@@ -26,10 +26,7 @@ object Local {
       def set(k: Key, v: Some[_]): Context = new Context1(k, v)
     }
 
-    private final class Context1(
-      k1: Key,
-      v1: Some[_]
-    ) extends Context {
+    private final class Context1(k1: Key, v1: Some[_]) extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1 else None
@@ -42,12 +39,7 @@ object Local {
         else new Context2(k1, v1, k, v)
     }
 
-    private final class Context2(
-      k1: Key,
-      v1: Some[_],
-      k2: Key,
-      v2: Some[_]
-    ) extends Context {
+    private final class Context2(k1: Key, v1: Some[_], k2: Key, v2: Some[_]) extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -131,14 +123,8 @@ object Local {
       }
     }
      */
-    private final class Context3(
-      k1: Key,
-      v1: Some[_],
-      k2: Key,
-      v2: Some[_],
-      k3: Key,
-      v3: Some[_]
-    ) extends Context {
+    private final class Context3(k1: Key, v1: Some[_], k2: Key, v2: Some[_], k3: Key, v3: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -167,8 +153,8 @@ object Local {
       k3: Key,
       v3: Some[_],
       k4: Key,
-      v4: Some[_]
-    ) extends Context {
+      v4: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -202,8 +188,8 @@ object Local {
       k4: Key,
       v4: Some[_],
       k5: Key,
-      v5: Some[_]
-    ) extends Context {
+      v5: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -242,8 +228,8 @@ object Local {
       k5: Key,
       v5: Some[_],
       k6: Key,
-      v6: Some[_]
-    ) extends Context {
+      v6: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -287,8 +273,8 @@ object Local {
       k6: Key,
       v6: Some[_],
       k7: Key,
-      v7: Some[_]
-    ) extends Context {
+      v7: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -337,8 +323,8 @@ object Local {
       k7: Key,
       v7: Some[_],
       k8: Key,
-      v8: Some[_]
-    ) extends Context {
+      v8: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -399,8 +385,8 @@ object Local {
       k8: Key,
       v8: Some[_],
       k9: Key,
-      v9: Some[_]
-    ) extends Context {
+      v9: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -498,8 +484,8 @@ object Local {
       k9: Key,
       v9: Some[_],
       k10: Key,
-      v10: Some[_]
-    ) extends Context {
+      v10: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -817,8 +803,8 @@ object Local {
       k10: Key,
       v10: Some[_],
       k11: Key,
-      v11: Some[_]
-    ) extends Context {
+      v11: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -1419,8 +1405,8 @@ object Local {
       k11: Key,
       v11: Some[_],
       k12: Key,
-      v12: Some[_]
-    ) extends Context {
+      v12: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -2122,8 +2108,8 @@ object Local {
       k12: Key,
       v12: Some[_],
       k13: Key,
-      v13: Some[_]
-    ) extends Context {
+      v13: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -2934,8 +2920,8 @@ object Local {
       k13: Key,
       v13: Some[_],
       k14: Key,
-      v14: Some[_]
-    ) extends Context {
+      v14: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -3863,8 +3849,8 @@ object Local {
       k14: Key,
       v14: Some[_],
       k15: Key,
-      v15: Some[_]
-    ) extends Context {
+      v15: Some[_])
+        extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -4851,11 +4837,7 @@ object Local {
         else new ContextN(k, v, this)
     }
 
-    private final class ContextN(
-      kN: Key,
-      vN: Some[_],
-      rest: Context
-    ) extends Context {
+    private final class ContextN(kN: Key, vN: Some[_], rest: Context) extends Context {
 
       def get(k: Key): Option[_] =
         if (k eq kN) vN

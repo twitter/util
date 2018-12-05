@@ -261,10 +261,7 @@ abstract class Buf { outer =>
     from == 0 && until >= length
 
   /** Helps implementations validate the arguments to [[write]]. */
-  protected[this] def checkWriteArgs(
-    outputLen: Int,
-    outputOff: Int
-  ): Unit = {
+  protected[this] def checkWriteArgs(outputLen: Int, outputOff: Int): Unit = {
     if (outputOff < 0)
       throw new IllegalArgumentException(s"offset must be non-negative: $outputOff")
     val len = length
@@ -642,8 +639,8 @@ object Buf {
   class ByteArray(
     private[Buf] val bytes: Array[Byte],
     private[Buf] val begin: Int,
-    private[Buf] val end: Int
-  ) extends Buf {
+    private[Buf] val end: Int)
+      extends Buf {
 
     def get(index: Int): Byte = {
       val off = begin + index

@@ -48,7 +48,8 @@ abstract class SlowProbeProxyTimer(maxRuntime: Duration) extends ProxyTimer {
   override protected def schedulePeriodically(
     when: Time,
     period: Duration
-  )(f: => Unit): TimerTask = {
+  )(f: => Unit
+  ): TimerTask = {
     checkSlowTask()
     self.schedule(when, period)(meterTask(f))
   }

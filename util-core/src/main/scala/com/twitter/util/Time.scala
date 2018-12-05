@@ -505,8 +505,7 @@ trait TimeControl {
 class TimeFormat(
   pattern: String,
   locale: Option[Locale],
-  timezone: TimeZone = TimeZone.getTimeZone("UTC")
-) {
+  timezone: TimeZone = TimeZone.getTimeZone("UTC")) {
 
   // jdk6 and jdk7 pick up the default locale differently in SimpleDateFormat,
   // so we can't rely on Locale.getDefault here.

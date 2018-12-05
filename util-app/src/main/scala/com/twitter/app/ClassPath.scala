@@ -85,11 +85,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
   }
 
   // package protected for testing
-  private[app] def browseUri(
-    uri: URI,
-    loader: ClassLoader,
-    buf: mutable.Buffer[CpInfo]
-  ): Unit =
+  private[app] def browseUri(uri: URI, loader: ClassLoader, buf: mutable.Buffer[CpInfo]): Unit =
     browseUri0(uri, loader, buf, mutable.Set[URI]())
 
   private[this] def browseUri0(
@@ -127,11 +123,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
         processFile(prefix, f, buf)
   }
 
-  protected def processFile(
-    prefix: String,
-    file: File,
-    buf: mutable.Buffer[CpInfo]
-  ): Unit
+  protected def processFile(prefix: String, file: File, buf: mutable.Buffer[CpInfo]): Unit
 
   private def browseJar(
     file: File,

@@ -31,8 +31,8 @@ private[util] class BatchExecutor[In, Out](
   sizePercentile: => Float = 1.0f,
   f: Seq[In] => Future[Seq[Out]]
 )(
-  implicit timer: Timer
-) extends Function1[In, Future[Out]] { batcher =>
+  implicit timer: Timer)
+    extends Function1[In, Future[Out]] { batcher =>
   import java.util.logging.Level.WARNING
 
   class ScheduledFlush(after: Duration, timer: Timer) {

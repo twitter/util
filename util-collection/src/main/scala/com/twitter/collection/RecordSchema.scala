@@ -34,8 +34,7 @@ final class RecordSchema {
    * externally.
    */
   final class Record private[RecordSchema] (
-    fields: IdentityHashMap[Field[_], Entry] = new IdentityHashMap[Field[_], Entry]
-  ) {
+    fields: IdentityHashMap[Field[_], Entry] = new IdentityHashMap[Field[_], Entry]) {
 
     private[this] def getOrInitializeEntry(field: Field[_]): Entry = {
       var entry = fields.get(field)

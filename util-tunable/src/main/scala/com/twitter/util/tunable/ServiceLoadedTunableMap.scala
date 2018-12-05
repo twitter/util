@@ -42,13 +42,11 @@ object ServiceLoadedTunableMap {
     loadedMaps.compute(
       serviceLoadedTunableMap.id,
       new BiFunction[String, TunableMap, TunableMap] {
-        def apply(
-          id: String,
-          curr: TunableMap
-        ): TunableMap = {
-          if (curr != null) throw new IllegalStateException(
-            s"Found multiple `ServiceLoadedTunableMap`s for $id: $curr, $serviceLoadedTunableMap"
-          )
+        def apply(id: String, curr: TunableMap): TunableMap = {
+          if (curr != null)
+            throw new IllegalStateException(
+              s"Found multiple `ServiceLoadedTunableMap`s for $id: $curr, $serviceLoadedTunableMap"
+            )
           else serviceLoadedTunableMap
         }
       }
@@ -68,10 +66,7 @@ object ServiceLoadedTunableMap {
       loadedMaps.computeIfPresent(
         serviceLoadedTunableMap.id,
         new BiFunction[String, TunableMap, TunableMap] {
-          def apply(
-            id: String,
-            curr: TunableMap
-          ): TunableMap = serviceLoadedTunableMap
+          def apply(id: String, curr: TunableMap): TunableMap = serviceLoadedTunableMap
         }
       )
     }

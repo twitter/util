@@ -13,8 +13,8 @@ case class NativeConnector(
   connectTimeout: Option[Duration],
   sessionTimeout: Duration,
   timer: Timer,
-  authenticate: Option[AuthInfo] = None
-) extends Connector
+  authenticate: Option[AuthInfo] = None)
+    extends Connector
     with Serialized {
   override val name = "native-zk-connector"
 
@@ -79,13 +79,20 @@ case class NativeConnector(
 }
 
 object NativeConnector {
-  def apply(connectString: String, sessionTimeout: Duration)(
+  def apply(
+    connectString: String,
+    sessionTimeout: Duration
+  )(
     implicit timer: Timer
   ): NativeConnector = {
     NativeConnector(connectString, None, sessionTimeout, timer)
   }
 
-  def apply(connectString: String, connectTimeout: Duration, sessionTimeout: Duration)(
+  def apply(
+    connectString: String,
+    connectTimeout: Duration,
+    sessionTimeout: Duration
+  )(
     implicit timer: Timer
   ): NativeConnector = {
     NativeConnector(connectString, Some(connectTimeout), sessionTimeout, timer)
@@ -96,7 +103,9 @@ object NativeConnector {
     connectTimeout: Duration,
     sessionTimeout: Duration,
     authenticate: Option[AuthInfo]
-  )(implicit timer: Timer): NativeConnector = {
+  )(
+    implicit timer: Timer
+  ): NativeConnector = {
     NativeConnector(connectString, Some(connectTimeout), sessionTimeout, timer, authenticate)
   }
 
@@ -115,8 +124,7 @@ object NativeConnector {
     sessionTimeout: Duration,
     authenticate: Option[AuthInfo],
     timer: Timer,
-    log: Logger
-  ) {
+    log: Logger) {
 
     @volatile protected[this] var zookeeper: Option[ZooKeeper] = None
 

@@ -204,9 +204,7 @@ object Promise {
     }
   }
 
-  private abstract class Transformer[A, B](
-    saved: Local.Context
-  ) extends K[A] {
+  private abstract class Transformer[A, B](saved: Local.Context) extends K[A] {
 
     protected[this] def k(r: Try[A]): Unit
 
@@ -233,8 +231,8 @@ object Promise {
   private final class FutureTransformer[A, B](
     saved: Local.Context,
     f: Try[A] => Future[B],
-    promise: Promise[B]
-  ) extends Transformer[A, B](saved) {
+    promise: Promise[B])
+      extends Transformer[A, B](saved) {
 
     protected[this] def k(r: Try[A]): Unit =
       // The promise can be fulfilled only by the transformer, so it's safe to use `become` here
@@ -250,8 +248,8 @@ object Promise {
   private final class TryTransformer[A, B](
     saved: Local.Context,
     f: Try[A] => Try[B],
-    promise: Promise[B]
-  ) extends Transformer[A, B](saved) {
+    promise: Promise[B])
+      extends Transformer[A, B](saved) {
 
     protected[this] def k(r: Try[A]): Unit = {
       // The promise can be fulfilled only by the transformer, so it's safe to use `update` here
@@ -281,8 +279,7 @@ object Promise {
    */
   private class Interruptible[A](
     val waitq: WaitQueue[A],
-    val handler: PartialFunction[Throwable, Unit]
-  )
+    val handler: PartialFunction[Throwable, Unit])
 
   /**
    * An unsatisfied [[Promise]] which forwards interrupts to `other`.

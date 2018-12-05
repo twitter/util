@@ -272,8 +272,8 @@ class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
 class ScheduledThreadPoolTimer(
   poolSize: Int,
   threadFactory: ThreadFactory,
-  rejectedExecutionHandler: Option[RejectedExecutionHandler]
-) extends Timer {
+  rejectedExecutionHandler: Option[RejectedExecutionHandler])
+    extends Timer {
   def this(poolSize: Int, threadFactory: ThreadFactory) =
     this(poolSize, threadFactory, None)
 

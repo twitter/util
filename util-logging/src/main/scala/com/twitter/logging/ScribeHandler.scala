@@ -132,8 +132,8 @@ class ScribeHandler(
   maxMessagesToBuffer: Int,
   formatter: Formatter,
   level: Option[Level],
-  statsReceiver: StatsReceiver
-) extends Handler(formatter, level) {
+  statsReceiver: StatsReceiver)
+    extends Handler(formatter, level) {
   import ScribeHandler._
 
   def this(

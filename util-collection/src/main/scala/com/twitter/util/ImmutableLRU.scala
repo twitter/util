@@ -27,8 +27,7 @@ class ImmutableLRU[K, V] private (
   maxSize: Int,
   idx: Long,
   map: Map[K, (Long, V)],
-  ord: SortedMap[Long, K]
-) {
+  ord: SortedMap[Long, K]) {
 
   // Scala's SortedMap requires a key ordering; ImmutableLRU doesn't
   // care about pulling a minimum value out of the SortedMap, so the

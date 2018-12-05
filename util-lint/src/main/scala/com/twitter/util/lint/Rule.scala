@@ -41,13 +41,7 @@ object Rule {
    *
    * @param fn is evaluated to determine if there are any issues.
    */
-  def apply(
-    category: Category,
-    shortName: String,
-    desc: String
-  )(
-    fn: => Seq[Issue]
-  ): Rule = {
+  def apply(category: Category, shortName: String, desc: String)(fn: => Seq[Issue]): Rule = {
     val _cat = category
     new Rule {
       def apply(): Seq[Issue] = fn

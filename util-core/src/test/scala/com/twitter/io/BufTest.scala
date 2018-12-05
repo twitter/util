@@ -235,12 +235,7 @@ class BufTest
   }
 
   test("Buf.process from and until returns -1 when fully processed") {
-    def assertAllProcessed(
-      expected: Array[Byte],
-      buf: Buf,
-      from: Int,
-      until: Int
-    ): Unit = {
+    def assertAllProcessed(expected: Array[Byte], buf: Buf, from: Int, until: Int): Unit = {
       var seen = new mutable.ListBuffer[Byte]()
       val processor = new Buf.Processor {
         def apply(byte: Byte): Boolean = {

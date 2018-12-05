@@ -120,83 +120,81 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @return A [[com.twitter.app.Flags.FlagParseResult]] representing the
    * result of parsing `args`.
    */
-  def parseArgs(
-    args: Array[String],
-    allowUndefinedFlags: Boolean = false
-  ): FlagParseResult = synchronized {
-    reset()
-    val remaining = new ArrayBuffer[String]
-    var i = 0
-    while (i < args.length) {
-      val a = args(i)
-      i += 1
-      if (a == "--") {
-        remaining ++= args.slice(i, args.length)
-        i = args.length
-      } else if (a startsWith "-") {
-        a drop 1 split ("=", 2) match {
-          // There seems to be a bug Scala's pattern matching
-          // optimizer that leaves `v' dangling in the last case if
-          // we make this a wildcard (Array(k, _@_*))
-          case Array(k) if !hasFlag(k) =>
-            if (allowUndefinedFlags)
-              remaining += a
-            else
+  def parseArgs(args: Array[String], allowUndefinedFlags: Boolean = false): FlagParseResult =
+    synchronized {
+      reset()
+      val remaining = new ArrayBuffer[String]
+      var i = 0
+      while (i < args.length) {
+        val a = args(i)
+        i += 1
+        if (a == "--") {
+          remaining ++= args.slice(i, args.length)
+          i = args.length
+        } else if (a startsWith "-") {
+          a drop 1 split ("=", 2) match {
+            // There seems to be a bug Scala's pattern matching
+            // optimizer that leaves `v' dangling in the last case if
+            // we make this a wildcard (Array(k, _@_*))
+            case Array(k) if !hasFlag(k) =>
+              if (allowUndefinedFlags)
+                remaining += a
+              else
+                return Error(
+                  "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
+                )
+
+            // Flag isn't defined
+            case Array(k, _) if !hasFlag(k) =>
+              if (allowUndefinedFlags)
+                remaining += a
+              else
+                return Error(
+                  "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
+                )
+
+            // Optional argument without a value
+            case Array(k) if flag(k).noArgumentOk =>
+              flag(k).parse()
+
+            // Mandatory argument without a value and with no more arguments.
+            case Array(k) if i == args.length =>
               return Error(
-                "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
+                "Error parsing flag \"%s\": %s".format(k, FlagValueRequiredMessage)
               )
 
-          // Flag isn't defined
-          case Array(k, _) if !hasFlag(k) =>
-            if (allowUndefinedFlags)
-              remaining += a
-            else
-              return Error(
-                "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
-              )
+            // Mandatory argument with another argument
+            case Array(k) =>
+              i += 1
+              try flag(k).parse(args(i - 1))
+              catch {
+                case NonFatal(e) =>
+                  return Error(
+                    "Error parsing flag \"%s\": %s".format(k, e.getMessage)
+                  )
+              }
 
-          // Optional argument without a value
-          case Array(k) if flag(k).noArgumentOk =>
-            flag(k).parse()
-
-          // Mandatory argument without a value and with no more arguments.
-          case Array(k) if i == args.length =>
-            return Error(
-              "Error parsing flag \"%s\": %s".format(k, FlagValueRequiredMessage)
-            )
-
-          // Mandatory argument with another argument
-          case Array(k) =>
-            i += 1
-            try flag(k).parse(args(i - 1))
-            catch {
-              case NonFatal(e) =>
-                return Error(
-                  "Error parsing flag \"%s\": %s".format(k, e.getMessage)
-                )
-            }
-
-          // Mandatory k=v
-          case Array(k, v) =>
-            try flag(k).parse(v)
-            catch {
-              case e: Throwable =>
-                return Error(
-                  "Error parsing flag \"%s\": %s".format(k, e.getMessage)
-                )
-            }
+            // Mandatory k=v
+            case Array(k, v) =>
+              try flag(k).parse(v)
+              catch {
+                case e: Throwable =>
+                  return Error(
+                    "Error parsing flag \"%s\": %s".format(k, e.getMessage)
+                  )
+              }
+          }
+        } else {
+          remaining += a
         }
-      } else {
-        remaining += a
       }
-    }
-    finishParsing()
+      finishParsing()
 
-    if (helpFlag())
-      Help(usage)
-    else
-      Ok(remaining)
-  }
+      if (helpFlag())
+        Help(usage)
+      else
+        Ok(remaining)
+    }
 
   /**
    * Parse an array of flag strings.
@@ -212,14 +210,12 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @throws FlagParseException if an error occurs during flag-parsing.
    */
   @deprecated("Prefer result-value based `Flags.parseArgs` method", "6.17.1")
-  def parse(
-    args: Array[String],
-    undefOk: Boolean = false
-  ): Seq[String] = parseArgs(args, undefOk) match {
-    case Ok(remainder) => remainder
-    case Help(usage) => throw FlagUsageError(usage)
-    case Error(reason) => throw FlagParseException(reason)
-  }
+  def parse(args: Array[String], undefOk: Boolean = false): Seq[String] =
+    parseArgs(args, undefOk) match {
+      case Ok(remainder) => remainder
+      case Help(usage) => throw FlagUsageError(usage)
+      case Error(reason) => throw FlagParseException(reason)
+    }
 
   /**
    * Parse an array of flag strings or exit the application (with exit code 1)

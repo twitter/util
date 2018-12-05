@@ -30,8 +30,7 @@ private[twitter] object WindowedAdder {
 private[twitter] class WindowedAdder private[WindowedAdder] (
   window: Long,
   N: Int,
-  now: () => Long
-) {
+  now: () => Long) {
   private[this] val writer = new LongAdder()
   @volatile private[this] var gen = 0
   private[this] val expiredGen = new AtomicInteger(gen)

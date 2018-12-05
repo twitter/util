@@ -46,7 +46,8 @@ object RetryPolicy {
     base: Duration,
     factor: Double = 2.0,
     maximum: Duration = 30.seconds
-  )(implicit timer: Timer)
+  )(
+    implicit timer: Timer)
       extends RetryPolicy {
     require(base > 0.seconds)
     require(factor >= 1)

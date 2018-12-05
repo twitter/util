@@ -20,10 +20,8 @@ import com.twitter.util.Future
  *   { case (target: Int, _, _, _) => target }
  * ))
  */
-private[cache] class KeyEncodingCache[K, V, U](
-  encode: K => V,
-  underlying: FutureCache[V, U]
-) extends FutureCache[K, U] {
+private[cache] class KeyEncodingCache[K, V, U](encode: K => V, underlying: FutureCache[V, U])
+    extends FutureCache[K, U] {
   override def get(key: K): Option[Future[U]] = underlying.get(encode(key))
 
   def set(key: K, value: Future[U]): Unit = underlying.set(encode(key), value)

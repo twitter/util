@@ -336,10 +336,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
     }
   }
 
-  private def mockTimerLocalPropagation(
-    timer: MockTimer,
-    localValue: Int
-  ): Int = {
+  private def mockTimerLocalPropagation(timer: MockTimer, localValue: Int): Int = {
     Time.withCurrentTimeFrozen { tc =>
       val timerLocal = new AtomicInteger(0)
       val local = new Local[Int]

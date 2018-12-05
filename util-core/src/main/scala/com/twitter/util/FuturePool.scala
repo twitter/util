@@ -118,8 +118,8 @@ class InterruptibleExecutorServiceFuturePool(executor: ExecutorService)
  */
 class ExecutorServiceFuturePool protected[this] (
   val executor: ExecutorService,
-  val interruptible: Boolean
-) extends FuturePool {
+  val interruptible: Boolean)
+    extends FuturePool {
   def this(executor: ExecutorService) = this(executor, false)
 
   def apply[T](f: => T): Future[T] = {

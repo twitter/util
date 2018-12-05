@@ -42,8 +42,9 @@ object PemFileTestUtils {
   def assertIOException[A](tryValue: Try[A]): Unit =
     assertException[IOException, A](tryValue)
 
-  def assertLogMessage(name: String)(
-    logMessage: String,
+  def assertLogMessage(
+    name: String
+  )(logMessage: String,
     filename: String,
     expectedExMessage: String
   ): Unit = {
@@ -51,10 +52,7 @@ object PemFileTestUtils {
     assert(logMessage.contains(expectedExMessage))
   }
 
-  def testFileDoesntExist[A](
-    name: String,
-    read: File => Try[A]
-  ): Unit = {
+  def testFileDoesntExist[A](name: String, read: File => Try[A]): Unit = {
     val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
@@ -68,10 +66,7 @@ object PemFileTestUtils {
     assertIOException(tryReadPem)
   }
 
-  def testFilePathIsntFile[A](
-    name: String,
-    read: File => Try[A]
-  ): Unit = {
+  def testFilePathIsntFile[A](name: String, read: File => Try[A]): Unit = {
     val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
@@ -83,10 +78,7 @@ object PemFileTestUtils {
     assertIOException(tryReadPem)
   }
 
-  def testFilePathIsntReadable[A](
-    name: String,
-    read: File => Try[A]
-  ): Unit = {
+  def testFilePathIsntReadable[A](name: String, read: File => Try[A]): Unit = {
     val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
@@ -104,7 +96,9 @@ object PemFileTestUtils {
   def testEmptyFile[A <: AnyRef, B](
     name: String,
     read: File => Try[B]
-  )(implicit classTag: ClassTag[A]): Unit = {
+  )(
+    implicit classTag: ClassTag[A]
+  ): Unit = {
     val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()

@@ -335,10 +335,8 @@ trait ExecutorScheduler { self: Scheduler =>
  * A scheduler that dispatches directly to an underlying Java
  * cached threadpool executor.
  */
-class ThreadPoolScheduler(
-  val name: String,
-  val executorFactory: ThreadFactory => ExecutorService
-) extends Scheduler
+class ThreadPoolScheduler(val name: String, val executorFactory: ThreadFactory => ExecutorService)
+    extends Scheduler
     with ExecutorScheduler {
   def this(name: String) = this(name, Executors.newCachedThreadPool(_))
 }
@@ -354,8 +352,8 @@ class ThreadPoolScheduler(
  */
 class BridgedThreadPoolScheduler(
   val name: String,
-  val executorFactory: ThreadFactory => ExecutorService
-) extends Scheduler
+  val executorFactory: ThreadFactory => ExecutorService)
+    extends Scheduler
     with ExecutorScheduler {
   private[this] val local = new LocalScheduler
 

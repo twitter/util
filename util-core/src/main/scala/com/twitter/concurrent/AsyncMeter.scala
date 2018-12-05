@@ -168,7 +168,8 @@ class AsyncMeter private (
   private[concurrent] val burstSize: Int,
   burstDuration: Duration,
   q: BlockingQueue[(Promise[Unit], Int)]
-)(implicit timer: Timer) {
+)(
+  implicit timer: Timer) {
 
   require(burstSize > 0, s"burst size of $burstSize, which is <= 0 doesn't make sense")
   require(

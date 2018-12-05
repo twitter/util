@@ -13,8 +13,8 @@ case class KetamaNode[A](identifier: String, weight: Int, handle: A)
 class KetamaDistributor[A](
   ketamaNodes: Seq[KetamaNode[A]],
   numReps: Int,
-  oldLibMemcachedVersionComplianceMode: Boolean = false
-) extends Distributor[A] {
+  oldLibMemcachedVersionComplianceMode: Boolean = false)
+    extends Distributor[A] {
 
   /**
    * Extract a little-endian integer from a given byte array starting at `offset`.

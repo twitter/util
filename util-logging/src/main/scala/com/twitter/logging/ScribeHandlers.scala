@@ -10,10 +10,7 @@ object ScribeHandlers {
    * the provided arguments, so Java users don't need to provide the
    * other default arguments in the call.
    */
-  def apply(
-    category: String,
-    formatter: Formatter
-  ): () => ScribeHandler =
+  def apply(category: String, formatter: Formatter): () => ScribeHandler =
     ScribeHandler.apply(
       hostname = DefaultHostname,
       port = DefaultPort,

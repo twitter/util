@@ -7,8 +7,8 @@ object SolarSystemPlanets {
     val orderFromSun: Int,
     val name: String,
     val mass: Kilogram,
-    val radius: Meter
-  ) extends Ordered[Planet] {
+    val radius: Meter)
+      extends Ordered[Planet] {
 
     def compare(that: Planet): Int =
       this.orderFromSun - that.orderFromSun

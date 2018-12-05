@@ -67,8 +67,8 @@ trait ExceptionStatsHandler {
 class CategorizingExceptionStatsHandler(
   categorizer: Throwable => Option[String] = _ => None,
   sourceFunction: Throwable => Option[String] = _ => None,
-  rollup: Boolean = true
-) extends ExceptionStatsHandler {
+  rollup: Boolean = true)
+    extends ExceptionStatsHandler {
   import ExceptionStatsHandler._
 
   private[this] val underlying: ExceptionStatsHandler = {
@@ -131,8 +131,8 @@ private[finagle] class MultiCategorizingExceptionStatsHandler(
   mkLabel: Throwable => String = _ => ExceptionStatsHandler.Failures,
   mkFlags: Throwable => Set[String] = _ => Set.empty,
   mkSource: Throwable => Option[String] = _ => None,
-  rollup: Boolean = true
-) extends ExceptionStatsHandler {
+  rollup: Boolean = true)
+    extends ExceptionStatsHandler {
   import ExceptionStatsHandler._
 
   def record(statsReceiver: StatsReceiver, t: Throwable): Unit = {

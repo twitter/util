@@ -28,10 +28,7 @@ object LoadService {
    * @param implementations cannot be empty.
    * @see [[App.loadServiceBindings]]
    */
-  class Binding[T](
-    val iface: Class[T],
-    val implementations: Seq[T]
-  ) {
+  class Binding[T](val iface: Class[T], val implementations: Seq[T]) {
 
     /**
      * Convenience constructor for binding a single implementation.

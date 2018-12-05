@@ -97,8 +97,8 @@ class FileHandler(
   val append: Boolean,
   rotateCount: Int,
   formatter: Formatter,
-  level: Option[Level]
-) extends Handler(formatter, level) {
+  level: Option[Level])
+    extends Handler(formatter, level) {
 
   // This converts relative paths to absolute paths, as expected
   val (filename, name) = {

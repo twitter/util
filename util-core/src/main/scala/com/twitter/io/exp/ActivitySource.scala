@@ -41,7 +41,9 @@ object ActivitySource {
    */
   def forFiles(
     period: Duration = Duration.fromSeconds(60)
-  )(implicit timer: Timer): ActivitySource[Buf] =
+  )(
+    implicit timer: Timer
+  ): ActivitySource[Buf] =
     new CachingActivitySource(new FilePollingActivitySource(period)(timer))
 
   /**
@@ -54,8 +56,8 @@ object ActivitySource {
 
   private[ActivitySource] class OrElse[T, U >: T](
     primary: ActivitySource[T],
-    failover: ActivitySource[U]
-  ) extends ActivitySource[U] {
+    failover: ActivitySource[U])
+      extends ActivitySource[U] {
     def get(name: String): Activity[U] = {
       primary.get(name) transform {
         case Activity.Failed(_) => failover.get(name)
@@ -115,7 +117,8 @@ class CachingActivitySource[T](underlying: ActivitySource[T]) extends ActivitySo
 class FilePollingActivitySource private[exp] (
   period: Duration,
   pool: FuturePool
-)(implicit timer: Timer)
+)(
+  implicit timer: Timer)
     extends ActivitySource[Buf] {
 
   private[exp] def this(period: Duration)(implicit timer: Timer) =

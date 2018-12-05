@@ -501,7 +501,8 @@ sealed abstract class AsyncStream[+A] {
 
     def fillBuffer(
       sizeRemaining: Int
-    )(s: => AsyncStream[A]): Future[(Seq[A], () => AsyncStream[A])] =
+    )(s: => AsyncStream[A]
+    ): Future[(Seq[A], () => AsyncStream[A])] =
       if (sizeRemaining < 1) Future.value((buffer, () => s))
       else
         s match {
@@ -787,19 +788,20 @@ object AsyncStream {
         case Throw(e) =>
           headp.setException(e)
           tailp.setException(e)
-        case Return(v) => v match {
-          case Empty =>
-            headp.become(Future.None)
-            tailp.setValue(Oneshot.empty)
-          case FromFuture(fa) =>
-            headp.become(fa.map(Some(_)))
-            tailp.setValue(Oneshot.empty)
-          case Cons(fa, more2) =>
-            headp.become(fa.map(Some(_)))
-            tailp.setValue(more2)
-          case Embed(newFas) =>
-            readEmbed(newFas, headp, tailp)
-        }
+        case Return(v) =>
+          v match {
+            case Empty =>
+              headp.become(Future.None)
+              tailp.setValue(Oneshot.empty)
+            case FromFuture(fa) =>
+              headp.become(fa.map(Some(_)))
+              tailp.setValue(Oneshot.empty)
+            case Cons(fa, more2) =>
+              headp.become(fa.map(Some(_)))
+              tailp.setValue(more2)
+            case Embed(newFas) =>
+              readEmbed(newFas, headp, tailp)
+          }
       }
 
     // Recover the AsyncStream interface. We don't return `as` because we want

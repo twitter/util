@@ -10,8 +10,8 @@ package com.twitter.finagle.stats
  */
 abstract class NameTranslatingStatsReceiver(
   protected val self: StatsReceiver,
-  namespacePrefix: String
-) extends StatsReceiverProxy {
+  namespacePrefix: String)
+    extends StatsReceiverProxy {
 
   def this(self: StatsReceiver) = this(self, "<namespacePrefix>")
 

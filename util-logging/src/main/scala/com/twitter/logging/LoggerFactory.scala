@@ -38,8 +38,8 @@ case class LoggerFactory(
   node: String = "",
   level: Option[Level] = None,
   handlers: List[HandlerFactory] = Nil,
-  useParents: Boolean = true
-) extends (() => Logger) {
+  useParents: Boolean = true)
+    extends (() => Logger) {
 
   /**
    * Registers new handlers and setting with the logger at `node`

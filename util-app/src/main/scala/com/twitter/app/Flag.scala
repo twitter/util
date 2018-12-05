@@ -56,8 +56,7 @@ class Flag[T: Flaggable] private[app] (
   val name: String,
   val help: String,
   defaultOrUsage: Either[() => T, String],
-  failFastUntilParsed: Boolean
-) {
+  failFastUntilParsed: Boolean) {
   import com.twitter.app.Flag._
   import java.util.logging._
 

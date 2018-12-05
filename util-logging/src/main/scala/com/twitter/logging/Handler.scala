@@ -84,10 +84,8 @@ object StringHandler {
   /**
    * Generates a HandlerFactory that returns a StringHandler
    */
-  def apply(
-    formatter: Formatter = new Formatter(),
-    level: Option[Level] = None
-  ) = () => new StringHandler(formatter, level)
+  def apply(formatter: Formatter = new Formatter(), level: Option[Level] = None) =
+    () => new StringHandler(formatter, level)
 
   /**
    * for java compatibility
@@ -127,10 +125,8 @@ object ConsoleHandler {
   /**
    * Generates a HandlerFactory that returns a ConsoleHandler
    */
-  def apply(
-    formatter: Formatter = new Formatter(),
-    level: Option[Level] = None
-  ) = () => new ConsoleHandler(formatter, level)
+  def apply(formatter: Formatter = new Formatter(), level: Option[Level] = None) =
+    () => new ConsoleHandler(formatter, level)
 
   /**
    * for java compatibility

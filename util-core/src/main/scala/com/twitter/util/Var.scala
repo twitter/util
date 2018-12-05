@@ -265,7 +265,9 @@ object Var {
    */
   def collect[T: ClassTag, CC[X] <: Traversable[X]](
     vars: CC[Var[T]]
-  )(implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]): Var[CC[T]] = {
+  )(
+    implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]
+  ): Var[CC[T]] = {
     val vs = vars.toArray
 
     def tree(begin: Int, end: Int): Var[Seq[T]] =

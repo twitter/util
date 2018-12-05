@@ -90,8 +90,8 @@ class Formatter(
   val truncateAt: Int = 0,
   val truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit,
   val useFullPackageNames: Boolean = false,
-  val prefix: String = Formatter.DefaultPrefix
-) extends javalog.Formatter {
+  val prefix: String = Formatter.DefaultPrefix)
+    extends javalog.Formatter {
 
   private val matcher = Formatter.DateFormatRegex.matcher(prefix)
 

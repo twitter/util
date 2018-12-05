@@ -382,6 +382,5 @@ object ZNode {
   case class TreeUpdate(
     parent: ZNode,
     added: Set[ZNode] = Set.empty[ZNode],
-    removed: Set[ZNode] = Set.empty[ZNode]
-  )
+    removed: Set[ZNode] = Set.empty[ZNode])
 }

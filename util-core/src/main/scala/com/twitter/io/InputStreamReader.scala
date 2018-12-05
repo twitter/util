@@ -10,11 +10,8 @@ import java.io.InputStream
  * The given `InputStream` will be closed when [[Reader.read]]
  * reaches the EOF or a call to [[discard()]] or [[close()]].
  */
-class InputStreamReader private[io] (
-  inputStream: InputStream,
-  chunkSize: Int,
-  pool: FuturePool
-) extends Reader[Buf]
+class InputStreamReader private[io] (inputStream: InputStream, chunkSize: Int, pool: FuturePool)
+    extends Reader[Buf]
     with Closable
     with CloseAwaitably {
   private[this] val mutex = new AsyncMutex()
@@ -97,10 +94,7 @@ object InputStreamReader {
    * using [[FuturePool.interruptibleUnboundedPool]] for executing
    * all I/O.
    */
-  def apply(
-    inputStream: InputStream,
-    chunkSize: Int = DefaultMaxBufferSize
-  ): InputStreamReader =
+  def apply(inputStream: InputStream, chunkSize: Int = DefaultMaxBufferSize): InputStreamReader =
     new InputStreamReader(inputStream, chunkSize)
 
 }

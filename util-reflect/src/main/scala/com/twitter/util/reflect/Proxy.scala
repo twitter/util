@@ -70,8 +70,8 @@ class ProxyFactory[I <: AnyRef: Manifest](f: MethodCall[I] => AnyRef)
 
 private[reflect] class MethodInterceptor[I <: AnyRef](
   target: Option[I],
-  callback: MethodCall[I] => AnyRef
-) extends CGMethodInterceptor
+  callback: MethodCall[I] => AnyRef)
+    extends CGMethodInterceptor
     with Serializable {
   val targetRef = target.getOrElse(null).asInstanceOf[I]
 
@@ -85,8 +85,8 @@ final class MethodCall[T <: AnyRef] private[reflect] (
   targetRef: T,
   val method: Method,
   val args: Array[AnyRef],
-  methodProxy: MethodProxy
-) extends (() => AnyRef) {
+  methodProxy: MethodProxy)
+    extends (() => AnyRef) {
 
   lazy val target = if (targetRef ne null) Some(targetRef) else None
 

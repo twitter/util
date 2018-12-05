@@ -13,8 +13,7 @@ class AsyncSemaphoreTest extends FunSpec {
   class AsyncSemaphoreHelper(
     val sem: AsyncSemaphore,
     var count: Int,
-    val permits: ConcurrentLinkedQueue[Permit]
-  ) {
+    val permits: ConcurrentLinkedQueue[Permit]) {
     def copy(
       sem: AsyncSemaphore = this.sem,
       count: Int = this.count,

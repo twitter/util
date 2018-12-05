@@ -20,8 +20,7 @@ case class CpuProfile(
   // The number of samples taken.
   count: Int,
   // The number of samples missed.
-  missed: Int
-) {
+  missed: Int) {
 
   /**
    * Write a Google pprof-compatible profile to `out`. The format is

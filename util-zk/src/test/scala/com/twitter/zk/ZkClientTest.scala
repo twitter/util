@@ -58,7 +58,8 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       data: Array[Byte] = "".getBytes,
       acls: Seq[ACL] = zkClient.acl,
       mode: CreateMode = zkClient.mode
-    )(wait: => Future[String]): Unit = {
+    )(wait: => Future[String]
+    ): Unit = {
       when(
         zk.create(
           meq(path),
@@ -149,7 +150,9 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def watchChildren(
       path: String
-    )(children: => Future[ZNode.Children])(update: => Future[WatchedEvent]): Unit = {
+    )(children: => Future[ZNode.Children]
+    )(update: => Future[WatchedEvent]
+    ): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
       when(zk.getChildren(meq(path), w.capture(), cb.capture(), meq(null))) thenAnswer answer[
@@ -183,7 +186,9 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def watchData(
       path: String
-    )(result: => Future[ZNode.Data])(update: => Future[WatchedEvent]): Unit = {
+    )(result: => Future[ZNode.Data]
+    )(update: => Future[WatchedEvent]
+    ): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
       when(zk.getData(meq(path), w.capture(), cb.capture(), meq(null))) thenAnswer answer[

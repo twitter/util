@@ -44,9 +44,12 @@ import scala.util.control.NonFatal
  * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
  */
 @GlobalFlagVisible
-abstract class GlobalFlag[T] private[app] (defaultOrUsage: Either[() => T, String], help: String)(
-  implicit _f: Flaggable[T]
-) extends Flag[T](null, help, defaultOrUsage, false) {
+abstract class GlobalFlag[T] private[app] (
+  defaultOrUsage: Either[() => T, String],
+  help: String
+)(
+  implicit _f: Flaggable[T])
+    extends Flag[T](null, help, defaultOrUsage, false) {
 
   override protected[this] def parsingDone: Boolean = true
 

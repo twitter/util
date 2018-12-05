@@ -1394,8 +1394,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     sizeThreshold: Int,
     timeThreshold: Duration = Duration.Top,
     sizePercentile: => Float = 1.0f
-  )(
-    f: Seq[In] => Future[Seq[Out]]
+  )(f: Seq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {
@@ -1835,9 +1834,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @see [[handle]]
    */
-  def rescue[B >: A](
-    rescueException: PartialFunction[Throwable, Future[B]]
-  ): Future[B] =
+  def rescue[B >: A](rescueException: PartialFunction[Throwable, Future[B]]): Future[B] =
     transform {
       case Throw(t) =>
         val result = rescueException.applyOrElse(t, Future.AlwaysNotApplied)

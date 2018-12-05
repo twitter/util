@@ -68,11 +68,8 @@ object ThrottledHandler {
  * @param maxToDisplay
  * Maximum duplicate log entries to pass before suppressing them.
  */
-class ThrottledHandler(
-  handler: Handler,
-  val duration: Duration,
-  val maxToDisplay: Int
-) extends ProxyHandler(handler) {
+class ThrottledHandler(handler: Handler, val duration: Duration, val maxToDisplay: Int)
+    extends ProxyHandler(handler) {
 
   // we accept some raciness here. it means that sometimes extra log lines will
   // get logged. this was deemed preferable to holding locks.

@@ -6,8 +6,8 @@ package com.twitter.finagle.stats
  */
 class VerbosityAdjustingStatsReceiver(
   protected val self: StatsReceiver,
-  defaultVerbosity: Verbosity
-) extends StatsReceiverProxy {
+  defaultVerbosity: Verbosity)
+    extends StatsReceiverProxy {
 
   override def counter(verbosity: Verbosity, names: String*): Counter =
     self.counter(defaultVerbosity, names: _*)
@@ -15,10 +15,7 @@ class VerbosityAdjustingStatsReceiver(
   override def stat(verbosity: Verbosity, names: String*): Stat =
     self.stat(defaultVerbosity, names: _*)
 
-  override def addGauge(
-    verbosity: Verbosity,
-    names: String*
-  )(f: => Float): Gauge = {
+  override def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = {
     // scalafix:off StoreGaugesAsMemberVariables
     self.addGauge(defaultVerbosity, names: _*)(f)
     // scalafix:on StoreGaugesAsMemberVariables

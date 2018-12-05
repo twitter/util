@@ -257,7 +257,8 @@ trait ArgumentCapture {
     E: ClassTag,
     F: ClassTag,
     G: ClassTag
-  ](func: (A, B, C, D, E, F, G) => _): Seq[(A, B, C, D, E, F, G)] = {
+  ](func: (A, B, C, D, E, F, G) => _
+  ): Seq[(A, B, C, D, E, F, G)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -293,7 +294,8 @@ trait ArgumentCapture {
     E: ClassTag,
     F: ClassTag,
     G: ClassTag
-  ](func: (A, B, C, D, E, F, G) => _): (A, B, C, D, E, F, G) =
+  ](func: (A, B, C, D, E, F, G) => _
+  ): (A, B, C, D, E, F, G) =
     capturingAll[A, B, C, D, E, F, G](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 8 iterables together into a Seq of 8-tuples. */
@@ -329,7 +331,8 @@ trait ArgumentCapture {
     F: ClassTag,
     G: ClassTag,
     H: ClassTag
-  ](func: (A, B, C, D, E, F, G, H) => _): Seq[(A, B, C, D, E, F, G, H)] = {
+  ](func: (A, B, C, D, E, F, G, H) => _
+  ): Seq[(A, B, C, D, E, F, G, H)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -369,7 +372,8 @@ trait ArgumentCapture {
     F: ClassTag,
     G: ClassTag,
     H: ClassTag
-  ](func: (A, B, C, D, E, F, G, H) => _): (A, B, C, D, E, F, G, H) =
+  ](func: (A, B, C, D, E, F, G, H) => _
+  ): (A, B, C, D, E, F, G, H) =
     capturingAll[A, B, C, D, E, F, G, H](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 9 iterables together into a Seq of 9-tuples. */
@@ -408,7 +412,8 @@ trait ArgumentCapture {
     G: ClassTag,
     H: ClassTag,
     I: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I) => _): Seq[(A, B, C, D, E, F, G, H, I)] = {
+  ](func: (A, B, C, D, E, F, G, H, I) => _
+  ): Seq[(A, B, C, D, E, F, G, H, I)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -452,7 +457,8 @@ trait ArgumentCapture {
     G: ClassTag,
     H: ClassTag,
     I: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I) => _): (A, B, C, D, E, F, G, H, I) =
+  ](func: (A, B, C, D, E, F, G, H, I) => _
+  ): (A, B, C, D, E, F, G, H, I) =
     capturingAll[A, B, C, D, E, F, G, H, I](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 10 iterables together into a Seq of 10-tuples. */
@@ -478,8 +484,7 @@ trait ArgumentCapture {
       .zip(arg7)
       .zip(arg8)
       .zip(arg9)
-      .map({ case (((((((((a, b), c), d), e), f), g), h), i), j) => (a, b, c, d, e, f, g, h, i, j) }
-      )
+      .map({ case (((((((((a, b), c), d), e), f), g), h), i), j) => (a, b, c, d, e, f, g, h, i, j) })
       .toSeq
   }
 
@@ -495,7 +500,8 @@ trait ArgumentCapture {
     H: ClassTag,
     I: ClassTag,
     J: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J) => _): Seq[(A, B, C, D, E, F, G, H, I, J)] = {
+  ](func: (A, B, C, D, E, F, G, H, I, J) => _
+  ): Seq[(A, B, C, D, E, F, G, H, I, J)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -543,7 +549,8 @@ trait ArgumentCapture {
     H: ClassTag,
     I: ClassTag,
     J: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J) => _): (A, B, C, D, E, F, G, H, I, J) =
+  ](func: (A, B, C, D, E, F, G, H, I, J) => _
+  ): (A, B, C, D, E, F, G, H, I, J) =
     capturingAll[A, B, C, D, E, F, G, H, I, J](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 11 iterables together into a Seq of 11-tuples. */
@@ -591,7 +598,8 @@ trait ArgumentCapture {
     I: ClassTag,
     J: ClassTag,
     K: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J, K) => _): Seq[(A, B, C, D, E, F, G, H, I, J, K)] = {
+  ](func: (A, B, C, D, E, F, G, H, I, J, K) => _
+  ): Seq[(A, B, C, D, E, F, G, H, I, J, K)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -643,7 +651,8 @@ trait ArgumentCapture {
     I: ClassTag,
     J: ClassTag,
     K: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J, K) => _): (A, B, C, D, E, F, G, H, I, J, K) =
+  ](func: (A, B, C, D, E, F, G, H, I, J, K) => _
+  ): (A, B, C, D, E, F, G, H, I, J, K) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 12 iterables together into a Seq of 12-tuples. */
@@ -694,7 +703,8 @@ trait ArgumentCapture {
     J: ClassTag,
     K: ClassTag,
     L: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J, K, L) => _): Seq[(A, B, C, D, E, F, G, H, I, J, K, L)] = {
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L) => _
+  ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
     val argCaptorC = ArgumentCaptor.forClass(classTag[C].runtimeClass.asInstanceOf[Class[C]])
@@ -750,7 +760,8 @@ trait ArgumentCapture {
     J: ClassTag,
     K: ClassTag,
     L: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J, K, L) => _): (A, B, C, D, E, F, G, H, I, J, K, L) =
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L) => _
+  ): (A, B, C, D, E, F, G, H, I, J, K, L) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L](func).lastOption.getOrElse(noArgWasCaptured())
 
   /** Zip 13 iterables together into a Seq of 13-tuples. */
@@ -804,8 +815,7 @@ trait ArgumentCapture {
     K: ClassTag,
     L: ClassTag,
     M: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -866,7 +876,8 @@ trait ArgumentCapture {
     K: ClassTag,
     L: ClassTag,
     M: ClassTag
-  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M) => _): (A, B, C, D, E, F, G, H, I, J, K, L, M) =
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M) => _
+  ): (A, B, C, D, E, F, G, H, I, J, K, L, M) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M](func).lastOption
       .getOrElse(noArgWasCaptured())
 
@@ -924,8 +935,7 @@ trait ArgumentCapture {
     L: ClassTag,
     M: ClassTag,
     N: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1005,8 +1015,7 @@ trait ArgumentCapture {
     L: ClassTag,
     M: ClassTag,
     N: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1068,8 +1077,7 @@ trait ArgumentCapture {
     M: ClassTag,
     N: ClassTag,
     O: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1154,8 +1162,7 @@ trait ArgumentCapture {
     M: ClassTag,
     N: ClassTag,
     O: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1220,8 +1227,7 @@ trait ArgumentCapture {
     N: ClassTag,
     O: ClassTag,
     P: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1311,8 +1317,7 @@ trait ArgumentCapture {
     N: ClassTag,
     O: ClassTag,
     P: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1380,8 +1385,7 @@ trait ArgumentCapture {
     O: ClassTag,
     P: ClassTag,
     Q: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1476,8 +1480,7 @@ trait ArgumentCapture {
     O: ClassTag,
     P: ClassTag,
     Q: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1551,8 +1554,7 @@ trait ArgumentCapture {
     P: ClassTag,
     Q: ClassTag,
     R: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1652,8 +1654,7 @@ trait ArgumentCapture {
     P: ClassTag,
     Q: ClassTag,
     R: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1730,8 +1731,7 @@ trait ArgumentCapture {
     Q: ClassTag,
     R: ClassTag,
     S: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -1836,8 +1836,7 @@ trait ArgumentCapture {
     Q: ClassTag,
     R: ClassTag,
     S: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -1923,8 +1922,7 @@ trait ArgumentCapture {
     R: ClassTag,
     S: ClassTag,
     T: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -2034,8 +2032,7 @@ trait ArgumentCapture {
     R: ClassTag,
     S: ClassTag,
     T: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -2127,8 +2124,7 @@ trait ArgumentCapture {
     S: ClassTag,
     T: ClassTag,
     U: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -2243,8 +2239,7 @@ trait ArgumentCapture {
     S: ClassTag,
     T: ClassTag,
     U: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U](func).lastOption
       .getOrElse(noArgWasCaptured())
@@ -2345,8 +2340,7 @@ trait ArgumentCapture {
     T: ClassTag,
     U: ClassTag,
     V: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) => _
   ): Seq[(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V)] = {
     val argCaptorA = ArgumentCaptor.forClass(classTag[A].runtimeClass.asInstanceOf[Class[A]])
     val argCaptorB = ArgumentCaptor.forClass(classTag[B].runtimeClass.asInstanceOf[Class[B]])
@@ -2466,8 +2460,7 @@ trait ArgumentCapture {
     T: ClassTag,
     U: ClassTag,
     V: ClassTag
-  ](
-    func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) => _
+  ](func: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) => _
   ): (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V) =
     capturingAll[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V](func).lastOption
       .getOrElse(noArgWasCaptured())

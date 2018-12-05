@@ -138,8 +138,8 @@ class SyslogFormatter(
   val priority: Int = SyslogHandler.PRIORITY_USER,
   timezone: Option[String] = None,
   truncateAt: Int = 0,
-  truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit
-) extends Formatter(
+  truncateStackTracesAt: Int = Formatter.DefaultStackTraceSizeLimit)
+    extends Formatter(
       timezone,
       truncateAt,
       truncateStackTracesAt,
