@@ -19,6 +19,7 @@ package com.twitter.conversions
 import com.twitter.util.StorageUnit
 import scala.language.implicitConversions
 
+@deprecated("Use the AnyVal version `com.twitter.conversions.StorageUnitOps`", "2018-12-05")
 object storage {
   class RichWholeNumber(wrapped: Long) {
     def byte: StorageUnit = bytes

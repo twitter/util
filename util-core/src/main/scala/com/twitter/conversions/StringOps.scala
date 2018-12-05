@@ -1,27 +1,15 @@
-/*
- * Copyright 2010 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.twitter.conversions
 
-import scala.language.implicitConversions
 import scala.util.matching.Regex
 
-@deprecated("Use the AnyVal version `com.twitter.conversions.StringOps`", "2018-12-05")
-object string {
-  final class RichString(wrapped: String) {
+object StringOps {
+
+  // we intentionally don't unquote "\$" here, so it can be used to escape interpolation later.
+  private val UNQUOTE_RE = """\\(u[\dA-Fa-f]{4}|x[\dA-Fa-f]{2}|[/rnt\"\\])""".r
+
+  private val QUOTE_RE = "[\u0000-\u001f\u007f-\uffff\\\\\"]".r
+
+  implicit final class RichString(val string: String) extends AnyVal {
 
     /**
      * For every section of a string that matches a regular expression, call
@@ -49,22 +37,20 @@ object string {
       var offset = 0
       val out = new StringBuilder()
 
-      for (m <- re.findAllIn(wrapped).matchData) {
+      for (m <- re.findAllIn(string).matchData) {
         if (m.start > offset) {
-          out.append(wrapped.substring(offset, m.start))
+          out.append(string.substring(offset, m.start))
         }
 
         out.append(replace(m))
         offset = m.end
       }
 
-      if (offset < wrapped.length) {
-        out.append(wrapped.substring(offset))
+      if (offset < string.length) {
+        out.append(string.substring(offset))
       }
       out.toString
     }
-
-    private val QUOTE_RE = "[\u0000-\u001f\u007f-\uffff\\\\\"]".r
 
     /**
      * Quote a string so that unprintable chars (in ASCII) are represented by
@@ -94,9 +80,6 @@ object string {
       }
     }
 
-    // we intentionally don't unquote "\$" here, so it can be used to escape interpolation later.
-    private val UNQUOTE_RE = """\\(u[\dA-Fa-f]{4}|x[\dA-Fa-f]{2}|[/rnt\"\\])""".r
-
     /**
      * Unquote an ASCII string that has been quoted in a style like
      * [[quoteC()]] and convert it into a standard unicode string.
@@ -106,7 +89,7 @@ object string {
      *
      * @return an unquoted unicode string
      */
-    def unquoteC() = {
+    def unquoteC(): String = {
       regexSub(UNQUOTE_RE) { m =>
         val ch = m.group(1).charAt(0) match {
           // holy crap! this is terrible:
@@ -128,8 +111,8 @@ object string {
      * opposite of `Array[Byte]#hexlify`.
      */
     def unhexlify(): Array[Byte] = {
-      val buffer = new Array[Byte]((wrapped.length + 1) / 2)
-      wrapped.grouped(2).toSeq.zipWithIndex.foreach {
+      val buffer = new Array[Byte]((string.length + 1) / 2)
+      string.grouped(2).toSeq.zipWithIndex.foreach {
         case (substr, i) =>
           buffer(i) = Integer.parseInt(substr, 16).toByte
       }
@@ -143,21 +126,19 @@ object string {
       val b = array(i)
       val s = (b.toInt & 0xff).toHexString
       if (s.length < 2) {
-        out append '0'
+        out.append('0')
       }
-      out append s
+      out.append(s)
     }
     out.toString
   }
 
-  final class RichByteArray(wrapped: Array[Byte]) {
+  implicit final class RichByteArray(val bytes: Array[Byte]) extends AnyVal {
 
     /**
      * Turn an `Array[Byte]` into a string of hex digits.
      */
-    def hexlify: String = string.hexlify(wrapped, 0, wrapped.length)
+    def hexlify: String = StringOps.hexlify(bytes, 0, bytes.length)
   }
 
-  implicit def stringToConfiggyString(s: String): RichString = new RichString(s)
-  implicit def byteArrayToConfiggyByteArray(b: Array[Byte]): RichByteArray = new RichByteArray(b)
 }

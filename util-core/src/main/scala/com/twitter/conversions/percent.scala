@@ -17,6 +17,7 @@ import scala.language.implicitConversions
  *    -10.percent == -0.1
  * }}}
  */
+@deprecated("Use the AnyVal version `com.twitter.conversions.PercentOps`", "2018-12-05")
 object percent {
 
   private val BigDecimal100 = BigDecimal(100.0)

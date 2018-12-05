@@ -1,7 +1,6 @@
 package com.twitter.conversions
 
-@deprecated("Use `com.twitter.conversions.U64Ops`", "2018-12-05")
-object u64 {
+object U64Ops {
 
   /**
    * Parses this HEX string as an unsigned 64-bit long value. Be careful, this can throw
@@ -19,4 +18,5 @@ object u64 {
   implicit class LongOps(val self: Long) extends AnyVal {
     def toU64HexString: String = "%016x".format(self)
   }
+
 }

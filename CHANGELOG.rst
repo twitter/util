@@ -13,11 +13,37 @@ New Features
 * util-core: Provide a way to listen for stream termination to `c.t.util.Reader`, `Reader#onClose`
   which is satisfied when the stream is discarded or read until the end. ``PHAB_ID=D236311``
 
+* util-core: Conversions in `c.t.conversions` have new implementations
+  that follow a naming scheme of `SomethingOps`. Where possible the implementations
+  are `AnyVal` based avoiding allocations for the common usage pattern.
+  ``PHAB_ID=D249403``
+
+  - `percent` is now `PercentOps`
+  - `storage` is now `StorageUnitOps`
+  - `string` is now `StringOps`
+  - `thread` is now `ThreadOps`
+  - `time` is now `DurationOps`
+  - `u64` is now `U64Ops`
+
 Bug Fixes
 ~~~~~~~~~
 
 * util-core: Fixed a bug where tail would sometimes return Some empty AsyncStream instead of None.
   ``PHAB_ID=D241513``
+
+Deprecations
+~~~~~~~~~~~~
+
+* util-core: Conversions in `c.t.conversions` have been deprecated in favor of `SomethingOps`
+  versions. Where possible the implementations are `AnyVal` based and use implicit classes
+  instead of implicit conversions. ``PHAB_ID=D249403``
+
+  - `percent` is now `PercentOps`
+  - `storage` is now `StorageUnitOps`
+  - `string` is now `StringOps`
+  - `thread` is now `ThreadOps`
+  - `time` is now `DurationOps`
+  - `u64` is now `U64Ops`
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~

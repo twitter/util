@@ -22,6 +22,7 @@ import scala.language.implicitConversions
 /**
  * Implicits for turning a block of code into a Runnable or Callable.
  */
+@deprecated("Use `com.twitter.conversions.ThreadOps`", "2018-12-05")
 object thread {
   implicit def makeRunnable(f: => Unit): Runnable = new Runnable() { def run(): Unit = f }
 

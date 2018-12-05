@@ -3,9 +3,8 @@ package com.twitter.conversions
 import org.scalatest.FunSuite
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-class U64Test extends FunSuite with GeneratorDrivenPropertyChecks {
-
-  import u64._
+class U64OpsTest extends FunSuite with GeneratorDrivenPropertyChecks {
+  import com.twitter.conversions.U64Ops._
 
   test("toU64HextString") {
     forAll { l: Long =>

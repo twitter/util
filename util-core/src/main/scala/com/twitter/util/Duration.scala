@@ -5,7 +5,9 @@ import java.util.concurrent.TimeUnit
 
 object Duration extends TimeLikeOps[Duration] {
 
-  def fromNanoseconds(nanoseconds: Long): Duration = new Duration(nanoseconds)
+  def fromNanoseconds(nanoseconds: Long): Duration =
+    if (nanoseconds == 0L) Zero
+    else new Duration(nanoseconds)
 
   // This is needed for Java compatibility.
   override def fromFractionalSeconds(seconds: Double): Duration =
@@ -14,12 +16,12 @@ object Duration extends TimeLikeOps[Duration] {
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
 
-  val NanosPerMicrosecond = 1000L
-  val NanosPerMillisecond = NanosPerMicrosecond * 1000L
-  val NanosPerSecond = NanosPerMillisecond * 1000L
-  val NanosPerMinute = NanosPerSecond * 60
-  val NanosPerHour = NanosPerMinute * 60
-  val NanosPerDay = NanosPerHour * 24
+  val NanosPerMicrosecond: Long = 1000L
+  val NanosPerMillisecond: Long = NanosPerMicrosecond * 1000L
+  val NanosPerSecond: Long = NanosPerMillisecond * 1000L
+  val NanosPerMinute: Long = NanosPerSecond * 60
+  val NanosPerHour: Long = NanosPerMinute * 60
+  val NanosPerDay: Long = NanosPerHour * 24
 
   /**
    * Create a duration from a [[java.util.concurrent.TimeUnit]].
@@ -36,7 +38,7 @@ object Duration extends TimeLikeOps[Duration] {
   }
 
   // This is needed for Java compatibility.
-  override val Zero: Duration = fromNanoseconds(0)
+  override val Zero: Duration = new Duration(0)
 
   /**
    * Duration `Top` is greater than any other duration, except for

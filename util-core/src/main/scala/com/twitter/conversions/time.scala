@@ -20,6 +20,7 @@ import com.twitter.util.Duration
 import java.util.concurrent.TimeUnit
 import scala.language.implicitConversions
 
+@deprecated("Use the AnyVal version `com.twitter.conversions.DurationOps`", "2018-12-05")
 object time {
   class RichWholeNumber(wrapped: Long) {
     def nanoseconds: Duration = Duration(wrapped, TimeUnit.NANOSECONDS)
