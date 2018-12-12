@@ -1,21 +1,23 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Basics &#8212; Util 18.11.0 documentation</title>
+    
+    <title>Basics &#8212; Util 18.12.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '18.11.0',
+        VERSION:     '18.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -24,6 +26,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 18.12.0 documentation" href="../index.html" />
+    <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="User Guide" href="user_guide.html" />
     <link rel="prev" title="Overview" href="overview.html" />
    
@@ -41,7 +45,7 @@
   </script>
 
   </head>
-  <body>
+  <body role="document">
   
   
 
@@ -155,7 +159,7 @@ distribution of work batches.</p>
 </div>
 <div class="section" id="verbosity-levels">
 <h2>Verbosity Levels<a class="headerlink" href="#verbosity-levels" title="Permalink to this headline">¶</a></h2>
-<p>Each metric created via a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/StatsReceiver.scala">StatsReceiver</a> has a <strong>verbosity level</strong> (i.e., “debug” or “default”)
+<p>Each metric created via a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/StatsReceiver.scala">StatsReceiver</a> has a <strong>verbosity level</strong> (i.e., &#8220;debug&#8221; or &#8220;default&#8221;)
 attached to it. Distinguishing verbosity levels for metrics is optional and is up to a concrete
 implementation. Doing this, however, helps to separate debug metrics (only helpful in
 troubleshooting) from their operationally-required counterparts (provide visibility into a healthy

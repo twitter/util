@@ -202,6 +202,10 @@
                         <a class="object" href="StreamIO$.html" title=""></a>
                         <a href="StreamIO$.html" title="">StreamIO</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="StreamTermination$.html" title=""></a>
+                        <a class="class" href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw."></a>
+                        <a href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw.">StreamTermination</a>
+                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="TempDirectory$.html" title=""></a>
                         <a href="TempDirectory$.html" title="">TempDirectory</a>
@@ -357,6 +361,25 @@ and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"
 producer of this stream similarly how <span class="extype" name="Future.raise">Future.raise</span> used to propagate interrupts across
 future chains.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Although unnecessary, it's always safe to discard a fully-consumed stream.</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Reader#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]"></a><a id="onClose:Future[StreamTermination]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader.html#onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+until the end of the stream nor by discarding. This is useful for any extra resource cleanup
+that you must do once the stream is no longer being used.
+</p></div></div>
     </li><li name="com.twitter.io.Reader#read" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="read():com.twitter.util.Future[Option[A]]"></a><a id="read():Future[Option[A]]"></a>
       <span class="permalink">

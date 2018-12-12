@@ -139,10 +139,6 @@
                         <a href="ActivitySource.html" title="An ActivitySource provides access to observerable named variables.">ActivitySource</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="BelowThroughputException.html" title="Indicates a reader or writer dropped below the minimum required bytes per second threshold."></a>
-                        <a href="BelowThroughputException.html" title="Indicates a reader or writer dropped below the minimum required bytes per second threshold.">BelowThroughputException</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
                         <a class="class" href="CachingActivitySource.html" title="A convenient wrapper for caching the results returned by the underlying ActivitySource."></a>
                         <a href="CachingActivitySource.html" title="A convenient wrapper for caching the results returned by the underlying ActivitySource.">CachingActivitySource</a>
                       </li><li class="current-entities indented4">
@@ -153,10 +149,6 @@
                         <span class="separator"></span>
                         <a class="class" href="FilePollingActivitySource.html" title="An ActivitySource for observing the contents of a file with periodic polling."></a>
                         <a href="FilePollingActivitySource.html" title="An ActivitySource for observing the contents of a file with periodic polling.">FilePollingActivitySource</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="object" href="MinimumThroughput$.html" title="Readers and Writers that have minimum bytes per second throughput limits."></a>
-                        <a href="MinimumThroughput$.html" title="Readers and Writers that have minimum bytes per second throughput limits.">MinimumThroughput</a>
                       </li>
               </ul>
             </div>
@@ -236,27 +228,6 @@
       </span>
       
       <p class="shortcomment cmt">An ActivitySource provides access to observerable named variables.</p>
-    </li><li name="com.twitter.io.exp.BelowThroughputException" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BelowThroughputExceptionextendsTimeoutExceptionwithProductwithSerializable"></a><a id="BelowThroughputException:BelowThroughputException"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/io/exp/index.html#BelowThroughputExceptionextendsTimeoutExceptionwithProductwithSerializable" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a title="Indicates a reader or writer dropped below the minimum required bytes per second threshold." href="BelowThroughputException.html"><span class="name">BelowThroughputException</span></a><span class="params">(<span name="elapsed">elapsed: <a href="../../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="currentBps">currentBps: <a href="http://www.scala-lang.org/api/2.12.7/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>, <span name="expectedBps">expectedBps: <a href="http://www.scala-lang.org/api/2.12.7/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>)</span><span class="result"> extends <a href="../../util/TimeoutException.html" class="extype" name="com.twitter.util.TimeoutException">TimeoutException</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Indicates a <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">reader</a> or
-<a href="../Writer.html" class="extype" name="com.twitter.io.Writer">writer</a> dropped below
-the minimum required bytes per second threshold.</p><div class="fullcomment"><div class="comment cmt"><p>Indicates a <a href="../Reader.html" class="extype" name="com.twitter.io.Reader">reader</a> or
-<a href="../Writer.html" class="extype" name="com.twitter.io.Writer">writer</a> dropped below
-the minimum required bytes per second threshold.
-</p></div><dl class="paramcmts block"><dt class="param">elapsed</dt><dd class="cmt"><p>total time spent reading or writing.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="MinimumThroughput$.html" class="extype" name="com.twitter.io.exp.MinimumThroughput">MinimumThroughput</a></p></span></dd></dl></div>
     </li><li name="com.twitter.io.exp.CachingActivitySource" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CachingActivitySource[T]extendsActivitySource[T]"></a><a id="CachingActivitySource[T]:CachingActivitySource[T]"></a>
       <span class="permalink">
@@ -330,23 +301,6 @@ underlying ActivitySource.</p>
       </span>
       
       
-    </li><li name="com.twitter.io.exp.MinimumThroughput" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MinimumThroughput"></a><a id="MinimumThroughput:MinimumThroughput"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/io/exp/index.html#MinimumThroughput" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="Readers and Writers that have minimum bytes per second throughput limits." href="MinimumThroughput$.html"><span class="name">MinimumThroughput</span></a>
-      </span>
-      
-      <p class="shortcomment cmt"><a href="../Reader.html" class="extype" name="com.twitter.io.Reader">Readers</a> and <a href="../Writer.html" class="extype" name="com.twitter.io.Writer">Writers</a> that have minimum bytes
-per second throughput limits.</p>
     </li>
               </ol>
             </div>

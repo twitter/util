@@ -202,6 +202,10 @@
                         <a class="object" href="StreamIO$.html" title=""></a>
                         <a href="StreamIO$.html" title="">StreamIO</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="StreamTermination$.html" title=""></a>
+                        <a class="class" href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw."></a>
+                        <a href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw.">StreamTermination</a>
+                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="TempDirectory$.html" title=""></a>
                         <a href="TempDirectory$.html" title="">TempDirectory</a>
@@ -508,7 +512,7 @@ the resource has been fully relinquished.
         <span class="name">discard</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this reader: its output is no longer required.</p><p>This closes the underlying <code>InputStream</code>.
+      <p class="shortcomment cmt">Discard this reader: its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this reader: its output is no longer required.</p><p>This asynchronously closes the underlying <code>InputStream</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
@@ -692,6 +696,25 @@ the resource has been fully relinquished.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.InputStreamReader#onClose" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]"></a><a id="onClose:Future[StreamTermination]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/InputStreamReader.html#onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+until the end of the stream nor by discarding. This is useful for any extra resource cleanup
+that you must do once the stream is no longer being used.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="com.twitter.io.InputStreamReader#read" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="read():com.twitter.util.Future[Option[com.twitter.io.Buf]]"></a><a id="read():Future[Option[Buf]]"></a>
       <span class="permalink">

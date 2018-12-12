@@ -202,6 +202,10 @@
                         <a class="object" href="StreamIO$.html" title=""></a>
                         <a href="StreamIO$.html" title="">StreamIO</a>
                       </li><li class="current-entities indented3">
+                        <a class="object" href="StreamTermination$.html" title=""></a>
+                        <a class="class" href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw."></a>
+                        <a href="StreamTermination.html" title="Trait that indicates what kind of stream termination a stream saw.">StreamTermination</a>
+                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="TempDirectory$.html" title=""></a>
                         <a href="TempDirectory$.html" title="">TempDirectory</a>
@@ -361,9 +365,9 @@ up other tasks.
 resolve into a <span class="extype" name="Future">Future</span> failed with <code>cause</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd><dt>Note</dt><dd><span class="cmt"><p>Failing an already closed stream does not have an effect.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writer#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="onClose:com.twitter.util.Future[Unit]"></a><a id="onClose:Future[Unit]"></a>
+      <a id="onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]"></a><a id="onClose:Future[StreamTermination]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/io/AbstractWriter.html#onClose:com.twitter.util.Future[Unit]" title="Permalink">
+      <a href="../../../com/twitter/io/AbstractWriter.html#onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -372,11 +376,11 @@ resolve into a <span class="extype" name="Future">Future</span> failed with <cod
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+        <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Expose a <code>Future</code> that is satisfied when the stream is closed.</p><div class="fullcomment"><div class="comment cmt"><p>Expose a <code>Future</code> that is satisfied when the stream is closed. It may contain an error
-if the Writer is failed.
+      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
+being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li><li name="com.twitter.io.Writer#write" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="write(element:A):com.twitter.util.Future[Unit]"></a><a id="write(A):Future[Unit]"></a>

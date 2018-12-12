@@ -1,21 +1,23 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Basics &#8212; Util 18.11.0 documentation</title>
+    
+    <title>Basics &#8212; Util 18.12.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '18.11.0',
+        VERSION:     '18.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -24,6 +26,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 18.12.0 documentation" href="../index.html" />
+    <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
    
@@ -41,7 +45,7 @@
   </script>
 
   </head>
-  <body>
+  <body role="document">
   
   
 
@@ -71,7 +75,7 @@
 <h1>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="getting-the-result-out-of-a-try">
 <h2>Getting the result out of a Try<a class="headerlink" href="#getting-the-result-out-of-a-try" title="Permalink to this headline">¶</a></h2>
-<p>While trivial with Scala’s pattern matching it is
+<p>While trivial with Scala&#8217;s pattern matching it is
 less obvious from Java.</p>
 <p>Scala:</p>
 <div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">,</span> <span class="nc">Try</span><span class="o">}</span>
@@ -99,9 +103,9 @@ less obvious from Java.</p>
 </div>
 </div>
 <div class="section" id="conversions-between-twitter-s-try-and-scala-s-try">
-<h2>Conversions between Twitter’s Try and Scala’s Try<a class="headerlink" href="#conversions-between-twitter-s-try-and-scala-s-try" title="Permalink to this headline">¶</a></h2>
-<p>Scala’s <code class="docutils literal"><span class="pre">scala.util.Try</span></code>, <code class="docutils literal"><span class="pre">scala.util.Success</span></code>, and <code class="docutils literal"><span class="pre">scala.util.Failure</span></code>
-were based on Twitter’s <code class="docutils literal"><span class="pre">com.twitter.util.Try</span></code>, <code class="docutils literal"><span class="pre">com.twitter.util.Return</span></code>
+<h2>Conversions between Twitter&#8217;s Try and Scala&#8217;s Try<a class="headerlink" href="#conversions-between-twitter-s-try-and-scala-s-try" title="Permalink to this headline">¶</a></h2>
+<p>Scala&#8217;s <code class="docutils literal"><span class="pre">scala.util.Try</span></code>, <code class="docutils literal"><span class="pre">scala.util.Success</span></code>, and <code class="docutils literal"><span class="pre">scala.util.Failure</span></code>
+were based on Twitter&#8217;s <code class="docutils literal"><span class="pre">com.twitter.util.Try</span></code>, <code class="docutils literal"><span class="pre">com.twitter.util.Return</span></code>
 and <code class="docutils literal"><span class="pre">com.twitter.util.Throw</span></code> and converting to and from them is sometimes
 necessary.</p>
 <p>Scala:</p>
@@ -132,7 +136,7 @@ necessary.</p>
 <p>The current time, <code class="docutils literal"><span class="pre">com.twitter.util.Time.now</span></code>, can be manipulated for
 writing deterministic tests with <code class="docutils literal"><span class="pre">Time.withTimeAt</span></code>, <code class="docutils literal"><span class="pre">Time.withCurrentTimeFrozen</span></code>,
 <code class="docutils literal"><span class="pre">Time.withTimeFunction</span></code>, and <code class="docutils literal"><span class="pre">Time.sleep</span></code>.</p>
-<p>While <code class="docutils literal"><span class="pre">Time.now</span></code> is not a “global”, it is properly propagated through
+<p>While <code class="docutils literal"><span class="pre">Time.now</span></code> is not a &#8220;global&#8221;, it is properly propagated through
 to other code via the standard usage of <code class="docutils literal"><span class="pre">Locals</span></code> throughout <cite>util</cite>.
 Specifically, code using <code class="docutils literal"><span class="pre">Future</span></code>s, <code class="docutils literal"><span class="pre">FuturePool</span></code>s, and <code class="docutils literal"><span class="pre">MockTimer</span></code>s
 will see the manipulated <code class="docutils literal"><span class="pre">Time.now</span></code>.</p>
@@ -156,8 +160,8 @@ will see the manipulated <code class="docutils literal"><span class="pre">Time.n
 <div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Duration</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func0</span><span class="o">;</span>
 
 <span class="n">Time</span> <span class="n">time</span> <span class="o">=</span> <span class="n">Time</span><span class="o">.</span><span class="na">fromMilliseconds</span><span class="o">(</span><span class="mi">123456L</span><span class="o">);</span>
 <span class="n">Time</span><span class="o">.</span><span class="na">withTimeAt</span><span class="o">(</span><span class="n">time</span><span class="o">,</span> <span class="n">func</span><span class="o">(</span><span class="n">timeControl</span> <span class="o">-&gt;</span> <span class="o">{</span>
@@ -209,8 +213,8 @@ which runs all <code class="docutils literal"><span class="pre">TimerTasks</span
 <span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.MockTimer</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.Time</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func0</span><span class="o">;</span>
 
 <span class="n">Time</span><span class="o">.</span><span class="na">withCurrentTimeFrozen</span><span class="o">(</span><span class="n">func</span><span class="o">(</span><span class="n">timeControl</span> <span class="o">-&gt;</span> <span class="o">{</span>
   <span class="n">MockTimer</span> <span class="n">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockTimer</span><span class="o">();</span>
@@ -254,7 +258,7 @@ which runs all <code class="docutils literal"><span class="pre">TimerTasks</span
   <ul>
 <li><a class="reference internal" href="#">Basics</a><ul>
 <li><a class="reference internal" href="#getting-the-result-out-of-a-try">Getting the result out of a Try</a></li>
-<li><a class="reference internal" href="#conversions-between-twitter-s-try-and-scala-s-try">Conversions between Twitter’s Try and Scala’s Try</a></li>
+<li><a class="reference internal" href="#conversions-between-twitter-s-try-and-scala-s-try">Conversions between Twitter&#8217;s Try and Scala&#8217;s Try</a></li>
 <li><a class="reference internal" href="#controlling-time-for-tests">Controlling Time for tests</a><ul>
 <li><a class="reference internal" href="#controlling-timers">Controlling Timers</a></li>
 </ul>

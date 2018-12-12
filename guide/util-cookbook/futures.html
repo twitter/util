@@ -1,21 +1,23 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Futures &#8212; Util 18.11.0 documentation</title>
+    
+    <title>Futures &#8212; Util 18.12.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '18.11.0',
+        VERSION:     '18.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -24,6 +26,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 18.12.0 documentation" href="../index.html" />
+    <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Input/Output" href="io.html" />
     <link rel="prev" title="Basics" href="basics.html" />
    
@@ -41,7 +45,7 @@
   </script>
 
   </head>
-  <body>
+  <body role="document">
   
   
 
@@ -76,10 +80,10 @@ and the <a class="reference external" href="https://twitter.github.io/effectives
 in Effective Scala for details on concurrent programming with futures.</p>
 </div>
 <div class="section" id="conversions-between-twitter-s-future-and-scala-s-future">
-<h2>Conversions between Twitter’s Future and Scala’s Future<a class="headerlink" href="#conversions-between-twitter-s-future-and-scala-s-future" title="Permalink to this headline">¶</a></h2>
-<p>Twitter’s <code class="docutils literal"><span class="pre">com.twitter.util.Future</span></code> is similar to, but
+<h2>Conversions between Twitter&#8217;s Future and Scala&#8217;s Future<a class="headerlink" href="#conversions-between-twitter-s-future-and-scala-s-future" title="Permalink to this headline">¶</a></h2>
+<p>Twitter&#8217;s <code class="docutils literal"><span class="pre">com.twitter.util.Future</span></code> is similar to, but
 <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html#futures">predates</a>,
-<a class="reference external" href="http://docs.scala-lang.org/overviews/core/futures.html">Scala’s</a>
+<a class="reference external" href="http://docs.scala-lang.org/overviews/core/futures.html">Scala&#8217;s</a>
 <code class="docutils literal"><span class="pre">scala.concurrent.Future</span></code> and as such they are not directly compatible
 (e.g. support for continuation-local variables and interruptibility).</p>
 <p>You can use the <a class="reference external" href="https://github.com/twitter/bijection">Twitter Bijection</a>
@@ -142,7 +146,7 @@ have a memory leak. You can create a bounded <code class="docutils literal"><spa
 <p>Java:</p>
 <div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">twitter</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Function</span><span class="o">.</span><span class="na">func0</span><span class="o">;</span>
 
 <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">futureResult</span> <span class="o">=</span> <span class="n">FuturePools</span><span class="o">.</span><span class="na">unboundedPool</span><span class="o">().</span><span class="na">apply</span><span class="o">(</span>
   <span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">someIO</span><span class="o">());</span>
@@ -153,7 +157,7 @@ have a memory leak. You can create a bounded <code class="docutils literal"><spa
 <div class="section" id="future-recursion">
 <h2>Future Recursion<a class="headerlink" href="#future-recursion" title="Permalink to this headline">¶</a></h2>
 <p>Often there is a need for a future to recurse and call itself.
-Twitter’s <code class="docutils literal"><span class="pre">Future</span></code>s implement something akin to tail-call elimination
+Twitter&#8217;s <code class="docutils literal"><span class="pre">Future</span></code>s implement something akin to tail-call elimination
 which means you will not see a stack overflow with code written
 in this manner.</p>
 <p>Scala:</p>
@@ -244,8 +248,8 @@ most use cases <code class="docutils literal"><span class="pre">acquire()</span>
 </div>
 <div class="section" id="caching-futures">
 <h2>Caching Futures<a class="headerlink" href="#caching-futures" title="Permalink to this headline">¶</a></h2>
-<p>It’s often useful to have an in-process cache of <code class="docutils literal"><span class="pre">com.twitter.util.Future</span></code>s.
-However, it’s tricky to get right especially around the handling of eviction of
+<p>It&#8217;s often useful to have an in-process cache of <code class="docutils literal"><span class="pre">com.twitter.util.Future</span></code>s.
+However, it&#8217;s tricky to get right especially around the handling of eviction of
 failed <code class="docutils literal"><span class="pre">Futures</span></code> and interruption of any <code class="docutils literal"><span class="pre">Futures</span></code> returned. Prefer using
 <code class="docutils literal"><span class="pre">com.twitter.cache.FutureCache.default()</span></code> possibly combined with a
 <a class="reference external" href="https://github.com/ben-manes/caffeine">Caffeine cache</a>
@@ -310,7 +314,7 @@ for the correct behavior.</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Futures</a><ul>
-<li><a class="reference internal" href="#conversions-between-twitter-s-future-and-scala-s-future">Conversions between Twitter’s Future and Scala’s Future</a></li>
+<li><a class="reference internal" href="#conversions-between-twitter-s-future-and-scala-s-future">Conversions between Twitter&#8217;s Future and Scala&#8217;s Future</a></li>
 <li><a class="reference internal" href="#blocking-or-synchronous-work">Blocking or synchronous work</a></li>
 <li><a class="reference internal" href="#future-recursion">Future Recursion</a></li>
 <li><a class="reference internal" href="#limiting-concurrency-via-semaphores-and-mutexes">Limiting concurrency via semaphores and mutexes</a></li>
