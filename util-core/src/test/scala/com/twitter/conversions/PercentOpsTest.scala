@@ -33,12 +33,12 @@ class PercentOpsTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("assorted percentages") {
     forAll(arbitrary[Int]) { i =>
-      assert(new RichDouble(i).percent == i / 100.0)
+      assert(new RichPercent(i).percent == i / 100.0)
     }
 
     // We're not as accurate when we get into high double-digit exponents, but that's acceptable.
     forAll(Gen.choose(-10000D, 10000D)) { d =>
-      assert(doubleEq(new RichDouble(d).percent, d / 100.0))
+      assert(doubleEq(new RichPercent(d).percent, d / 100.0))
     }
   }
 

@@ -21,7 +21,7 @@ object PercentOps {
 
   private val BigDecimal100 = BigDecimal(100.0)
 
-  implicit class RichDouble(val value: Double) extends AnyVal {
+  implicit class RichPercent(val value: Double) extends AnyVal {
     // convert wrapped to BigDecimal to preserve precision when dividing Doubles
     def percent: Double =
       if (value.equals(Double.NaN)

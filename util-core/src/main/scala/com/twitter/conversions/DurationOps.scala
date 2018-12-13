@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  */
 object DurationOps {
 
-  implicit class RichLong(val numNanos: Long) extends AnyVal {
+  implicit class RichDuration(val numNanos: Long) extends AnyVal {
     def nanoseconds: Duration = Duration(numNanos, TimeUnit.NANOSECONDS)
     def nanosecond: Duration = nanoseconds
     def microseconds: Duration = Duration(numNanos, TimeUnit.MICROSECONDS)

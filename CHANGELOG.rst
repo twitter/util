@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+  * util-core: The implicit conversions classes in `c.t.conversions.SomethingOps` have been
+    renamed to have unique names. This allows them to be used together with wildcard imports.
+    See Github issue (https://github.com/twitter/util/issues/239). ``PHAB_ID=D252462``
+
 18.12.0
 -------
 

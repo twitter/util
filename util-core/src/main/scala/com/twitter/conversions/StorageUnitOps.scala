@@ -16,7 +16,7 @@ import com.twitter.util.StorageUnit
  */
 object StorageUnitOps {
 
-  implicit class RichLong(val numBytes: Long) extends AnyVal {
+  implicit class RichStorageUnit(val numBytes: Long) extends AnyVal {
     def byte: StorageUnit = bytes
     def bytes: StorageUnit = StorageUnit.fromBytes(numBytes)
     def kilobyte: StorageUnit = kilobytes
