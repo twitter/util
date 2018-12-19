@@ -309,7 +309,8 @@ object Reader {
   }
 
   /**
-   * Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+   * Copy elements from many Readers to a Writer. Readers will be discarded if
+   * `copy` is cancelled (discarding the target). The Writer is unmanaged, the
    * caller is responsible for finalization and error handling, e.g.:
    *
    * {{{
@@ -320,9 +321,9 @@ object Reader {
     readers.foreachF(Reader.copy(_, target))
 
   /**
-   * Copy the bytes from a Reader to a Writer in chunks of size `n`. The Writer
-   * is unmanaged, the caller is responsible for finalization and error
-   * handling, e.g.:
+   * Copy elements from a Reader to a Writer. The Reader will be discarded if
+   * `copy` is cancelled (discarding the writer). The Writer is unmanaged, the caller
+   * is responsible for finalization and error handling, e.g.:
    *
    * {{{
    * Reader.copy(r, w, n) ensure w.close()
@@ -337,7 +338,13 @@ object Reader {
     val p = new Promise[Unit]
     // We have to do this because discarding the writer doesn't interrupt read
     // operations, it only fails the next write operation.
-    loop().proxyTo(p)
+    loop().respond {
+      case t @ Throw(ex) if ex.isInstanceOf[ReaderDiscardedException] =>
+        r.discard()
+        p.updateIfEmpty(t)
+      case a =>
+        p.updateIfEmpty(a)
+    }
     p.setInterruptHandler { case exc => r.discard() }
     p
   }

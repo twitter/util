@@ -79,6 +79,34 @@ class ReaderTest
     }
   }
 
+  test("Reader.copy - discard the source if cancelled") {
+    var cancelled = false
+    val src = new Reader[Int] {
+      def read(): Future[Option[Int]] = Future.value(Some(1))
+      def discard(): Unit = cancelled = true
+      def onClose: Future[StreamTermination] = Future.never
+    }
+    val dest = new Pipe[Int]
+    Reader.copy(src, dest)
+    assert(await(dest.read()) == Some(1))
+    dest.discard()
+    assert(cancelled)
+  }
+
+  test("Reader.copy - discard the source if interrupted") {
+    var cancelled = false
+    val src = new Reader[Int] {
+      def read(): Future[Option[Int]] = Future.value(Some(1))
+      def discard(): Unit = cancelled = true
+      def onClose: Future[StreamTermination] = Future.never
+    }
+    val dest = new Pipe[Int]
+    val f = Reader.copy(src, dest)
+    assert(await(dest.read()) == Some(1))
+    f.raise(new Exception("Freeze!"))
+    assert(cancelled)
+  }
+
   test("Reader.chunked") {
     val stringAndChunk = for {
       s <- Gen.alphaStr
