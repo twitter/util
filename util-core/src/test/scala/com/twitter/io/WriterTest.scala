@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise}
 import java.io.{ByteArrayOutputStream, OutputStream}
 import org.scalatest.{FunSuite, Matchers}

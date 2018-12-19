@@ -1,7 +1,7 @@
 package com.twitter.jvm
 
 import com.twitter.conversions.StorageUnitOps._
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.lang.management.ManagementFactory
 import java.util.logging.{Level, Logger}

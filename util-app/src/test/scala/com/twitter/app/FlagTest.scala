@@ -1,7 +1,7 @@
 package com.twitter.app
 
 import com.twitter.app.SolarSystemPlanets._
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Awaitable}
 import org.scalatest.FunSuite
 import scala.collection.mutable

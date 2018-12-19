@@ -6,7 +6,7 @@ import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 
 @RunWith(classOf[JUnitRunner])
 class PoolTest extends WordSpec {

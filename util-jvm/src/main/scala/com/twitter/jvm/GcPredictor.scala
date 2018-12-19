@@ -1,6 +1,6 @@
 package com.twitter.jvm
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Duration, Time, Timer}
 
 /**

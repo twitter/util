@@ -8,7 +8,7 @@ import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, MockTimer, Promise, Return, Time}
 
 class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {

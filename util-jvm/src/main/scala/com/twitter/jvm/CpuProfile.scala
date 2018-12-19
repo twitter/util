@@ -6,7 +6,7 @@ import java.nio.{ByteBuffer, ByteOrder}
 
 import scala.collection.mutable
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Duration, Future, Promise, Stopwatch, Time}
 
 /**

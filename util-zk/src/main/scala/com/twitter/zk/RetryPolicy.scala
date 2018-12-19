@@ -2,7 +2,7 @@ package com.twitter.zk
 
 import org.apache.zookeeper.KeeperException
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Duration, Future, Timer}
 
 /** Pluggable retry strategy. */

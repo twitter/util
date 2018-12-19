@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import org.mockito.Matchers.any

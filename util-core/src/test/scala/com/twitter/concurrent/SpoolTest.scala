@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.concurrent.Spool.{*::, seqToSpool}
-import com.twitter.conversions.time.intToTimeableNumber
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
 import org.junit.runner.RunWith

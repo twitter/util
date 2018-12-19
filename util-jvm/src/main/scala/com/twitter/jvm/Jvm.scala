@@ -1,7 +1,7 @@
 package com.twitter.jvm
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.lang.management.ManagementFactory
 import java.util.concurrent.{ConcurrentHashMap, Executors, ScheduledExecutorService, TimeUnit}

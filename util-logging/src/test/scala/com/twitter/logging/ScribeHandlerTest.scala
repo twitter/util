@@ -18,7 +18,7 @@ package com.twitter
 package logging
 
 import com.twitter.conversions.StringOps._
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
 import java.net.Socket

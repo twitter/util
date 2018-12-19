@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Promise, Await}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite

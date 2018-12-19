@@ -43,7 +43,7 @@ val collUtils = "com.twitter" %% "util-collection" % "18.12.0"
 ## Time
 
 ```scala
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 
 val duration1 = 1.second
 val duration2 = 2.minutes
@@ -64,7 +64,7 @@ amount.inKilobytes // => 8192L
 A Non-actor re-implementation of Scala Futures.
 
 ```scala
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise}
 
 val f = new Promise[Int]

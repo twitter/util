@@ -1,6 +1,6 @@
 package com.twitter.cache
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise, Time}
 import org.mockito.Mockito._
 import org.scalatest._

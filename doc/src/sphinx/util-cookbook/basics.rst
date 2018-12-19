@@ -85,7 +85,7 @@ Scala:
 
 .. code-block:: scala
 
-    import com.twitter.conversions.time._
+    import com.twitter.conversions.DurationOps._
     import com.twitter.util.{FuturePool, Time}
 
     val time = Time.fromMilliseconds(123456L)
@@ -135,7 +135,7 @@ Scala:
 
 .. code-block:: scala
 
-    import com.twitter.conversions.time._
+    import com.twitter.conversions.DurationOps._
     import com.twitter.util.{Future, MockTimer, Time}
 
     Time.withCurrentTimeFrozen { timeControl =>

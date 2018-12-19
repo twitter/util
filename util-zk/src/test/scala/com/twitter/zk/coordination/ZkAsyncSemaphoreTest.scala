@@ -1,7 +1,7 @@
 package com.twitter.zk.coordination
 
 import com.twitter.concurrent.Permit
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import com.twitter.zk.{NativeConnector, RetryPolicy, ZkClient, ZNode}
 import java.util.concurrent.ConcurrentLinkedQueue

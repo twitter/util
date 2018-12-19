@@ -289,7 +289,7 @@ private[util] object DurationBox {
  * using the time conversions:
  *
  * {{{
- * import com.twitter.conversions.time._
+ * import com.twitter.conversions.DurationOps._
  *
  * 3.days+4.nanoseconds
  * }}}

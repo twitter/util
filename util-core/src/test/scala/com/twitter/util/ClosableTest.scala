@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.conversions.time.intToTimeableNumber
+import com.twitter.conversions.DurationOps._
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}

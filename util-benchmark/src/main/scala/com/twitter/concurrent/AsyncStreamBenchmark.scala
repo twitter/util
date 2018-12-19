@@ -1,6 +1,6 @@
 package com.twitter.concurrent
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, StdBenchAnnotations}
 import org.openjdk.jmh.annotations._
 

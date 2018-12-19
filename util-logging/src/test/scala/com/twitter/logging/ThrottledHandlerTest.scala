@@ -16,7 +16,7 @@
 
 package com.twitter.logging
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
 import org.scalatest.{BeforeAndAfter, WordSpec}

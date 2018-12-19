@@ -1,6 +1,6 @@
 package com.twitter.jvm
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.io.ByteArrayOutputStream
 import org.junit.runner.RunWith

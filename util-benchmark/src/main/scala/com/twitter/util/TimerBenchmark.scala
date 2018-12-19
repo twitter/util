@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 

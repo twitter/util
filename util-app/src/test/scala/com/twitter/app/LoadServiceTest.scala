@@ -1,7 +1,7 @@
 package com.twitter.app
 
 import com.twitter.app.LoadService.Binding
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.util.loadServiceDenied
 import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
 import com.twitter.util.{Await, Future, FuturePool}

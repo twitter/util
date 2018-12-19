@@ -17,7 +17,7 @@
 package com.twitter.logging
 package config
 
-import com.twitter.conversions.time._
+import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Config, Duration, NetUtil}
 
 @deprecated("use LoggerFactory", "6.12.1")

@@ -62,7 +62,7 @@ class ActivitySourceTest extends FunSuite with BeforeAndAfter {
 
   test("FilePollingActivitySource") {
     Time.withCurrentTimeFrozen { timeControl =>
-      import com.twitter.conversions.time._
+      import com.twitter.conversions.DurationOps._
       implicit val timer = new MockTimer
       val file = new FilePollingActivitySource(1.microsecond, FuturePool.immediatePool)
       val buf = file.get(tempFile)

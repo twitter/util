@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference
  *   def getData(): Future[T] = { ... }
  *
  * can be memoized with a TTL of 1 hour as follows:
- *   import com.twitter.conversions.time._
+ *   import com.twitter.conversions.DurationOps._
  *   import com.twitter.cache.Refresh
  *   val getData: () => Future[T] = Refresh.every(1.hour) { ... }
  */
