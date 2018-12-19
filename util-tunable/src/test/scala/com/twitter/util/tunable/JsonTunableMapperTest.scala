@@ -3,7 +3,7 @@ package com.twitter.util.tunable
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.twitter.conversions.storage._
+import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.time._
 import com.twitter.util.{Duration, Return, StorageUnit, Throw}
 import org.scalatest.FunSuite

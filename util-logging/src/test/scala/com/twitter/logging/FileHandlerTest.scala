@@ -21,7 +21,7 @@ import java.util.{Calendar, Date, logging => javalog}
 import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
-import com.twitter.conversions.storage._
+import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.time._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time

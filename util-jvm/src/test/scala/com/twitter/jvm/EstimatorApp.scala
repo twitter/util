@@ -12,7 +12,7 @@ package com.twitter.jvm
  * in order: current time, next gc, estimated next GC.
  */
 object EstimatorApp extends App {
-  import com.twitter.conversions.storage._
+  import com.twitter.conversions.StorageUnitOps._
 
   val estimator = args match {
     case Array("kalman", n, error) =>

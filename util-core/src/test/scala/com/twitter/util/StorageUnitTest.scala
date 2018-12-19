@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import com.twitter.conversions.storage._
+import com.twitter.conversions.StorageUnitOps._
 
 @RunWith(classOf[JUnitRunner])
 class StorageUnitTest extends FunSuite {

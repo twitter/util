@@ -73,7 +73,7 @@ object StorageUnit {
  * from `Long` and `Int` to construct instances.
  *
  * {{{
- *   import com.twitter.conversions.storage._
+ *   import com.twitter.conversions.StorageUnitOps._
  *   import com.twitter.util.StorageUnit
  *
  *   val size: StorageUnit = 10.kilobytes

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 
-import com.twitter.conversions.string._
+import com.twitter.conversions.StringOps._
 
 @RunWith(classOf[JUnitRunner])
 class FormatterTest extends WordSpec {

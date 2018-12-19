@@ -1,6 +1,6 @@
 package com.twitter.jvm
 
-import com.twitter.conversions.storage._
+import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.time._
 import com.twitter.util.Time
 import java.lang.management.ManagementFactory

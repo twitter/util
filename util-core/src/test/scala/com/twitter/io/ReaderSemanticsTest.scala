@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
-import com.twitter.conversions.storage._
+import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.time._
 import com.twitter.util.{Future, Return, Await, Throw}
 import java.io.ByteArrayInputStream

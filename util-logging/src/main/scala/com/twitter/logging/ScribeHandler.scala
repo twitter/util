@@ -25,7 +25,7 @@ import java.util.concurrent.{ArrayBlockingQueue, LinkedBlockingQueue, TimeUnit, 
 import java.util.{Arrays, logging => javalog}
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import com.twitter.conversions.string._
+import com.twitter.conversions.StringOps._
 import com.twitter.conversions.time._
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 import com.twitter.util.{Duration, Time}

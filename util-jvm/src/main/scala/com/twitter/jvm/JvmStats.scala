@@ -1,6 +1,6 @@
 package com.twitter.jvm
 
-import com.twitter.conversions.string._
+import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.{BroadcastStatsReceiver, StatsReceiver}
 import java.lang.management.{ManagementFactory, BufferPoolMXBean}
 import scala.collection.JavaConverters._
