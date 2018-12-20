@@ -49,6 +49,14 @@ object JvmStats {
       case _ =>
     }
 
+    val compilerStats = stats.scope("compiler");
+    gauges.add(compilerStats.addGauge("graal") {
+      System.getProperty("jvmci.Compiler") match {
+        case "graal" => 1
+        case _ => 0
+      }
+    })
+
     ManagementFactory.getCompilationMXBean() match {
       case null =>
       case compilation =>
