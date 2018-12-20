@@ -75,7 +75,7 @@ import scala.collection.mutable.ListBuffer
  *     }
  * }}}
  */
-trait Reader[+A] {
+trait Reader[+A] { self =>
 
   /**
    * Asynchronously read the next element of this stream. Returned [[Future]] will resolve into
@@ -102,7 +102,35 @@ trait Reader[+A] {
    * that you must do once the stream is no longer being used.
    */
   def onClose: Future[StreamTermination]
+
+  /**
+   * Construct a new Reader by applying `f` to every item read from this Reader
+   * @param f the function constructs a new Reader[B] from the value of this Reader.read
+   */
+  final def flatMap[B](f: A => Reader[B]): Reader[B] = {
+    val target = Reader.concat(Reader.toAsyncStream(map(f)))
+    target.onClose.respond {
+      case Return(StreamTermination.Discarded) => self.discard()
+      case _ => ()
+    }
+    target
+  }
+
+  /**
+   * Construct a new Reader by applying `f` to every item read from this Reader
+   * @param f the function transforms data of type A to B
+   */
+  final def map[B](f: A => B): Reader[B] = new Reader[B] {
+    def read(): Future[Option[B]] = self.read().map(oa => oa.map(f))
+    def discard(): Unit = self.discard()
+    def onClose: Future[StreamTermination] = self.onClose
+  }
 }
+
+/**
+ * Abstract `Reader` class for Java compatibility.
+ */
+abstract class AbstractReader[+A] extends Reader[A]
 
 /**
  * Indicates that a given stream was discarded by the Reader's consumer.
@@ -180,6 +208,39 @@ object Reader {
 
     def onClose: Future[StreamTermination] = r.onClose
   }
+
+  /**
+   * Construct a `Reader` from a `Future`
+   */
+  def fromFuture[A](fa: Future[A]): Reader[A] = new Reader[A] {
+    private[this] val closep = Promise[StreamTermination]()
+
+    def read(): Future[Option[A]] = {
+      if (!closep.isDefined) {
+        closep.updateIfEmpty(StreamTermination.FullyRead.Return)
+        fa.map(a => Some(a))
+      } else {
+        closep.flatMap {
+          case StreamTermination.FullyRead => Future.None
+          case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
+        }
+      }
+    }
+
+    def discard(): Unit = closep.updateIfEmpty(StreamTermination.Discarded.Return)
+
+    def onClose: Future[StreamTermination] = closep
+  }
+
+  /**
+   * Construct a `Reader` from a value `a`
+   */
+  def value[A](a: A): Reader[A] = fromFuture[A](Future.value(a))
+
+  /**
+   * Construct a `Reader` from an exception `e`
+   */
+  def exception[A](e: Throwable): Reader[A] = fromFuture[A](Future.exception(e))
 
   /**
    * Read the entire bytestream presented by `r`.
@@ -335,16 +396,15 @@ object Reader {
         case None => Future.Done
         case Some(buf) => w.write(buf) before loop()
       }
+
+    w.onClose.respond {
+      case Return(StreamTermination.Discarded) => r.discard()
+      case _ => ()
+    }
     val p = new Promise[Unit]
     // We have to do this because discarding the writer doesn't interrupt read
     // operations, it only fails the next write operation.
-    loop().respond {
-      case t @ Throw(ex) if ex.isInstanceOf[ReaderDiscardedException] =>
-        r.discard()
-        p.updateIfEmpty(t)
-      case a =>
-        p.updateIfEmpty(a)
-    }
+    loop().proxyTo(p)
     p.setInterruptHandler { case exc => r.discard() }
     p
   }

@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+  * util-core: Added Reader.map/flatMap to transform Reader[A] to Reader[B]. Added `fromFuture()`
+    and `value()` in the Reader object to construct a new Reader. ``PHAB_ID=D252165``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 

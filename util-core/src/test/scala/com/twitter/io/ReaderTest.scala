@@ -5,6 +5,7 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.util.{Await, Awaitable, Future, Promise}
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
 import org.scalacheck.{Arbitrary, Gen}
@@ -12,6 +13,7 @@ import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FunSuite, Matchers}
 import scala.annotation.tailrec
+import scala.collection.mutable.ArrayBuffer
 
 class ReaderTest
     extends FunSuite
@@ -50,6 +52,22 @@ class ReaderTest
       await(r.read())
     }
   }
+
+  private def readAllString(r: Reader[String]): Future[String] = {
+    def loop(left: StringBuilder): Future[String] = {
+      r.read.flatMap {
+        case Some(right) => loop(left.append(right))
+        case _ => Future.value(left.toString())
+      }
+    }
+    loop(StringBuilder.newBuilder)
+  }
+
+  private def writeLoop[T](from: List[T], to: Writer[T]): Future[Unit] =
+    from match {
+      case h :: t => to.write(h).flatMap(_ => writeLoop(t, to))
+      case _ => to.close()
+    }
 
   test("Reader.copy - source and destination equality") {
     forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
@@ -282,6 +300,119 @@ class ReaderTest
     val r = Reader.framed(BufReader(Buf.U32BE(0)), new ReaderTest.U32BEFramer())
     assert(await(r.read()).contains(Buf.Empty))
     assert(await(r.read()).isEmpty)
+  }
+
+  test("Reader.flatMap") {
+    forAll { s: String =>
+      val reader1 = Reader.fromBuf(Buf.Utf8(s), 8)
+      val reader2 = reader1.flatMap { buf =>
+        val pipe = new Pipe[Buf]
+        pipe.write(buf).flatMap(_ => pipe.write(Buf.Empty)).flatMap(_ => pipe.close())
+        pipe
+      }
+
+      assert(Buf.decodeString(await(Reader.readAll(reader2)), JChar.UTF_8) == s)
+    }
+  }
+
+  test("Reader.flatMap: discard the intermediate will discard the output reader") {
+    val reader1 = Reader.fromBuf(Buf.Utf8("hi"), 8)
+    val reader2 = reader1.flatMap { buf =>
+      val pipe = new Pipe[Buf]
+      pipe.write(buf).map(_ => pipe.discard())
+      pipe
+    }
+
+    await(reader2.read())
+    intercept[ReaderDiscardedException] {
+      await(reader2.read())
+    }
+  }
+
+  test("Reader.flatMap: discard the origin reader will discard the output reader") {
+    val reader1 = Reader.fromBuf(Buf.Utf8("hi"), 1)
+    val samples = ArrayBuffer.empty[Reader[Buf]]
+    val reader2 = reader1.flatMap { buf =>
+      val pipe = new Pipe[Buf]
+      pipe.write(buf).map(_ => samples += pipe).flatMap(_ => pipe.close())
+      pipe
+    }
+
+    await(reader2.read())
+    reader1.discard()
+    await(reader2.read())
+
+    intercept[ReaderDiscardedException] {
+      println(await(reader2.read()))
+    }
+
+    assert(samples.size == 2)
+    assert(await(samples(0).onClose) == StreamTermination.FullyRead)
+    assert(await(samples(1).onClose) == StreamTermination.FullyRead)
+  }
+
+  test(
+    "Reader.flatMap: discard the output reader will discard " +
+      "the origin and intermediate") {
+    val reader1 = Reader.fromBuf(Buf.Utf8("hello"), 1)
+    val samples = ArrayBuffer.empty[Reader[Buf]]
+    val reader2 = reader1.flatMap { buf =>
+      val pipe = new Pipe[Buf]
+      pipe.write(buf).map(_ => samples += pipe).flatMap(_ => pipe.close())
+      pipe
+    }
+
+    await(reader2.read())
+    reader2.discard()
+
+    assert(samples.size == 2)
+    assert(await(samples(0).onClose) == StreamTermination.FullyRead)
+    assert(await(samples(1).onClose) == StreamTermination.Discarded)
+
+    intercept[ReaderDiscardedException] {
+      await(reader1.read())
+    }
+  }
+
+  test("Reader.value") {
+    forAll { a: AnyVal =>
+      val r = Reader.value(a)
+      assert(await(r.read()) == Some(a))
+      assert(await(r.read()) == None)
+    }
+  }
+
+  test("Reader.exception") {
+    forAll { ex: Exception =>
+      val r = Reader.exception(ex)
+      intercept[Exception] {
+        await(r.read())
+      }
+      assert(await(r.read()) == None)
+    }
+  }
+
+  test("Reader.fromFuture") {
+    // read regularly
+    val r1 = Reader.fromFuture(Future.value(1))
+    assert(await(r1.read()) == Some(1))
+    assert(await(r1.read()) == None)
+
+    // discard
+    val r2 = Reader.fromFuture(Future.value(2))
+    r2.discard()
+    intercept[ReaderDiscardedException] {
+      await(r2.read())
+    }
+  }
+
+  test("Reader.map") {
+    forAll { l: List[Int] =>
+      val pipe = new Pipe[Int]
+      writeLoop(l, pipe)
+      val reader2 = pipe.map(_.toString)
+      assert(await(readAllString(reader2)) == l.mkString)
+    }
   }
 }
 
