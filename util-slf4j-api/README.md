@@ -77,7 +77,7 @@ Or simply instantiate a new logger:
 
 ```
 class MyJavaClass extends MyBaseScalaClass {
-  private static final Logger logger = new Logger(this.getClass);
+  private static final Logger logger = new Logger(MyJavaClass.class);
 
   ...
 
