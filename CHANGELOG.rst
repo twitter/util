@@ -20,6 +20,9 @@ Breaking API Changes
     renamed to have unique names. This allows them to be used together with wildcard imports.
     See Github issue (https://github.com/twitter/util/issues/239). ``PHAB_ID=D252462``
 
+  * util-core: Both `c.t.io.Writer.FailingWriter` and `c.t.io.Writer.fail` were removed. Build your
+    own instance should you need to.  ``PHAB_ID=D256615``
+
 18.12.0
 -------
 

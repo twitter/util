@@ -106,20 +106,6 @@ abstract class AbstractWriter[-A] extends Writer[A]
  */
 object Writer {
 
-  /**
-   * A [[Writer]] instance that will always fail. Useful for situations
-   * where writing to the [[Writer]] is nonsensical such as the [[Writer]] on the
-   * `Response` returned by the Finagle HTTP client.
-   */
-  val FailingWriter: Writer[Buf] = fail[Buf]
-
-  def fail[A]: Writer[A] = new Writer[A] {
-    def write(element: A): Future[Unit] = Future.exception(new IllegalStateException("NullWriter"))
-    def fail(cause: Throwable): Unit = ()
-    def close(deadline: Time): Future[Unit] = Future.Done
-    def onClose: Future[StreamTermination] = Future.never
-  }
-
   val BufferSize: Int = 4096
 
   /**
