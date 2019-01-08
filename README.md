@@ -1,6 +1,6 @@
 # Twitter Util
 
-[![Build status](https://travis-ci.org/twitter/util.svg?branch=develop)](https://travis-ci.org/twitter/util)
+[![Build status](https://travis-ci.org/twitter/util.svg?branch=master)](https://travis-ci.org/twitter/util)
 [![Codecov](https://codecov.io/gh/twitter/util/branch/develop/graph/badge.svg)](https://codecov.io/gh/twitter/util)
 [![Project status](https://img.shields.io/badge/status-active-brightgreen.svg)](#status)
 [![Gitter](https://badges.gitter.im/twitter/finagle.svg)](https://gitter.im/twitter/finagle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
@@ -35,7 +35,7 @@ for more details about how to contribute.
 An example SBT dependency string for the `util-collection` tools would look like this:
 
 ```scala
-val collUtils = "com.twitter" %% "util-collection" % "18.12.0"
+val collUtils = "com.twitter" %% "util-collection" % "19.1.0"
 ```
 
 # Units
