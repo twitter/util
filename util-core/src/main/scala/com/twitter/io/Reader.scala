@@ -108,7 +108,7 @@ trait Reader[+A] { self =>
    * @param f the function constructs a new Reader[B] from the value of this Reader.read
    */
   final def flatMap[B](f: A => Reader[B]): Reader[B] = {
-    val target = Reader.concat(Reader.toAsyncStream(map(f)))
+    val target = Reader.flatten(map(f))
     target.onClose.respond {
       case Return(StreamTermination.Discarded) => self.discard()
       case _ => ()
@@ -125,6 +125,12 @@ trait Reader[+A] { self =>
     def discard(): Unit = self.discard()
     def onClose: Future[StreamTermination] = self.onClose
   }
+
+  /**
+   * Converts a `Reader[Reader[B]]` into a `Reader[B]`
+   */
+  def flatten[B](implicit ev: A <:< Reader[B]): Reader[B] =
+    Reader.flatten(this.asInstanceOf[Reader[Reader[B]]])
 }
 
 /**
@@ -320,6 +326,43 @@ object Reader {
   def fromStream(s: InputStream, chunkSize: Int): Reader[Buf] = InputStreamReader(s, chunkSize)
 
   /**
+   * Create a new [[Reader]] from a given [[Seq]].
+   *
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
+   */
+  def fromSeq[A](seq: Seq[A]): Reader[A] = new Reader[A] { self =>
+    private[this] val closep = Promise[StreamTermination]()
+    private[this] var state: Try[Seq[A]] = Return(seq)
+
+    def read(): Future[Option[A]] = {
+      val result: Future[Option[A]] = self.synchronized {
+        state match {
+          case Return(Nil) => Future.None
+          case Return(head +: tail) =>
+            state = Return(tail)
+            Future.value(Some(head))
+          case t: Throw[_] =>
+            Future.const(t.cast[Option[A]])
+        }
+      }
+      if (result eq Future.None) {
+        closep.updateIfEmpty(StreamTermination.FullyRead.Return)
+      }
+      result
+    }
+
+    def discard(): Unit = {
+      self.synchronized {
+        state = Throw(new ReaderDiscardedException)
+      }
+      closep.updateIfEmpty(StreamTermination.Discarded.Return)
+    }
+
+    def onClose: Future[StreamTermination] = closep
+  }
+
+  /**
    * Allow [[AsyncStream]] to be consumed as a [[Reader]]
    */
   def fromAsyncStream[A](as: AsyncStream[A]): Reader[A] = {
@@ -343,8 +386,9 @@ object Reader {
     }
 
   /**
-   * Convenient abstraction to read from a stream of Readers as if it were a
-   * single Reader.
+   * Convenient abstraction to read from a stream (AsyncStream) of Readers as if
+   * it were a single Reader.
+   * @param readers An AsyncStream holds a stream of Reader[A]
    */
   def concat[A](readers: AsyncStream[Reader[A]]): Reader[A] = {
     val target = new Pipe[A]
@@ -370,6 +414,43 @@ object Reader {
   }
 
   /**
+   * Convenient abstraction to read from a stream (Reader) of Readers as if
+   * it were a single Reader. The subsequent readers are unmanaged, the caller is
+   * responsible for discarding those when abandoned.
+   * @param readers A Reader holds a stream of Reader[A]
+   */
+  def flatten[A](readers: Reader[Reader[A]]): Reader[A] = new Reader[A] { self =>
+
+    private[this] val closep = Promise[StreamTermination]()
+    // access this currentReader is synchronized on `self`
+    private[this] var currentReader: Reader[A] = Reader.empty
+
+    // this method should be called inside a synchronized block
+    def updateCurrentAndRead(): Future[Option[A]] =
+      readers.read().flatMap {
+        case Some(reader) =>
+          currentReader = reader
+          read()
+        case None => Future.None
+      }
+
+    def read(): Future[Option[A]] = self.synchronized {
+      currentReader.read().flatMap {
+        case sa @ Some(_) => Future.value(sa)
+        case _ => updateCurrentAndRead
+      }
+    }
+
+    def discard(): Unit = {
+      closep.updateIfEmpty(StreamTermination.Discarded.Return)
+      currentReader.discard()
+      readers.discard()
+    }
+
+    def onClose: Future[StreamTermination] = closep
+  }
+
+  /**
    * Copy elements from many Readers to a Writer. Readers will be discarded if
    * `copy` is cancelled (discarding the target). The Writer is unmanaged, the
    * caller is responsible for finalization and error handling, e.g.:
@@ -377,6 +458,7 @@ object Reader {
    * {{{
    * Reader.copyMany(readers, writer) ensure writer.close()
    * }}}
+   * @param readers An AsyncStream holds a stream of Reader[A]
    */
   def copyMany[A](readers: AsyncStream[Reader[A]], target: Writer[A]): Future[Unit] =
     readers.foreachF(Reader.copy(_, target))
@@ -394,7 +476,7 @@ object Reader {
     def loop(): Future[Unit] =
       r.read().flatMap {
         case None => Future.Done
-        case Some(buf) => w.write(buf) before loop()
+        case Some(elem) => w.write(elem) before loop()
       }
 
     w.onClose.respond {

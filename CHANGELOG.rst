@@ -12,6 +12,8 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
+  * util-core: Added `Reader.flatten` to flatten a `Reader[Reader[_]]` to `Reader[_]`,
+    and `Reader.fromSeq` to create a new Reader from a Seq. ``PHAB_ID=D255424``
 
   * util-core: Added Reader.map/flatMap to transform Reader[A] to Reader[B]. Added `fromFuture()`
     and `value()` in the Reader object to construct a new Reader. ``PHAB_ID=D252165``
