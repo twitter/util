@@ -799,7 +799,7 @@
 this with a signed long, and thus the largest representable duration is:</p><p>  106751.days+23.hours+47.minutes+16.seconds
     +854.milliseconds+775.microseconds+807.nanoseconds</p><p>Durations may be constructed via its companion object,
 <code>Duration.fromNanoseconds</code>, <code>Duration.fromSeconds</code>, etc. or by
-using the time conversions:</p><pre><span class="kw">import</span> com.twitter.conversions.time._
+using the time conversions:</p><pre><span class="kw">import</span> com.twitter.conversions.DurationOps._
 
 <span class="num">3.</span>days+<span class="num">4.</span>nanoseconds</pre><p>In addition to the timespans in the range of <code>Long.MinValue</code> to
 <code>Long.MaxValue</code> nanoseconds, durations have two distinguished

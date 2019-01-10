@@ -117,10 +117,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
-    </li><li name="com.twitter.conversions.PercentOps" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="PercentOps"></a><a id="PercentOps:PercentOps"></a>
+    </li><li name="com.twitter.conversions.U64Ops" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="U64Ops"></a><a id="U64Ops:U64Ops"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/index.html#PercentOps" title="Permalink">
+      <a href="../../../com/twitter/conversions/index.html#U64Ops" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -129,25 +129,18 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent." href="PercentOps$.html"><span class="name">PercentOps</span></a>
+        <a title="" href="U64Ops$.html"><span class="name">U64Ops</span></a>
       </span>
       
-      <p class="shortcomment cmt">Implicits for turning <code>x.percent</code> (where <code>x</code> is an <code>Int</code> or <code>Double</code>) into a <code>Double</code>
-scaled to where 1.0 is 100 percent.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for turning <code>x.percent</code> (where <code>x</code> is an <code>Int</code> or <code>Double</code>) into a <code>Double</code>
-scaled to where 1.0 is 100 percent.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.conversions">conversions</a></dd><div class="block">Example:
-               <ol><li class="cmt"><p></p><pre><span class="kw">import</span> com.twitter.conversions.PercentOps._
-
-<span class="num">1.</span>percent == <span class="num">0.01</span>
-<span class="num">100.</span>percent == <span class="num">1.0</span>
-<span class="num">99.9</span>.percent == <span class="num">0.999</span>
-<span class="num">500.</span>percent == <span class="num">5.0</span>
--<span class="num">10.</span>percent == -<span class="num">0.1</span></pre></li></ol>
-            </div><dt>Note</dt><dd><span class="cmt"><p>Negative values, fractional values, and values greater than 100 are permitted.</p></span></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.conversions">conversions</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">RichDouble</a>
+                        <a class="class" href="" title="Converts this unsigned 64-bit long value into a 16-character HEX string."></a>
+                        <a href="" title="Converts this unsigned 64-bit long value into a 16-character HEX string.">RichU64Long</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="U64Ops$$RichU64String.html" title="Parses this HEX string as an unsigned 64-bit long value."></a>
+                        <a href="U64Ops$$RichU64String.html" title="Parses this HEX string as an unsigned 64-bit long value.">RichU64String</a>
                       </li>
               </ul>
             </div>
@@ -156,9 +149,9 @@ scaled to where 1.0 is 100 percent.
             <body class="class type">
       <div id="definition">
         <div class="big-circle class">c</div>
-        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.conversions">conversions</a>.<a href="PercentOps$.html" class="extype" name="com.twitter.conversions.PercentOps">PercentOps</a></p>
-        <h1>RichDouble<span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html" title="Permalink">
+        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.conversions">conversions</a>.<a href="U64Ops$.html" class="extype" name="com.twitter.conversions.U64Ops">U64Ops</a></p>
+        <h1>RichU64Long<span class="permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -171,12 +164,13 @@ scaled to where 1.0 is 100 percent.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">RichDouble</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
+        <span class="name">RichU64Long</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Converts this unsigned 64-bit long value into a 16-character HEX string.
+</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -206,7 +200,7 @@ scaled to where 1.0 is 100 percent.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.conversions.PercentOps.RichDouble"><span>RichDouble</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.conversions.U64Ops.RichU64Long"><span>RichU64Long</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -226,10 +220,10 @@ scaled to where 1.0 is 100 percent.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.conversions.PercentOps.RichDouble#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(value:Double):com.twitter.conversions.PercentOps.RichDouble"></a><a id="&lt;init&gt;:RichDouble"></a>
+              <ol><li name="com.twitter.conversions.U64Ops.RichU64Long#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(self:Long):com.twitter.conversions.U64Ops.RichU64Long"></a><a id="&lt;init&gt;:RichU64Long"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#&lt;init&gt;(value:Double):com.twitter.conversions.PercentOps.RichDouble" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#&lt;init&gt;(self:Long):com.twitter.conversions.U64Ops.RichU64Long" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -238,7 +232,7 @@ scaled to where 1.0 is 100 percent.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RichDouble</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.12.7/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>)</span>
+        <span class="name">RichU64Long</span><span class="params">(<span name="self">self: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span>
       </span>
       
       
@@ -255,7 +249,7 @@ scaled to where 1.0 is 100 percent.
                 <li name="scala.Any#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -271,7 +265,7 @@ scaled to where 1.0 is 100 percent.
     </li><li name="scala.Any###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -287,7 +281,7 @@ scaled to where 1.0 is 100 percent.
     </li><li name="scala.Any#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -303,7 +297,7 @@ scaled to where 1.0 is 100 percent.
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -319,7 +313,7 @@ scaled to where 1.0 is 100 percent.
     </li><li name="scala.AnyVal#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -335,7 +329,7 @@ scaled to where 1.0 is 100 percent.
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -348,26 +342,26 @@ scaled to where 1.0 is 100 percent.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.PercentOps.RichDouble#percent" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="percent:Double"></a>
+    </li><li name="com.twitter.conversions.U64Ops.RichU64Long#self" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="self:Long"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#percent:Double" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#self:Long" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">percent</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>
+        <span class="name">self</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>
       </span>
       
       
     </li><li name="scala.Any#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -380,19 +374,19 @@ scaled to where 1.0 is 100 percent.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.PercentOps.RichDouble#value" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="value:Double"></a>
+    </li><li name="com.twitter.conversions.U64Ops.RichU64Long#toU64HexString" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="toU64HexString:String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/PercentOps$$RichDouble.html#value:Double" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64Long.html#toU64HexString:String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">value</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a></span>
+        <span class="name">toU64HexString</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
       

@@ -591,7 +591,7 @@ backed by a <code>Caffeine</code> cache with TTL may be more appropriate.</p><p>
 infrequently and we need to access that value often, for example asking a service for a list of
 features that it supports.</p><p>A non-memoized function like this:
   def getData(): Future[T] = { ... }</p><p>can be memoized with a TTL of 1 hour as follows:
-  import com.twitter.conversions.time._
+  import com.twitter.conversions.DurationOps._
   import com.twitter.cache.Refresh
   val getData: () =&gt; Future[T] = Refresh.every(1.hour) { ... }
 </p></div></div>

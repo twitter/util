@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &#8212; Util 18.12.0 documentation</title>
+    <title>Basics &#8212; Util 19.1.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '18.12.0',
+        VERSION:     '19.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 18.12.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 19.1.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Futures" href="futures.html" />
     <link rel="prev" title="Util Cookbook" href="index.html" />
@@ -141,7 +141,7 @@ to other code via the standard usage of <code class="docutils literal"><span cla
 Specifically, code using <code class="docutils literal"><span class="pre">Future</span></code>s, <code class="docutils literal"><span class="pre">FuturePool</span></code>s, and <code class="docutils literal"><span class="pre">MockTimer</span></code>s
 will see the manipulated <code class="docutils literal"><span class="pre">Time.now</span></code>.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.DurationOps._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">FuturePool</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
 
 <span class="k">val</span> <span class="n">time</span> <span class="k">=</span> <span class="nc">Time</span><span class="o">.</span><span class="n">fromMilliseconds</span><span class="o">(</span><span class="mi">123456L</span><span class="o">)</span>
@@ -185,7 +185,7 @@ Enter <code class="docutils literal"><span class="pre">com.twitter.util.MockTime
 manipulation methods discussed above. It adds a method to <code class="docutils literal"><span class="pre">Timer</span></code>, <code class="docutils literal"><span class="pre">tick()</span></code>,
 which runs all <code class="docutils literal"><span class="pre">TimerTasks</span></code> that are past their deadline.</p>
 <p>Scala:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.time._</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.conversions.DurationOps._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">MockTimer</span><span class="o">,</span> <span class="nc">Time</span><span class="o">}</span>
 
 <span class="nc">Time</span><span class="o">.</span><span class="n">withCurrentTimeFrozen</span> <span class="o">{</span> <span class="n">timeControl</span> <span class="k">=&gt;</span>
@@ -292,7 +292,7 @@ which runs all <code class="docutils literal"><span class="pre">TimerTasks</span
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2018 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2019 Twitter, Inc.</div>
   
   </body>
 </html>

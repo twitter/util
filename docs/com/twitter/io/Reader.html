@@ -139,6 +139,10 @@
                         <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods.">AbstractByteWriter</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractReader.html" title="Abstract Reader class for Java compatibility."></a>
+                        <a href="AbstractReader.html" title="Abstract Reader class for Java compatibility.">AbstractReader</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
                         <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
                       </li><li class="current-entities indented3">
@@ -267,7 +271,7 @@ reader is fully consumed (stream is exhausted) once its read-loop is run.</p><h4
 unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
   <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Consumed an entire stream successfully."</span>)
   <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Encountered an error while consuming a stream: $e"</span>)
-}</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Once failed, a stream can not be restarted such that all future reads will resolve into a
+}</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]</dd><dt>Note</dt><dd><span class="cmt"><p>Once failed, a stream can not be restarted such that all future reads will resolve into a
       failure. There is no need to discard an already failed stream.</p><h4> Resource Safety </h4><p>One of the important implications of readers, and streams in general, is that they are prone to
 resource leaks unless fully consumed or discarded (failed). Specifically, readers backed by
 network connections MUST be discarded unless already consumed (EOF observed) to prevent
@@ -292,7 +296,7 @@ and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"
             <span class="toggle">
               Known Subclasses
             </span>
-            <div class="subClasses hiddenContent"><a href="InputStreamReader.html" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a>, <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a></div>
+            <div class="subClasses hiddenContent"><a href="AbstractReader.html" class="extype" name="com.twitter.io.AbstractReader">AbstractReader</a>, <a href="InputStreamReader.html" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a>, <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a></div>
           </div></div>
         
 
@@ -546,6 +550,22 @@ that you must do once the stream is no longer being used.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Reader#flatMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatMap[B](f:A=&gt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]"></a><a id="flatMap[B]((A)⇒Reader[B]):Reader[B]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader.html#flatMap[B](f:A=&gt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.io.Reader.A">A</span>) ⇒ <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -600,6 +620,22 @@ that you must do once the stream is no longer being used.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.io.Reader#map" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="map[B](f:A=&gt;B):com.twitter.io.Reader[B]"></a><a id="map[B]((A)⇒B):Reader[B]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader.html#map[B](f:A=&gt;B):com.twitter.io.Reader[B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.io.Reader.A">A</span>) ⇒ <span class="extype" name="com.twitter.io.Reader.map.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.map.B">B</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function transforms data of type A to B</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">

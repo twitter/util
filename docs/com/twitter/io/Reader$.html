@@ -139,6 +139,10 @@
                         <a href="AbstractByteWriter.html" title="An abstract implementation that implements the floating point methods in terms of integer methods.">AbstractByteWriter</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="class" href="AbstractReader.html" title="Abstract Reader class for Java compatibility."></a>
+                        <a href="AbstractReader.html" title="Abstract Reader class for Java compatibility.">AbstractReader</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
                         <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
                       </li><li class="current-entities indented3">
@@ -450,9 +454,9 @@ single Reader.</p>
         <span class="name">copy</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.copy.A">A</span>]</span>, <span name="w">w: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Reader.copy.A">A</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Copy the bytes from a Reader to a Writer in chunks of size <code>n</code>. The Writer
-is unmanaged, the caller is responsible for finalization and error
-handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div></div>
+      <p class="shortcomment cmt">Copy elements from a Reader to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy elements from a Reader to a Writer. The Reader will be discarded if
+<code>copy</code> is cancelled (discarding the writer). The Writer is unmanaged, the caller
+is responsible for finalization and error handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div></div>
     </li><li name="com.twitter.io.Reader#copyMany" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="copyMany[A](readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader[A]],target:com.twitter.io.Writer[A]):com.twitter.util.Future[Unit]"></a><a id="copyMany[A](AsyncStream[Reader[A]],Writer[A]):Future[Unit]"></a>
       <span class="permalink">
@@ -468,7 +472,8 @@ handling, e.g.:</p><pre>Reader.copy(r, w, n) ensure w.close()</pre></div></div>
         <span class="name">copyMany</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="readers">readers: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.copyMany.A">A</span>]]</span>, <span name="target">target: <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Reader.copyMany.A">A</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Copy bytes from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy bytes from many Readers to a Writer. The Writer is unmanaged, the
+      <p class="shortcomment cmt">Copy elements from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy elements from many Readers to a Writer. Readers will be discarded if
+<code>copy</code> is cancelled (discarding the target). The Writer is unmanaged, the
 caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div></div>
     </li><li name="com.twitter.io.Reader#empty" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="empty[A]:com.twitter.io.Reader[A]"></a><a id="empty[A]:Reader[A]"></a>
@@ -518,6 +523,23 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Reader#exception" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="exception[A](e:Throwable):com.twitter.io.Reader[A]"></a><a id="exception[A](Throwable):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#exception[A](e:Throwable):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.exception.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a <code>Reader</code> from an exception <code>e</code>
+</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -649,6 +671,23 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
 at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
 <span class="extype" name="Reader.discard()">Reader.discard()</span>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromFile</code> for a Java API</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Reader#fromFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromFuture[A](fa:com.twitter.util.Future[A]):com.twitter.io.Reader[A]"></a><a id="fromFuture[A](Future[A]):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#fromFuture[A](fa:com.twitter.util.Future[A]):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromFuture</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fa">fa: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.io.Reader.fromFuture.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromFuture.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a <code>Reader</code> from a <code>Future</code>
+</p>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream,chunkSize:Int):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromStream(InputStream,Int):Reader[Buf]"></a>
       <span class="permalink">
@@ -859,6 +898,23 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.io.Reader#value" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="value[A](a:A):com.twitter.io.Reader[A]"></a><a id="value[A](A):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#value[A](a:A):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">value</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="a">a: <span class="extype" name="com.twitter.io.Reader.value.A">A</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.value.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a <code>Reader</code> from a value <code>a</code>
+</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

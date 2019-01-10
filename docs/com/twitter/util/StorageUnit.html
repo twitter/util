@@ -796,7 +796,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of storage units.</p><p>Use either <code>StorageUnit.fromX</code> or <a href="../conversions/storage$.html" class="extype" name="com.twitter.conversions.storage">implicit conversions</a>
-from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><span class="kw">import</span> com.twitter.conversions.storage._
+from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><span class="kw">import</span> com.twitter.conversions.StorageUnitOps._
 <span class="kw">import</span> com.twitter.util.StorageUnit
 
 <span class="kw">val</span> size: StorageUnit = <span class="num">10.</span>kilobytes</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>While all the methods in this abstraction are prefixed according

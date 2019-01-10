@@ -135,12 +135,12 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.conversions">conversions</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title="Converts this unsigned 64-bit long value into a 16-character HEX string."></a>
-                        <a href="" title="Converts this unsigned 64-bit long value into a 16-character HEX string.">LongOps</a>
+                        <a class="class" href="U64Ops$$RichU64Long.html" title="Converts this unsigned 64-bit long value into a 16-character HEX string."></a>
+                        <a href="U64Ops$$RichU64Long.html" title="Converts this unsigned 64-bit long value into a 16-character HEX string.">RichU64Long</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="U64Ops$$StringOps.html" title="Parses this HEX string as an unsigned 64-bit long value."></a>
-                        <a href="U64Ops$$StringOps.html" title="Parses this HEX string as an unsigned 64-bit long value.">StringOps</a>
+                        <a class="class" href="" title="Parses this HEX string as an unsigned 64-bit long value."></a>
+                        <a href="" title="Parses this HEX string as an unsigned 64-bit long value.">RichU64String</a>
                       </li>
               </ul>
             </div>
@@ -150,8 +150,8 @@
       <div id="definition">
         <div class="big-circle class">c</div>
         <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.conversions">conversions</a>.<a href="U64Ops$.html" class="extype" name="com.twitter.conversions.U64Ops">U64Ops</a></p>
-        <h1>LongOps<span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html" title="Permalink">
+        <h1>RichU64String<span class="permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -164,13 +164,14 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">LongOps</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
+        <span class="name">RichU64String</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Converts this unsigned 64-bit long value into a 16-character HEX string.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Parses this HEX string as an unsigned 64-bit long value. Be careful, this can throw
+<span class="extype" name="NumberFormatException">NumberFormatException</span>.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="java.lang.Long.parseUnsignedLong()">java.lang.Long.parseUnsignedLong()</span></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -200,7 +201,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.conversions.U64Ops.LongOps"><span>LongOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.conversions.U64Ops.RichU64String"><span>RichU64String</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -220,10 +221,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.conversions.U64Ops.LongOps#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(self:Long):com.twitter.conversions.U64Ops.LongOps"></a><a id="&lt;init&gt;:LongOps"></a>
+              <ol><li name="com.twitter.conversions.U64Ops.RichU64String#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(self:String):com.twitter.conversions.U64Ops.RichU64String"></a><a id="&lt;init&gt;:RichU64String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#&lt;init&gt;(self:Long):com.twitter.conversions.U64Ops.LongOps" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#&lt;init&gt;(self:String):com.twitter.conversions.U64Ops.RichU64String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -232,7 +233,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">LongOps</span><span class="params">(<span name="self">self: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span>
+        <span class="name">RichU64String</span><span class="params">(<span name="self">self: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
       </span>
       
       
@@ -249,7 +250,7 @@
                 <li name="scala.Any#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -265,7 +266,7 @@
     </li><li name="scala.Any###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -281,7 +282,7 @@
     </li><li name="scala.Any#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -297,7 +298,7 @@
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -313,7 +314,7 @@
     </li><li name="scala.AnyVal#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -329,7 +330,7 @@
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -342,10 +343,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.U64Ops.LongOps#self" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="self:Long"></a>
+    </li><li name="com.twitter.conversions.U64Ops.RichU64String#self" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="self:String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#self:Long" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#self:String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -354,14 +355,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">self</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>
+        <span class="name">self</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
       
     </li><li name="scala.Any#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -374,10 +375,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.U64Ops.LongOps#toU64HexString" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="toU64HexString:String"></a>
+    </li><li name="com.twitter.conversions.U64Ops.RichU64String#toU64Long" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="toU64Long:Long"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/U64Ops$$LongOps.html#toU64HexString:String" title="Permalink">
+      <a href="../../../com/twitter/conversions/U64Ops$$RichU64String.html#toU64Long:Long" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -386,7 +387,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toU64HexString</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">toU64Long</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>
       </span>
       
       
