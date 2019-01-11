@@ -7,26 +7,30 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Added `Reader.flatten` to flatten a `Reader[Reader[_]]` to `Reader[_]`,
+  and `Reader.fromSeq` to create a new Reader from a Seq. ``PHAB_ID=D255424``
+
 19.1.0
 -------
 
 New Features
 ~~~~~~~~~~~~
-  * util-core: Added `Reader.flatten` to flatten a `Reader[Reader[_]]` to `Reader[_]`,
-    and `Reader.fromSeq` to create a new Reader from a Seq. ``PHAB_ID=D255424``
 
-  * util-core: Added Reader.map/flatMap to transform Reader[A] to Reader[B]. Added `fromFuture()`
-    and `value()` in the Reader object to construct a new Reader. ``PHAB_ID=D252165``
+* util-core: Added Reader.map/flatMap to transform Reader[A] to Reader[B]. Added `fromFuture()`
+  and `value()` in the Reader object to construct a new Reader. ``PHAB_ID=D252165``
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
-  * util-core: The implicit conversions classes in `c.t.conversions.SomethingOps` have been
-    renamed to have unique names. This allows them to be used together with wildcard imports.
-    See Github issue (https://github.com/twitter/util/issues/239). ``PHAB_ID=D252462``
+* util-core: The implicit conversions classes in `c.t.conversions.SomethingOps` have been
+  renamed to have unique names. This allows them to be used together with wildcard imports.
+  See Github issue (https://github.com/twitter/util/issues/239). ``PHAB_ID=D252462``
 
-  * util-core: Both `c.t.io.Writer.FailingWriter` and `c.t.io.Writer.fail` were removed. Build your
-    own instance should you need to.  ``PHAB_ID=D256615``
+* util-core: Both `c.t.io.Writer.FailingWriter` and `c.t.io.Writer.fail` were removed. Build your
+  own instance should you need to.  ``PHAB_ID=D256615``
 
 18.12.0
 -------
