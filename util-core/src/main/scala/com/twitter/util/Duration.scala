@@ -13,6 +13,7 @@ object Duration extends TimeLikeOps[Duration] {
   override def fromFractionalSeconds(seconds: Double): Duration =
     super.fromFractionalSeconds(seconds)
   override def fromSeconds(seconds: Int): Duration = super.fromSeconds(seconds)
+  override def fromMinutes(minutes: Int): Duration = super.fromMinutes(minutes)
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
 

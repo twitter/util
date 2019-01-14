@@ -96,6 +96,8 @@ trait TimeLikeOps[This <: TimeLike[This]] {
 
   def fromSeconds(seconds: Int): This = fromMilliseconds(1000L * seconds)
 
+  def fromMinutes(minutes: Int): This = fromMilliseconds(60L * 1000L * minutes)
+
   /**
    * Make a new `This` from the given number of seconds.
    * Because this method takes a Double, it can represent values less than a second.
@@ -289,6 +291,7 @@ object Time extends TimeLikeOps[Time] {
   // This is needed for Java compatibility.
   override def fromFractionalSeconds(seconds: Double): Time = super.fromFractionalSeconds(seconds)
   override def fromSeconds(seconds: Int): Time = super.fromSeconds(seconds)
+  override def fromMinutes(minutes: Int): Time = super.fromMinutes(minutes)
   override def fromMilliseconds(millis: Long): Time = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Time = super.fromMicroseconds(micros)
 

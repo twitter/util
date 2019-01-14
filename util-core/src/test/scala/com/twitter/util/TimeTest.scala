@@ -118,7 +118,8 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
           fromMicroseconds(0),
           fromFractionalSeconds(0),
           fromMilliseconds(0),
-          fromSeconds(0)
+          fromSeconds(0),
+          fromMinutes(0)
         )) {
         assert(z.isZero == true)
       }
@@ -602,7 +603,7 @@ with IntegrationPatience {
       }
     }
 
-    "fromSeconds(Double)" in {
+    "fromFractionalSeconds" in {
       val tolerance = 2.microseconds // we permit 1us slop
 
       forAll { i: Int =>
@@ -661,6 +662,15 @@ with IntegrationPatience {
 
       val currentTimeMs = System.currentTimeMillis
       assert(Time.fromMilliseconds(currentTimeMs).inNanoseconds == currentTimeMs * 1000000L)
+    }
+
+    "fromMinutes" in {
+      assert(Time.fromMinutes(0).inNanoseconds == 0L)
+      assert(Time.fromMinutes(-1).inNanoseconds == -60L * 1000000000L)
+
+      assert(Time.fromMinutes(Int.MaxValue).inNanoseconds == Long.MaxValue)
+      assert(Time.fromMinutes(Int.MaxValue) == Time.Top)
+      assert(Time.fromMinutes(Int.MinValue) == Time.Bottom)
     }
 
     "until" in {
