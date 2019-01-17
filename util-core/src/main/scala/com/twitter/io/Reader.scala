@@ -107,14 +107,7 @@ trait Reader[+A] { self =>
    * Construct a new Reader by applying `f` to every item read from this Reader
    * @param f the function constructs a new Reader[B] from the value of this Reader.read
    */
-  final def flatMap[B](f: A => Reader[B]): Reader[B] = {
-    val target = Reader.flatten(map(f))
-    target.onClose.respond {
-      case Return(StreamTermination.Discarded) => self.discard()
-      case _ => ()
-    }
-    target
-  }
+  final def flatMap[B](f: A => Reader[B]): Reader[B] = Reader.flatten(map(f))
 
   /**
    * Construct a new Reader by applying `f` to every item read from this Reader
@@ -219,23 +212,21 @@ object Reader {
    * Construct a `Reader` from a `Future`
    */
   def fromFuture[A](fa: Future[A]): Reader[A] = new Reader[A] {
+
     private[this] val closep = Promise[StreamTermination]()
 
-    def read(): Future[Option[A]] = {
-      if (!closep.isDefined) {
-        closep.updateIfEmpty(StreamTermination.FullyRead.Return)
-        fa.map(a => Some(a))
-      } else {
+    final def read(): Future[Option[A]] =
+      if (closep.updateIfEmpty(StreamTermination.FullyRead.Return))
+        fa.map(Some.apply)
+      else
         closep.flatMap {
           case StreamTermination.FullyRead => Future.None
           case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
         }
-      }
-    }
 
-    def discard(): Unit = closep.updateIfEmpty(StreamTermination.Discarded.Return)
+    final def discard(): Unit = closep.updateIfEmpty(StreamTermination.Discarded.Return)
 
-    def onClose: Future[StreamTermination] = closep
+    final def onClose: Future[StreamTermination] = closep
   }
 
   /**
@@ -437,7 +428,7 @@ object Reader {
     def read(): Future[Option[A]] = self.synchronized {
       currentReader.read().flatMap {
         case sa @ Some(_) => Future.value(sa)
-        case _ => updateCurrentAndRead
+        case _ => updateCurrentAndRead()
       }
     }
 
