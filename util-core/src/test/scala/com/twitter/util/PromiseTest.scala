@@ -128,8 +128,8 @@ class PromiseTest extends FunSuite {
   }
 
   class HandledMonitor extends Monitor {
-    var handled = null: Throwable
-    def handle(exc: Throwable) = {
+    var handled: Throwable = null: Throwable
+    def handle(exc: Throwable): Boolean = {
       handled = exc
       true
     }

@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class TryTest extends FunSuite {
   class MyException extends Exception
-  val e = new Exception("this is an exception")
+  val e: Exception = new Exception("this is an exception")
 
   test("Try.apply(): should catch exceptions and lift into the Try type") {
     assert(Try[Int](1) == Return(1))

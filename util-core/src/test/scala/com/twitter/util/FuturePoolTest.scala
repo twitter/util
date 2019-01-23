@@ -13,7 +13,7 @@ import scala.util.control.NonFatal
 @RunWith(classOf[JUnitRunner])
 class FuturePoolTest extends FunSuite with Eventually {
 
-  implicit override val patienceConfig =
+  implicit override val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))
 
   test("FuturePool should dispatch to another thread") {
@@ -173,10 +173,10 @@ class FuturePoolTest extends FunSuite with Eventually {
   }
 
   class PoolCtx {
-    val executor = Executors.newFixedThreadPool(1)
-    val pool = FuturePool(executor)
+    val executor: ExecutorService = Executors.newFixedThreadPool(1)
+    val pool: ExecutorServiceFuturePool = FuturePool(executor)
 
-    val pools = Seq(FuturePool.immediatePool, pool)
+    val pools: Seq[FuturePool] = Seq(FuturePool.immediatePool, pool)
   }
 
   test("handles NonLocalReturnControl properly") {

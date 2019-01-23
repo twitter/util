@@ -263,7 +263,7 @@ trait Event[+T] { self =>
    * builder. A value containing the current version of the collection
    * is notified for each incoming event.
    */
-  def build[U >: T, That](implicit cbf: CanBuild[U, That]) = new Event[That] {
+  def build[U >: T, That](implicit cbf: CanBuild[U, That]): Event[That] = new Event[That] {
     def register(s: Witness[That]): Closable = {
       val b = cbf()
       self.respond { t =>

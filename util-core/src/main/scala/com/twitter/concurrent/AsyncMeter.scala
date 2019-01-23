@@ -24,7 +24,7 @@ private[concurrent] object Period {
 }
 
 object AsyncMeter {
-  private[concurrent] val MinimumInterval = Duration.fromMilliseconds(1)
+  private[concurrent] val MinimumInterval: Duration = Duration.fromMilliseconds(1)
 
   /**
    * Creates an [[AsyncMeter]] that allows smoothed out `permits` per

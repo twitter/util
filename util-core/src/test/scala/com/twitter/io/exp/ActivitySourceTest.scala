@@ -11,15 +11,15 @@ import scala.util.Random
 @RunWith(classOf[JUnitRunner])
 class ActivitySourceTest extends FunSuite with BeforeAndAfter {
 
-  val ok = new ActivitySource[String] {
+  val ok: ActivitySource[String] = new ActivitySource[String] {
     def get(varName: String) = Activity.value(varName)
   }
 
-  val failed = new ActivitySource[Nothing] {
+  val failed: ActivitySource[Nothing] = new ActivitySource[Nothing] {
     def get(varName: String) = Activity.exception(new Exception(varName))
   }
 
-  val tempFile = Random.alphanumeric.take(5).mkString
+  val tempFile: String = Random.alphanumeric.take(5).mkString
 
   def writeToTempFile(s: String): Unit = {
     val printer = new java.io.PrintWriter(new File(tempFile))

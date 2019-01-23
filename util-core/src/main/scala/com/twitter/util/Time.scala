@@ -404,8 +404,8 @@ object Time extends TimeLikeOps[Time] {
   /**
    * Note, this should only ever be updated by methods used for testing.
    */
-  private[util] val localGetTime = new Local[() => Time]
-  private[util] val localGetTimer = new Local[MockTimer]
+  private[util] val localGetTime: Local[scala.Function0[Time]] = new Local[() => Time]
+  private[util] val localGetTimer: Local[MockTimer] = new Local[MockTimer]
 
   /**
    * Creates a [[Time]] instance of the given [[Date]].
@@ -553,7 +553,7 @@ class TimeFormat(
  * @see [[TimeFormat]] for converting to and from `String` representations.
  */
 sealed class Time private[util] (protected val nanos: Long) extends {
-  protected val ops = Time
+  protected val ops: Time.type = Time
 } with TimeLike[Time] with Serializable {
   import ops._
 

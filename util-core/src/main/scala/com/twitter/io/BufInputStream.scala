@@ -25,7 +25,7 @@ class BufInputStream(val buf: Buf) extends InputStream {
   override def close(): Unit = {}
 
   // Marks the current position in this input stream.
-  override def mark(readlimit: Int) = synchronized { mrk = index }
+  override def mark(readlimit: Int): Unit = synchronized { mrk = index }
 
   // Tests if this input stream supports the mark and reset methods.
   override def markSupported(): Boolean = true
@@ -68,7 +68,7 @@ class BufInputStream(val buf: Buf) extends InputStream {
    * Repositions this stream to the position at the time the mark
    * method was last called on this input stream.
    */
-  override def reset() = synchronized { index = mrk }
+  override def reset(): Unit = synchronized { index = mrk }
 
   /**
    * Skips over and discards n bytes of data from this input stream.

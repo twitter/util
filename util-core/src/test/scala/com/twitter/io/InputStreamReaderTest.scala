@@ -10,8 +10,8 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class InputStreamReaderTest extends FunSuite {
-  def arr(i: Int, j: Int) = Array.range(i, j).map(_.toByte)
-  def buf(i: Int, j: Int) = Buf.ByteArray.Owned(arr(i, j))
+  def arr(i: Int, j: Int): Array[Byte] = Array.range(i, j).map(_.toByte)
+  def buf(i: Int, j: Int): Buf = Buf.ByteArray.Owned(arr(i, j))
 
   test("InputStreamReader - read empty") {
     val a = Array.empty[Byte]

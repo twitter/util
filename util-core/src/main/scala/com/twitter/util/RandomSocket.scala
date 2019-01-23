@@ -14,7 +14,7 @@ object RandomSocket {
   private[this] val ephemeralSocketAddress = localSocketOnPort(0)
 
   @deprecated("RandomSocket cannot ensure that the address is not in use.", "2014-11-13")
-  def apply() = nextAddress()
+  def apply(): InetSocketAddress = nextAddress()
 
   @deprecated("RandomSocket cannot ensure that the address is not in use.", "2014-11-13")
   def nextAddress(): InetSocketAddress =

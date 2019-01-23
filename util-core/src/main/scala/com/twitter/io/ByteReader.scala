@@ -290,7 +290,7 @@ object ByteReader {
   /**
    * The max value of a signed 24 bit "medium" integer
    */
-  private[io] val SignedMediumMax = 0x800000
+  private[io] val SignedMediumMax: Int = 0x800000
 }
 
 private class ByteReaderImpl(buf: Buf) extends ByteReader {

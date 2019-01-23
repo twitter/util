@@ -347,7 +347,7 @@ class MockTimer extends Timer {
   // These are weird semantics admittedly, but there may
   // be a bunch of tests that rely on them already.
   case class Task(var when: Time, runner: () => Unit) extends TimerTask {
-    var isCancelled = false
+    var isCancelled: Boolean = false
 
     def cancel(): Unit = MockTimer.this.synchronized {
       isCancelled = true
@@ -357,9 +357,9 @@ class MockTimer extends Timer {
     }
   }
 
-  var isStopped = false
-  var tasks = ArrayBuffer[Task]()
-  var nCancelled = 0
+  var isStopped: Boolean = false
+  var tasks: ArrayBuffer[Task] = ArrayBuffer[Task]()
+  var nCancelled: Int = 0
 
   def tick(): Unit = synchronized {
     if (isStopped)

@@ -65,7 +65,7 @@ object Tx {
   /**
    * A constant `Tx` with the value of `Unit`.
    */
-  val Unit = const(())
+  val Unit: Tx[Unit] = const(())
 
   object AlreadyDone extends Exception("Tx is already done")
   object AlreadyAckd extends Exception("Tx was already ackd")

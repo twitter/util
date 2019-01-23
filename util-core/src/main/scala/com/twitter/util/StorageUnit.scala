@@ -31,8 +31,8 @@ object StorageUnit {
   def fromExabytes(exabytes: Long): StorageUnit =
     new StorageUnit(exabytes * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
 
-  val infinite = new StorageUnit(Long.MaxValue)
-  val zero = new StorageUnit(0)
+  val infinite: StorageUnit = new StorageUnit(Long.MaxValue)
+  val zero: StorageUnit = new StorageUnit(0)
 
   private def factor(s: String): Long = {
     var lower = s.toLowerCase

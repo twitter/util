@@ -31,7 +31,7 @@ trait Monitor { self =>
    */
   def handle(exc: Throwable): Boolean
 
-  private[this] val someSelf = Some(self)
+  private[this] val someSelf: Some[Monitor] = Some(self)
 
   /**
    * Run `f` inside of the monitor context. If `f` throws

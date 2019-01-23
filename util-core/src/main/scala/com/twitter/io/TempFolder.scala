@@ -26,7 +26,7 @@ import java.io.File
  * is effectively a thread-local global.
  */
 trait TempFolder {
-  private val _folderName = new ThreadLocal[File]
+  private val _folderName: ThreadLocal[File] = new ThreadLocal[File]
 
   /**
    * Runs the given block of code with the presence of a temporary folder whose name can be

@@ -106,7 +106,7 @@ object string {
      *
      * @return an unquoted unicode string
      */
-    def unquoteC() = {
+    def unquoteC(): String = {
       regexSub(UNQUOTE_RE) { m =>
         val ch = m.group(1).charAt(0) match {
           // holy crap! this is terrible:

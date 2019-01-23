@@ -4,6 +4,7 @@ import java.util.concurrent.CancellationException
 import java.util.logging.Logger
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * A "batcher" that takes a function `Seq[In] => Future[Seq[Out]]` and
@@ -36,8 +37,8 @@ private[util] class BatchExecutor[In, Out](
   import java.util.logging.Level.WARNING
 
   class ScheduledFlush(after: Duration, timer: Timer) {
-    @volatile var cancelled = false
-    val task = timer.schedule(after.fromNow) { flush() }
+    @volatile var cancelled: Boolean = false
+    val task: TimerTask = timer.schedule(after.fromNow) { flush() }
 
     def cancel(): Unit = {
       cancelled = true
@@ -55,14 +56,15 @@ private[util] class BatchExecutor[In, Out](
     }
   }
 
-  val log = Logger.getLogger("Future.batched")
+  val log: Logger = Logger.getLogger("Future.batched")
 
   // operations on these are synchronized on `this`.
-  val buf = new mutable.ArrayBuffer[(In, Promise[Out])](sizeThreshold)
+  val buf: ArrayBuffer[Tuple2[In, Promise[Out]]] =
+    new mutable.ArrayBuffer[(In, Promise[Out])](sizeThreshold)
   var scheduled: Option[ScheduledFlush] = scala.None
-  var currentBufThreshold = newBufThreshold
+  var currentBufThreshold: Int = newBufThreshold
 
-  def currentBufPercentile = sizePercentile match {
+  def currentBufPercentile: Float = sizePercentile match {
     case tooHigh if tooHigh > 1.0f =>
       log.log(WARNING, "value returned for sizePercentile (%f) was > 1.0f, using 1.0", tooHigh)
       1.0f
@@ -74,7 +76,7 @@ private[util] class BatchExecutor[In, Out](
     case p => p
   }
 
-  def newBufThreshold =
+  def newBufThreshold: Int =
     math.round(currentBufPercentile * sizeThreshold) match {
       case tooLow if tooLow < 1 => 1
       case size => math.min(size, sizeThreshold)

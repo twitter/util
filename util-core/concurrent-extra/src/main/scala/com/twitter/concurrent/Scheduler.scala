@@ -138,8 +138,8 @@ private[concurrent] object LocalScheduler {
     private[this] val rs = new ArrayDeque[Runnable]
     private[this] var running = false
 
-    @volatile var numDispatches = 0L
-    @volatile var blockingNanos = 0L
+    @volatile var numDispatches: Long = 0L
+    @volatile var blockingNanos: Long = 0L
 
     override def toString: String = s"Activation(${System.identityHashCode(this)})"
 

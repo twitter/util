@@ -10,6 +10,7 @@ import org.scalatest.junit.AssertionsForJUnit
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scala.collection.mutable
+import java.nio.charset.Charset
 
 class BufTest
     extends FunSuite
@@ -18,7 +19,7 @@ class BufTest
     with Checkers
     with AssertionsForJUnit {
 
-  val AllCharsets = Seq(
+  val AllCharsets: Seq[Charset] = Seq(
     JChar.ISO_8859_1,
     JChar.US_ASCII,
     JChar.UTF_8,

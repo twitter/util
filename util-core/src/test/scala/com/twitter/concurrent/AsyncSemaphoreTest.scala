@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.scalatest.fixture.FunSpec
 import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable
+import org.scalatest.Outcome
 
 @RunWith(classOf[JUnitRunner])
 class AsyncSemaphoreTest extends FunSpec {
@@ -18,7 +19,7 @@ class AsyncSemaphoreTest extends FunSpec {
       sem: AsyncSemaphore = this.sem,
       count: Int = this.count,
       permits: ConcurrentLinkedQueue[Permit] = this.permits
-    ) =
+    ): AsyncSemaphoreHelper =
       new AsyncSemaphoreHelper(sem, count, permits)
   }
 
@@ -26,7 +27,7 @@ class AsyncSemaphoreTest extends FunSpec {
 
   private def await[T](t: Awaitable[T]): T = Await.result(t, 15.seconds)
 
-  override def withFixture(test: OneArgTest) = {
+  override def withFixture(test: OneArgTest): Outcome = {
     val sem = new AsyncSemaphore(2)
     val helper = new AsyncSemaphoreHelper(sem, 0, new ConcurrentLinkedQueue[Permit])
     withFixture(test.toNoArgTest(helper))

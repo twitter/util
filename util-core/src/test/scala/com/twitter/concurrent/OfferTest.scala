@@ -15,7 +15,7 @@ class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
   def this(fut: Future[Tx[T]]) = this(Stream.continually(fut))
   def this(tx: Tx[T]) = this(Stream.continually(Future.value(tx)))
 
-  def prepare() = {
+  def prepare(): Future[Tx[T]] = {
     val next #:: rest = futures
     futures = rest
     next

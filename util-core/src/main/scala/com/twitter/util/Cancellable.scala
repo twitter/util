@@ -38,7 +38,7 @@ object Cancellable {
 
 class CancellableSink(f: => Unit) extends Cancellable {
   private[this] val wasCancelled = new AtomicBoolean(false)
-  def isCancelled = wasCancelled.get
+  def isCancelled: Boolean = wasCancelled.get
   def cancel(): Unit = { if (wasCancelled.compareAndSet(false, true)) f }
   def linkTo(other: Cancellable): Unit = {
     throw new Exception("linking not supported in CancellableSink")

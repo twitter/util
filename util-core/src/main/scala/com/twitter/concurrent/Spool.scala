@@ -67,7 +67,7 @@ sealed trait Spool[+A] {
    * Apply {{f}} for each item in the spool, until the end.  {{f}} is
    * applied as the items become available.
    */
-  def foreach[B](f: A => B) = foreachElem(_ foreach f)
+  def foreach[B](f: A => B): Future[Unit] = foreachElem(_ foreach f)
 
   /**
    * A version of {{foreach}} that wraps each element in an
@@ -291,8 +291,8 @@ abstract class AbstractSpool[A] extends Spool[A]
  */
 object Spool {
   case class Cons[A](head: A, tail: Future[Spool[A]]) extends Spool[A] {
-    def isEmpty = false
-    override def toString = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
+    def isEmpty: Boolean = false
+    override def toString: String = "Cons(%s, %c)".format(head, if (tail.isDefined) '*' else '?')
   }
 
   private class LazyCons[A](val head: A, next: => Future[Spool[A]]) extends Spool[A] {
@@ -303,10 +303,10 @@ object Spool {
   }
 
   object Empty extends Spool[Nothing] {
-    def isEmpty = true
-    def head = throw new NoSuchElementException("spool is empty")
-    def tail = Future.exception(new NoSuchElementException("spool is empty"))
-    override def toString = "Empty"
+    def isEmpty: Boolean = true
+    def head: Nothing = throw new NoSuchElementException("spool is empty")
+    def tail: Future[Nothing] = Future.exception(new NoSuchElementException("spool is empty"))
+    override def toString: String = "Empty"
   }
 
   /**
@@ -352,7 +352,7 @@ object Spool {
      * @deprecated Deprecated in favor of {{*::}}. This will eventually be removed.
      */
     @deprecated("Use *:: instead.", "6.14.1")
-    def **::(head: A) = cons(head, tail)
+    def **::(head: A): Spool[A] = cons(head, tail)
   }
 
   implicit def syntax1[A](s: Spool[A]): Syntax1[A] = new Syntax1[A](s)

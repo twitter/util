@@ -203,5 +203,5 @@ class AsyncQueue[T](maxPendingOffers: Int) {
     }
   }
 
-  override def toString = s"AsyncQueue<${synchronized(state)}>"
+  override def toString: String = s"AsyncQueue<${synchronized(state)}>"
 }

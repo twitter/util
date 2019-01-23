@@ -21,6 +21,7 @@ import java.io.{File, IOException}
 import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.parsing.combinator._
+import scala.util.matching.Regex
 
 /**
  * Simple helper to read authentication credentials from a text file.
@@ -31,12 +32,12 @@ import scala.util.parsing.combinator._
 object Credentials {
   object parser extends RegexParsers {
 
-    override val whiteSpace = "(?:\\s+|#.*\\r?\\n)+".r
+    override val whiteSpace: Regex = "(?:\\s+|#.*\\r?\\n)+".r
 
     private[this] val key = "[\\w-]+".r
     private[this] val value = ".+".r
 
-    def auth = key ~ ":" ~ value ^^ { case k ~ ":" ~ v => (k, v) }
+    def auth: Parser[Tuple2[String, String]] = key ~ ":" ~ value ^^ { case k ~ ":" ~ v => (k, v) }
     def content: Parser[Map[String, String]] = rep(auth) ^^ { auths =>
       Map(auths: _*)
     }

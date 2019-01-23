@@ -12,8 +12,8 @@ import scala.util.control.NonFatal
 trait ClosableOnce extends Closable {
 
   // Our intrinsic lock for mutating the `closed` field
-  private[this] val closePromise = Promise[Unit]()
-  private[this] var closed = false
+  private[this] val closePromise: Promise[Unit] = Promise[Unit]()
+  private[this] var closed: Boolean = false
 
   private[this] def once(): Boolean = closePromise.synchronized {
     if (closed) {

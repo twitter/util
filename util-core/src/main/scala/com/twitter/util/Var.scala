@@ -159,7 +159,7 @@ object Var {
   }
 
   private[util] object Observer {
-    def apply[T](k: T => Unit) = new Observer(k)
+    def apply[T](k: T => Unit): Observer[T] = new Observer(k)
   }
 
   /**
@@ -433,16 +433,16 @@ private object UpdatableVar {
   import Var.Observer
 
   case class Party[T](obs: Observer[T], depth: Int, n: Long) {
-    @volatile var active = true
+    @volatile var active: Boolean = true
   }
 
   case class State[T](value: T, version: Long, parties: immutable.SortedSet[Party[T]]) {
-    def -(p: Party[T]) = copy(parties = parties - p)
-    def +(p: Party[T]) = copy(parties = parties + p)
-    def :=(newv: T) = copy(value = newv, version = version + 1)
+    def -(p: Party[T]): State[T] = copy(parties = parties - p)
+    def +(p: Party[T]): State[T] = copy(parties = parties + p)
+    def :=(newv: T): State[T] = copy(value = newv, version = version + 1)
   }
 
-  implicit def order[T] = new Ordering[Party[T]] {
+  implicit def order[T]: Ordering[Party[T]] = new Ordering[Party[T]] {
     // This is safe because observers are compared
     // only from the same counter.
     def compare(a: Party[T], b: Party[T]): Int = {
@@ -495,7 +495,7 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
     }
   }
 
-  override def toString = "Var(" + state.get.value + ")@" + hashCode
+  override def toString: String = "Var(" + state.get.value + ")@" + hashCode
 }
 
 /**

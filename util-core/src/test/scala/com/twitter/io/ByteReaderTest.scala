@@ -14,7 +14,7 @@ class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   def readerWith(bytes: Byte*): ByteReader = ByteReader(Buf.ByteArray.Owned(bytes.toArray))
 
-  def maskMedium(i: Int) = i & 0x00ffffff
+  def maskMedium(i: Int): Int = i & 0x00ffffff
 
   test("readBytes increments position by the number of bytes returned") {
     val br = readerWith()

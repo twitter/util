@@ -399,7 +399,7 @@ class TimeFormatTest extends WordSpec {
 }
 
 @RunWith(classOf[JUnitRunner])
-class TimeTest extends { val ops = Time } with TimeLikeSpec[Time] with Eventually
+class TimeTest extends { val ops: Time.type = Time } with TimeLikeSpec[Time] with Eventually
 with IntegrationPatience {
 
   "Time" should {

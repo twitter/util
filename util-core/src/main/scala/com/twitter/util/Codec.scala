@@ -25,7 +25,7 @@ trait Encoder[T, S] extends (T => S) {
    */
   def encode(t: T): S
 
-  def apply(t: T) = encode(t)
+  def apply(t: T): S = encode(t)
 }
 
 trait DecoderCompanion {
@@ -51,7 +51,7 @@ trait Decoder[T, S] {
    */
   def decode(s: S): T
 
-  def invert(s: S) = decode(s)
+  def invert(s: S): T = decode(s)
 }
 
 object Codec extends EncoderCompanion with DecoderCompanion {

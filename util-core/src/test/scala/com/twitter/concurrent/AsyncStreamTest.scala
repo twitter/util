@@ -743,18 +743,18 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
 }
 
 private object AsyncStreamTest {
-  val genListAndN = for {
+  val genListAndN: Gen[Tuple2[List[Int], Int]] = for {
     as <- Arbitrary.arbitrary[List[Int]]
     n <- Gen.choose(0, as.length)
   } yield (as, n)
 
-  val genListAndSentinel = for {
+  val genListAndSentinel: Gen[Tuple2[List[Int], Int]] = for {
     as <- Arbitrary.arbitrary[List[Int]]
     if as.nonEmpty
     n <- Gen.choose(0, as.length - 1)
   } yield (as, as(n))
 
-  def await[T](fut: Future[T]) = Await.result(fut, 100.milliseconds)
+  def await[T](fut: Future[T]): T = Await.result(fut, 100.milliseconds)
 
   def undefined[A]: A = throw new Exception
 

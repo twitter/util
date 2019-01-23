@@ -11,8 +11,8 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
   private var top = 0
   private var count_ = 0
 
-  def length = count_
-  override def size = count_
+  def length: Int = count_
+  override def size: Int = count_
 
   def clear(): Unit = {
     top = 0
@@ -84,7 +84,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
     }
   }
 
-  override def iterator = new Iterator[A] {
+  override def iterator: Iterator[A] = new Iterator[A] {
     var idx = 0
     def hasNext = idx != count_
     def next = {

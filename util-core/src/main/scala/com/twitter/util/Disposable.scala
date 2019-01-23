@@ -66,7 +66,7 @@ trait Disposable[+T] {
 }
 
 object Disposable {
-  def const[T](t: T) = new Disposable[T] {
+  def const[T](t: T): Disposable[T] = new Disposable[T] {
     def get = t
     def dispose(deadline: Time) = Future.value(())
   }
@@ -131,13 +131,13 @@ trait Managed[+T] { selfT =>
 }
 
 object Managed {
-  def singleton[T](t: Disposable[T]) = new Managed[T] { def make() = t }
-  def const[T](t: T) = singleton(Disposable.const(t))
+  def singleton[T](t: Disposable[T]): Managed[T] = new Managed[T] { def make() = t }
+  def const[T](t: T): Managed[T] = singleton(Disposable.const(t))
 }
 
 class DoubleTrouble(cause1: Throwable, cause2: Throwable) extends Exception {
-  override def getStackTrace = cause1.getStackTrace
-  override def getMessage =
+  override def getStackTrace: Array[StackTraceElement] = cause1.getStackTrace
+  override def getMessage: String =
     "Double failure while disposing composite resource: %s \n %s".format(
       cause1.getMessage,
       cause2.getMessage

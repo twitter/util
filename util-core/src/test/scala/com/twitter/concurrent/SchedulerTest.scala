@@ -16,7 +16,7 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite with Matchers 
       def run(): Unit = f
     })
 
-  val N = 100
+  val N: Int = 100
 
   test("run the first submitter immediately") {
     var ok = false

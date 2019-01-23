@@ -70,6 +70,6 @@ private[io] class OutputStreamWriter(out: OutputStream, bufsize: Int) extends Wr
 }
 
 private object OutputStreamWriter {
-  val WriteExc = new IllegalStateException("write while writing")
-  val CloseExc = new IllegalStateException("write after close")
+  val WriteExc: IllegalStateException = new IllegalStateException("write while writing")
+  val CloseExc: IllegalStateException = new IllegalStateException("write after close")
 }

@@ -312,6 +312,6 @@ object Offer {
   }
 
   object LostSynchronization extends Exception {
-    override def fillInStackTrace = this
+    override def fillInStackTrace: LostSynchronization.type = this
   }
 }
