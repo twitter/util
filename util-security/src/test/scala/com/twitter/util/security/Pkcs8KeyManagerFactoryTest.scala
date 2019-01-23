@@ -3,14 +3,11 @@ package com.twitter.util.security
 import com.twitter.io.TempFile
 import java.io.File
 import javax.net.ssl.{KeyManager, X509KeyManager}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class PKCS8KeyManagerFactoryTest extends FunSuite {
 
-  private[this] def assertContainsCertAndKey(keyManager: KeyManager): Unit = {
+  private[this] def assertContainsCertsAndKey(keyManager: KeyManager, numCerts: Int = 1): Unit = {
     assert(keyManager.isInstanceOf[X509KeyManager])
     val x509km = keyManager.asInstanceOf[X509KeyManager]
 
@@ -22,7 +19,7 @@ class PKCS8KeyManagerFactoryTest extends FunSuite {
     val alias = clientAliases.head
 
     val certChain = x509km.getCertificateChain(alias)
-    assert(certChain.length == 1)
+    assert(certChain.length == numCerts)
     val cert = certChain.head
     assert(cert.getSubjectX500Principal.getName().contains("localhost.twitter.com"))
 
@@ -83,7 +80,23 @@ class PKCS8KeyManagerFactoryTest extends FunSuite {
     assert(tryKeyManagers.isReturn)
     val keyManagers = tryKeyManagers.get()
     assert(keyManagers.length == 1)
-    assertContainsCertAndKey(keyManagers.head)
+    assertContainsCertsAndKey(keyManagers.head)
+  }
+
+  test("Chain of certificates is good") {
+    val tempCertsFile = TempFile.fromResourcePath("/certs/test-rsa-full-cert-chain.crt")
+    // deleteOnExit is handled by TempFile
+
+    val tempKeyFile = TempFile.fromResourcePath("/keys/test-pkcs8.key")
+    // deleteOnExit is handled by TempFile
+
+    val factory = new Pkcs8KeyManagerFactory(tempCertsFile, tempKeyFile)
+    val tryKeyManagers = factory.getKeyManagers()
+
+    assert(tryKeyManagers.isReturn)
+    val keyManagers = tryKeyManagers.get()
+    assert(keyManagers.length == 1)
+    assertContainsCertsAndKey(keyManagers.head, numCerts = 3)
   }
 
 }

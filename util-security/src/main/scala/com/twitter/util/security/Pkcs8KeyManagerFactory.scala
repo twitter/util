@@ -12,13 +12,13 @@ import javax.net.ssl.{KeyManager, KeyManagerFactory}
 
 /**
  * A factory which can create a [[javax.net.ssl.KeyManager KeyManager]] which contains
- * an X.509 Certificate and a PKCS#8 private key.
+ * an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
  */
-class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
+class Pkcs8KeyManagerFactory(certsFile: File, keyFile: File) {
 
   private[this] def logException(ex: Throwable): Unit =
     log.warning(
-      s"Pkcs8KeyManagerFactory (${certFile.getName()}, ${keyFile.getName()}) " +
+      s"Pkcs8KeyManagerFactory (${certsFile.getName()}, ${keyFile.getName()}) " +
         s"failed to create key manager: ${ex.getMessage()}."
     )
 
@@ -27,11 +27,14 @@ class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
     kf.generatePrivate(keySpec)
   }
 
-  private[this] def createKeyStore(cert: X509Certificate, privateKey: PrivateKey): KeyStore = {
+  private[this] def createKeyStore(
+    certs: Seq[X509Certificate],
+    privateKey: PrivateKey
+  ): KeyStore = {
     val alias: String = UUID.randomUUID().toString()
     val ks: KeyStore = KeyStore.getInstance("JKS")
     ks.load(null)
-    ks.setKeyEntry(alias, privateKey, "".toCharArray(), Array(cert))
+    ks.setKeyEntry(alias, privateKey, "".toCharArray(), certs.toArray)
     ks
   }
 
@@ -42,19 +45,20 @@ class Pkcs8KeyManagerFactory(certFile: File, keyFile: File) {
   }
 
   /**
-   * Attempts to read the contents of both the X.509 Certificate file and the PKCS#8
+   * Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
    * Private Key file and combine the contents into a [[javax.net.ssl.KeyManager KeyManager]].
    * The singular value is returned in an Array for ease of use with
    * [[javax.net.ssl.SSLContext SSLContext's]] init method.
    */
   def getKeyManagers(): Try[Array[KeyManager]] = {
-    val tryCert: Try[X509Certificate] = new X509CertificateFile(certFile).readX509Certificate()
+    val tryCerts: Try[Seq[X509Certificate]] =
+      new X509CertificateFile(certsFile).readX509Certificates()
     val tryKeySpec: Try[PKCS8EncodedKeySpec] =
       new Pkcs8EncodedKeySpecFile(keyFile).readPkcs8EncodedKeySpec()
     val tryPrivateKey: Try[PrivateKey] = tryKeySpec.map(keySpecToPrivateKey)
 
-    val tryCertKey: Try[(X509Certificate, PrivateKey)] = join(tryCert, tryPrivateKey)
-    val tryKeyStore: Try[KeyStore] = tryCertKey.map((createKeyStore _).tupled)
+    val tryCertsKey: Try[(Seq[X509Certificate], PrivateKey)] = join(tryCerts, tryPrivateKey)
+    val tryKeyStore: Try[KeyStore] = tryCertsKey.map((createKeyStore _).tupled)
     tryKeyStore.map(keyStoreToKeyManagers).onFailure(logException)
   }
 

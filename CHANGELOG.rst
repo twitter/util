@@ -16,6 +16,9 @@ New Features
 * util-core: Added `Duration.fromMinutes` to return a `Duration` from a given number of minutes.
   ``PHAB_ID=D259795``
 
+* util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
+  certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
+
 19.1.0
 -------
 
