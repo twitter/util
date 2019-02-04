@@ -216,13 +216,17 @@ object Reader {
     private[this] val closep = Promise[StreamTermination]()
 
     final def read(): Future[Option[A]] =
-      if (closep.updateIfEmpty(StreamTermination.FullyRead.Return))
-        fa.map(Some.apply)
-      else
+      if (!closep.isDefined) {
+        fa.map(Some.apply).respond {
+          case Throw(e) => closep.updateIfEmpty(Throw(e))
+          case Return(_) => closep.updateIfEmpty(StreamTermination.FullyRead.Return)
+        }
+      } else {
         closep.flatMap {
           case StreamTermination.FullyRead => Future.None
           case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
         }
+      }
 
     final def discard(): Unit = closep.updateIfEmpty(StreamTermination.Discarded.Return)
 
@@ -416,25 +420,29 @@ object Reader {
     // access this currentReader is synchronized on `self`
     private[this] var currentReader: Reader[A] = Reader.empty
 
-    // this method should be called inside a synchronized block
-    def updateCurrentAndRead(): Future[Option[A]] =
+    private def updateCurrentAndRead(): Future[Option[A]] =
       readers.read().flatMap {
         case Some(reader) =>
-          currentReader = reader
+          self.synchronized { currentReader = reader }
           read()
-        case None => Future.None
+        case None =>
+          closep.updateIfEmpty(StreamTermination.FullyRead.Return)
+          Future.None
       }
 
     def read(): Future[Option[A]] = self.synchronized {
-      currentReader.read().flatMap {
-        case sa @ Some(_) => Future.value(sa)
-        case _ => updateCurrentAndRead()
+      currentReader.read().transform {
+        case Return(None) => updateCurrentAndRead()
+        case Return(sa) => Future.value(sa)
+        case Throw(t) =>
+          closep.updateIfEmpty(Throw(t))
+          Future.exception(t)
       }
     }
 
     def discard(): Unit = {
       closep.updateIfEmpty(StreamTermination.Discarded.Return)
-      currentReader.discard()
+      self.synchronized(currentReader).discard()
       readers.discard()
     }
 

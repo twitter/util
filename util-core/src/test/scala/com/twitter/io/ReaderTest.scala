@@ -261,26 +261,31 @@ class ReaderTest
     assertFailed(reader, p)
   }
 
-  test("Reader.flatten - lazy tail") {
-    val head = new Reader[Buf] {
-      def read(): Future[Option[Buf]] = Future.exception(new Exception)
+  test("Reader.flatten - onClose is satisfied when fully read") {
+    val reader = Reader.flatten(Reader.fromSeq(Seq(Reader.value(10), Reader.value(20))))
+    assert(await(reader.read()) == Some(10))
+    assert(await(reader.read()) == Some(20))
+    assert(await(reader.read()) == None)
+    assert(await(reader.onClose) == StreamTermination.FullyRead)
+  }
 
-      def discard(): Unit = ()
-      def onClose: Future[StreamTermination] = Future.never
+  test("Reader.flatten - stop when encounter exceptions") {
+    val reader = Reader.flatten(
+      Reader.fromSeq(
+        Seq(Reader.value(10), Reader.exception(new Exception("stop")), Reader.value(20))))
+    assert(await(reader.read()) == Some(10))
+    val ex1 = intercept[Exception] {
+      await(reader.read())
     }
-    val p = new Promise[Unit]
-
-    def tail: Reader[Reader[Buf]] = {
-      p.setDone()
-      Reader.empty
+    assert(ex1.getMessage == "stop")
+    val ex2 = intercept[Exception] {
+      await(reader.read())
     }
-
-    val combined = Reader.flatten(Reader.fromSeq(head +: undefinedReaders))
-    val buf = Reader.readAll(combined)
-    intercept[Exception] {
-      await(buf)
+    assert(ex2.getMessage == "stop")
+    val ex3 = intercept[Exception] {
+      await(reader.onClose)
     }
-    assert(!p.isDefined)
+    assert(ex3.getMessage == "stop")
   }
 
   test("Reader.fromSeq works on infinite streams") {
@@ -289,19 +294,6 @@ class ReaderTest
     assert(await(reader.read()) == Some(1))
     assert(await(reader.read()) == Some(1))
     assert(await(reader.read()) == Some(1))
-  }
-
-  test("Reader.flatten - concurrent read on a Reader with empty Reader prefixed") {
-    val p = new Promise[Int]
-    val reader = Reader.flatten(
-      Reader.fromSeq(Seq(Reader.empty, Reader.fromFuture(p), Reader.fromSeq(Seq(2, 3)))))
-
-    val x = reader.read()
-    val y = reader.read()
-    val z = reader.read()
-
-    p.setValue(1)
-    assert(Seq(Some(1), Some(2), Some(3)) == Seq(await(x), await(y), await(z)))
   }
 
   test("Reader.fromStream closes resources on EOF read") {
@@ -322,10 +314,10 @@ class ReaderTest
   }
 
   test("Reader.fromAsyncStream completes when stream is empty") {
-    val as = AsyncStream(buf(1, 10))
+    val as = AsyncStream(buf(1, 10)) ++ AsyncStream.exception[Buf](new Exception()) ++ AsyncStream(
+      buf(1, 10))
     val r = Reader.fromAsyncStream(as)
-    val f = Reader.readAll(r)
-    assert(await(f) == buf(1, 10))
+    assert(await(r.read()) == Some(buf(1, 10)))
   }
 
   test("Reader.fromAsyncStream fails on exceptional stream") {
@@ -477,10 +469,14 @@ class ReaderTest
   test("Reader.exception") {
     forAll { ex: Exception =>
       val r = Reader.exception(ex)
-      intercept[Exception] {
+      val exr = intercept[Exception] {
         await(r.read())
       }
-      assert(await(r.read()) == None)
+      assert(exr == ex)
+      val exc = intercept[Exception] {
+        await(r.onClose)
+      }
+      assert(exc == ex)
     }
   }
 
