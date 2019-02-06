@@ -19,6 +19,16 @@ New Features
 * util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
   certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
 
+* util-core: If given a `Timer` upon construction, `c.t.io.Pipe` will respect the close
+  deadline and wait the given amount of time for any pending writes to be read. ``PHAB_ID=D229728``
+
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Closing a `c.t.io.Pipe` will notify `onClose` when the deadline has passed whereas
+  before the pipe would wait indefinitely for a read before transitioning to the Closed state.
+  ``PHAB_ID=D229728``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 

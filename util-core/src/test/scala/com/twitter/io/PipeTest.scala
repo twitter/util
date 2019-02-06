@@ -1,8 +1,7 @@
 package com.twitter.io
 
 import com.twitter.conversions.DurationOps._
-import com.twitter.io.ReaderDiscardedException
-import com.twitter.util.{Await, Future, Return}
+import com.twitter.util.{Await, Future, MockTimer, Return, Time}
 import org.scalatest.{FunSuite, Matchers}
 
 class PipeTest extends FunSuite with Matchers {
@@ -36,13 +35,13 @@ class PipeTest extends FunSuite with Matchers {
     val buf = Buf.ByteArray.Owned(Array.range(i, j).map(_.toByte))
     val f = w.write(buf)
     assert(f.isDefined)
-    assert(await(f.liftToTry) == Return(()))
+    assert(await(f.liftToTry) == Return.Unit)
   }
 
   private def assertWriteEmpty(w: Writer[Buf]): Unit = {
     val f = w.write(Buf.Empty)
     assert(f.isDefined)
-    assert(await(f.liftToTry) == Return(()))
+    assert(await(f.liftToTry) == Return.Unit)
   }
 
   private def assertReadEofAndClosed(rw: Pipe[Buf]): Unit = {
@@ -231,7 +230,10 @@ class PipeTest extends FunSuite with Matchers {
     intercept[IllegalStateException] {
       await(wf)
     }
-    assertReadEofAndClosed(rw)
+    assertReadNone(rw)
+    intercept[IllegalStateException] {
+      await(rw.onClose)
+    }
   }
 
   test("read while reading") {
@@ -322,15 +324,34 @@ class PipeTest extends FunSuite with Matchers {
   }
 
   test("close before fail") {
-    val rw = new Pipe[Buf]
-    val cf = rw.close()
-    assert(!cf.isDone)
+    val timer = new MockTimer()
+    Time.withCurrentTimeFrozen { ctrl =>
+      val rw = new Pipe[Buf](timer)
+      val cf = rw.close(1.second)
+      assert(!cf.isDone)
 
-    rw.fail(failedEx)
-    assert(!cf.isDone)
+      ctrl.advance(1.second)
+      timer.tick()
 
-    assertFailedEx(rw.read())
-    assertFailedEx(cf)
+      rw.fail(failedEx)
+
+      assertFailedEx(rw.read())
+    }
+  }
+
+  test("close before fail within deadline") {
+    val timer = new MockTimer()
+    Time.withCurrentTimeFrozen { _ =>
+      val rw = new Pipe[Buf](timer)
+      val cf = rw.close(1.second)
+      assert(!cf.isDone)
+
+      rw.fail(failedEx)
+      assert(!cf.isDone)
+
+      assertFailedEx(rw.read())
+      assertFailedEx(cf)
+    }
   }
 
   test("close while write pending") {
@@ -342,6 +363,73 @@ class PipeTest extends FunSuite with Matchers {
     intercept[IllegalStateException] {
       await(wf)
     }
-    assertReadEofAndClosed(rw)
+    assertReadNone(rw)
+    intercept[IllegalStateException] {
+      await(rw.onClose)
+    }
+  }
+
+  test("close respects deadline") {
+    val mockTimer = new MockTimer()
+    Time.withCurrentTimeFrozen { timeCtrl =>
+      val rw = new Pipe[Buf](mockTimer)
+      val wf = rw.write(buf(0, 6))
+
+      rw.close(1.second)
+
+      assert(!wf.isDefined)
+      assert(!rw.onClose.isDefined)
+
+      timeCtrl.advance(1.second)
+      mockTimer.tick()
+
+      intercept[IllegalStateException] {
+        await(wf)
+      }
+
+      intercept[IllegalStateException] {
+        await(rw.onClose)
+      }
+      assertReadNone(rw)
+    }
+  }
+
+  test("read complete data before close deadline") {
+    val mockTimer = new MockTimer()
+    val rw = new Pipe[Buf](mockTimer)
+    Time.withCurrentTimeFrozen { timeCtrl =>
+      val wf = rw.write(buf(0, 6)) before rw.close(1.second)
+
+      assert(!wf.isDefined)
+      assertRead(rw, 0, 6)
+      assertReadNone(rw)
+      assert(wf.isDefined)
+
+      timeCtrl.advance(1.second)
+      mockTimer.tick()
+
+      assertReadEofAndClosed(rw)
+    }
+  }
+
+  test("multiple reads read complete data before close deadline") {
+    val mockTimer = new MockTimer()
+    val buf = Buf.Utf8("foo")
+    Time.withCurrentTimeFrozen { timeCtrl =>
+      val rw = new Pipe[Buf](mockTimer)
+      val writef = rw.write(buf)
+
+      rw.close(1.second)
+
+      assert(!writef.isDefined)
+      assert(await(Reader.readAll(rw)) == buf)
+      assertReadNone(rw)
+      assert(writef.isDefined)
+
+      timeCtrl.advance(1.second)
+      mockTimer.tick()
+
+      assertReadEofAndClosed(rw)
+    }
   }
 }

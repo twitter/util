@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, Promise, Return, Time, Throw}
+import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
 
 /**
  * A synchronous in-memory pipe that connects [[Reader]] and [[Writer]] in the sense
@@ -66,12 +66,14 @@ import com.twitter.util.{Future, Promise, Return, Time, Throw}
  * The following rules should help reasoning about closure signals in pipes:
  *
  * - Closing a pipe with a pending read resolves said read into EOF and returns a [[Future.Unit]]
- * - Closing a pipe with a pending write fails said write with [[IllegalStateException]] and
- *   returns a future that will be satisfied when a consumer observes the closure (EOF) via read
+ * - Closing a pipe with a pending write by default fails said write with [[IllegalStateException]] and
+ *   returns a future that will be satisfied when a consumer observes the closure (EOF) via read. If
+ *   a timer is provided, the pipe will wait until the provided deadline for a successful read before
+ *   failing the write.
  * - Closing an idle pipe returns a future that will be satisfied when a consumer observes the
- *   closure (EOF) via read
+ *   closure (EOF) via read when a timer is provided, otherwise the pipe will be closed immedidately.
  */
-final class Pipe[A] extends Reader[A] with Writer[A] {
+final class Pipe[A](timer: Timer) extends Reader[A] with Writer[A] {
 
   // Implementation Notes:
   //
@@ -87,6 +89,11 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
 
   import Pipe._
 
+  /**
+   * For Java compatability
+   */
+  def this() = this(Timer.Nil)
+
   // thread-safety provided by synchronization on `this`
   private[this] var state: State[A] = State.Idle
 
@@ -99,10 +106,6 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
         case State.Failed(exc) =>
           (null, Future.exception(exc))
 
-        case State.Closing =>
-          state = State.Closed
-          (null, Future.None)
-
         case State.Closed =>
           (null, Future.None)
 
@@ -112,12 +115,22 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
           (null, p)
 
         case State.Writing(buf, p) =>
-          // pending write can fully fit into this requested read
           state = State.Idle
           (p, Future.value(Some(buf)))
 
         case State.Reading(_) =>
           (null, Future.exception(new IllegalStateException("read() while read is pending")))
+
+        case State.Closing(buf, p) =>
+          val result = buf match {
+            case None =>
+              state = State.Closed
+              Future.None
+            case _ =>
+              state = State.Closing(None, null)
+              Future.value(buf)
+          }
+          (p, result)
       }
     }
 
@@ -136,7 +149,7 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
         case State.Failed(exc) =>
           (null, null, Future.exception(exc))
 
-        case State.Closed | State.Closing =>
+        case State.Closed | State.Closing(_, _) =>
           (null, null, Future.exception(new IllegalStateException("write() while closed")))
 
         case State.Idle =>
@@ -171,9 +184,12 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
         case State.Closed | State.Failed(_) =>
           // do not update state to failing
           (null, null, null)
-        case State.Idle | State.Closing =>
+        case State.Idle =>
           state = State.Failed(cause)
           (closep, null, null)
+        case State.Closing(_, p) =>
+          state = State.Failed(cause)
+          (closep, null, p)
         case State.Reading(p) =>
           state = State.Failed(cause)
           (closep, p, null)
@@ -192,23 +208,34 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
     }
   }
 
+  private def closeLater(deadline: Time): Future[Unit] = {
+    timer.doLater(Time.now.until(deadline)) {
+      Pipe.this.synchronized {
+        state match {
+          case State.Failed(_) | State.Closed =>
+          case _ => state = State.Closed
+        }
+      }
+    }
+  }
+
   def close(deadline: Time): Future[Unit] = {
-    val (closer, reader, writer) = synchronized {
+    val (reader, writer) = synchronized {
       state match {
-        case State.Failed(_) | State.Closed | State.Closing =>
-          (null, null, null)
+        case State.Failed(_) | State.Closed | State.Closing(_, _) =>
+          (null, null)
 
         case State.Idle =>
-          state = State.Closing
-          (null, null, null)
+          state = State.Closing(None, null)
+          (null, null)
 
         case State.Reading(p) =>
           state = State.Closed
-          (closep, p, null)
+          (p, null)
 
-        case State.Writing(_, p) =>
-          state = State.Closing
-          (null, null, p)
+        case State.Writing(buf, p) =>
+          state = State.Closing(Some(buf), p)
+          (null, p)
       }
     }
 
@@ -216,9 +243,11 @@ final class Pipe[A] extends Reader[A] with Writer[A] {
       reader.update(Return.None)
       closep.update(StreamTermination.FullyRead.Return)
     } else if (writer != null) {
-      val exn = new IllegalStateException("close() while write is pending")
-      writer.setException(exn)
-      if (closer != null) closer.updateIfEmpty(Throw(exn))
+      closeLater(deadline).respond { _ =>
+        val exn = new IllegalStateException("close() while write is pending")
+        writer.updateIfEmpty(Throw(exn))
+        closep.updateIfEmpty(Throw(exn))
+      }
     }
 
     onClose.unit
@@ -256,8 +285,14 @@ object Pipe {
     /** Indicates the pipe was failed. */
     final case class Failed(exc: Throwable) extends State[Nothing]
 
-    /** Indicates a close occurred while `Idle` — no reads or writes were pending.*/
-    case object Closing extends State[Nothing]
+    /**
+     * Indicates a close occurred while a write was pending.
+     *
+     * @param value the pending write
+     * @param p when satisfied it indicates that this write has been fully read or the
+     *          close deadline has expired before it has been fully read.
+     * */
+    final case class Closing[A](value: Option[A], p: Promise[Unit]) extends State[A]
 
     /** Indicates the reader has seen the EOF. No more reads or writes are allowed. */
     case object Closed extends State[Nothing]
