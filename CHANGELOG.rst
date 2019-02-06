@@ -19,6 +19,16 @@ New Features
 * util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
   certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Remove `c.t.u.CountDownLatch` which is an extremely thin shim around
+  `j.u.c.CountDownLatch` that provides pretty limited value.  To migrate to `j.u.c.CountDownLatch`,
+  instead of `c.t.u.CountDownLatch#await(Duration)`, please use
+  `j.u.c.CountDownLatch#await(int, TimeUnit)`, and instead of
+  `c.t.u.CountDownLatch#within(Duration)`, please throw an exception yourself after awaiting.
+  ``PHAB_ID=D269404``
+
 19.1.0
 -------
 

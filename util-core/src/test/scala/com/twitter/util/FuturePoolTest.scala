@@ -93,7 +93,7 @@ class FuturePoolTest extends FunSuite with Eventually {
       runCount.get
     }
 
-    startedLatch.await(1.second)
+    startedLatch.await(1, TimeUnit.SECONDS)
     result.raise(new Exception)
     cancelledLatch.countDown()
 
@@ -212,7 +212,7 @@ class FuturePoolTest extends FunSuite with Eventually {
     // execute a task we can control
     val latch = new CountDownLatch(1)
     val future = pool {
-      latch.await(10.seconds)
+      latch.await(10, TimeUnit.SECONDS)
       true
     }
     eventually { assert(pool.poolSize == 1) }

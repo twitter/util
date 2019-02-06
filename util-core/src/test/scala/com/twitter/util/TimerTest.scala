@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import java.util.concurrent.{CancellationException, ExecutorService}
+import java.util.concurrent.{CancellationException, ExecutorService, TimeUnit, CountDownLatch}
 import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -140,7 +140,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
       throw new scala.MatchError("huh")
     }
 
-    latch.await(30.seconds)
+    latch.await(30, TimeUnit.SECONDS)
 
     assert(errors == 1)
 
@@ -151,7 +151,7 @@ class TimerTest extends FunSuite with MockitoSugar with Eventually with Integrat
       latch.countDown()
     }
 
-    latch.await(30.seconds)
+    latch.await(30, TimeUnit.SECONDS)
 
     assert(result == 2)
     assert(errors == 1)
