@@ -421,7 +421,7 @@ lazy val utilZk = Project(
 ).settings(
   name := "util-zk",
   libraryDependencies += zkDependency
-).dependsOn(utilCore, utilCollection, utilLogging)
+).dependsOn(utilCore, utilLogging)
 
 lazy val utilZkTest = Project(
   id = "util-zk-test",
