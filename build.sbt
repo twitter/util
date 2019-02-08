@@ -124,7 +124,6 @@ lazy val util = Project(
   utilCacheGuava,
   utilClassPreloader,
   utilCodec,
-  utilCollection,
   utilCore,
   utilDoc,
   utilFunction,
@@ -202,18 +201,6 @@ lazy val utilCodec = Project(
 ).settings(
   name := "util-codec"
 ).dependsOn(utilCore)
-
-lazy val utilCollection = Project(
-  id = "util-collection",
-  base = file("util-collection")
-).settings(
-  sharedSettings
-).settings(
-  name := "util-collection",
-  libraryDependencies ++= Seq(
-    scalacheckLib
-  )
-).dependsOn(utilCore % "compile->compile;test->test")
 
 lazy val utilCore = Project(
   id = "util-core",

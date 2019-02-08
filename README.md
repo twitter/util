@@ -89,18 +89,6 @@ for {
 }
 ```
 
-# Collections
-
-## LruMap
-
-The LruMap is an LRU with a maximum size passed in. If the map is full it expires items in FIFO order. Reading a value will move an item to the top of the stack.
-
-```scala
-import com.twitter.util.LruMap
-
-val map = new LruMap[String, String](15) // this is of type mutable.Map[String, String]
-```
-
 # Object Pool
 
 The pool order is FIFO.

@@ -39,6 +39,14 @@ Breaking API Changes
   `c.t.u.CountDownLatch#within(Duration)`, please throw an exception yourself after awaiting.
   ``PHAB_ID=D269404``
 
+* util-collection: Delete util-collection.  We deleted `GenerationalQueue`, `MapToSetAdapter`, and
+  `ImmutableLRU`, because we found that they were of little utility.  We deleted `LruMap` because it
+  was a very thin shim around a `j.u.LinkedHashMap`, where you override `removeEldestEntry`.  If you
+  need `SynchronizedLruMap`, you can wrap your `LinkedHashMap` with
+  `j.u.Collection.synchronizedMap`.  We moved `RecordSchema` into finagle-base-http because it was
+  basically only used for HTTP messages, so its new package name is `c.t.f.http.collection`.
+  ``PHAB_ID=D270548``
+
 * util-core: Rename `BlacklistStatsReceiver` to `DenylistStatsReceiver`. ``PHAB_ID=D270526``
 
 19.1.0
