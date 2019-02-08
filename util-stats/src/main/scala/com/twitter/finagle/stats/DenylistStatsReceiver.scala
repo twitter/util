@@ -1,15 +1,15 @@
 package com.twitter.finagle.stats
 
 /**
- * A blacklisting [[StatsReceiver]].  If the name for a metric is found to be
- * blacklisted, nothing is recorded.
+ * A denylisting [[StatsReceiver]].  If the name for a metric is found to be
+ * denylisted, nothing is recorded.
  *
  * @param self a base [[StatsReceiver]], used for metrics that aren't
- *        blacklisted
- * @param blacklisted a predicate that reads a name and returns true to
- *        blacklist, and false to let it pass through
+ *        denylisted
+ * @param denylisted a predicate that reads a name and returns true to
+ *        denylist, and false to let it pass through
  */
-class BlacklistStatsReceiver(protected val self: StatsReceiver, blacklisted: Seq[String] => Boolean)
+class DenylistStatsReceiver(protected val self: StatsReceiver, denylisted: Seq[String] => Boolean)
     extends StatsReceiverProxy {
 
   override def counter(verbosity: Verbosity, name: String*): Counter =
@@ -22,7 +22,7 @@ class BlacklistStatsReceiver(protected val self: StatsReceiver, blacklisted: Seq
     getStatsReceiver(name).addGauge(verbosity, name: _*)(f)
 
   private[this] def getStatsReceiver(name: Seq[String]): StatsReceiver =
-    if (blacklisted(name)) NullStatsReceiver else self
+    if (denylisted(name)) NullStatsReceiver else self
 
-  override def toString: String = s"BlacklistStatsReceiver($self)"
+  override def toString: String = s"DenylistStatsReceiver($self)"
 }

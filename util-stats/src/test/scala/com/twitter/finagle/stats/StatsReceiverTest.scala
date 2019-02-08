@@ -143,8 +143,8 @@ class StatsReceiverTest extends FunSuite {
     assert("NullStatsReceiver" == NullStatsReceiver.scope("hi").scopeSuffix("bye").toString)
 
     assert(
-      "BlacklistStatsReceiver(NullStatsReceiver)" ==
-        new BlacklistStatsReceiver(NullStatsReceiver, { _ =>
+      "DenylistStatsReceiver(NullStatsReceiver)" ==
+        new DenylistStatsReceiver(NullStatsReceiver, { _ =>
           false
         }).toString
     )

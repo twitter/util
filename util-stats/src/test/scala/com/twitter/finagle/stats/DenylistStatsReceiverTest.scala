@@ -1,15 +1,12 @@
 package com.twitter.finagle.stats
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
-class BlacklistStatsReceiverTest extends FunSuite {
+class DenylistStatsReceiverTest extends FunSuite {
   // scalafix:off StoreGaugesAsMemberVariables
-  test("BlacklistStatsReceiver blacklists properly") {
+  test("DenylistStatsReceiver denylists properly") {
     val inmemory = new InMemoryStatsReceiver()
-    val bsr = new BlacklistStatsReceiver(inmemory, { case _ => true })
+    val bsr = new DenylistStatsReceiver(inmemory, { case _ => true })
     val ctr = bsr.counter("foo", "bar")
     ctr.incr()
     val gauge = bsr.addGauge("foo", "baz") { 3.0f }
@@ -21,9 +18,9 @@ class BlacklistStatsReceiverTest extends FunSuite {
     assert(inmemory.stats.isEmpty)
   }
 
-  test("BlacklistStatsReceiver allows through properly") {
+  test("DenylistStatsReceiver allows through properly") {
     val inmemory = new InMemoryStatsReceiver()
-    val bsr = new BlacklistStatsReceiver(inmemory, { case _ => false })
+    val bsr = new DenylistStatsReceiver(inmemory, { case _ => false })
     val ctr = bsr.counter("foo", "bar")
     ctr.incr()
     val gauge = bsr.addGauge("foo", "baz") { 3.0f }
@@ -35,9 +32,9 @@ class BlacklistStatsReceiverTest extends FunSuite {
     assert(inmemory.stats == Map(Seq("qux") -> Seq(3.0)))
   }
 
-  test("BlacklistStatsReceiver can go both ways properly") {
+  test("DenylistStatsReceiver can go both ways properly") {
     val inmemory = new InMemoryStatsReceiver()
-    val bsr = new BlacklistStatsReceiver(inmemory, { case seq => seq.length != 2 })
+    val bsr = new DenylistStatsReceiver(inmemory, { case seq => seq.length != 2 })
     val ctr = bsr.counter("foo", "bar")
     ctr.incr()
     val gauge = bsr.addGauge("foo", "baz") { 3.0f }
@@ -49,10 +46,10 @@ class BlacklistStatsReceiverTest extends FunSuite {
     assert(inmemory.stats.isEmpty)
   }
 
-  test("BlacklistStatsReceiver works scoped") {
+  test("DenylistStatsReceiver works scoped") {
     val inmemory = new InMemoryStatsReceiver()
     val bsr =
-      new BlacklistStatsReceiver(inmemory, { case seq => seq == Seq("foo", "bar") }).scope("foo")
+      new DenylistStatsReceiver(inmemory, { case seq => seq == Seq("foo", "bar") }).scope("foo")
     val ctr = bsr.counter("foo", "bar")
     ctr.incr()
     val gauge = bsr.addGauge("foo", "baz") { 3.0f }

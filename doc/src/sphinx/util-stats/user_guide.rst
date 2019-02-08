@@ -124,7 +124,7 @@ operations.
 
 Limiting the number of exported metrics via verbosity levels can reduce applications' operational
 cost. However taking this to extremes may drastically affect operability of your service. We
-recommend using your judgment to make sure blacklisting a given metric will not reduce a process'
+recommend using your judgment to make sure denylisting a given metric will not reduce a process'
 visibility.
 
 Access needed to a StatsReceiver in an inconvenient place
@@ -145,7 +145,7 @@ developers may find useful.
 
 - `NullStatsReceiver`_ for when you do not care about all metrics.
 
-- `BlacklistStatsReceiver`_ programmatically decide which metrics to ignore.
+- `DenylistStatsReceiver`_ programmatically decide which metrics to ignore.
 
 - `BroadcastStatsReceiver`_ allows for sending metrics to two or more ``StatsReceiver``\s.
 
@@ -167,4 +167,4 @@ Via TwitterServer/finagle-stats — the `HTTP admin interface`_ responds with js
 .. _java.lang.ref.WeakReference: http://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html
 .. _InMemoryStatsReceiver: https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala
 .. _HTTP admin interface: https://twitter.github.io/twitter-server/Features.html#http-admin-interface
-.. _BlacklistStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/BlacklistStatsReceiver.scala
+.. _DenylistStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala

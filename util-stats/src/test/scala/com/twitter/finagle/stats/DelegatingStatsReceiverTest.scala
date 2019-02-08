@@ -17,9 +17,9 @@ class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyC
       Gen.const(new InMemoryStatsReceiver())
     }
 
-    private[this] def blacklistStatsReceiver(depth: Int): Gen[StatsReceiver] =
+    private[this] def denylistStatsReceiver(depth: Int): Gen[StatsReceiver] =
       if (depth > 3) inMemoryStatsReceiver
-      else statsReceiverTopology(depth).map(new BlacklistStatsReceiver(_, { case _ => false }))
+      else statsReceiverTopology(depth).map(new DenylistStatsReceiver(_, { case _ => false }))
 
     private[this] def rollupStatsReceiver(depth: Int): Gen[StatsReceiver] =
       if (depth > 3) inMemoryStatsReceiver
@@ -58,7 +58,7 @@ class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyC
     private[this] def statsReceiverTopology(depth: Int): Gen[StatsReceiver] = {
       val seq = Seq(
         inMemoryStatsReceiver,
-        Gen.lzy(blacklistStatsReceiver(depth + 1)),
+        Gen.lzy(denylistStatsReceiver(depth + 1)),
         Gen.lzy(scopedStatsReceiver(depth + 1)),
         Gen.lzy(broadcastStatsReceiver(depth + 1)),
         Gen.lzy(proxyStatsReceiver(depth + 1)),

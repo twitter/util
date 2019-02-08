@@ -39,6 +39,8 @@ Breaking API Changes
   `c.t.u.CountDownLatch#within(Duration)`, please throw an exception yourself after awaiting.
   ``PHAB_ID=D269404``
 
+* util-core: Rename `BlacklistStatsReceiver` to `DenylistStatsReceiver`. ``PHAB_ID=D270526``
+
 19.1.0
 -------
 
