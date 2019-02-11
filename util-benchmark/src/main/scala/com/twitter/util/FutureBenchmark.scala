@@ -78,6 +78,18 @@ class FutureBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
+  def fromConstMap: Future[Unit] =
+    Future.Done.map(MapFn)
+
+  @Benchmark
+  def fromConstFlatMapToConst: Future[Unit] =
+    Future.Done.flatMap(FlatMapFn)
+
+  @Benchmark
+  def fromConstTransformToConst: Future[Unit] =
+    Future.Done.transform(TransformFn)
+
+  @Benchmark
   def timeSelect(state: SelectState): Future[(Try[Unit], Seq[Future[Unit]])] = {
     import state._
 
@@ -256,6 +268,9 @@ object FutureBenchmark {
   }
   private val MapFn: Unit => Unit = { _: Unit =>
     ()
+  }
+  private val TransformFn: Try[Unit] => Future[Unit] = { _: Try[Unit] =>
+    Future.Done
   }
 
   @State(Scope.Benchmark)

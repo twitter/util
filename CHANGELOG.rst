@@ -16,11 +16,14 @@ New Features
 * util-core: Added `Duration.fromMinutes` to return a `Duration` from a given number of minutes.
   ``PHAB_ID=D259795``
 
-* util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
-  certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
-
 * util-core: If given a `Timer` upon construction, `c.t.io.Pipe` will respect the close
   deadline and wait the given amount of time for any pending writes to be read. ``PHAB_ID=D229728``
+
+* util-core: Optimized `ConstFuture.proxyTo` which brings the performance of
+  `flatMap` and `transform` of a `ConstFuture` in line with `map`. ``PHAB_ID=D271358``
+
+* util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
+  certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~

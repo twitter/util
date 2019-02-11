@@ -32,6 +32,11 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
     this
   }
 
+  override def proxyTo[B >: A](other: Promise[B]): Unit = {
+    // avoid an extra call to `isDefined` as `update` checks
+    other.update(result)
+  }
+
   def raise(interrupt: Throwable): Unit = ()
 
   protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {

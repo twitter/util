@@ -703,14 +703,16 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    * @see [[com.twitter.util.Future.proxyTo]]
    */
   def become(other: Future[A]): Unit = {
-    if (isDefined) {
-      val current = Await.result(liftToTry)
-      throw new IllegalStateException(s"cannot become() on an already satisfied promise: $current")
-    }
     if (other.isInstanceOf[Promise[_]]) {
+      if (isDefined) {
+        val current = Await.result(liftToTry)
+        throw new IllegalStateException(
+          s"cannot become() on an already satisfied promise: $current")
+      }
       val that = other.asInstanceOf[Promise[A]]
       that.link(compress())
     } else {
+      // avoid an extra call to `isDefined` as `proxyTo` checks
       other.proxyTo(this)
       forwardInterruptsTo(other)
     }
