@@ -42,6 +42,16 @@ Breaking API Changes
   `c.t.u.CountDownLatch#within(Duration)`, please throw an exception yourself after awaiting.
   ``PHAB_ID=D269404``
 
+* util-core: Deprecated conversions in `c.t.conversions` have new implementations
+  that follow a naming scheme of `SomethingOps`. ``PHAB_ID=D272206``
+
+  - `percent` is now `PercentOps`
+  - `storage` is now `StorageUnitOps`
+  - `string` is now `StringOps`
+  - `thread` is now `ThreadOps`
+  - `time` is now `DurationOps`
+  - `u64` is now `U64Ops`
+
 * util-collection: Delete util-collection.  We deleted `GenerationalQueue`, `MapToSetAdapter`, and
   `ImmutableLRU`, because we found that they were of little utility.  We deleted `LruMap` because it
   was a very thin shim around a `j.u.LinkedHashMap`, where you override `removeEldestEntry`.  If you
