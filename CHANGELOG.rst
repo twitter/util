@@ -52,6 +52,9 @@ Breaking API Changes
 
 * util-core: Rename `BlacklistStatsReceiver` to `DenylistStatsReceiver`. ``PHAB_ID=D270526``
 
+* util-core: `Buf.Composite` is now private. Program against more generic, `Buf` interface instead.
+  ``PHAB_ID=D270916``
+
 19.1.0
 -------
 

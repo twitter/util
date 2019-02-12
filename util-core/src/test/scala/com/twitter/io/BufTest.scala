@@ -615,26 +615,6 @@ class BufTest
     assert(Buf.Utf8("abcabc") == Buf(Seq(abc, Buf.Empty, abc)))
   }
 
-  test("Buf.Composite.unapply") {
-    Buf.Empty match {
-      case Buf.Composite(_) => fail()
-      case _ =>
-    }
-
-    val abc = Buf.Utf8("abc")
-    abc match {
-      case Buf.Composite(_) => fail()
-      case _ =>
-    }
-
-    val xyz = Buf.Utf8("xyz")
-    abc.concat(xyz) match {
-      case Buf.Composite(bufs) =>
-        assert(bufs == IndexedSeq(abc, xyz))
-      case _ => fail()
-    }
-  }
-
   test("Buf.Utf8: English") {
     val buf = Buf.Utf8("Hello, world!")
     assert(buf.length == 13)
