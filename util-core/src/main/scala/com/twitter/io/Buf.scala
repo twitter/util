@@ -13,7 +13,7 @@ import scala.collection.immutable.VectorBuilder
  *
  * @see [[com.twitter.io.Buf.ByteArray]] for an `Array[Byte]` backed
  *     implementation.
- * @see [[com.twitter.io.Buf.ByteBuffer]] for an `nio.ByteBuffer` backed
+ * @see [[com.twitter.io.Buf.ByteBuffer]] for a `java.nio.ByteBuffer` backed
  *     implementation.
  * @see [[com.twitter.io.Buf.apply]] for creating a `Buf` from other `Bufs`
  * @see [[com.twitter.io.Buf.Empty]] for an empty `Buf`.
@@ -273,16 +273,20 @@ abstract class Buf { outer =>
 }
 
 /**
- * Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
- * Owned APIs, each of which with construction & extraction utilities.
+ * [[Buf]] wrapper-types (like [[Buf.ByteArray]] and [[Buf.ByteBuffer]]) provide
+ * "shared" and "owned" APIs, each of which contain construction and extraction
+ * utilities. While the owned and shared nomenclature is unintuitive, their
+ * purpose and use cases are straightforward.
  *
- * The Owned APIs may provide direct access to a Buf's underlying
- * implementation; and so mutating the data structure invalidates a Buf's
- * immutability constraint. Users must take care to handle this data
+ * A "shared" [[Buf]] means that steps are taken to ensure that the produced
+ * [[Buf]] shares no state with the producer. This typically implies defensive
+ * copying and should be used when you do not control the lifecycle or usage
+ * of the passed in data.
+ *
+ * The "owned" APIs may provide direct access to a [[Buf]]'s underlying
+ * implementation; and so mutating the underlying data structure invalidates
+ * a [[Buf]]'s immutability constraint. Users must take care to handle this data
  * immutably.
- *
- * The Shared variants, on the other hand, ensure that the Buf shares no state
- * with the caller (at the cost of additional allocation).
  *
  * Note: There are Java-friendly APIs for this object at `com.twitter.io.Bufs`.
  */
@@ -698,12 +702,15 @@ object Buf {
 
     /**
      * Construct a buffer representing the given bytes.
+     *
+     * The contract is that these bytes will not be modified after this has
+     * been called.
      */
     def apply(bytes: Byte*): Buf = Owned(bytes.toArray)
 
     /**
-     * Safely coerce a buffer to a Buf.ByteArray, potentially without copying its underlying
-     * data.
+     * Safely coerce a buffer to a [[Buf.ByteArray]], potentially without
+     * copying its underlying data.
      */
     def coerce(buf: Buf): Buf.ByteArray = buf match {
       case buf: Buf.ByteArray => buf
@@ -716,7 +723,16 @@ object Buf {
         }
     }
 
-    /** Owned non-copying constructors/extractors for Buf.ByteArray. */
+    /**
+     * Non-copying constructors and extractors for [[Buf.ByteArray]].
+     *
+     * The "owned" APIs may provide direct access to a [[Buf]]'s underlying
+     * implementation; and so mutating the underlying data structure invalidates
+     * a [[Buf]]'s immutability constraint. Users must take care to handle this data
+     * immutably.
+     *
+     * @see [[Shared]] for analogs that make defensive copies.
+     */
     object Owned {
 
       /**
@@ -752,7 +768,16 @@ object Buf {
       }
     }
 
-    /** Safe copying constructors / extractors for Buf.ByteArray. */
+    /**
+     * Copying constructors and extractors for [[Buf.ByteArray]].
+     *
+     * A "shared" [[Buf]] means that steps are taken to ensure that the produced
+     * [[Buf]] shares no state with the producer. This typically implies defensive
+     * copying and should be used when you do not control the lifecycle or usage
+     * of the passed in data.
+     *
+     * @see [[Owned]] for analogs that do not make defensive copies.
+     */
     object Shared {
 
       /**
@@ -782,7 +807,7 @@ object Buf {
 
   /**
    * A buffer representing the remaining bytes in the
-   * given ByteBuffer. The given buffer will not be
+   * given `java.nio.ByteBuffer`. The given buffer will not be
    * affected.
    *
    * Modifications to the ByteBuffer's content will be
@@ -859,7 +884,7 @@ object Buf {
     def unapply(buf: ByteBuffer): Some[java.nio.ByteBuffer] =
       Some(buf.underlying.asReadOnlyBuffer)
 
-    /** Coerce a generic buffer to a Buf.ByteBuffer, potentially without copying data. */
+    /** Coerce a generic buffer to a [[Buf.ByteBuffer]], potentially without copying data. */
     def coerce(buf: Buf): ByteBuffer = buf match {
       case buf: ByteBuffer => buf
       case _ =>
@@ -872,7 +897,16 @@ object Buf {
         new ByteBuffer(bb)
     }
 
-    /** Owned non-copying constructors/extractors for Buf.ByteBuffer. */
+    /**
+     * Non-copying constructors and extractors for [[Buf.ByteBuffer]].
+     *
+     * The "owned" APIs may provide direct access to a [[Buf]]'s underlying
+     * implementation; and so mutating the underlying data structure invalidates
+     * a [[Buf]]'s immutability constraint. Users must take care to handle this data
+     * immutably.
+     *
+     * @see [[Shared]] for analogs that make defensive copies.
+     */
     object Owned {
 
       // N.B. We cannot use ByteBuffer.asReadOnly to ensure correctness because
@@ -896,7 +930,16 @@ object Buf {
       def extract(buf: Buf): java.nio.ByteBuffer = Buf.ByteBuffer.coerce(buf).underlying
     }
 
-    /** Safe copying constructors/extractors for Buf.ByteBuffer. */
+    /**
+     * Copying constructors and extractors for [[Buf.ByteBuffer]].
+     *
+     * A "shared" [[Buf]] means that steps are taken to ensure that the produced
+     * [[Buf]] shares no state with the producer. This typically implies defensive
+     * copying and should be used when you do not control the lifecycle or usage
+     * of the passed in data.
+     *
+     * @see [[Owned]] for analogs that do not make defensive copies.
+     */
     object Shared {
       private[this] def copy(orig: java.nio.ByteBuffer): java.nio.ByteBuffer = {
         val copy = java.nio.ByteBuffer.allocate(orig.remaining)
