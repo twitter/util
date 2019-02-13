@@ -325,7 +325,7 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
    *
    * - loses no information
    * - is easy to read
-   * - can be read back in if com.twitter.conversions.time._ is imported
+   * - can be read back in if com.twitter.conversions.DurationOps._ is imported
    *
    * An example:
    *
