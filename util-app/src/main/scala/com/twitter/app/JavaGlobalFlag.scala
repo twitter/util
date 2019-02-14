@@ -8,12 +8,12 @@ package com.twitter.app
  *
  * 1. the flag's class name must end with "$", e.g. `javaGlobalWithDefault$`.
  * This is done to mimic the behavior of Scala's singleton `object`.
- * 1. the class must have a method, `public static Flag<?> globalFlagInstance()`,
+ * 2. the class must have a method, `public static Flag<?> globalFlagInstance()`,
  * that returns the singleton instance of the [[Flag]].
- * 1. the class should have a `static final` field holding the singleton
+ * 3. the class should have a `static final` field holding the singleton
  * instance of the flag.
- * 1. the class should extend `JavaGlobalFlag`.
- * 1. to avoid extraneous creation of instances, thus forcing users to only
+ * 4. the class should extend `JavaGlobalFlag`.
+ * 5. to avoid extraneous creation of instances, thus forcing users to only
  * access the singleton, the constructor should be `private` and the class
  * should be `public final`.
  *

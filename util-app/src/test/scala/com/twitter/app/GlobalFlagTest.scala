@@ -63,4 +63,10 @@ class GlobalFlagTest extends FunSuite {
     }
   }
 
+  test("GlobalFlag.getAll") {
+    val flags = GlobalFlag.getAll(getClass.getClassLoader)
+    assert(flags.length == 9)
+    assert(flags.exists(_.help.equals("a package object test flag")))
+  }
+
 }

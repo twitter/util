@@ -1,6 +1,6 @@
 package com.twitter.app
 
-import java.lang.reflect.{Method, Modifier}
+import java.lang.reflect.{Field, Method, Modifier}
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control.NonFatal
 
@@ -98,20 +98,6 @@ abstract class GlobalFlag[T] private[app] (
     case v @ Some(_) => v
     case _ => propertyValue
   }
-
-  /**
-   * Used by [[Flags.parseArgs]] to initialize [[Flag]] values.
-   *
-   * @note Called via reflection assuming it will be a `static`
-   *       method on a singleton `object`. This causes problems
-   *       for Java developers who want to create a [[GlobalFlag]]
-   *       as there is no good means for them to have it be a
-   *       `static` method. Thus, Java devs must add a method
-   *       `public static Flag<?> globalFlagInstance()` which
-   *       returns the singleton instance of the flag.
-   *       See [[JavaGlobalFlag]] for more details.
-   */
-  def getGlobalFlag: Flag[_] = this
 }
 
 object GlobalFlag {
@@ -136,9 +122,26 @@ object GlobalFlag {
           None
       }
 
-    tryMethod(f, "getGlobalFlag").orElse {
+    def validField(f: Field): Boolean =
+      f != null && Modifier.isStatic(f.getModifiers) && classOf[Flag[_]].isAssignableFrom(f.getType)
+
+    def tryModuleField(clsName: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(clsName)
+        val f = cls.getField("MODULE$")
+        if (validField(f))
+          Some(f.get(null).asInstanceOf[Flag[_]])
+        else
+          None
+      } catch {
+        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+          None
+      }
+
+    val className = if (!f.endsWith("$")) f + "$" else f
+    tryModuleField(className).orElse {
       // fallback for GlobalFlags declared in Java
-      tryMethod(f + "$", "globalFlagInstance")
+      tryMethod(className, "globalFlagInstance")
     }
   }
 
@@ -173,7 +176,7 @@ object GlobalFlag {
       try {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
-          get(info.className.dropRight(1)) match {
+          get(info.className) match {
             case Some(f) => flags += f
             case None => println("failed for " + info.className)
           }
