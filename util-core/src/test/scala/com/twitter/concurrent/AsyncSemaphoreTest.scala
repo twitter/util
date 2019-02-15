@@ -390,5 +390,24 @@ class AsyncSemaphoreTest extends FunSpec {
       val msgs = results.collect { case Some(Throw(e)) => e.getMessage }
       assert(msgs.forall(_ == "woop"))
     }
+
+    it("should be idempotent and not release a permit twice") { _ =>
+      val semaphore = new AsyncSemaphore(1)
+      val (p1, p2, p3) = (semaphore.acquire(), semaphore.acquire(), semaphore.acquire())
+
+      assert(p1.isDefined)
+      assert(!p2.isDefined)
+      assert(!p3.isDefined)
+      assert(semaphore.numWaiters == 2)
+
+      val permit1 = await(p1)
+      permit1.release()
+      permit1.release()
+
+      assert(p1.isDefined)
+      assert(p2.isDefined)
+      assert(!p3.isDefined)
+      assert(semaphore.numWaiters == 1)
+    }
   }
 }

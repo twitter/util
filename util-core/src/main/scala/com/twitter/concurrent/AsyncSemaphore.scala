@@ -59,29 +59,32 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
   // Serves as our intrinsic lock.
   private[this] final def lock: Object = waitq
 
-  private[this] val semaphorePermit = new Permit {
-    private[this] val ReturnThis = Return(this)
+  private[this] def semaphorePermit(): Permit = new Permit {
+    // access to `released` is synchronized by locking on the `lock` above.
+    private[this] var released = false
 
     @tailrec override def release(): Unit = {
       val waiter = lock.synchronized {
-        val next = waitq.pollFirst()
-        if (next == null) {
-          availablePermits += 1
+        if (released) null
+        else {
+          val next = waitq.pollFirst()
+          if (next == null) {
+            availablePermits += 1
+          }
+          released = true
+          next
         }
-        next
       }
 
       if (waiter != null) {
         // If the waiter is already satisfied, it must
         // have been interrupted, so we can simply move on.
-        if (!waiter.updateIfEmpty(ReturnThis)) {
+        if (!waiter.updateIfEmpty(Return(semaphorePermit()))) {
           release()
         }
       }
     }
   }
-
-  private[this] val futurePermit = Future.value(semaphorePermit)
 
   def numWaiters: Int = lock.synchronized(waitq.size)
   def numInitialPermits: Int = initialPermits
@@ -122,7 +125,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
 
     if (availablePermits > 0) {
       availablePermits -= 1
-      futurePermit
+      Future.value(semaphorePermit())
     } else {
       maxWaiters match {
         case Some(max) if waitq.size >= max =>
