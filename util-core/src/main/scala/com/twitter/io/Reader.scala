@@ -3,6 +3,7 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
+import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
@@ -95,7 +96,7 @@ trait Reader[+A] { self =>
   def discard(): Unit
 
   /**
-   * A [[Future]] that resolves once this reader is closed.
+   * A [[Future]] that resolves once this reader is closed upon reading of end-of-stream.
    *
    * If the result is a failed future, this indicates that it was not closed either by reading
    * until the end of the stream nor by discarding. This is useful for any extra resource cleanup
@@ -210,31 +211,68 @@ object Reader {
 
   /**
    * Construct a `Reader` from a `Future`
+   *
+   * We want to ensure that this reader always satisfies these invariants:
+   * 1. Satisfied closep is always aligned with the state
+   * 2. Reading from a discarded reader will always return ReaderDiscardedException
+   * 3. Reading from a fully read reader will always return None
+   * 4. Reading from an exceptioned reader will always return the exception it has thrown
+   *
+   * We achieved this with a state machine where any access to the state is synchronized,
+   * and by ensuring that we always verify the update of state succeeded before setting closep,
+   * and by preventing changing the state when the reader is exceptioned, fully read, or discarded
+   *
+   * @note Multiple outstanding reads are not allowed on this reader
+   *
    */
   def fromFuture[A](fa: Future[A]): Reader[A] = new Reader[A] {
 
     private[this] val closep = Promise[StreamTermination]()
+    private[this] val state = new AtomicReference[State](State.Idle)
 
-    final def read(): Future[Option[A]] =
-      if (!closep.isDefined) {
-        fa.map(Some.apply).respond {
-          case Throw(e) => closep.updateIfEmpty(Throw(e))
-          case Return(_) => closep.updateIfEmpty(StreamTermination.FullyRead.Return)
-        }
-      } else {
-        closep.flatMap {
-          case StreamTermination.FullyRead => Future.None
-          case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
-        }
+    final def read(): Future[Option[A]] = {
+      state.get() match {
+        case State.Idle =>
+          fa.map(Some.apply).respond {
+            case t: Throw[_] =>
+              if (state.compareAndSet(State.Idle, State.Exception)) {
+                closep.update(t.cast[StreamTermination])
+              }
+            case Return(_) =>
+              state.compareAndSet(State.Idle, State.Read)
+          }
+        case State.Read =>
+          if (state.compareAndSet(State.Read, State.FullyRead)) {
+            closep.update(StreamTermination.FullyRead.Return)
+          }
+          closep.flatMap {
+            case StreamTermination.FullyRead => Future.None
+            case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
+          }
+        case State.Exception =>
+          /** closep is guaranteed to be an exception, flatMap should never be triggered but return the exception */
+          closep.flatMap(_ => Future.None)
+        case State.FullyRead =>
+          Future.None
+        case State.Discard =>
+          Future.exception(new ReaderDiscardedException)
       }
+    }
 
-    final def discard(): Unit = closep.updateIfEmpty(StreamTermination.Discarded.Return)
+    final def discard(): Unit = {
+      if (state.compareAndSet(State.Idle, State.Discard) || state
+          .compareAndSet(State.Read, State.Discard)) {
+        closep.update(StreamTermination.Discarded.Return)
+        fa.raise(new ReaderDiscardedException)
+      }
+    }
 
     final def onClose: Future[StreamTermination] = closep
   }
 
   /**
    * Construct a `Reader` from a value `a`
+   * @note Multiple outstanding reads are not allowed on this reader
    */
   def value[A](a: A): Reader[A] = fromFuture[A](Future.value(a))
 
@@ -420,13 +458,14 @@ object Reader {
     // access this currentReader is synchronized on `self`
     private[this] var currentReader: Reader[A] = Reader.empty
 
+    readers.onClose.respond(closep.updateIfEmpty)
+
     private def updateCurrentAndRead(): Future[Option[A]] =
       readers.read().flatMap {
         case Some(reader) =>
           self.synchronized { currentReader = reader }
           read()
         case None =>
-          closep.updateIfEmpty(StreamTermination.FullyRead.Return)
           Future.None
       }
 
@@ -441,7 +480,6 @@ object Reader {
     }
 
     def discard(): Unit = {
-      closep.updateIfEmpty(StreamTermination.Discarded.Return)
       self.synchronized(currentReader).discard()
       readers.discard()
     }
@@ -486,7 +524,7 @@ object Reader {
     // We have to do this because discarding the writer doesn't interrupt read
     // operations, it only fails the next write operation.
     loop().proxyTo(p)
-    p.setInterruptHandler { case exc => r.discard() }
+    p.setInterruptHandler { case _ => r.discard() }
     p
   }
 
@@ -497,4 +535,25 @@ object Reader {
    *       of the framer.
    */
   def framed(r: Reader[Buf], framer: Buf => Seq[Buf]): Reader[Buf] = new Framed(r, framer)
+
+  private sealed trait State
+
+  private object State {
+
+    /** Indicates no actions are taken on the Reader. */
+    case object Idle extends State
+
+    /** Indicates the reader has been read once. */
+    case object Read extends State
+
+    /** Indicates an exception occurred during reading */
+    case object Exception extends State
+
+    /** Indicates the reader is fully read. */
+    case object FullyRead extends State
+
+    /** Indicates the reader has been discarded. */
+    case object Discard extends State
+  }
+
 }

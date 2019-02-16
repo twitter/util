@@ -458,11 +458,32 @@ class ReaderTest
     }
   }
 
+  test("Reader.flatMap: propagate parent's onClose when parent reader failed with an exception") {
+    val ExceptionMessage = "boom"
+    val parentReader = new Pipe[Double]
+    val childReader = parentReader.flatMap(Reader.value)
+    parentReader.fail(new Exception(ExceptionMessage))
+    val parentException = intercept[Exception](await(parentReader.onClose))
+    val readerException = intercept[Exception](await(childReader.onClose))
+    assert(parentException.getMessage == ExceptionMessage)
+    assert(readerException.getMessage == ExceptionMessage)
+  }
+
+  test("Reader.flatMap: propagate parent's onClose when parent reader is discarded") {
+    val parentReader = Reader.empty[Int]
+    val childReader = parentReader.flatMap(Reader.value)
+    parentReader.discard()
+    assert(await(parentReader.onClose) == StreamTermination.Discarded)
+    assert(await(childReader.onClose) == StreamTermination.Discarded)
+  }
+
   test("Reader.value") {
     forAll { a: AnyVal =>
       val r = Reader.value(a)
       assert(await(r.read()) == Some(a))
+      assert(r.onClose.isDefined == false)
       assert(await(r.read()) == None)
+      assert(await(r.onClose) == StreamTermination.FullyRead)
     }
   }
 

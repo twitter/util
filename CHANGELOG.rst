@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: updated `Reader#fromFuture` to resolve its `onClose` when reading of end-of-stream.
+  ``PHAB_ID=D269413``
+
 * util-core: Added `Reader.flatten` to flatten a `Reader[Reader[_]]` to `Reader[_]`,
   and `Reader.fromSeq` to create a new Reader from a Seq. ``PHAB_ID=D255424``
 
@@ -24,6 +27,12 @@ New Features
 
 * util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
   certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
+
+Bug Fixes
+~~~~~~~~~
+
+* util-core: Fixed the behavior in `c.t.io.Reader` where `Reader#flatMap` fails to propagate
+  parent reader's `onClose`. ``PHAB_ID=D269413``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
