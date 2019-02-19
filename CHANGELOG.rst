@@ -25,6 +25,13 @@ New Features
 * util-core: Optimized `ConstFuture.proxyTo` which brings the performance of
   `flatMap` and `transform` of a `ConstFuture` in line with `map`. ``PHAB_ID=D271358``
 
+* util-core: Experimental toggle (com.twitter.util.BypassScheduler) for speeding up
+  `ConstFuture.map` (`transformTry`). The mechanism, when turned on, runs map operations
+  immediately (why not when we have a concrete value), instead of via the Scheduler, where it may
+  be queued and potentially reordered, e.g.:
+  `f.flatMap { _ => println(1); g.map { _ => println(2) }; println(3) }` will print `1 2 3`,
+  where it would have printed `1 3 2`. ``PHAB_ID=D271962``
+
 * util-security: `Pkcs8KeyManagerFactory` now supports a certificates file which contains multiple
   certificates that are part of the same certificate chain. ``PHAB_ID=D263190``
 

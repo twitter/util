@@ -14,6 +14,16 @@ import scala.util.control.NoStackTrace
  *      on concurrent programming with Futures.
  */
 object Future {
+  // An experimental property for bypassing the scheduler in Future.map
+  // operations.
+  @volatile private[util] var BypassScheduler: Boolean =
+    System.getProperty("com.twitter.util.BypassScheduler", "false").toBoolean
+
+  // Set to true to bypass the scheduler in Future.map operations.
+  private[twitter] def bypassScheduler(setting: Boolean): Unit = {
+    BypassScheduler = setting
+  }
+
   val DEFAULT_TIMEOUT: Duration = Duration.Top
 
   /** A successfully satisfied constant `Unit`-typed `Future` of `()` */
