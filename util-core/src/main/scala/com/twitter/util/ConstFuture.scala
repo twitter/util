@@ -40,13 +40,13 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   def raise(interrupt: Throwable): Unit = ()
 
   protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {
-    val p = new Promise[B]
     if (Future.BypassScheduler) {
-      try p.update(f(result))
+      try Future.const(f(result))
       catch {
-        case scala.util.control.NonFatal(e) => p.update(Throw(e))
+        case scala.util.control.NonFatal(e) => Future.const(Throw(e))
       }
     } else {
+      val p = new Promise[B]
       // see the note on `respond` for an explanation of why `Scheduler` is used.
       val saved = Local.save()
       Scheduler.submit(new Runnable {
@@ -65,8 +65,8 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
           p.update(computed)
         }
       })
+      p
     }
-    p
   }
 
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
