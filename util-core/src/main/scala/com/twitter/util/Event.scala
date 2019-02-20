@@ -8,14 +8,59 @@ import scala.collection.immutable.Queue
 import scala.language.higherKinds
 
 /**
- * Events are instantaneous values, defined only at particular
- * instants in time (cf. [[com.twitter.util.Var Vars]], which are
- * defined at all times). It is possible to view Events as the
- * discrete counterpart to [[com.twitter.util.Var Var]]'s continuous
- * nature.
+ * Events are emitters of values. They can be processed as if they were
+ * streams. Here's how to create one that emits Ints.
  *
- * Events are observed by registering [[com.twitter.util.Witness Witnesses]]
- * to which the Event's values are notified.
+ * {{{
+ * val ints = Event[Int]()
+ * }}}
+ *
+ * To listen to an Event stream for values, register a handler.
+ *
+ * {{{
+ * val you = ints.respond { n => println(s"$n for you") }
+ * }}}
+ *
+ * Handlers in Event-speak are called [[com.twitter.util.Witness Witnesses]].
+ * And, respond is equivalent to `register(Witness { ... })`, so we can also
+ * write:
+ *
+ * {{{
+ * val me = ints.register(Witness { n => println(s"$n for me") })
+ * }}}
+ *
+ * Registration is time-sensitive. Witnesses registered to an Event stream
+ * can't observe past values. In this way, Events are instantaneous. When the
+ * stream emits a value, it fans out to every Witness; if there are no
+ * Witnesses to that communication, whatever value it carried is lost.
+ *
+ * Events emit values, okay, but who decides what is emitted? The implementor
+ * of an Event decides!
+ *
+ * But there's another way: you can create an Event that is also a Witness.
+ * Remember, Witnesses are simply handlers that can receive a value. Their type
+ * is `T => Unit`. So an Event that you can send values to is also a Witness.
+ *
+ * The `ints` Event we created above is one of these. Watch:
+ *
+ * {{{
+ * scala> ints.notify(1)
+ * 1 for you
+ * 1 for me
+ * }}}
+ *
+ * We can also stop listening. This is important for resource cleanup.
+ *
+ * {{{
+ * scala> me.close()
+ * scala> ints.notify(2)
+ * 2 for you
+ * }}}
+ *
+ * In relation to [[com.twitter.util.Var Vars]], Events are instantaneous
+ * values, defined only at particular instants in time; whereas Vars are
+ * defined at all times. It is possible to view Events as the discrete
+ * counterpart to Var's continuous nature.
  *
  * Note: There is a Java-friendly API for this trait: [[com.twitter.util.AbstractEvent]].
  */
