@@ -11,12 +11,45 @@ import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 /**
- * Trait Var represents a variable. It is a reference cell which is
- * composable: dependent Vars (derived through flatMap) are
- * recomputed automatically when independent variables change -- they
- * implement a form of self-adjusting computation.
+ * Vars are values that vary over time. To create one, you must give it an
+ * initial value.
  *
- * Vars are observed, notifying users whenever the variable changes.
+ * {{{
+ * val a = Var[Int](1)
+ * }}}
+ *
+ * A Var created this way can be sampled to retrieve its current value,
+ *
+ * {{{
+ * println(Var.sample(a)) // prints 1
+ * }}}
+ *
+ * or, invoked to assign it new values.
+ *
+ * {{{
+ * a.update(2)
+ * println(Var.sample(a)) // prints 2
+ * }}}
+ *
+ * Vars can be derived from other Vars.
+ *
+ * {{{
+ * val b = a.flatMap { x => Var(x + 2) }
+ * println(Var.sample(b)) // prints 4
+ * }}}
+ *
+ * And, if the underlying is assigned a new value, the derived Var is updated.
+ * Updates are computed lazily, so while assignment is cheap, sampling is where
+ * we pay the cost of the computation required to derive the new Var.
+ *
+ * {{{
+ * a.update(1)
+ * println(Var.sample(b)) // prints 3
+ * }}}
+ *
+ * A key difference between the derived Var and its underlying is that derived
+ * Vars can't be assigned new values. That's why `b`, from the example above,
+ * can't be invoked to assign it a new value, it can only be sampled.
  *
  * @note Vars do not always perform the minimum amount of
  * re-computation.
