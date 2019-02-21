@@ -5,51 +5,51 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.control.NonFatal
 
 /**
- * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the
- * sense that they are accessible by any application that depends on that library.
- * Regardless of where in a library a GlobalFlag is defined, a value for it can
- * be passed as a command-line flag by any binary that includes the library.
- * The set of defined GlobalFlags can be enumerated (via `GlobalFlag.getAll)` by
- * the application.
- *
- * A [[GlobalFlag]] must be declared as an `object` (see below for Java):
- * {{{
- * import com.twitter.app.GlobalFlag
- *
- * object myFlag extends GlobalFlag[String]("default value", "this is my global flag")
- * }}}
- *
- * All such global flag declarations in a given classpath are visible to and
- * used by [[com.twitter.app.App]].
- *
- * A flag's name (as set on the command line) is its fully-qualified classname.
- * For example, the flag
- *
- * {{{
- * package com.twitter.server
- *
- * import com.twitter.app.GlobalFlag
- *
- * object port extends GlobalFlag[Int](8080, "the TCP port to which we bind")
- * }}}
- *
- * is settable by the command-line flag `-com.twitter.server.port=8080`.
- *
- * Global flags may also be set by Java system properties with keys
- * named in the same way. However, values supplied by flags override
- * those supplied by system properties.
- *
- * @define java_declaration
- *
- * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
- */
+  * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the
+  * sense that they are accessible by any application that depends on that library.
+  * Regardless of where in a library a GlobalFlag is defined, a value for it can
+  * be passed as a command-line flag by any binary that includes the library.
+  * The set of defined GlobalFlags can be enumerated (via `GlobalFlag.getAll)` by
+  * the application.
+  *
+  * A [[GlobalFlag]] must be declared as an `object` (see below for Java):
+  * {{{
+  * import com.twitter.app.GlobalFlag
+  *
+  * object myFlag extends GlobalFlag[String]("default value", "this is my global flag")
+  * }}}
+  *
+  * All such global flag declarations in a given classpath are visible to and
+  * used by [[com.twitter.app.App]].
+  *
+  * A flag's name (as set on the command line) is its fully-qualified classname.
+  * For example, the flag
+  *
+  * {{{
+  * package com.twitter.server
+  *
+  * import com.twitter.app.GlobalFlag
+  *
+  * object port extends GlobalFlag[Int](8080, "the TCP port to which we bind")
+  * }}}
+  *
+  * is settable by the command-line flag `-com.twitter.server.port=8080`.
+  *
+  * Global flags may also be set by Java system properties with keys
+  * named in the same way. However, values supplied by flags override
+  * those supplied by system properties.
+  *
+  * @define java_declaration
+  *
+  * If you'd like to declare a new [[GlobalFlag]] in Java, see [[JavaGlobalFlag]].
+  */
 @GlobalFlagVisible
-abstract class GlobalFlag[T] private[app] (
-  defaultOrUsage: Either[() => T, String],
-  help: String
-)(
-  implicit _f: Flaggable[T])
-    extends Flag[T](null, help, defaultOrUsage, false) {
+abstract class GlobalFlag[T] private[app](
+                                           defaultOrUsage: Either[() => T, String],
+                                           help: String
+                                         )(
+                                           implicit _f: Flaggable[T])
+  extends Flag[T](null, help, defaultOrUsage, false) {
 
   override protected[this] def parsingDone: Boolean = true
 
@@ -68,46 +68,57 @@ abstract class GlobalFlag[T] private[app] (
     }
 
   /**
-   * $java_declaration
-   *
-   * @param default the default value used if the value is not specified by the user.
-   * @param help documentation regarding usage of this [[Flag]].
-   */
+    * $java_declaration
+    *
+    * @param default the default value used if the value is not specified by the user.
+    * @param help    documentation regarding usage of this [[Flag]].
+    */
   def this(default: T, help: String)(implicit _f: Flaggable[T]) =
     this(Left(() => default), help)
 
   /**
-   * $java_declaration
-   *
-   * @param help documentation regarding usage of this [[Flag]].
-   */
+    * $java_declaration
+    *
+    * @param help documentation regarding usage of this [[Flag]].
+    */
   def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) =
     this(Right(m.toString), help)
 
   /**
-   * The "name", or "id", of this [[Flag]].
-   *
-   * While not marked `final`, if a subclass overrides this value, then
-   * developers '''must''' set that flag via System properties as otherwise it
-   * will not be recognized with command-line arguments.
-   * e.g. `-DyourGlobalFlagName=flagName`
-   */
+    * The "name", or "id", of this [[Flag]].
+    *
+    * While not marked `final`, if a subclass overrides this value, then
+    * developers '''must''' set that flag via System properties as otherwise it
+    * will not be recognized with command-line arguments.
+    * e.g. `-DyourGlobalFlagName=flagName`
+    */
   override val name: String = getClass.getName.stripSuffix("$")
 
   protected override def getValue: Option[T] = super.getValue match {
-    case v @ Some(_) => v
+    case v@Some(_) => v
     case _ => propertyValue
   }
+
+  /**
+    * Used by [[Flags.parseArgs]] to initialize [[Flag]] values.
+    *
+    * @note Called via reflection assuming it will be a `static`
+    *       method on a singleton `object`. This causes problems
+    *       for Java developers who want to create a [[GlobalFlag]]
+    *       as there is no good means for them to have it be a
+    *       `static` method. Thus, Java devs must add a method
+    *       `public static Flag<?> globalFlagInstance()` which
+    *       returns the singleton instance of the flag.
+    *       See [[JavaGlobalFlag]] for more details.
+    */
+  def getGlobalFlag: Flag[_] = this
 }
 
 object GlobalFlag {
 
   private[app] def get(f: String): Option[Flag[_]] = {
     def validMethod(m: Method): Boolean =
-      m != null &&
-        Modifier.isStatic(m.getModifiers) &&
-        m.getReturnType == classOf[Flag[_]] &&
-        m.getParameterCount == 0
+      Modifier.isStatic(m.getModifiers) && m.getReturnType == classOf[Flag[_]] && m.getParameterCount == 0
 
     def tryMethod(clsName: String, methodName: String): Option[Flag[_]] =
       try {
@@ -123,7 +134,7 @@ object GlobalFlag {
       }
 
     def validField(f: Field): Boolean =
-      f != null && Modifier.isStatic(f.getModifiers) && classOf[Flag[_]].isAssignableFrom(f.getType)
+      Modifier.isStatic(f.getModifiers) && classOf[Flag[_]].isAssignableFrom(f.getType)
 
     def tryModuleField(clsName: String): Option[Flag[_]] =
       try {
