@@ -116,31 +116,35 @@ abstract class GlobalFlag[T] private[app](
 
 object GlobalFlag {
 
-  private[app] def get(className: String): Option[Flag[_]] = {
-    def tryMethod(cls: Class[_], methodName: String): Option[Flag[_]] = {
-      val m = cls.getMethod(methodName)
-      val isValid = Modifier.isStatic(m.getModifiers) && m.getReturnType == classOf[Flag[_]] && m.getParameterCount == 0
-      if (isValid) Some(m.invoke(null).asInstanceOf[Flag[_]]) else None
-    }
-
-    def tryModuleField(cls: Class[_]): Option[Flag[_]] = {
-      val f = cls.getField("MODULE$")
-      val isValid = Modifier.isStatic(f.getModifiers) && classOf[Flag[_]].isAssignableFrom(f.getType)
-      if (isValid) Some(f.get(null).asInstanceOf[Flag[_]]) else None
-    }
-
-    try {
-      val cls = Class.forName(if (!className.endsWith("$")) className + "$" else className)
-      tryModuleField(cls).orElse {
-        // fallback for GlobalFlags declared in Java
-        tryMethod(cls, "globalFlagInstance")
+  private[app] def get(flagName: String): Option[Flag[_]] = {
+    def tryMethod(className: String, methodName: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(className)
+        val m = cls.getMethod(methodName)
+        val isValid = Modifier.isStatic(m.getModifiers) &&
+          m.getReturnType == classOf[Flag[_]] &&
+          m.getParameterCount == 0
+        if (isValid) Some(m.invoke(null).asInstanceOf[Flag[_]]) else None
+      } catch {
+        case _: ClassNotFoundException | _: NoSuchMethodException | _: IllegalArgumentException =>
+          None
       }
-    } catch {
-      case _: ClassNotFoundException |
-           _: NoSuchFieldException |
-           _: NoSuchMethodException |
-           _: IllegalArgumentException =>
-        None
+
+    def tryModuleField(className: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(className)
+        val f = cls.getField("MODULE$")
+        val isValid = Modifier.isStatic(f.getModifiers) && classOf[Flag[_]].isAssignableFrom(f.getType)
+        if (isValid) Some(f.get(null).asInstanceOf[Flag[_]]) else None
+      } catch {
+        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+          None
+      }
+
+    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
+    tryModuleField(className).orElse {
+      // fallback for GlobalFlags declared in Java
+      tryMethod(className, "globalFlagInstance")
     }
   }
 
