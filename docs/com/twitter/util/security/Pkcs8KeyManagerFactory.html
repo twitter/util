@@ -159,8 +159,8 @@
                         <a href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file.">Pkcs8EncodedKeySpecFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title="A factory which can create a KeyManager which contains an X.509 Certificate and a PKCS#8 private key."></a>
-                        <a href="" title="A factory which can create a KeyManager which contains an X.509 Certificate and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
+                        <a class="class" href="" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
+                        <a href="" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format."></a>
@@ -210,7 +210,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A factory which can create a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span> which contains
-an X.509 Certificate and a PKCS#8 private key.
+an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -262,9 +262,9 @@ an X.509 Certificate and a PKCS#8 private key.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.twitter.util.security.Pkcs8KeyManagerFactory#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(certFile:java.io.File,keyFile:java.io.File):com.twitter.util.security.Pkcs8KeyManagerFactory"></a><a id="&lt;init&gt;:Pkcs8KeyManagerFactory"></a>
+      <a id="&lt;init&gt;(certsFile:java.io.File,keyFile:java.io.File):com.twitter.util.security.Pkcs8KeyManagerFactory"></a><a id="&lt;init&gt;:Pkcs8KeyManagerFactory"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/util/security/Pkcs8KeyManagerFactory.html#&lt;init&gt;(certFile:java.io.File,keyFile:java.io.File):com.twitter.util.security.Pkcs8KeyManagerFactory" title="Permalink">
+      <a href="../../../../com/twitter/util/security/Pkcs8KeyManagerFactory.html#&lt;init&gt;(certsFile:java.io.File,keyFile:java.io.File):com.twitter.util.security.Pkcs8KeyManagerFactory" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -273,7 +273,7 @@ an X.509 Certificate and a PKCS#8 private key.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Pkcs8KeyManagerFactory</span><span class="params">(<span name="certFile">certFile: <span class="extype" name="java.io.File">File</span></span>, <span name="keyFile">keyFile: <span class="extype" name="java.io.File">File</span></span>)</span>
+        <span class="name">Pkcs8KeyManagerFactory</span><span class="params">(<span name="certsFile">certsFile: <span class="extype" name="java.io.File">File</span></span>, <span name="keyFile">keyFile: <span class="extype" name="java.io.File">File</span></span>)</span>
       </span>
       
       
@@ -463,8 +463,8 @@ an X.509 Certificate and a PKCS#8 private key.
         <span class="name">getKeyManagers</span><span class="params">()</span><span class="result">: <a href="../Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Attempts to read the contents of both the X.509 Certificate file and the PKCS#8
-Private Key file and combine the contents into a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Attempts to read the contents of both the X.509 Certificate file and the PKCS#8
+      <p class="shortcomment cmt">Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
+Private Key file and combine the contents into a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
 Private Key file and combine the contents into a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>.
 The singular value is returned in an Array for ease of use with
 <span class="extype" name="javax.net.ssl.SSLContext">SSLContext's</span> init method.

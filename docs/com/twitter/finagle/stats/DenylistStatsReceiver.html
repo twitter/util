@@ -143,10 +143,6 @@
                         <a href="AggregateWithHistogramDetails$.html" title="">AggregateWithHistogramDetails</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title="A blacklisting StatsReceiver."></a>
-                        <a href="" title="A blacklisting StatsReceiver.">BlacklistStatsReceiver</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
                         <a class="object" href="BroadcastCounter$.html" title="BroadcastCounter is a helper object that create a Counter wrapper around multiple Counters (n)."></a>
                         <a href="BroadcastCounter$.html" title="BroadcastCounter is a helper object that create a Counter wrapper around multiple Counters (n).">BroadcastCounter</a>
                       </li><li class="current-entities indented4">
@@ -177,6 +173,10 @@
                         <a class="object" href="DelegatingStatsReceiver$.html" title=""></a>
                         <a class="trait" href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers."></a>
                         <a href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers.">DelegatingStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="" title="A denylisting StatsReceiver."></a>
+                        <a href="" title="A denylisting StatsReceiver.">DenylistStatsReceiver</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="ExceptionStatsHandler$.html" title="API for deciding where request exceptions are reported in stats."></a>
                         <a class="trait" href="ExceptionStatsHandler.html" title="Exception Stats Recorder."></a>
@@ -258,8 +258,8 @@
       <div id="definition">
         <div class="big-circle class">c</div>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="index.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1>BlacklistStatsReceiver<span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html" title="Permalink">
+        <h1>DenylistStatsReceiver<span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -272,13 +272,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">BlacklistStatsReceiver</span><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
+        <span class="name">DenylistStatsReceiver</span><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
-blacklisted, nothing is recorded.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A denylisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
+denylisted, nothing is recorded.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -309,7 +309,7 @@ blacklisted, nothing is recorded.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.finagle.stats.BlacklistStatsReceiver"><span>BlacklistStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiverProxy"><span>StatsReceiverProxy</span></li><li class="in" name="com.twitter.finagle.stats.DelegatingStatsReceiver"><span>DelegatingStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.finagle.stats.DenylistStatsReceiver"><span>DenylistStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiverProxy"><span>StatsReceiverProxy</span></li><li class="in" name="com.twitter.finagle.stats.DelegatingStatsReceiver"><span>DelegatingStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -329,10 +329,10 @@ blacklisted, nothing is recorded.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver"></a><a id="&lt;init&gt;:BlacklistStatsReceiver"></a>
+              <ol><li name="com.twitter.finagle.stats.DenylistStatsReceiver#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,denylisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.DenylistStatsReceiver"></a><a id="&lt;init&gt;:DenylistStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,blacklisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.BlacklistStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,denylisted:Seq[String]=&gt;Boolean):com.twitter.finagle.stats.DenylistStatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -341,12 +341,12 @@ blacklisted, nothing is recorded.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BlacklistStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="blacklisted">blacklisted: (<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span>
+        <span class="name">DenylistStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="denylisted">denylisted: (<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]) ⇒ <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>)</span>
       </span>
       
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">self</dt><dd class="cmt"><p>a base <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, used for metrics that aren't
-       blacklisted</p></dd><dt class="param">blacklisted</dt><dd class="cmt"><p>a predicate that reads a name and returns true to
-       blacklist, and false to let it pass through</p></dd></dl></div>
+       denylisted</p></dd><dt class="param">denylisted</dt><dd class="cmt"><p>a predicate that reads a name and returns true to
+       denylist, and false to let it pass through</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -360,7 +360,7 @@ blacklisted, nothing is recorded.
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -376,7 +376,7 @@ blacklisted, nothing is recorded.
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html###():Int" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -392,7 +392,7 @@ blacklisted, nothing is recorded.
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -405,10 +405,10 @@ blacklisted, nothing is recorded.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(Verbosity,String*)(⇒Float):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -426,12 +426,12 @@ be a part of this measurement: thus, it needs to be retained by the
 caller. Or put another way, the measurement is only guaranteed to exist
 as long as there exists a strong reference to the returned
 <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> and typically should be stored in a member variable.</p><p>Measurements under the same name are added together.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.DenylistStatsReceiver">DenylistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
     to store the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> that can give the desired lifecycle.</p></span><span class="cmt"><p><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html" target="_blank">java.lang.ref.WeakReference</a></p></span></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(String*)(⇒Float):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -454,7 +454,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -470,7 +470,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#clone():Object" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -491,10 +491,10 @@ as long as there exists a strong reference to the returned
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter"></a><a id="counter(Verbosity,String*):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -507,11 +507,11 @@ as long as there exists a strong reference to the returned
       </span>
       
       <p class="shortcomment cmt">Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.DenylistStatsReceiver">DenylistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter(name:String*):com.twitter.finagle.stats.Counter"></a><a id="counter(String*):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#counter(name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#counter(name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -531,7 +531,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -547,7 +547,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -563,7 +563,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#finalize():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -585,7 +585,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -604,7 +604,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#hashCode():Int" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -623,7 +623,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -639,7 +639,7 @@ as long as there exists a strong reference to the returned
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#isNull" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isNull:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#isNull:Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#isNull:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -658,7 +658,7 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -674,7 +674,7 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#notify():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -693,7 +693,7 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -712,7 +712,7 @@ is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="
     </li><li name="com.twitter.finagle.stats.StatsReceiver#provideGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="provideGauge(name:String*)(f:=&gt;Float):Unit"></a><a id="provideGauge(String*)(⇒Float):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -732,7 +732,7 @@ a lifecycle with no end.</p><p>This measurement exists in perpetuity.</p><p>Meas
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#repr" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="repr:AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#repr:AnyRef" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#repr:AnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -751,7 +751,7 @@ are only reported once per receiver.
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String*):StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -771,7 +771,7 @@ are only reported once per receiver.
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scope(namespace:String):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String):StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#scope(namespace:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#scope(namespace:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -789,7 +789,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scopeSuffix" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver"></a><a id="scopeSuffix(String):StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -803,10 +803,10 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
       
       <p class="shortcomment cmt">Prepend a suffix value to the next scope.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend a suffix value to the next scope.</p><p>For example:</p><pre>statsReceiver.scopeSuffix(<span class="lit">"toto"</span>).scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/toto/adds</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#self" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#self" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="self:com.twitter.finagle.stats.StatsReceiver"></a><a id="self:StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#self:com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#self:com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -818,11 +818,11 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
         <span class="name">self</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.DenylistStatsReceiver">DenylistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat"></a><a id="stat(Verbosity,String*):Stat"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -835,11 +835,11 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
       </span>
       
       <p class="shortcomment cmt">Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.DenylistStatsReceiver">DenylistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat(name:String*):com.twitter.finagle.stats.Stat"></a><a id="stat(String*):Stat"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#stat(name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#stat(name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -859,7 +859,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -872,10 +872,10 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#toString():String" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -887,11 +887,11 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.BlacklistStatsReceiver">BlacklistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.DenylistStatsReceiver">DenylistStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#underlying" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="underlying:Seq[com.twitter.finagle.stats.StatsReceiver]"></a><a id="underlying:Seq[StatsReceiver]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#underlying:Seq[com.twitter.finagle.stats.StatsReceiver]" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#underlying:Seq[com.twitter.finagle.stats.StatsReceiver]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -908,7 +908,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#wait():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -930,7 +930,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -952,7 +952,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -984,7 +984,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
               <ol><li name="com.twitter.finagle.stats.StatsReceiver#counter0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter0(name:String):com.twitter.finagle.stats.Counter"></a><a id="counter0(String):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#counter0(name:String):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#counter0(name:String):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1005,7 +1005,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
     </li><li name="com.twitter.finagle.stats.StatsReceiver#stat0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat0(name:String):com.twitter.finagle.stats.Stat"></a><a id="stat0(String):Stat"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/BlacklistStatsReceiver.html#stat0(name:String):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver.html#stat0(name:String):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>

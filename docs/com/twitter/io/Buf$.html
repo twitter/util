@@ -146,7 +146,7 @@
                         <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
                         <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities."></a>
+                        <a class="object" href="" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide &quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access.">Buf</a>
                       </li><li class="current-entities indented3">
@@ -259,12 +259,16 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
-Owned APIs, each of which with construction &amp; extraction utilities.</p><p>The Owned APIs may provide direct access to a Buf's underlying
-implementation; and so mutating the data structure invalidates a Buf's
-immutability constraint. Users must take care to handle this data
-immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
-with the caller (at the cost of additional allocation).</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> wrapper-types (like <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">Buf.ByteArray</a> and <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">Buf.ByteBuffer</a>) provide
+&quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction
+utilities. While the owned and shared nomenclature is unintuitive, their
+purpose and use cases are straightforward.</p><p>A &quot;shared&quot; <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> means that steps are taken to ensure that the produced
+<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> shares no state with the producer. This typically implies defensive
+copying and should be used when you do not control the lifecycle or usage
+of the passed in data.</p><p>The &quot;owned&quot; APIs may provide direct access to a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>'s underlying
+implementation; and so mutating the underlying data structure invalidates
+a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>'s immutability constraint. Users must take care to handle this data
+immutably.</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -345,33 +349,16 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A buffer representing the remaining bytes in the given ByteBuffer." href="Buf$$ByteBuffer.html"><span class="name">ByteBuffer</span></a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+        <a title="A buffer representing the remaining bytes in the given java.nio.ByteBuffer." href="Buf$$ByteBuffer.html"><span class="name">ByteBuffer</span></a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
       </span>
       
       <p class="shortcomment cmt">A buffer representing the remaining bytes in the
-given ByteBuffer.</p><div class="fullcomment"><div class="comment cmt"><p>A buffer representing the remaining bytes in the
-given ByteBuffer. The given buffer will not be
+given <code>java.nio.ByteBuffer</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A buffer representing the remaining bytes in the
+given <code>java.nio.ByteBuffer</code>. The given buffer will not be
 affected.</p><p>Modifications to the ByteBuffer's content will be
 visible to the resulting Buf. The ByteBuffer should
 be immutable in practice.
 </p></div></div>
-    </li><li name="com.twitter.io.Buf.Composite" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="CompositeextendsBuf"></a><a id="Composite:Composite"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/Buf$.html#CompositeextendsBuf" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">sealed abstract </span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="A Buf which is composed of other Bufs." href="Buf$$Composite.html"><span class="name">Composite</span></a><span class="result"> extends <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">A <code>Buf</code> which is composed of other <code>Bufs</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>Buf</code> which is composed of other <code>Bufs</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#apply(bufs:Iterable[com.twitter.io.Buf]):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf#apply">Buf.apply</a> for creating new instances.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.Processor" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="ProcessorextendsAnyRef"></a><a id="Processor:Processor"></a>
       <span class="permalink">
@@ -916,22 +903,6 @@ contents in hexadecimal.</p>
       </span>
       <span class="symbol">
         <a title="" href="Buf$$ByteBuffer$.html"><span class="name">ByteBuffer</span></a>
-      </span>
-      
-      
-    </li><li name="com.twitter.io.Buf.Composite" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Composite"></a><a id="Composite:Composite"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/Buf$.html#Composite" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="Buf$$Composite$.html"><span class="name">Composite</span></a>
       </span>
       
       

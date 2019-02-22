@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &#8212; Util 19.1.0 documentation</title>
+    <title>User Guide &#8212; Util 19.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '19.1.0',
+        VERSION:     '19.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 19.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 19.2.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -180,7 +180,7 @@ potentially (assuming supported in implementation) prevent it from being exporte
 operations.</p>
 <p>Limiting the number of exported metrics via verbosity levels can reduce applications&#8217; operational
 cost. However taking this to extremes may drastically affect operability of your service. We
-recommend using your judgment to make sure blacklisting a given metric will not reduce a process&#8217;
+recommend using your judgment to make sure denylisting a given metric will not reduce a process&#8217;
 visibility.</p>
 </div>
 <div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
@@ -198,7 +198,7 @@ developers may find useful.</p>
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</li>
 <li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> for when you do not care about all metrics.</li>
-<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/BlacklistStatsReceiver.scala">BlacklistStatsReceiver</a> programmatically decide which metrics to ignore.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala">DenylistStatsReceiver</a> programmatically decide which metrics to ignore.</li>
 <li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal"><span class="pre">StatsReceiver</span></code>s.</li>
 </ul>
 </div>

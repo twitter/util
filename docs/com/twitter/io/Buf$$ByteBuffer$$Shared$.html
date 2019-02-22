@@ -129,16 +129,21 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities." href="Buf$.html"><span class="name">Buf</span></a>
+        <a title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide &quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction utilities." href="Buf$.html"><span class="name">Buf</span></a>
       </span>
       
-      <p class="shortcomment cmt">Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
-Owned APIs, each of which with construction &amp; extraction utilities.</p><div class="fullcomment"><div class="comment cmt"><p>Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and
-Owned APIs, each of which with construction &amp; extraction utilities.</p><p>The Owned APIs may provide direct access to a Buf's underlying
-implementation; and so mutating the data structure invalidates a Buf's
-immutability constraint. Users must take care to handle this data
-immutably.</p><p>The Shared variants, on the other hand, ensure that the Buf shares no state
-with the caller (at the cost of additional allocation).</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
+      <p class="shortcomment cmt"><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> wrapper-types (like <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">Buf.ByteArray</a> and <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">Buf.ByteBuffer</a>) provide
+&quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction
+utilities.</p><div class="fullcomment"><div class="comment cmt"><p><a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> wrapper-types (like <a href="Buf$$ByteArray.html" class="extype" name="com.twitter.io.Buf.ByteArray">Buf.ByteArray</a> and <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">Buf.ByteBuffer</a>) provide
+&quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction
+utilities. While the owned and shared nomenclature is unintuitive, their
+purpose and use cases are straightforward.</p><p>A &quot;shared&quot; <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> means that steps are taken to ensure that the produced
+<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> shares no state with the producer. This typically implies defensive
+copying and should be used when you do not control the lifecycle or usage
+of the passed in data.</p><p>The &quot;owned&quot; APIs may provide direct access to a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>'s underlying
+implementation; and so mutating the underlying data structure invalidates
+a <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>'s immutability constraint. Users must take care to handle this data
+immutably.</p><p>Note: There are Java-friendly APIs for this object at <code>com.twitter.io.Bufs</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.io">io</a></dd></dl></div>
     </li><li name="com.twitter.io.Buf.ByteBuffer" visbl="pub" class="indented5 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ByteBuffer"></a><a id="ByteBuffer:ByteBuffer"></a>
@@ -158,12 +163,12 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Buf$.html" class="extype" name="com.twitter.io.Buf">Buf</a></dd></dl></div>
     </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="Buf$$ByteBuffer$$Owned$.html" title="Owned non-copying constructors/extractors for Buf.ByteBuffer."></a>
-                        <a href="Buf$$ByteBuffer$$Owned$.html" title="Owned non-copying constructors/extractors for Buf.ByteBuffer.">Owned</a>
+                        <a class="object" href="Buf$$ByteBuffer$$Owned$.html" title="Non-copying constructors and extractors for Buf.ByteBuffer."></a>
+                        <a href="Buf$$ByteBuffer$$Owned$.html" title="Non-copying constructors and extractors for Buf.ByteBuffer.">Owned</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="" title="Safe copying constructors/extractors for Buf.ByteBuffer."></a>
-                        <a href="" title="Safe copying constructors/extractors for Buf.ByteBuffer.">Shared</a>
+                        <a class="object" href="" title="Copying constructors and extractors for Buf.ByteBuffer."></a>
+                        <a href="" title="Copying constructors and extractors for Buf.ByteBuffer.">Shared</a>
                       </li>
               </ul>
             </div>
@@ -192,7 +197,11 @@ with the caller (at the cost of additional allocation).</p><p>Note: There are Ja
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Safe copying constructors/extractors for Buf.ByteBuffer.</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Copying constructors and extractors for <a href="Buf$$ByteBuffer.html" class="extype" name="com.twitter.io.Buf.ByteBuffer">Buf.ByteBuffer</a>.</p><p>A &quot;shared&quot; <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> means that steps are taken to ensure that the produced
+<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> shares no state with the producer. This typically implies defensive
+copying and should be used when you do not control the lifecycle or usage
+of the passed in data.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$ByteBuffer$$Owned$.html" class="extype" name="com.twitter.io.Buf.ByteBuffer.Owned">Owned</a> for analogs that do not make defensive copies.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>

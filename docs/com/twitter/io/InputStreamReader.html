@@ -146,7 +146,7 @@
                         <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
                         <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities."></a>
+                        <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide &quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access.">Buf</a>
                       </li><li class="current-entities indented3">
@@ -588,6 +588,24 @@ the resource has been fully relinquished.
       </span>
       
       <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+    </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]"></a><a id="flatten[B](&lt;:&lt;[Buf,Reader[B]]):Reader[B]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/InputStreamReader.html#flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -747,7 +765,7 @@ the resource has been fully relinquished.
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
 until the end of the stream nor by discarding. This is useful for any extra resource cleanup
 that you must do once the stream is no longer being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>

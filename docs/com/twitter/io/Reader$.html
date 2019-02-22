@@ -146,7 +146,7 @@
                         <a class="class" href="AbstractWriter.html" title="Abstract Writer class for Java compatibility."></a>
                         <a href="AbstractWriter.html" title="Abstract Writer class for Java compatibility.">AbstractWriter</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide Shared and Owned APIs, each of which with construction &amp; extraction utilities."></a>
+                        <a class="object" href="Buf$.html" title="Buf wrapper-types (like Buf.ByteArray and Buf.ByteBuffer) provide &quot;shared&quot; and &quot;owned&quot; APIs, each of which contain construction and extraction utilities."></a>
                         <a class="class" href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access."></a>
                         <a href="Buf.html" title="Buf represents a fixed, immutable byte buffer with efficient positional access.">Buf</a>
                       </li><li class="current-entities indented3">
@@ -422,7 +422,7 @@ reader.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.io.Reader#concat" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader#concat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="concat[A](readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader[A]]):com.twitter.io.Reader[A]"></a><a id="concat[A](AsyncStream[Reader[A]]):Reader[A]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Reader$.html#concat[A](readers:com.twitter.concurrent.AsyncStream[com.twitter.io.Reader[A]]):com.twitter.io.Reader[A]" title="Permalink">
@@ -437,8 +437,9 @@ reader.
         <span class="name">concat</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="readers">readers: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.concat.A">A</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.concat.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Convenient abstraction to read from a stream of Readers as if it were a
-single Reader.</p>
+      <p class="shortcomment cmt">Convenient abstraction to read from a stream (AsyncStream) of Readers as if
+it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (AsyncStream) of Readers as if
+it were a single Reader.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>An AsyncStream holds a stream of Reader[A]</p></dd></dl></div>
     </li><li name="com.twitter.io.Reader#copy" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="copy[A](r:com.twitter.io.Reader[A],w:com.twitter.io.Writer[A]):com.twitter.util.Future[Unit]"></a><a id="copy[A](Reader[A],Writer[A]):Future[Unit]"></a>
       <span class="permalink">
@@ -474,7 +475,7 @@ is responsible for finalization and error handling, e.g.:</p><pre>Reader.copy(r,
       
       <p class="shortcomment cmt">Copy elements from many Readers to a Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Copy elements from many Readers to a Writer. Readers will be discarded if
 <code>copy</code> is cancelled (discarding the target). The Writer is unmanaged, the
-caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div></div>
+caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.copyMany(readers, writer) ensure writer.close()</pre></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>An AsyncStream holds a stream of Reader[A]</p></dd></dl></div>
     </li><li name="com.twitter.io.Reader#empty" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="empty[A]:com.twitter.io.Reader[A]"></a><a id="empty[A]:Reader[A]"></a>
       <span class="permalink">
@@ -562,6 +563,25 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="flatten[A](readers:com.twitter.io.Reader[com.twitter.io.Reader[A]]):com.twitter.io.Reader[A]"></a><a id="flatten[A](Reader[Reader[A]]):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#flatten[A](readers:com.twitter.io.Reader[com.twitter.io.Reader[A]]):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="readers">readers: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Convenient abstraction to read from a stream (Reader) of Readers as if
+it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (Reader) of Readers as if
+it were a single Reader. The subsequent readers are unmanaged, the caller is
+responsible for discarding those when abandoned.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>A Reader holds a stream of Reader[A]</p></dd></dl></div>
     </li><li name="com.twitter.io.Reader#framed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="framed(r:com.twitter.io.Reader[com.twitter.io.Buf],framer:com.twitter.io.Buf=&gt;Seq[com.twitter.io.Buf]):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="framed(Reader[Buf],(Buf)⇒Seq[Buf]):Reader[Buf]"></a>
       <span class="permalink">
@@ -671,7 +691,7 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
 at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
 <span class="extype" name="Reader.discard()">Reader.discard()</span>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromFile</code> for a Java API</p></span></dd></dl></div>
-    </li><li name="com.twitter.io.Reader#fromFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader#fromFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromFuture[A](fa:com.twitter.util.Future[A]):com.twitter.io.Reader[A]"></a><a id="fromFuture[A](Future[A]):Reader[A]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Reader$.html#fromFuture[A](fa:com.twitter.util.Future[A]):com.twitter.io.Reader[A]" title="Permalink">
@@ -686,8 +706,32 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="name">fromFuture</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="fa">fa: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.io.Reader.fromFuture.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromFuture.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a <code>Reader</code> from a <code>Future</code>
-</p>
+      <p class="shortcomment cmt">Construct a <code>Reader</code> from a <code>Future</code></p><div class="fullcomment"><div class="comment cmt"><p>Construct a <code>Reader</code> from a <code>Future</code></p><p>We want to ensure that this reader always satisfies these invariants:
+1. Satisfied closep is always aligned with the state
+2. Reading from a discarded reader will always return ReaderDiscardedException
+3. Reading from a fully read reader will always return None
+4. Reading from an exceptioned reader will always return the exception it has thrown</p><p>We achieved this with a state machine where any access to the state is synchronized,
+and by ensuring that we always verify the update of state succeeded before setting closep,
+and by preventing changing the state when the reader is exceptioned, fully read, or discarded
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Multiple outstanding reads are not allowed on this reader</p></span></dd></dl></div>
+    </li><li name="com.twitter.io.Reader#fromSeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fromSeq[A](seq:Seq[A]):com.twitter.io.Reader[A]"></a><a id="fromSeq[A](Seq[A]):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#fromSeq[A](seq:Seq[A]):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
+<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+</p></div></div>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream,chunkSize:Int):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromStream(InputStream,Int):Reader[Buf]"></a>
       <span class="permalink">
@@ -898,7 +942,7 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.io.Reader#value" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader#value" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="value[A](a:A):com.twitter.io.Reader[A]"></a><a id="value[A](A):Reader[A]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Reader$.html#value[A](a:A):com.twitter.io.Reader[A]" title="Permalink">
@@ -913,8 +957,7 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
         <span class="name">value</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="a">a: <span class="extype" name="com.twitter.io.Reader.value.A">A</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.value.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a <code>Reader</code> from a value <code>a</code>
-</p>
+      <p class="shortcomment cmt">Construct a <code>Reader</code> from a value <code>a</code></p><div class="fullcomment"><div class="comment cmt"><p>Construct a <code>Reader</code> from a value <code>a</code></p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Multiple outstanding reads are not allowed on this reader</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

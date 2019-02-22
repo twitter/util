@@ -143,10 +143,6 @@
                         <a href="AggregateWithHistogramDetails$.html" title="">AggregateWithHistogramDetails</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="BlacklistStatsReceiver.html" title="A blacklisting StatsReceiver."></a>
-                        <a href="BlacklistStatsReceiver.html" title="A blacklisting StatsReceiver.">BlacklistStatsReceiver</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
                         <a class="object" href="BroadcastCounter$.html" title="BroadcastCounter is a helper object that create a Counter wrapper around multiple Counters (n)."></a>
                         <a href="BroadcastCounter$.html" title="BroadcastCounter is a helper object that create a Counter wrapper around multiple Counters (n).">BroadcastCounter</a>
                       </li><li class="current-entities indented4">
@@ -177,6 +173,10 @@
                         <a class="object" href="DelegatingStatsReceiver$.html" title=""></a>
                         <a class="trait" href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers."></a>
                         <a href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers.">DelegatingStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="DenylistStatsReceiver.html" title="A denylisting StatsReceiver."></a>
+                        <a href="DenylistStatsReceiver.html" title="A denylisting StatsReceiver.">DenylistStatsReceiver</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="ExceptionStatsHandler$.html" title="API for deciding where request exceptions are reported in stats."></a>
                         <a class="trait" href="ExceptionStatsHandler.html" title="Exception Stats Recorder."></a>
@@ -344,24 +344,6 @@
       </span>
       
       
-    </li><li name="com.twitter.finagle.stats.BlacklistStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BlacklistStatsReceiverextendsStatsReceiverProxy"></a><a id="BlacklistStatsReceiver:BlacklistStatsReceiver"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#BlacklistStatsReceiverextendsStatsReceiverProxy" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="A blacklisting StatsReceiver." href="BlacklistStatsReceiver.html"><span class="name">BlacklistStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A blacklisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
-blacklisted, nothing is recorded.
-</p></div></div>
     </li><li name="com.twitter.finagle.stats.BucketAndCount" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BucketAndCountextendsProductwithSerializable"></a><a id="BucketAndCount:BucketAndCount"></a>
       <span class="permalink">
@@ -449,6 +431,24 @@ Counter is &quot;number of requests served&quot;.
       
       <p class="shortcomment cmt">Should be mixed into <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that delegate to other
 <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a>.</p>
+    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DenylistStatsReceiverextendsStatsReceiverProxy"></a><a id="DenylistStatsReceiver:DenylistStatsReceiver"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#DenylistStatsReceiverextendsStatsReceiverProxy" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A denylisting StatsReceiver." href="DenylistStatsReceiver.html"><span class="name">DenylistStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A denylisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A denylisting <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.  If the name for a metric is found to be
+denylisted, nothing is recorded.
+</p></div></div>
     </li><li name="com.twitter.finagle.stats.ExceptionStatsHandler" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ExceptionStatsHandlerextendsAnyRef"></a><a id="ExceptionStatsHandler:ExceptionStatsHandler"></a>
       <span class="permalink">
