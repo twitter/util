@@ -10,16 +10,39 @@ import scala.reflect.ClassTag
 import scala.util.control.NonFatal
 
 /**
- * An Activity is a handle to a concurrently running process, producing
- * T-typed values. An activity is in one of three states:
+ * Activity, like [[com.twitter.util.Var Var]], is a value that varies over
+ * time; but, richer than Var, these values have error and pending states.
+ * They are useful for modeling a process that produces values, but also
+ * intermittent failures (e.g. address resolution, reloadable configuration).
+ *
+ * As such, an Activity can be in one of three states:
  *
  *  - [[com.twitter.util.Activity.Pending Pending]]: output is pending;
  *  - [[com.twitter.util.Activity.Ok Ok]]: an output is available; and
  *  - [[com.twitter.util.Activity.Failed Failed]]: the process failed with an exception.
  *
- * An activity may transition between any state at any time.
+ * An Activity may transition between any state at any time. They are typically
+ * constructed from [[com.twitter.util.Event Events]], but they can also be
+ * constructed without arguments.
  *
- * (The observant reader will notice that this is really a monad
+ * {{{
+ * val (activity, witness) = Activity[Int]()
+ * println(activity.sample()) // throws java.lang.IllegalStateException: Still pending
+ * }}}
+ *
+ * As you can see, Activities start in a Pending state. Attempts to sample an
+ * Activity that is pending will fail. Curiously, the constructor for an
+ * Activity also returns a [[com.twitter.util.Witness Witness]].
+ *
+ * Recall that a Witness is the interface to something that you can send values
+ * to; and in this case, that something is the Activity.
+ *
+ * {{{
+ * witness.notify(Return(1))
+ * println(activity.sample()) // prints 1
+ * }}}
+ *
+ * (For implementers, it may be useful to think of Activity as a monad
  * transformer for an ''Op'' monad over [[com.twitter.util.Var Var]]
  * where Op is like a [[com.twitter.util.Try Try]] with an additional
  * pending state.)
