@@ -1,9 +1,18 @@
 package com.twitter.app
 
+import java.lang.ClassLoader.getSystemClassLoader
+import java.net.URLClassLoader
+
+import org.mockito.ArgumentMatcher
 import org.scalatest.FunSuite
+import org.scalatest.mockito.MockitoSugar._
+import org.mockito.Mockito.when
+import org.mockito.Matchers._
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
+
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
+
 object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
 class GlobalFlagTest extends FunSuite {
@@ -64,8 +73,19 @@ class GlobalFlagTest extends FunSuite {
   }
 
   test("GlobalFlag.getAll") {
-    val flags = GlobalFlag.getAll(getClass.getClassLoader)
-    assert(flags.length == 9)
+    val isValidClassName: ArgumentMatcher[String] = { className =>
+      List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
+        .map(_.getClass.getName)
+        .contains(className)
+    }
+    val realClassLoader = getSystemClassLoader.asInstanceOf[URLClassLoader]
+    val mockClassLoader = mock[URLClassLoader]
+    when(mockClassLoader.getURLs).thenReturn(realClassLoader.getURLs)
+    when(mockClassLoader.loadClass(argThat(isValidClassName))).thenAnswer { inv =>
+      realClassLoader.loadClass(inv.getArgumentAt(0, classOf[String]))
+    }
+    val flags = GlobalFlag.getAll(mockClassLoader)
+    assert(flags.length == 4)
     assert(flags.exists(_.help.equals("a package object test flag")))
   }
 
