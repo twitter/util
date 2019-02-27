@@ -3,11 +3,8 @@ package com.twitter.jvm
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.io.ByteArrayOutputStream
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CpuProfileTest extends FunSuite {
   test("record") {
 

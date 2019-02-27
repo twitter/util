@@ -5,7 +5,7 @@ import com.twitter.util.Time
 
 object NilJvm extends Jvm {
   val opts: Opts = new Opts {
-    def compileThresh = None
+    def compileThresh: Option[Int] = None
   }
   def forceGc(): Unit = System.gc()
   val snapCounters: Map[String, String] = Map()

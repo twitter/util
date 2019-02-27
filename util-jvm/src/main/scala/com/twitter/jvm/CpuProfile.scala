@@ -1,13 +1,11 @@
 package com.twitter.jvm
 
+import com.twitter.conversions.DurationOps._
+import com.twitter.util.{Duration, Future, Promise, Stopwatch, Time}
 import java.io.OutputStream
 import java.lang.management.ManagementFactory
 import java.nio.{ByteBuffer, ByteOrder}
-
 import scala.collection.mutable
-
-import com.twitter.conversions.DurationOps._
-import com.twitter.util.{Duration, Future, Promise, Stopwatch, Time}
 
 /**
  * A CPU profile.

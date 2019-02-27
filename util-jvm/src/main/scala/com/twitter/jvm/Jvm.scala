@@ -10,76 +10,6 @@ import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 /**
- * Information about the Heap
- *
- * @param allocated Estimated number of bytes
- * that have been allocated so far (into eden)
- *
- * @param tenuringThreshold How many times an Object
- * needs to be copied before being tenured.
- *
- * @param ageHisto Histogram of the number of bytes that
- * have been copied as many times. Note: 0-indexed.
- */
-case class Heap(allocated: Long, tenuringThreshold: Long, ageHisto: Seq[Long])
-
-/**
- * Information about the JVM's safepoint
- *
- * @param syncTimeMillis Cumulative time, in milliseconds, spent
- * getting all threads to safepoint states
- *
- * @param totalTimeMillis Cumulative time, in milliseconds, that the
- * application has been stopped for safepoint operations
- *
- * @param count The number of safepoints taken place since
- * the JVM started
- */
-case class Safepoint(syncTimeMillis: Long, totalTimeMillis: Long, count: Long)
-
-case class PoolState(numCollections: Long, capacity: StorageUnit, used: StorageUnit) {
-  def -(other: PoolState) = PoolState(
-    numCollections = this.numCollections - other.numCollections,
-    capacity = other.capacity,
-    used = this.used + other.capacity - other.used +
-      other.capacity * (this.numCollections - other.numCollections - 1)
-  )
-
-  override def toString =
-    "PoolState(n=%d,remaining=%s[%s of %s])".format(numCollections, capacity - used, used, capacity)
-}
-
-/**
- * A handle to a garbage collected memory pool.
- */
-trait Pool {
-
-  /** Get the current state of this memory pool. */
-  def state(): PoolState
-
-  /**
-   * Sample the allocation rate of this pool. Note that this is merely
-   * an estimation based on sampling the state of the pool initially
-   * and then again when the period elapses.
-   *
-   * @return Future of the samples rate (in bps).
-   */
-  def estimateAllocRate(period: Duration, timer: Timer): Future[Long] = {
-    val elapsed = Stopwatch.start()
-    val begin = state()
-    timer.doLater(period) {
-      val end = state()
-      val interval = elapsed()
-      ((end - begin).used.inBytes * 1000) / interval.inMilliseconds
-    }
-  }
-}
-
-case class Gc(count: Long, name: String, timestamp: Time, duration: Duration)
-
-case class Snapshot(timestamp: Time, heap: Heap, lastGcs: Seq[Gc])
-
-/**
  * Access JVM internal performance counters. We maintain a strict
  * interface so that we are decoupled from the actual underlying JVM.
  */
@@ -174,7 +104,7 @@ trait Jvm {
     }
 
     executor.scheduleAtFixedRate(
-      new Runnable { def run() = sample() },
+      new Runnable { def run(): Unit = sample() },
       0 /*initial delay*/,
       Period.inMilliseconds,
       TimeUnit.MILLISECONDS
@@ -198,7 +128,7 @@ trait Jvm {
         buffer = (gc :: buffer).takeWhile(_.timestamp > floor)
     }
 
-    (since: Time) =>
+    since: Time =>
       buffer.takeWhile(_.timestamp > since)
   }
 
@@ -213,9 +143,9 @@ trait Jvm {
    */
   def mainClassName: String = {
     val mainClass = for {
-      (_, stack) <- Thread.getAllStackTraces().asScala.find { case (t, s) => t.getName == "main" }
+      (_, stack) <- Thread.getAllStackTraces.asScala.find { case (t, s) => t.getName == "main" }
       frame <- stack.reverse.find { elem =>
-        !(elem.getClassName.startsWith("scala.tools.nsc.MainGenericRunner"))
+        !elem.getClassName.startsWith("scala.tools.nsc.MainGenericRunner")
       }
     } yield frame.getClassName
 

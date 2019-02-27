@@ -7,7 +7,6 @@ import java.util.concurrent.{
   ScheduledFuture,
   TimeUnit
 }
-
 import scala.collection.mutable
 
 // A mostly empty implementation so that we can successfully

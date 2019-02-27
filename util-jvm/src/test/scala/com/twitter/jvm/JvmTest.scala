@@ -3,12 +3,9 @@ package com.twitter.jvm
 import com.twitter.conversions.DurationOps._
 import com.twitter.logging.{Level, TestLogging}
 import com.twitter.util.Time
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable
 
-@RunWith(classOf[JUnitRunner])
 class JvmTest extends WordSpec with TestLogging {
   "Jvm" should {
     class JvmHelper {
