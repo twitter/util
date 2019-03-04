@@ -7,8 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Added `c.t.conversions.StringOps#toSnakeCase,toCamelCase,toPascalCase` implementations.
+  ``PHAB_ID=D280886``
+
 19.2.0
--------
+------
 
 New Features
 ~~~~~~~~~~~~
@@ -89,7 +95,7 @@ Breaking API Changes
   ``PHAB_ID=D270916``
 
 19.1.0
--------
+------
 
 New Features
 ~~~~~~~~~~~~

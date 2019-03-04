@@ -118,6 +118,45 @@ object StringOps {
       }
       buffer
     }
+
+    /**
+     * Converts foo_bar to fooBar (first letter lowercased)
+     *
+     * For example:
+     *
+     * {{{
+     *   "hello_world".toCamelCase
+     * }}}
+     *
+     * will return the String `"helloWorld"`.
+     */
+    def toCamelCase: String = StringOps.toCamelCase(string)
+
+    /**
+     * Converts foo_bar to FooBar (first letter uppercased)
+     *
+     * For example:
+     *
+     * {{{
+     *   "hello_world".toPascalCase
+     * }}}
+     *
+     * will return the String `"HelloWorld"`.
+     */
+    def toPascalCase: String = StringOps.toPascalCase(string)
+
+    /**
+     * Converts FooBar to foo_bar (all lowercase)
+     *
+     * For example:
+     *
+     * {{{
+     *   "HelloWorld".toSnakeCase
+     * }}}
+     *
+     * will return the String `"hello_world"`.
+     */
+    def toSnakeCase: String = StringOps.toSnakeCase(string)
   }
 
   def hexlify(array: Array[Byte], from: Int, to: Int): String = {
@@ -131,6 +170,95 @@ object StringOps {
       out.append(s)
     }
     out.toString
+  }
+
+  private[this] val SnakeCaseRegexFirstPass = """([A-Z]+)([A-Z][a-z])""".r
+  private[this] val SnakeCaseRegexSecondPass = """([a-z\d])([A-Z])""".r
+
+  /**
+   * Turn a string of format "FooBar" into snake case "foo_bar"
+   *
+   * @note toSnakeCase is not reversible, ie. in general the following will _not_ be true:
+   *
+   * {{{
+   *    s == toCamelCase(toSnakeCase(s))
+   * }}}
+   *
+   * Copied from the Lift Framework and RENAMED:
+   * https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/StringHelpers.scala
+   * Apache 2.0 License: https://github.com/lift/framework/blob/master/LICENSE.txt
+   *
+   * @return the underscored string
+   */
+  def toSnakeCase(name: String): String =
+    SnakeCaseRegexSecondPass
+      .replaceAllIn(
+        SnakeCaseRegexFirstPass
+          .replaceAllIn(name, "$1_$2"),
+        "$1_$2"
+      )
+      .toLowerCase
+
+  /**
+   * Turns a string of format "foo_bar" into PascalCase "FooBar"
+   *
+   * @note Camel case may start with a capital letter (called "Pascal Case" or "Upper Camel Case") or,
+   *       especially often in programming languages, with a lowercase letter. In this code's
+   *       perspective, PascalCase means the first char is capitalized while camelCase means the first
+   *       char is lowercased. In general both can be considered equivalent although by definition
+   *       "CamelCase" is a valid camel-cased word. Hence, PascalCase can be considered to be a
+   *       subset of camelCase.
+   *
+   * Copied from the "lift" framework and RENAMED:
+   * https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/StringHelpers.scala
+   * Apache 2.0 License: https://github.com/lift/framework/blob/master/LICENSE.txt
+   * Functional code courtesy of Jamie Webb (j@jmawebb.cjb.net) 2006/11/28
+   *
+   * @param name the String to PascalCase
+   * @return the PascalCased string
+   */
+  def toPascalCase(name: String): String = {
+    def loop(x: List[Char]): List[Char] = (x: @unchecked) match {
+      case '_' :: '_' :: rest => loop('_' :: rest)
+      case '_' :: c :: rest => Character.toUpperCase(c) :: loop(rest)
+      case '_' :: Nil => Nil
+      case c :: rest => c :: loop(rest)
+      case Nil => Nil
+    }
+
+    if (name == null) {
+      ""
+    } else {
+      loop('_' :: name.toList).mkString
+    }
+  }
+
+  /**
+   * Turn a string of format "foo_bar" into camelCase with the first letter in lower case: "fooBar"
+   *
+   * This function is especially used to camelCase method names.
+   *
+   * @note Camel case may start with a capital letter (called "Pascal Case" or "Upper Camel Case") or,
+   *       especially often in programming languages, with a lowercase letter. In this code's
+   *       perspective, PascalCase means the first char is capitalized while camelCase means the first
+   *       char is lowercased. In general both can be considered equivalent although by definition
+   *       "CamelCase" is a valid camel-cased word. Hence, PascalCase can be considered to be a
+   *       subset of camelCase.
+   *
+   * Copied from the Lift Framework and RENAMED:
+   * https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/StringHelpers.scala
+   * Apache 2.0 License: https://github.com/lift/framework/blob/master/LICENSE.txt
+   *
+   * @param name the String to camelCase
+   * @return the camelCased string
+   */
+  def toCamelCase(name: String): String = {
+    val tmp: String = toPascalCase(name)
+    if (tmp.length == 0) {
+      ""
+    } else {
+      tmp.substring(0, 1).toLowerCase + tmp.substring(1)
+    }
   }
 
   implicit final class RichByteArray(val bytes: Array[Byte]) extends AnyVal {
