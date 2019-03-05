@@ -57,10 +57,6 @@ Runtime Behavior Changes
   before the pipe would wait indefinitely for a read before transitioning to the Closed state.
   ``PHAB_ID=D229728``
 
-* util-core: Don't allow `AsyncSemaphore` `Permit`s to be released multiple times. Before it was
-  possible to release a permit more than once and incorrectly remove waiters from the queue.
-  With this change, the `release` permit operation is idempotent. ``PHAB_ID=D274017``
-
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
