@@ -5,14 +5,20 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.lang.management.ManagementFactory
 import java.util.logging.{Level, Logger}
-import javax.management.openmbean.CompositeDataSupport
-import javax.management.{ObjectName, RuntimeMBeanException}
+import javax.management.openmbean.{CompositeData, CompositeDataSupport}
+import javax.management.{
+  Notification,
+  NotificationEmitter,
+  NotificationListener,
+  ObjectName,
+  RuntimeMBeanException
+}
 import scala.collection.JavaConverters._
 import scala.language.reflectiveCalls
 
 class Hotspot extends Jvm {
   private[this] val epoch =
-    Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean().getStartTime())
+    Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean.getStartTime)
 
   private[this] type Counter = {
     def getName(): String
@@ -37,8 +43,7 @@ class Hotspot extends Jvm {
 
   private[this] def opt(name: String) =
     try Some {
-      val o = ManagementFactory
-        .getPlatformMBeanServer()
+      val o = ManagementFactory.getPlatformMBeanServer
         .invoke(DiagnosticBean, "getVMOption", Array(name), Array("java.lang.String"))
       o.asInstanceOf[CompositeDataSupport].get("value").asInstanceOf[String]
     } catch {
@@ -80,6 +85,25 @@ class Hotspot extends Jvm {
       lastEntryTime = ticksToDuration(lastEntryTicks, freq)
       kind = "%d.%s".format(which, name)
     } yield Gc(invocations, kind, epoch + lastEntryTime, duration)
+  }
+
+  private[this] def newGcListener(f: Gc => Unit): NotificationListener =
+    new NotificationListener {
+      def handleNotification(notification: Notification, handback: Any): Unit = {
+        if (Hotspot.isGcNotification(notification)) {
+          val gc =
+            Hotspot.gcFromNotificationInfo(notification.getUserData.asInstanceOf[CompositeData])
+          f(gc)
+        }
+      }
+    }
+
+  override def foreachGc(f: Gc => Unit): Unit = {
+    ManagementFactory.getGarbageCollectorMXBeans.asScala.foreach {
+      case bean: NotificationEmitter =>
+        bean.addNotificationListener(newGcListener(f), null, null)
+      case _ => ()
+    }
   }
 
   def snap: Snapshot = {
@@ -185,4 +209,64 @@ class Hotspot extends Jvm {
     counters("").mapValues(_.getValue().toString)
 
   def forceGc(): Unit = System.gc()
+}
+
+private object Hotspot {
+
+  // this inlines the value of GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION
+  // to avoid reflection
+  def isGcNotification(notification: Notification): Boolean =
+    notification.getType == "com.sun.management.gc.notification"
+
+  private[this] val jvmStart =
+    Time.fromMilliseconds(ManagementFactory.getRuntimeMXBean.getStartTime)
+
+  private[this] val gcNotifInfoFromMethod =
+    Class
+      .forName("com.sun.management.GarbageCollectionNotificationInfo")
+      .getMethod("from", classOf[CompositeData])
+
+  private[this] val gcNotifInfoGetGcInfoMethod =
+    Class
+      .forName("com.sun.management.GarbageCollectionNotificationInfo")
+      .getMethod("getGcInfo")
+
+  private[this] val gcNotifInfoGetGcNameMethod =
+    Class
+      .forName("com.sun.management.GarbageCollectionNotificationInfo")
+      .getMethod("getGcName")
+
+  private[this] val gcInfoGetIdMethod =
+    Class
+      .forName("com.sun.management.GcInfo")
+      .getMethod("getId")
+
+  private[this] val gcInfoGetStartTimeMethod =
+    Class
+      .forName("com.sun.management.GcInfo")
+      .getMethod("getStartTime")
+
+  private[this] val gcInfoGetDurationMethod =
+    Class
+      .forName("com.sun.management.GcInfo")
+      .getMethod("getDuration")
+
+  /**
+   * This uses reflection because we the `com.sun` classes may not be available
+   * at compilation time.
+   */
+  def gcFromNotificationInfo(compositeData: CompositeData): Gc = {
+    val gcNotifInfo /* com.sun.management.GarbageCollectionNotificationInfo */ =
+      gcNotifInfoFromMethod.invoke(compositeData)
+    val gcInfo /* com.sun.management.GcInfo */ =
+      gcNotifInfoGetGcInfoMethod.invoke(gcNotifInfo)
+    Gc(
+      count = gcInfoGetIdMethod.invoke(gcInfo).asInstanceOf[Long],
+      name = gcNotifInfoGetGcNameMethod.invoke(gcNotifInfo).asInstanceOf[String],
+      timestamp = jvmStart + gcInfoGetStartTimeMethod
+        .invoke(gcInfo).asInstanceOf[Long].milliseconds,
+      duration = gcInfoGetDurationMethod.invoke(gcInfo).asInstanceOf[Long].milliseconds
+    )
+  }
+
 }
