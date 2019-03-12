@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: Discard parent reader from `Reader.flatten` when child reader encounters an exception.
+  ``PHAB_ID=D281830``
+
 * util-core: Added `c.t.conversions.StringOps#toSnakeCase,toCamelCase,toPascalCase` implementations.
   ``PHAB_ID=D280886``
 

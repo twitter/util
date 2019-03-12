@@ -473,9 +473,13 @@ object Reader {
       currentReader.read().transform {
         case Return(None) => updateCurrentAndRead()
         case Return(sa) => Future.value(sa)
-        case Throw(t) =>
-          closep.updateIfEmpty(Throw(t))
-          Future.exception(t)
+        case t @ Throw(_) =>
+          // update `closep` with the exception thrown before discarding readers,
+          // because discard will update `closep` to a `Discarded` StreamTermination
+          // and return a `ReaderDiscardedException` during reading.
+          closep.updateIfEmpty(t.cast[StreamTermination])
+          readers.discard()
+          Future.const(t)
       }
     }
 

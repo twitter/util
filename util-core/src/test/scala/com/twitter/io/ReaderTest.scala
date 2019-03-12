@@ -257,8 +257,10 @@ class ReaderTest
       def discard(): Unit = p.setException(new ReaderDiscardedException)
       def onClose: Future[StreamTermination] = Future.never
     }
-    val reader = Reader.flatten(Reader.fromSeq(head +: undefinedReaders))
+    val pReader = Reader.fromSeq(head +: undefinedReaders)
+    val reader = Reader.flatten(pReader)
     assertFailed(reader, p)
+    assert(await(pReader.onClose) == StreamTermination.Discarded)
   }
 
   test("Reader.flatten - onClose is satisfied when fully read") {
