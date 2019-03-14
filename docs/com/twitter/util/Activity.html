@@ -279,8 +279,8 @@
                         <a href="Activities.html" title="A Java adaptation of com.twitter.util.Activity companion object.">Activities</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Activity$.html" title="Note: There is a Java-friendly API for this object: com.twitter.util.Activities."></a>
-                        <a class="class" href="" title="An Activity is a handle to a concurrently running process, producing T-typed values."></a>
-                        <a href="" title="An Activity is a handle to a concurrently running process, producing T-typed values.">Activity</a>
+                        <a class="class" href="" title="Activity, like Var, is a value that varies over time; but, richer than Var, these values have error and pending states."></a>
+                        <a href="" title="Activity, like Var, is a value that varies over time; but, richer than Var, these values have error and pending states.">Activity</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="Await$.html" title="Synchronously await the result of some action by blocking the current thread."></a>
@@ -771,8 +771,17 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An Activity is a handle to a concurrently running process, producing
-T-typed values. An activity is in one of three states:</p><ul><li><a href="Activity$$Pending$.html" class="extype" name="com.twitter.util.Activity.Pending">Pending</a>: output is pending;</li><li><a href="Activity$$Ok.html" class="extype" name="com.twitter.util.Activity.Ok">Ok</a>: an output is available; and</li><li><a href="Activity$$Failed.html" class="extype" name="com.twitter.util.Activity.Failed">Failed</a>: the process failed with an exception.</li></ul><p>An activity may transition between any state at any time.</p><p>(The observant reader will notice that this is really a monad
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Activity, like <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>, is a value that varies over
+time; but, richer than Var, these values have error and pending states.
+They are useful for modeling a process that produces values, but also
+intermittent failures (e.g. address resolution, reloadable configuration).</p><p>As such, an Activity can be in one of three states:</p><ul><li><a href="Activity$$Pending$.html" class="extype" name="com.twitter.util.Activity.Pending">Pending</a>: output is pending;</li><li><a href="Activity$$Ok.html" class="extype" name="com.twitter.util.Activity.Ok">Ok</a>: an output is available; and</li><li><a href="Activity$$Failed.html" class="extype" name="com.twitter.util.Activity.Failed">Failed</a>: the process failed with an exception.</li></ul><p>An Activity may transition between any state at any time. They are typically
+constructed from <a href="Event.html" class="extype" name="com.twitter.util.Event">Events</a>, but they can also be
+constructed without arguments.</p><pre><span class="kw">val</span> (activity, witness) = Activity[<span class="std">Int</span>]()
+println(activity.sample()) <span class="cmt">// throws java.lang.IllegalStateException: Still pending</span></pre><p>As you can see, Activities start in a Pending state. Attempts to sample an
+Activity that is pending will fail. Curiously, the constructor for an
+Activity also returns a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>.</p><p>Recall that a Witness is the interface to something that you can send values
+to; and in this case, that something is the Activity.</p><pre>witness.notify(Return(<span class="num">1</span>))
+println(activity.sample()) <span class="cmt">// prints 1</span></pre><p>(For implementers, it may be useful to think of Activity as a monad
 transformer for an <i>Op</i> monad over <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>
 where Op is like a <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a> with an additional
 pending state.)
