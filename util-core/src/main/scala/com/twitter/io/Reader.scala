@@ -3,7 +3,6 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
-import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
@@ -212,63 +211,9 @@ object Reader {
   /**
    * Construct a `Reader` from a `Future`
    *
-   * We want to ensure that this reader always satisfies these invariants:
-   * 1. Satisfied closep is always aligned with the state
-   * 2. Reading from a discarded reader will always return ReaderDiscardedException
-   * 3. Reading from a fully read reader will always return None
-   * 4. Reading from an exceptioned reader will always return the exception it has thrown
-   *
-   * We achieved this with a state machine where any access to the state is synchronized,
-   * and by ensuring that we always verify the update of state succeeded before setting closep,
-   * and by preventing changing the state when the reader is exceptioned, fully read, or discarded
-   *
    * @note Multiple outstanding reads are not allowed on this reader
-   *
    */
-  def fromFuture[A](fa: Future[A]): Reader[A] = new Reader[A] {
-
-    private[this] val closep = Promise[StreamTermination]()
-    private[this] val state = new AtomicReference[State](State.Idle)
-
-    final def read(): Future[Option[A]] = {
-      state.get() match {
-        case State.Idle =>
-          fa.map(Some.apply).respond {
-            case t: Throw[_] =>
-              if (state.compareAndSet(State.Idle, State.Exception)) {
-                closep.update(t.cast[StreamTermination])
-              }
-            case Return(_) =>
-              state.compareAndSet(State.Idle, State.Read)
-          }
-        case State.Read =>
-          if (state.compareAndSet(State.Read, State.FullyRead)) {
-            closep.update(StreamTermination.FullyRead.Return)
-          }
-          closep.flatMap {
-            case StreamTermination.FullyRead => Future.None
-            case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
-          }
-        case State.Exception =>
-          /** closep is guaranteed to be an exception, flatMap should never be triggered but return the exception */
-          closep.flatMap(_ => Future.None)
-        case State.FullyRead =>
-          Future.None
-        case State.Discard =>
-          Future.exception(new ReaderDiscardedException)
-      }
-    }
-
-    final def discard(): Unit = {
-      if (state.compareAndSet(State.Idle, State.Discard) || state
-          .compareAndSet(State.Read, State.Discard)) {
-        closep.update(StreamTermination.Discarded.Return)
-        fa.raise(new ReaderDiscardedException)
-      }
-    }
-
-    final def onClose: Future[StreamTermination] = closep
-  }
+  def fromFuture[A](fa: Future[A]): Reader[A] = new FutureReader(fa)
 
   /**
    * Construct a `Reader` from a value `a`
@@ -363,37 +308,10 @@ object Reader {
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
    * [[Reader.discard()]].
+   *
+   * @note Multiple outstanding reads are not allowed on this reader.
    */
-  def fromSeq[A](seq: Seq[A]): Reader[A] = new Reader[A] { self =>
-    private[this] val closep = Promise[StreamTermination]()
-    private[this] var state: Try[Seq[A]] = Return(seq)
-
-    def read(): Future[Option[A]] = {
-      val result: Future[Option[A]] = self.synchronized {
-        state match {
-          case Return(Nil) => Future.None
-          case Return(head +: tail) =>
-            state = Return(tail)
-            Future.value(Some(head))
-          case t: Throw[_] =>
-            Future.const(t.cast[Option[A]])
-        }
-      }
-      if (result eq Future.None) {
-        closep.updateIfEmpty(StreamTermination.FullyRead.Return)
-      }
-      result
-    }
-
-    def discard(): Unit = {
-      self.synchronized {
-        state = Throw(new ReaderDiscardedException)
-      }
-      closep.updateIfEmpty(StreamTermination.Discarded.Return)
-    }
-
-    def onClose: Future[StreamTermination] = closep
-  }
+  def fromSeq[A](seq: Seq[A]): Reader[A] = new SeqReader(seq)
 
   /**
    * Allow [[AsyncStream]] to be consumed as a [[Reader]]
@@ -539,25 +457,5 @@ object Reader {
    *       of the framer.
    */
   def framed(r: Reader[Buf], framer: Buf => Seq[Buf]): Reader[Buf] = new Framed(r, framer)
-
-  private sealed trait State
-
-  private object State {
-
-    /** Indicates no actions are taken on the Reader. */
-    case object Idle extends State
-
-    /** Indicates the reader has been read once. */
-    case object Read extends State
-
-    /** Indicates an exception occurred during reading */
-    case object Exception extends State
-
-    /** Indicates the reader is fully read. */
-    case object FullyRead extends State
-
-    /** Indicates the reader has been discarded. */
-    case object Discard extends State
-  }
 
 }
