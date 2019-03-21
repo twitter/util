@@ -86,6 +86,38 @@ class FlagTest extends FunSuite {
     assert(res2 == "false")
   }
 
+  test("Flag: letParse") {
+    def current: Boolean = MyGlobalBooleanFlag()
+
+    // track the order the blocks execute and that they only execute once
+    var buf = mutable.Buffer[Int]()
+
+    // make sure they stack properly
+    assert(!current)
+    MyGlobalBooleanFlag.letParse("true") {
+      buf += 1
+      assert(current)
+      MyGlobalBooleanFlag.letParse("false") {
+        buf += 2
+        assert(!current)
+      }
+      buf += 3
+      assert(current)
+    }
+    assert(!current)
+
+    assert(buf == Seq(1, 2, 3))
+  }
+
+  test("Flag: letParse return values reflect bindings") {
+    def current: Boolean = MyGlobalBooleanFlag()
+
+    val res1 = MyGlobalBooleanFlag.letParse("true") { current.toString }
+    assert(res1 == "true")
+    val res2 = MyGlobalBooleanFlag.letParse("false") { current.toString }
+    assert(res2 == "false")
+  }
+
   test("Flag: letClear") {
     // track the order the blocks execute and that they only execute once
     var buf = mutable.Buffer[Int]()

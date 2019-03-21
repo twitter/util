@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-app: Improve usage of `Flag.let` by providing a `Flag.letParse` method
+  ``PHAB_ID=D288549``
+
 19.3.0
 ------
 

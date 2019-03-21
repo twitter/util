@@ -146,10 +146,21 @@ class Flag[T: Flaggable] private[app] (
    * Override the value of this flag with `t`, only for the scope of the current
    * [[com.twitter.util.Local]] for the given function `f`.
    *
+   * @see [[letParse]]
    * @see [[letClear]]
    */
   def let[R](t: T)(f: => R): R =
     let(Some(t), f)
+
+  /**
+   * Override the value of this flag with `arg` [[String] parsed to this [[Flag]]'s [[T]] type,
+   * only for the scope of the current [[com.twitter.util.Local]] for the given function `f`.
+   *
+   * @see [[let]]
+   * @see [[letClear]]
+   */
+  def letParse[R](arg: String)(f: => R): R =
+    let(flaggable.parse(arg))(f)
 
   /**
    * Unset the value of this flag, such that [[isDefined]] will return `false`,
@@ -157,6 +168,7 @@ class Flag[T: Flaggable] private[app] (
    * given function `f`.
    *
    * @see [[let]]
+   * @see [[letParse]]
    */
   def letClear[R](f: => R): R =
     let(None, f)
