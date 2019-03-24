@@ -8,6 +8,7 @@ import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar._
 import org.mockito.Mockito.when
 import org.mockito.Matchers._
+import org.mockito.invocation.InvocationOnMock
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
 
@@ -73,7 +74,7 @@ class GlobalFlagTest extends FunSuite {
   }
 
   test("GlobalFlag.getAll") {
-    val isValidClassName: ArgumentMatcher[String] = { className =>
+    val isValidClassName: ArgumentMatcher[String] = { className: Any =>
       List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
         .map(_.getClass.getName)
         .contains(className)
@@ -81,7 +82,7 @@ class GlobalFlagTest extends FunSuite {
     val realClassLoader = getSystemClassLoader.asInstanceOf[URLClassLoader]
     val mockClassLoader = mock[URLClassLoader]
     when(mockClassLoader.getURLs).thenReturn(realClassLoader.getURLs)
-    when(mockClassLoader.loadClass(argThat(isValidClassName))).thenAnswer { inv =>
+    when(mockClassLoader.loadClass(argThat(isValidClassName))).thenAnswer { inv: InvocationOnMock =>
       realClassLoader.loadClass(inv.getArgumentAt(0, classOf[String]))
     }
     val flags = GlobalFlag.getAll(mockClassLoader)
