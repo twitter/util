@@ -257,7 +257,7 @@ private object Hotspot {
    */
   def gcFromNotificationInfo(compositeData: CompositeData): Gc = {
     val gcNotifInfo /* com.sun.management.GarbageCollectionNotificationInfo */ =
-      gcNotifInfoFromMethod.invoke(compositeData)
+      gcNotifInfoFromMethod.invoke(null /* static method */, compositeData)
     val gcInfo /* com.sun.management.GcInfo */ =
       gcNotifInfoGetGcInfoMethod.invoke(gcNotifInfo)
     Gc(
