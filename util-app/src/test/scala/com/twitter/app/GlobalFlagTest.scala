@@ -1,20 +1,10 @@
 package com.twitter.app
 
-import java.lang.ClassLoader.getSystemClassLoader
 import java.net.URLClassLoader
-
-import org.mockito.ArgumentMatcher
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar._
-import org.mockito.Mockito.when
-import org.mockito.Matchers._
-import org.mockito.invocation.InvocationOnMock
-import org.mockito.stubbing.Answer
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
-
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
-
 object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
 class GlobalFlagTest extends FunSuite {
@@ -75,22 +65,20 @@ class GlobalFlagTest extends FunSuite {
   }
 
   test("GlobalFlag.getAll") {
-    val isValidClassName: ArgumentMatcher[String] = new ArgumentMatcher[String] {
-      override def matches(className: Any): Boolean =
-        List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
-          .map(_.getClass.getName)
-          .contains(className)
-    }
-    val realClassLoader = getSystemClassLoader.asInstanceOf[URLClassLoader]
-    val mockClassLoader = mock[URLClassLoader]
-    when(mockClassLoader.getURLs).thenReturn(realClassLoader.getURLs)
-    when(mockClassLoader.loadClass(argThat(isValidClassName))).thenAnswer(new Answer[Class[_]] {
-      override def answer(inv: InvocationOnMock): Class[_] =
-        realClassLoader.loadClass(inv.getArgumentAt(0, classOf[String]))
-    })
+    val mockClassLoader = new MockClassLoader(getClass.getClassLoader.asInstanceOf[URLClassLoader])
     val flags = GlobalFlag.getAll(mockClassLoader)
     assert(flags.length == 4)
     assert(flags.exists(_.help.equals("a package object test flag")))
+  }
+
+  private class MockClassLoader(realClassLoader: URLClassLoader) extends URLClassLoader(realClassLoader.getURLs) {
+    private val isValidClassName = (className: String) =>
+      List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
+        .map(_.getClass.getName)
+        .contains(className)
+
+    override def loadClass(name: String): Class[_] =
+      if (isValidClassName(name)) realClassLoader.loadClass(name) else null
   }
 
 }
