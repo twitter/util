@@ -31,9 +31,23 @@ object AsyncMeter {
    * second, and has a maximum burst size of `permits` over one second.
    *
    * This is equivalent to `AsyncMeter.newMeter(permits, 1.second, maxWaiters)`.
+   *
+   * @see [[perSecondUnbounded()]] for creating an async meter that allows unbounded waiters
    */
   def perSecond(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
     newMeter(permits, Duration.fromSeconds(1), maxWaiters)
+
+  /**
+   * Creates an [[AsyncMeter]] that allows smoothed out `permits` per
+   * second, and has a maximum burst size of `permits` over one second.
+   *
+   * This meter is not bounded by the number of allowed waiters. This is equivalent to
+   * `AsyncMeter.newUnboundedMeter(permits, 1.second, maxWaiters)`.
+   *
+   * @see [[perSecond()]] for creating an async meter that only allows a certain number of waiters
+   */
+  def perSecondUnbounded(permits: Int)(implicit timer: Timer): AsyncMeter =
+    newUnboundedMeter(permits, Duration.fromSeconds(1))
 
   /**
    * Creates an [[AsyncMeter]] that allows smoothed out `permits` per second,
