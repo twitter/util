@@ -290,6 +290,43 @@ class ReaderTest
     assert(ex3.getMessage == "stop")
   }
 
+  test("Reader.flatten - listen for onClose update from parent") {
+    val exceptionMsg = "boom"
+    val p = new Pipe[Int]
+    val reader = Reader.flatten(Reader.value(p))
+    reader.read()
+    p.fail(new Exception(exceptionMsg))
+    val exception = intercept[Exception] {
+      await(reader.onClose)
+    }
+    assert(exception.getMessage == exceptionMsg)
+  }
+
+  test("Reader.flatten - re-register `curReaderClosep` to listen to the next reader in the stream") {
+    val exceptionMsg = "boom"
+
+    val r1 = Reader.value(1)
+    val p2 = new Promise
+    val i2 = p2.interruptible
+    val r2 = Reader.fromFuture(i2)
+
+    def rStreams: Stream[Reader[Any]] = r1 #:: r2 #:: rStreams
+
+    val reader = Reader.fromSeq(rStreams)
+    val rFlat = reader.flatten
+    val e = new Exception(exceptionMsg)
+
+    assert(await(rFlat.read()) == Some(1))
+    // re-register `curReaderClosep` to listen to r2
+    rFlat.read()
+    i2.raise(e)
+    val exception = intercept[Exception] {
+      await(rFlat.onClose)
+    }
+
+    assert(exception.getMessage == exceptionMsg)
+  }
+
   test("Reader.fromSeq works on infinite streams") {
     def ones: Stream[Int] = 1 #:: ones
     val reader = Reader.fromSeq(ones)

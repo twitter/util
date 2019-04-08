@@ -1,6 +1,7 @@
 package com.twitter.io
 
 import com.twitter.concurrent.AsyncStream
+import com.twitter.util.Promise.Detachable
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
 import scala.annotation.tailrec
@@ -371,26 +372,21 @@ object Reader {
    * @param readers A Reader holds a stream of Reader[A]
    */
   def flatten[A](readers: Reader[Reader[A]]): Reader[A] = new Reader[A] { self =>
+    // access currentReader and curReaderClosep are synchronized on `self`
+    private[this] var currentReader: Reader[A] = Reader.empty
+    private[this] var curReaderClosep: Promise[StreamTermination] with Detachable =
+      Promise.attached(currentReader.onClose)
 
     private[this] val closep = Promise[StreamTermination]()
-    // access this currentReader is synchronized on `self`
-    private[this] var currentReader: Reader[A] = Reader.empty
 
     readers.onClose.respond(closep.updateIfEmpty)
 
-    private def updateCurrentAndRead(): Future[Option[A]] =
-      readers.read().flatMap {
-        case Some(reader) =>
-          self.synchronized { currentReader = reader }
-          read()
-        case None =>
-          Future.None
-      }
-
-    def read(): Future[Option[A]] = self.synchronized {
-      currentReader.read().transform {
-        case Return(None) => updateCurrentAndRead()
-        case Return(sa) => Future.value(sa)
+    def read(): Future[Option[A]] = {
+      self.synchronized(currentReader).read().transform {
+        case Return(None) =>
+          updateCurrentAndRead()
+        case Return(sa) =>
+          Future.value(sa)
         case t @ Throw(_) =>
           // update `closep` with the exception thrown before discarding readers,
           // because discard will update `closep` to a `Discarded` StreamTermination
@@ -402,11 +398,36 @@ object Reader {
     }
 
     def discard(): Unit = {
-      self.synchronized(currentReader).discard()
+      self
+        .synchronized {
+          curReaderClosep.detach()
+          currentReader
+        }.discard()
       readers.discard()
     }
 
     def onClose: Future[StreamTermination] = closep
+
+    /**
+     * Update currentReader and the callback promise to be the `closep` of currentReader
+     */
+    private def updateCurrentAndRead(): Future[Option[A]] = {
+      readers.read().flatMap {
+        case Some(reader) =>
+          val curClosep = self.synchronized {
+            currentReader = reader
+            currentReader.onClose
+          }
+          curReaderClosep = Promise.attached(curClosep)
+          curReaderClosep.respond {
+            case Return(StreamTermination.FullyRead) =>
+            case discardedOrFailed => closep.updateIfEmpty(discardedOrFailed)
+          }
+          read()
+        case _ =>
+          Future.None
+      }
+    }
   }
 
   /**
