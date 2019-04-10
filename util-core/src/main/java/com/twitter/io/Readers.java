@@ -4,8 +4,13 @@ package com.twitter.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Stream;
+
 import com.twitter.concurrent.AsyncStream;
 import com.twitter.util.Future;
+
+import scala.collection.JavaConverters;
 import scala.runtime.BoxedUnit;
 
 /**
@@ -70,4 +75,26 @@ public final class Readers {
     return Reader$.MODULE$.fromStream(in, chunkSize);
   }
 
+  /**
+   * See [[com.twitter.io.Reader$#fromSeq(scala.collection.Seq)]]
+   */
+  public static <A> Reader<A> fromSeq(List<A> list) {
+    return Reader$.MODULE$.fromSeq(JavaConverters.asScalaIteratorConverter(list.iterator())
+      .asScala().toSeq());
+  }
+
+  /**
+   * See [[com.twitter.io.Reader$#fromSeq(scala.collection.Seq)]]
+   */
+  public static <A> Reader<A> fromSeq(Stream<A> stream) {
+    return Reader$.MODULE$.fromSeq(JavaConverters.asScalaIteratorConverter(stream.iterator())
+      .asScala().toSeq());
+  }
+
+  /**
+   * See [[com.twitter.io.Reader#toAsyncStream]]
+   */
+  public static <A> AsyncStream<A> toAsyncStream(Reader<A> reader) {
+    return Reader$.MODULE$.toAsyncStream(reader);
+  }
 }
