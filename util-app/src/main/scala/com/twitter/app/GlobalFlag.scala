@@ -1,6 +1,6 @@
 package com.twitter.app
 
-import java.lang.reflect.{Method, Modifier}
+import java.lang.reflect.Modifier
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control.NonFatal
 
@@ -116,29 +116,36 @@ abstract class GlobalFlag[T] private[app] (
 
 object GlobalFlag {
 
-  private[app] def get(f: String): Option[Flag[_]] = {
-    def validMethod(m: Method): Boolean =
-      m != null &&
-        Modifier.isStatic(m.getModifiers) &&
-        m.getReturnType == classOf[Flag[_]] &&
-        m.getParameterCount == 0
-
-    def tryMethod(clsName: String, methodName: String): Option[Flag[_]] =
+  private[app] def get(flagName: String): Option[Flag[_]] = {
+    def tryMethod(className: String, methodName: String): Option[Flag[_]] =
       try {
-        val cls = Class.forName(clsName)
+        val cls = Class.forName(className)
         val m = cls.getMethod(methodName)
-        if (validMethod(m))
-          Some(m.invoke(null).asInstanceOf[Flag[_]])
-        else
-          None
+        val isValid = Modifier.isStatic(m.getModifiers) &&
+          m.getReturnType == classOf[Flag[_]] &&
+          m.getParameterCount == 0
+        if (isValid) Some(m.invoke(null).asInstanceOf[Flag[_]]) else None
       } catch {
         case _: ClassNotFoundException | _: NoSuchMethodException | _: IllegalArgumentException =>
           None
       }
 
-    tryMethod(f, "getGlobalFlag").orElse {
+    def tryModuleField(className: String): Option[Flag[_]] =
+      try {
+        val cls = Class.forName(className)
+        val f = cls.getField("MODULE$")
+        val isValid = Modifier.isStatic(f.getModifiers) && classOf[Flag[_]]
+          .isAssignableFrom(f.getType)
+        if (isValid) Some(f.get(null).asInstanceOf[Flag[_]]) else None
+      } catch {
+        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+          None
+      }
+
+    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
+    tryModuleField(className).orElse {
       // fallback for GlobalFlags declared in Java
-      tryMethod(f + "$", "globalFlagInstance")
+      tryMethod(className, "globalFlagInstance")
     }
   }
 
@@ -173,7 +180,7 @@ object GlobalFlag {
       try {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
-          get(info.className.dropRight(1)) match {
+          get(info.className) match {
             case Some(f) => flags += f
             case None => println("failed for " + info.className)
           }

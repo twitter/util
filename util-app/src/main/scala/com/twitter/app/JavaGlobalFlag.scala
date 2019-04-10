@@ -1,21 +1,19 @@
 package com.twitter.app
 
 /**
- * @define java_declaration
- *
  * In order to declare a new [[GlobalFlag]] in Java, it can be done with a bit
  * of ceremony by following a few steps:
  *
- * 1. the flag's class name must end with "$", e.g. `javaGlobalWithDefault$`.
- * This is done to mimic the behavior of Scala's singleton `object`.
- * 1. the class must have a method, `public static Flag<?> globalFlagInstance()`,
- * that returns the singleton instance of the [[Flag]].
- * 1. the class should have a `static final` field holding the singleton
- * instance of the flag.
- * 1. the class should extend `JavaGlobalFlag`.
- * 1. to avoid extraneous creation of instances, thus forcing users to only
- * access the singleton, the constructor should be `private` and the class
- * should be `public final`.
+ *  1. the flag's class name must end with "$", e.g. `javaGlobalWithDefault$`.
+ *  This is done to mimic the behavior of Scala's singleton `object`.
+ *  1. the class must have a method, `public static Flag<?> globalFlagInstance()`,
+ *  that returns the singleton instance of the [[Flag]].
+ *  1. the class should have a `static final` field holding the singleton
+ *  instance of the flag.
+ *  1. the class should extend `JavaGlobalFlag`.
+ *  1. to avoid extraneous creation of instances, thus forcing users to only
+ *  access the singleton, the constructor should be `private` and the class
+ *  should be `public final`.
  *
  * An example of a [[GlobalFlag]] declared in Java:
  * {{{

@@ -13,6 +13,5 @@ lib_managed/
 .DS_Store
 .ensime
 .ivyjars
-sbt
 out/
 sbt-launch.jar

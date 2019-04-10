@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import java.net.URLClassLoader
 import org.scalatest.FunSuite
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
@@ -61,6 +62,24 @@ class GlobalFlagTest extends FunSuite {
     MyGlobalFlag.let("not okay") {
       assert(MyGlobalFlag() == "not okay")
     }
+  }
+
+  test("GlobalFlag.getAll") {
+    val mockClassLoader = new MockClassLoader(getClass.getClassLoader.asInstanceOf[URLClassLoader])
+    val flags = GlobalFlag.getAll(mockClassLoader)
+    assert(flags.length == 4)
+    assert(flags.exists(_.help.equals("a package object test flag")))
+  }
+
+  private class MockClassLoader(realClassLoader: URLClassLoader)
+      extends URLClassLoader(realClassLoader.getURLs) {
+    private val isValidClassName = (className: String) =>
+      List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
+        .map(_.getClass.getName)
+        .contains(className)
+
+    override def loadClass(name: String): Class[_] =
+      if (isValidClassName(name)) realClassLoader.loadClass(name) else null
   }
 
 }
