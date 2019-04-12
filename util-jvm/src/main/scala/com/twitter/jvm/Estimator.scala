@@ -134,7 +134,7 @@ class WindowedMeans(N: Int, windows: Seq[(Int, Int)]) extends Estimator[Double] 
  * Unix-like load average, an exponentially weighted moving average,
  * smoothed to the given interval (counted in number of
  * measurements).
- * See: http://web.mit.edu/saltzer/www/publications/instrumentation.html
+ * See: https://web.mit.edu/saltzer/www/publications/instrumentation.html
  */
 class LoadAverage(interval: Double) extends Estimator[Double] {
   private[this] val a = math.exp(-1D / interval)

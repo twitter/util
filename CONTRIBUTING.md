@@ -172,13 +172,13 @@ Please let us know if you have any questions about this process!
 
 [0]: https://github.com/twitter/util/pull/109
 [1]: https://github.com/twitter/util/blob/master/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
-[scaladoc]: http://docs.scala-lang.org/style/scaladoc.html
+[scaladoc]: https://docs.scala-lang.org/style/scaladoc.html
 [es]: https://twitter.github.io/effectivescala/
-[sd]: http://docs.scala-lang.org/style/scaladoc.html
-[funsuite]: http://www.scalatest.org/getting_started_with_fun_suite
-[scalatest]: http://www.scalatest.org/
-[ssg]: http://docs.scala-lang.org/style/scaladoc.html
+[sd]: https://docs.scala-lang.org/style/scaladoc.html
+[funsuite]: https://www.scalatest.org/getting_started_with_fun_suite
+[scalatest]: https://www.scalatest.org/
+[ssg]: https://docs.scala-lang.org/style/scaladoc.html
 [travis-ci]: https://travis-ci.org/twitter/util
 [changes]: https://github.com/twitter/util/blob/develop/CHANGELOG.rst
 [scalacheck]: https://www.scalacheck.org/
-[gendrivenprop]: http://www.scalatest.org/user_guide/generator_driven_property_checks
+[gendrivenprop]: https://www.scalatest.org/user_guide/generator_driven_property_checks

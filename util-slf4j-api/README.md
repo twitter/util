@@ -4,7 +4,7 @@ This library provides a Scala-friendly logging wrapper around the [slf4j-api](ht
 
 ## Differences with `util-logging`
 
-The code in `util-logging` is a scala wrapper over `java.util.logging` (JUL) which is a logging API **and** implementation. `util-slf4j-api` is an API-only and adds a thin scala wrapper over the [slf4j-api](http://www.slf4j.org/) which allows
+The code in `util-logging` is a scala wrapper over `java.util.logging` (JUL) which is a logging API **and** implementation. `util-slf4j-api` is an API-only and adds a thin scala wrapper over the [slf4j-api](https://www.slf4j.org/) which allows
 users to choose their logging implementation. It is recommended that users move to using `util-slf4j-api` over `util-logging`.
 
 Since the [slf4j-api](https://www.slf4j.org/manual.html) is only an interface it requires an actual logging implementation. You should ensure that you do not end-up with *multiple* logging implementations on your classpath, e.g., you should not have multiple SLF4J bindings (`slf4j-nop`, `slf4j-log4j12`, `slf4j-jdk14`, etc.) and/or a `java.util.logging` implementation, etc. on your classpath as these are all competing implementations and since classpath order is non-deterministic, can lead to unexpected logging behavior.

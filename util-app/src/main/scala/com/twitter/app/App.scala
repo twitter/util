@@ -43,7 +43,7 @@ trait App extends Closable with CloseAwaitably {
 
   /** The [[com.twitter.app.Flags]] instance associated with this application */
   //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
-  //as things like this can happen http://stackoverflow.com/questions/18138397/calling-method-from-constructor
+  //as things like this can happen https://stackoverflow.com/questions/18138397/calling-method-from-constructor
   val flag: Flags = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
 
   private var _args = Array[String]()

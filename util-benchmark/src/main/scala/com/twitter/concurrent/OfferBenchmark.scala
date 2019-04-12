@@ -42,7 +42,7 @@ object OfferBenchmark {
     // N.B. Traditionally you'd put this type of setup inside of a benchmark setup method per invocation
     // but because the runtime of each invocation is so small, the overhead is high JMH advises against
     // using Invocation setup methods:
-    // http://hg.openjdk.java.net/code-tools/jmh/file/bdfc7d3a6ebf/jmh-core/src/main/java/org/openjdk/jmh/annotations/Level.java#l50
+    // https://hg.openjdk.java.net/code-tools/jmh/file/bdfc7d3a6ebf/jmh-core/src/main/java/org/openjdk/jmh/annotations/Level.java#l50
     def toChooseFrom(): Seq[Offer[Int]] = {
       val ps = new ArrayBuffer[Promise[Tx[Int]]](numToChooseFrom)
       val ofs = new ArrayBuffer[Offer[Int]](numToChooseFrom)

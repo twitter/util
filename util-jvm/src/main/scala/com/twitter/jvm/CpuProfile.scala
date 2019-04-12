@@ -24,7 +24,7 @@ case class CpuProfile(
    * Write a Google pprof-compatible profile to `out`. The format is
    * documented here:
    *
-   *   http://google-perftools.googlecode.com/svn/trunk/doc/cpuprofile-fileformat.html
+   *   https://google-perftools.googlecode.com/svn/trunk/doc/cpuprofile-fileformat.html
    */
   def writeGoogleProfile(out: OutputStream): Unit = {
     var next = 1
@@ -80,7 +80,7 @@ object CpuProfile {
    * When looking for RUNNABLEs, the JVM's notion of runnable differs from the
    * from kernel's definition and for some well known cases, we can filter
    * out threads that are actually asleep.
-   * See http://www.brendangregg.com/blog/2014-06-09/java-cpu-sampling-using-hprof.html
+   * See https://www.brendangregg.com/blog/2014-06-09/java-cpu-sampling-using-hprof.html
    */
   private[jvm] def isRunnable(stackElem: StackTraceElement): Boolean =
     !IdleClassAndMethod.contains((stackElem.getClassName, stackElem.getMethodName))

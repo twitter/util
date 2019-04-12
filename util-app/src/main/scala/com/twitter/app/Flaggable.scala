@@ -48,7 +48,7 @@ import scala.collection.JavaConverters._
  * }
  * }}}
  *
- * [1] http://en.wikipedia.org/wiki/Type_class
+ * [1] https://en.wikipedia.org/wiki/Type_class
  */
 abstract class Flaggable[T] {
 

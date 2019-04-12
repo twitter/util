@@ -11,7 +11,7 @@ Conversions between Twitter's Future and Scala's Future
 
 Twitter's ``com.twitter.util.Future`` is similar to, but
 `predates <https://twitter.github.io/finagle/guide/Futures.html#futures>`_,
-`Scala's <http://docs.scala-lang.org/overviews/core/futures.html>`_
+`Scala's <https://docs.scala-lang.org/overviews/core/futures.html>`_
 ``scala.concurrent.Future`` and as such they are not directly compatible
 (e.g. support for continuation-local variables and interruptibility).
 

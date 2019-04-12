@@ -28,7 +28,7 @@ trait Scheduler {
   //
   // On OSX, the Mach thread_info call is used.
   //
-  // [1] http://linux.die.net/man/3/clock_gettime
+  // [1] https://linux.die.net/man/3/clock_gettime
   //
   // Note, these clock stats were decommissioned as they only make
   // sense relative to `wallTime` and the tracking error we have

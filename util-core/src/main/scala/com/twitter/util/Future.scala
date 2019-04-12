@@ -2143,7 +2143,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * match the semantics of a Java Future as closely as possible to
    * avoid issues with the way another API might use them. See:
    *
-   * http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+   * https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
    */
   def toJavaFuture: JavaFuture[_ <: A] = {
     new JavaFuture[A] {

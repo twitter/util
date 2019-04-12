@@ -18,7 +18,7 @@ and is being actively developed and maintained.
 ## Releases
 
 [Releases](https://maven-badges.herokuapp.com/maven-central/com.twitter/util_2.12)
-are done on an approximately monthly schedule. While [semver](http://semver.org/)
+are done on an approximately monthly schedule. While [semver](https://semver.org/)
 is not followed, the [changelogs](CHANGELOG.rst) are detailed and include sections on
 public API breaks and changes in runtime behavior.
 

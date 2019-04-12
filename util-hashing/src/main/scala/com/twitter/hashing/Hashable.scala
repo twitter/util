@@ -47,7 +47,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * FNV fast hashing algorithm in 32 bits.
-   * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
+   * @see https://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
   val FNV1_32: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]) = {
@@ -67,7 +67,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * FNV fast hashing algorithm in 32 bits, variant with operations reversed.
-   * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
+   * @see https://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
   val FNV1A_32: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
@@ -87,7 +87,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * FNV fast hashing algorithm in 64 bits.
-   * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
+   * @see https://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
   val FNV1_64: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
     def apply(key: Array[Byte]): Long = {
@@ -107,7 +107,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * FNV fast hashing algorithm in 64 bits, variant with operations reversed.
-   * @see http://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
+   * @see https://en.wikipedia.org/wiki/Fowler_Noll_Vo_hash
    */
   val FNV1A_64: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
     def apply(key: Array[Byte]): Long = {
@@ -179,7 +179,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * Paul Hsieh's hash function.
-   * http://www.azillionmonkeys.com/qed/hash.html
+   * https://www.azillionmonkeys.com/qed/hash.html
    */
   val HSIEH: Hashable[Array[Byte], Int] = new Hashable[Array[Byte], Int] {
     def apply(key: Array[Byte]): Int = {
@@ -244,7 +244,7 @@ object Hashable extends LowPriorityHashable {
 
   /**
    * Jenkins Hash Function
-   * http://en.wikipedia.org/wiki/Jenkins_hash_function
+   * https://en.wikipedia.org/wiki/Jenkins_hash_function
    */
   val JENKINS: Hashable[Array[Byte], Long] = new Hashable[Array[Byte], Long] {
     def apply(key: Array[Byte]): Long = {

@@ -172,7 +172,7 @@ trait StatsReceiver {
    * @see [[StatsReceiver.provideGauge]] when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    *
-   * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
+   * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(name: String*)(f: => Float): Gauge = addGauge(Verbosity.Default, name: _*)(f)
 
@@ -191,7 +191,7 @@ trait StatsReceiver {
    * @see [[StatsReceiver.provideGauge]] when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    *
-   * @see [[http://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
+   * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
 

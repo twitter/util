@@ -492,7 +492,7 @@ sealed abstract class AsyncStream[+A] {
    * Buffer the specified number of items from the stream, or all
    * remaining items if the end of the stream is reached before finding
    * that many items. In all cases, this method should act like
-   * <http://www.scala-lang.org/api/current/index.html#scala.collection.GenTraversableLike@splitAt(n:Int):(Repr,Repr)>
+   * <https://www.scala-lang.org/api/current/index.html#scala.collection.GenTraversableLike@splitAt(n:Int):(Repr,Repr)>
    * and not cause evaluation of the remainder of the stream.
    */
   private[concurrent] def buffer(n: Int): Future[(Seq[A], () => AsyncStream[A])] = {
@@ -531,7 +531,7 @@ sealed abstract class AsyncStream[+A] {
    * Convert the stream into a stream of groups of items. This
    * facilitates batch processing of the items in the stream. In all
    * cases, this method should act like
-   * <http://www.scala-lang.org/api/current/index.html#scala.collection.IterableLike@grouped(size:Int):Iterator[Repr]>
+   * <https://www.scala-lang.org/api/current/index.html#scala.collection.IterableLike@grouped(size:Int):Iterator[Repr]>
    * The resulting stream will cause this original stream to be
    * evaluated group-wise, so calling this method will cause the first
    * `groupSize` cells to be evaluated (even without examining the

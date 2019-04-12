@@ -186,7 +186,7 @@ object Await {
     all(awaitables.asScala.toSeq, timeout)
 }
 
-// See http://stackoverflow.com/questions/26643045/java-interoperability-woes-with-scala-generics-and-boxing
+// See https://stackoverflow.com/questions/26643045/java-interoperability-woes-with-scala-generics-and-boxing
 private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
   private[this] val onClose: Promise[U] = new Promise[U]
   private[this] val closed: AtomicBoolean = new AtomicBoolean(false)

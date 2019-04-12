@@ -91,13 +91,13 @@ object Logger {
  * @define logWith
  *
  * Log the given parameterized message at the named log level using the given
- * args. See [[http://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
+ * args. See [[https://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
  *
  * @define logWithMarker
  *
  * Log the given parameterized message at the named log level using the given
  * args taking into consideration the given [[Marker]] data.
- * See [[http://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
+ * See [[https://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
  */
 @SerialVersionUID(1L)
 final class Logger private (underlying: slf4j.Logger) extends Serializable {
