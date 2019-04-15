@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import scala.collection.mutable
-import scala.collection.Seq
+import scala.collection.Iterable
 
 trait Pool[A] {
   def reserve(): Future[A]
@@ -9,7 +9,7 @@ trait Pool[A] {
 }
 
 class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
-  def this(initialItems: Seq[A]) = this {
+  def this(initialItems: Iterable[A]) = this {
     val queue = new mutable.Queue[Future[A]]
     queue ++= initialItems.map(Future(_))
     queue

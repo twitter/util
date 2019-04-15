@@ -2,7 +2,6 @@ package com.twitter.util
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.Seq
 
 object Throwables {
 
@@ -28,14 +27,14 @@ object Throwables {
    * classname strings.
    */
   def mkString(ex: Throwable): Seq[String] = {
-    @tailrec def rec(ex: Throwable, buf: ArrayBuffer[String]): Seq[String] = {
+    @tailrec def rec(ex: Throwable, buf: List[String]): Seq[String] = {
       if (ex eq null)
-        buf.result
+        buf.reverse
       else
-        rec(ex.getCause, buf += ex.getClass.getName)
+        rec(ex.getCause, ex.getClass.getName :: buf)
     }
 
-    rec(ex, ArrayBuffer.empty)
+    rec(ex, Nil)
   }
 
   object RootCause {

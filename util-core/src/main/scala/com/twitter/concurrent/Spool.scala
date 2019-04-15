@@ -1,9 +1,7 @@
 package com.twitter.concurrent
 
 import com.twitter.util.{Await, Duration, Future, Return, Throw, ConstFuture}
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable
-import scala.collection.Seq
 import scala.language.implicitConversions
 import java.io.EOFException
 
@@ -262,11 +260,11 @@ sealed trait Spool[+A] {
    * satisfied when the entire result is ready.
    */
   def toSeq: Future[Seq[A]] = {
-    val as = new ArrayBuffer[A]
+    val as = Vector.newBuilder[A]
     foreach { a =>
       as += a
     } map { _ =>
-      as
+      as.result
     }
   }
 

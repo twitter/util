@@ -2,7 +2,7 @@ package com.twitter.io
 
 import com.twitter.io.SeqReader._
 import com.twitter.util.{Future, Promise}
-import scala.collection.Seq
+import scala.collection.Iterable
 
 /**
  * We want to ensure that this reader always satisfies these invariants:
@@ -12,22 +12,24 @@ import scala.collection.Seq
  * We achieved this with a state machine where any access to the state is synchronized,
  * and by preventing changing the state when the reader is fully read or discarded.
  */
-private[io] final class SeqReader[A](seq: Seq[A]) extends Reader[A] {
+private[io] final class SeqReader[A](it: Iterable[A]) extends Reader[A] {
+  import SeqReader._
+
   private[this] val closep = Promise[StreamTermination]()
-  private[this] var value: Seq[A] = seq
+  private[this] var value: Iterator[A] = it.iterator
   private[this] var state: State = State.Idle
 
   def read(): Future[Option[A]] = {
     val result = synchronized {
       state match {
         case State.Idle =>
-          value match {
-            case head +: tail =>
-              value = tail
-              Future.value(Some(head))
-            case Nil =>
-              state = State.FullyRead
-              Future.None
+          if(value.hasNext) {
+            val n = value.next
+            Future.value(Some(n))
+          }
+          else {
+            state = State.FullyRead
+            Future.None
           }
         case State.FullyRead =>
           Future.None

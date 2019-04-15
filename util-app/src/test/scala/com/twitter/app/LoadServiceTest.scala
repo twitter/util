@@ -99,7 +99,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
 
   test("LoadService shouldn't fail on un-readable dir") {
     val loader = mock[ClassLoader]
-    val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+    val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
     val rand = new Random()
 
     val f = File.createTempFile("tmp", "__utilapp_loadservice" + rand.nextInt(10000))
@@ -108,14 +108,14 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       f.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.isEmpty)
+      assert(buf.result.isEmpty)
       f.delete()
     }
   }
 
   test("LoadService shouldn't fail on un-readable sub-dir") {
     val loader = mock[ClassLoader]
-    val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+    val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
     val rand = new Random()
 
     val f = File.createTempFile("tmp", "__utilapp_loadservice" + rand.nextInt(10000))
@@ -127,7 +127,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       subDir.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.isEmpty)
+      assert(buf.result.isEmpty)
 
       subDir.delete()
       f.delete()
@@ -165,7 +165,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       val jos = new JarOutputStream(new FileOutputStream(jarFile), manifest)
       jos.close()
       val loader = mock[ClassLoader]
-      val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+      val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
       new LoadServiceClassPath().browseUri(jarFile.toURI, loader, buf)
     } finally {
       jarFile.delete
@@ -187,7 +187,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       attributes.put(CLASS_PATH, jar1.getName)
       new JarOutputStream(new FileOutputStream(jar2), manifest).close()
       val loader = mock[ClassLoader]
-      val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+      val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
       new LoadServiceClassPath().browseUri(jar1.toURI, loader, buf)
     } finally {
       jar1.delete

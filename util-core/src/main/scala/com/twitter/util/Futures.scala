@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import java.util.{List => JList, Map => JMap}
+import scala.collection.Iterable
 import scala.collection.JavaConverters.{
   asScalaBufferConverter,
   mapAsJavaMapConverter,
@@ -776,7 +777,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * to be satisfied and the rest of the futures.
    */
   def select[A](fs: JList[Future[A]]): Future[(Try[A], JList[Future[A]])] =
-    Future.select(fs.asScala).map {
+    Future.select(fs.asScala.toSeq).map {
       case (first, rest) =>
         (first, rest.asJava)
     }

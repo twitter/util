@@ -6,7 +6,7 @@ import java.net.{URISyntaxException, URLClassLoader, URI}
 import java.nio.charset.MalformedInputException
 import java.util.jar.{JarEntry, JarFile}
 import scala.collection.mutable
-import scala.collection.Seq
+import scala.collection.mutable.Builder
 import scala.collection.JavaConverters._
 import scala.io.Source
 
@@ -52,47 +52,40 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
   protected def ignoredPackages: Set[String]
 
   def browse(loader: ClassLoader): Seq[CpInfo] = {
-    val buf = mutable.Buffer[CpInfo]()
+    val buf = Vector.newBuilder[CpInfo]
     val seenUris = mutable.HashSet[URI]()
 
     for ((uri, loader) <- getEntries(loader)) {
       browseUri0(uri, loader, buf, seenUris)
       seenUris += uri
     }
-    buf
+    buf.result
   }
 
   // package protected for testing
   private[app] def getEntries(loader: ClassLoader): Seq[(URI, ClassLoader)] = {
-    val ents = mutable.Buffer[(URI, ClassLoader)]()
-    val parent = loader.getParent
-    if (parent != null)
-      ents ++= getEntries(parent)
+    val parent = Option(loader.getParent)
+ 
+    val ownURIs: Vector[(URI, ClassLoader)] = for {
+      urlLoader <- Vector(loader).collect {case u: URLClassLoader => u}
+      urls <- Option(urlLoader.getURLs()).toVector
+      url <- urls if url != null
+    } yield (url.toURI -> loader)
 
-    loader match {
-      case urlLoader: URLClassLoader =>
-        Option(urlLoader.getURLs) match {
-          case Some(urls) =>
-            urls.foreach { url =>
-              if (url != null)
-                ents += (url.toURI -> loader)
-            }
-          case _ =>
-        }
-      case _ =>
-    }
+    val p = parent.toSeq.flatMap(getEntries)
 
-    ents
+    ownURIs ++ p
+
   }
 
   // package protected for testing
-  private[app] def browseUri(uri: URI, loader: ClassLoader, buf: mutable.Buffer[CpInfo]): Unit =
+  private[app] def browseUri(uri: URI, loader: ClassLoader, buf: Builder[CpInfo, Seq[CpInfo]]): Unit =
     browseUri0(uri, loader, buf, mutable.Set[URI]())
 
   private[this] def browseUri0(
     uri: URI,
     loader: ClassLoader,
-    buf: mutable.Buffer[CpInfo],
+    buf: Builder[CpInfo, Seq[CpInfo]],
     history: mutable.Set[URI]
   ): Unit = {
     if (!history.contains(uri)) {
@@ -115,7 +108,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     dir: File,
     loader: ClassLoader,
     prefix: String,
-    buf: mutable.Buffer[CpInfo]
+    buf: Builder[CpInfo, Seq[CpInfo]]
   ): Unit = {
     if (ignoredPackages.contains(prefix))
       return
@@ -128,12 +121,12 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
         processFile(prefix, f, buf)
   }
 
-  protected def processFile(prefix: String, file: File, buf: mutable.Buffer[CpInfo]): Unit
+  protected def processFile(prefix: String, file: File, buf: Builder[CpInfo, Seq[CpInfo]]): Unit
 
   private def browseJar(
     file: File,
     loader: ClassLoader,
-    buf: mutable.Buffer[CpInfo],
+    buf: Builder[CpInfo, Seq[CpInfo]],
     seenUris: mutable.Set[URI]
   ): Unit = {
     val jarFile = try new JarFile(file)
@@ -163,7 +156,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
   protected def processJarEntry(
     jarFile: JarFile,
     entry: JarEntry,
-    buf: mutable.Buffer[CpInfo]
+    buf: Builder[CpInfo, Seq[CpInfo]]
   ): Unit
 
   private def jarClasspath(jarFile: File, manifest: java.util.jar.Manifest): Seq[URI] =
@@ -199,7 +192,7 @@ private[app] class FlagClassPath extends ClassPath[ClassPath.FlagInfo] {
   protected def processFile(
     prefix: String,
     file: File,
-    buf: mutable.Buffer[ClassPath.FlagInfo]
+    buf: Builder[ClassPath.FlagInfo, Seq[ClassPath.FlagInfo]]
   ): Unit = {
     val name = file.getName
     if (isClass(name)) {
@@ -210,7 +203,7 @@ private[app] class FlagClassPath extends ClassPath[ClassPath.FlagInfo] {
   protected def processJarEntry(
     jarFile: JarFile,
     entry: JarEntry,
-    buf: mutable.Buffer[ClassPath.FlagInfo]
+    buf: Builder[ClassPath.FlagInfo, Seq[ClassPath.FlagInfo]]
   ): Unit = {
     val name = entry.getName
     if (isClass(name)) {
@@ -251,7 +244,7 @@ private[app] class LoadServiceClassPath extends ClassPath[ClassPath.LoadServiceI
   protected def processFile(
     prefix: String,
     file: File,
-    buf: mutable.Buffer[ClassPath.LoadServiceInfo]
+    buf: Builder[ClassPath.LoadServiceInfo, Seq[ClassPath.LoadServiceInfo]]
   ): Unit = {
     for (iface <- ifaceOfName(prefix + file.getName)) {
       val source = Source.fromFile(file, "UTF-8")
@@ -263,7 +256,7 @@ private[app] class LoadServiceClassPath extends ClassPath[ClassPath.LoadServiceI
   protected def processJarEntry(
     jarFile: JarFile,
     entry: JarEntry,
-    buf: mutable.Buffer[ClassPath.LoadServiceInfo]
+    buf: Builder[ClassPath.LoadServiceInfo, Seq[ClassPath.LoadServiceInfo]]
   ): Unit = {
     for (iface <- ifaceOfName(entry.getName)) {
       val source = Source.fromInputStream(jarFile.getInputStream(entry), "UTF-8")

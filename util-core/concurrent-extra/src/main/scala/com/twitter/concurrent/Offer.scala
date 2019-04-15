@@ -3,7 +3,6 @@ package com.twitter.concurrent
 import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
 import com.twitter.util.Return
 import scala.util.Random
-import scala.collection.Seq
 
 /**
  * An offer to communicate with another process. The offer is

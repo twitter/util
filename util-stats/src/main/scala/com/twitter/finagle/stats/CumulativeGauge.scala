@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.{Function => JFunction}
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.Seq
+import scala.collection.Iterable
 
 /**
  * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)
