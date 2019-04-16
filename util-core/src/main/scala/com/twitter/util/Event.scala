@@ -304,11 +304,11 @@ trait Event[+T] { self =>
   }
 
   /**
-   * Progressively build a collection of events using the passed-in
+   * Progressively build any collection of events using the passed-in
    * builder. A value containing the current version of the collection
    * is notified for each incoming event.
    */
-  def build[U >: T, That](implicit factory: Factory[U, That]): Event[That] = new Event[That] {
+  def buildAny[That](implicit factory: Factory[T, That]): Event[That] = new Event[That] {
     def register(s: Witness[That]): Closable = {
       val b = factory.newBuilder
       self.respond { t =>
@@ -317,6 +317,13 @@ trait Event[+T] { self =>
       }
     }
   }
+
+  /**
+   * Progressively build a Seq of events using the passed-in
+   * builder. A value containing the current version of the collection
+   * is notified for each incoming event.
+   */
+  def build[U >: T, That <: Seq[U]](implicit factory: Factory[U, That]): Event[That] = buildAny(factory)
 
   /**
    * A Future which is satisfied by the first value observed.

@@ -55,7 +55,8 @@ public class BufCompilationTest {
     Buf abc = Bufs.utf8Buf("abc");
     Buf def = Bufs.utf8Buf("def");
     Buf merged = Buf.apply(
-      JavaConverters.asScalaBuffer(Arrays.asList(empty, abc, def)));
+      JavaConverters.asScalaBufferConverter(Arrays.asList(empty, abc, def)).asScala()
+    );
   }
 
   @Test

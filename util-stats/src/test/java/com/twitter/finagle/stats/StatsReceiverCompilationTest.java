@@ -83,6 +83,11 @@ public final class StatsReceiverCompilationTest {
       public Stat stat(Verbosity verbosity, String... name) {
         return nullSr.stat(verbosity, name);
       }
+      
+      @Override
+      public Stat stat(Verbosity verbosity, scala.collection.Seq<String> name) {
+        return nullSr.stat(verbosity, name.toVector());
+      }
 
       @Override
       public Object repr() {
@@ -95,18 +100,18 @@ public final class StatsReceiverCompilationTest {
       }
 
       @Override
-      public Counter counter(Verbosity verbosity, Seq<String> name) {
+      public Counter counter(Verbosity verbosity, String... name) {
         return nullSr.counter(name);
       }
 
       @Override
-      public Stat stat(Verbosity verbosity, Seq<String> name) {
-        return nullSr.stat(name);
+      public Counter counter(Verbosity verbosity, scala.collection.Seq<String> name){
+        return nullSr.counter(verbosity, name.toVector());
       }
 
       @Override
-      public Gauge addGauge(Verbosity verbosity, Seq<String> name, Function0<Object> f) {
-        return nullSr.addGauge(verbosity, name, f);
+      public Gauge addGauge(Verbosity verbosity, scala.collection.Seq<String> name, Function0<Object> f) {
+        return nullSr.addGauge(verbosity, name.toVector(), f);
       }
     };
   }

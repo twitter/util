@@ -5,8 +5,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable
-import scala.collection.Seq
-import scala.collection.Seq._
+import scala.collection.compat._
 
 class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   private case class U[T](init: T) extends UpdatableVar[T](init) {
@@ -219,7 +218,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("Var.collect: empty") {
-    assert(Var.collect(Seq.empty[Var[Int]]).sample == Seq.empty)
+    assert(Var.collect(List.empty[Var[Int]]).sample == Nil)
   }
 
   test("Var.collect[Seq]") {

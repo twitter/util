@@ -6,7 +6,7 @@ import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
 import org.scalacheck.{Arbitrary, Gen, Prop}
 import org.scalatest.FunSuite
-import org.scalatest.junit.AssertionsForJUnit
+import org.scalatestplus.junit.AssertionsForJUnit
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatestplus.scalacheck.Checkers
