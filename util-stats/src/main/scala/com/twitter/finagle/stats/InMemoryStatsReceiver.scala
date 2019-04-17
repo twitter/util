@@ -208,14 +208,10 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     new HistogramDetail {
       def counts: Seq[BucketAndCount] = {
         addedValues
-          .map { x =>
-            nearestPosInt(x)
-          }
-          .groupBy(identity)
-          .mapValues(_.size)
+          .groupBy(nearestPosInt)
+          .map { case (k, vs) => BucketAndCount(k, k+1, vs.size) }
           .toSeq
-          .sortWith(_._1 < _._1)
-          .map { case (k, v) => BucketAndCount(k, k + 1, v) }
+          .sortBy(_.lowerLimit)
       }
     }
   }

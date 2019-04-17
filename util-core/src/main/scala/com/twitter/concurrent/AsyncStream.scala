@@ -650,9 +650,8 @@ object AsyncStream {
    * Transformation (or lift) from [[Seq]] into `AsyncStream`.
    */
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {
-    case Nil => empty
-    case _ if seq.hasDefiniteSize && seq.tail.isEmpty => of(seq.head)
-    case _ => seq.head +:: fromSeq(seq.tail)
+    case head +: tail => head +:: fromSeq(tail)
+    case _ => empty
   }
 
   /**

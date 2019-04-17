@@ -308,7 +308,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
 
   meths foreach println
   '
-   */
+   """*/
 
   /**
    * Join 2 futures. The returned future is complete when all
