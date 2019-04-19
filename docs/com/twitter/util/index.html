@@ -1040,7 +1040,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java's analog of Scala's com.twitter.util.CloseAwaitably." href="AbstractCloseAwaitably.html"><span class="name">AbstractCloseAwaitably</span></a><span class="result"> extends <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a> with <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/runtime/BoxedUnit.html#scala.runtime.BoxedUnit" class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</a>]</span>
+        <a title="Java's analog of Scala's com.twitter.util.CloseAwaitably." href="AbstractCloseAwaitably.html"><span class="name">AbstractCloseAwaitably</span></a><span class="result"> extends <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">AbstractClosable</a> with <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/runtime/BoxedUnit.html#scala.runtime.BoxedUnit" class="extype" name="scala.runtime.BoxedUnit">BoxedUnit</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Java's analog of Scala's <code><a href="CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">com.twitter.util.CloseAwaitably</a></code>.</p><div class="fullcomment"><div class="comment cmt"><p>Java's analog of Scala's <code><a href="CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">com.twitter.util.CloseAwaitably</a></code>.</p><p>In order to make it more Java-friendly, the abstract method
@@ -1133,7 +1133,7 @@ function in Scala version.</p><p>An example usage looks as follows.</p><p><pre>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.util.Activity companion object." href="Activities.html"><span class="name">Activities</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.util.Activity companion object." href="Activities.html"><span class="name">Activities</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Activity.html" class="extype" name="com.twitter.util.Activity">com.twitter.util.Activity</a></code> companion object.</p>
@@ -1149,7 +1149,7 @@ function in Scala version.</p><p>An example usage looks as follows.</p><p><pre>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Activity, like Var, is a value that varies over time; but, richer than Var, these values have error and pending states." href="Activity.html"><span class="name">Activity</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="run">run: <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.T">T</span>]]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Activity, like Var, is a value that varies over time; but, richer than Var, these values have error and pending states." href="Activity.html"><span class="name">Activity</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="run">run: <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>[<a href="Activity$$State.html" class="extype" name="com.twitter.util.Activity.State">State</a>[<span class="extype" name="com.twitter.util.Activity.T">T</span>]]</span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">Activity, like <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>, is a value that varies over
@@ -1180,7 +1180,7 @@ pending state.)
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Wait for the result of some action." href="Awaitable.html"><span class="name">Awaitable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Wait for the result of some action." href="Awaitable.html"><span class="name">Awaitable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Wait for the result of some action.</p><div class="fullcomment"><div class="comment cmt"><p>Wait for the result of some action. Awaitable is not used
@@ -1304,7 +1304,7 @@ when the stack is full, the oldest element gets dropped off the bottom.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Defines a trait that makes the underlying object *cancellable*." href="Cancellable.html"><span class="name">Cancellable</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Defines a trait that makes the underlying object *cancellable*." href="Cancellable.html"><span class="name">Cancellable</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Defines a trait that makes the underlying object *cancellable*.</p><div class="fullcomment"><div class="comment cmt"><p>Defines a trait that makes the underlying object *cancellable*.
@@ -1342,7 +1342,7 @@ that the provider of the computation may choose to ignore.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Closable is a mixin trait to describe a closable resource." href="Closable.html"><span class="name">Closable</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Closable is a mixin trait to describe a closable resource." href="Closable.html"><span class="name">Closable</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><div class="fullcomment"><div class="comment cmt"><p>Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">com.twitter.util.AbstractClosable</a>.
@@ -1378,7 +1378,7 @@ as the first invocation irrespective of the deadline provided.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java compatibility layer for com.twitter.util.Closable." href="Closables.html"><span class="name">Closables</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java compatibility layer for com.twitter.util.Closable." href="Closables.html"><span class="name">Closables</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java compatibility layer for <code><a href="Closable.html" class="extype" name="com.twitter.util.Closable">com.twitter.util.Closable</a></code>.</p>
@@ -1394,7 +1394,7 @@ as the first invocation irrespective of the deadline provided.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable." href="CloseAwaitably.html"><span class="name">CloseAwaitably</span></a><span class="result"> extends <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+        <a title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable." href="CloseAwaitably.html"><span class="name">CloseAwaitably</span></a><span class="result"> extends <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
       <p class="shortcomment cmt">A mixin to make an <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">com.twitter.util.Awaitable</a> out
@@ -1434,7 +1434,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="" href="Command.html"><span class="name">Command</span></a><span class="tparams">[<span name="T1">-T1</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Command.T1">T1</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <a title="" href="Command.html"><span class="name">Command</span></a><span class="tparams">[<span name="T1">-T1</span>]</span><span class="result"> extends (<span class="extype" name="com.twitter.util.Command.T1">T1</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       
@@ -1499,7 +1499,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java interface to Credentials." href="Credentials.html"><span class="name">Credentials</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java interface to Credentials." href="Credentials.html"><span class="name">Credentials</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java interface to Credentials.</p>
@@ -1515,7 +1515,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A base trait for decoders for type T from a serialized form S" href="Decoder.html"><span class="name">Decoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A base trait for decoders for type T from a serialized form S" href="Decoder.html"><span class="name">Decoder</span></a><span class="tparams">[<span name="T">T</span>, <span name="S">S</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A base trait for decoders for type T from a serialized form S
@@ -1532,7 +1532,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="DecoderCompanion.html"><span class="name">DecoderCompanion</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="DecoderCompanion.html"><span class="name">DecoderCompanion</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -1548,7 +1548,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Diff stores the necessary instructions required to bring two version of a data structure into agreement." href="Diff.html"><span class="name">Diff</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Diff stores the necessary instructions required to bring two version of a data structure into agreement." href="Diff.html"><span class="name">Diff</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Diff stores the necessary instructions required to bring two
@@ -1565,7 +1565,7 @@ version of a data structure into agreement.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A type class that tells how to compute a Diff between two versions of a collection CC[T]." href="Diffable.html"><span class="name">Diffable</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A type class that tells how to compute a Diff between two versions of a collection CC[T]." href="Diffable.html"><span class="name">Diffable</span></a><span class="tparams">[<span name="CC">CC<span class="tparams">[<span name="_">_</span>]</span></span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A type class that tells how to compute a <a href="Diff.html" class="extype" name="com.twitter.util.Diff">Diff</a> between
@@ -1582,7 +1582,7 @@ two versions of a collection <code>CC[T]</code>.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="com.twitter.util.Disposable represents a live resource that must be disposed after use." href="Disposable.html"><span class="name">Disposable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="com.twitter.util.Disposable represents a live resource that must be disposed after use." href="Disposable.html"><span class="name">Disposable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"><a href="Disposable.html" class="extype" name="com.twitter.util.Disposable">com.twitter.util.Disposable</a> represents a live resource that must be disposed after use.</p><div class="fullcomment"><div class="comment cmt"><h4>Resource Management</h4><p><a href="Disposable.html" class="extype" name="com.twitter.util.Disposable">com.twitter.util.Disposable</a> represents a live resource that must be disposed after use.
@@ -1698,7 +1698,7 @@ that are truly infinite; for example the absence of a timeout.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="EncoderCompanion.html"><span class="name">EncoderCompanion</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="EncoderCompanion.html"><span class="name">EncoderCompanion</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -1714,7 +1714,7 @@ that are truly infinite; for example the absence of a timeout.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Events are emitters of values." href="Event.html"><span class="name">Event</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Events are emitters of values." href="Event.html"><span class="name">Event</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Events are emitters of values.</p><div class="fullcomment"><div class="comment cmt"><p>Events are emitters of values. They can be processed as if they were
@@ -1747,7 +1747,7 @@ counterpart to Var's continuous nature.</p><p>Note: There is a Java-friendly API
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.util.Event companion object." href="Events.html"><span class="name">Events</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.util.Event companion object." href="Events.html"><span class="name">Events</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Event.html" class="extype" name="com.twitter.util.Event">com.twitter.util.Event</a></code> companion object.</p>
@@ -1814,7 +1814,7 @@ use an <a href="InterruptibleExecutorServiceFuturePool.html" class="extype" name
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="Extractable.html"><span class="name">Extractable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="Extractable.html"><span class="name">Extractable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -1846,7 +1846,7 @@ use an <a href="InterruptibleExecutorServiceFuturePool.html" class="extype" name
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="This class is for Java friendliness." href="Function.html"><span class="name">Function</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="com.twitter.util.Function.T1">T1</span>, <span class="extype" name="com.twitter.util.Function.R">R</span>]</span>
+        <a title="This class is for Java friendliness." href="Function.html"><span class="name">Function</span></a><span class="tparams">[<span name="T1">-T1</span>, <span name="R">+R</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="com.twitter.util.Function.T1">T1</span>, <span class="extype" name="com.twitter.util.Function.R">R</span>]</span>
       </span>
       
       <p class="shortcomment cmt">This class is for Java friendliness.</p><div class="fullcomment"><div class="comment cmt"><p>This class is for Java friendliness. Any Scala method that takes Function1[A, B]
@@ -1950,7 +1950,7 @@ in particular, it does not couple the user to a specific executor or event loop.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Java friendly API for handling side-effects for a Future." href="FutureEventListener.html"><span class="name">FutureEventListener</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java friendly API for handling side-effects for a Future." href="FutureEventListener.html"><span class="name">FutureEventListener</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java friendly API for handling side-effects for a <code>Future</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A Java friendly API for handling side-effects for a <code>Future</code>.</p><p>If you want a Java API to
@@ -1985,7 +1985,7 @@ the work you can use a <a href="FutureTransformer.html" class="extype" name="com
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A FuturePool executes tasks asynchronously, typically using a pool of worker threads." href="FuturePool.html"><span class="name">FuturePool</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A FuturePool executes tasks asynchronously, typically using a pool of worker threads." href="FuturePool.html"><span class="name">FuturePool</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A <code>FuturePool</code> executes tasks asynchronously, typically using a pool
@@ -2002,7 +2002,7 @@ of worker threads.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of the com.twitter.util.FuturePool companion object." href="FuturePools.html"><span class="name">FuturePools</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of the com.twitter.util.FuturePool companion object." href="FuturePools.html"><span class="name">FuturePools</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">com.twitter.util.FuturePool</a></code> companion object.</p>
@@ -2034,7 +2034,7 @@ of worker threads.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="An alternative interface for performing Future transformations; that is, converting a Future[A] to a Future[B]." href="FutureTransformer.html"><span class="name">FutureTransformer</span></a><span class="tparams">[<span name="A">-A</span>, <span name="B">+B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="An alternative interface for performing Future transformations; that is, converting a Future[A] to a Future[B]." href="FutureTransformer.html"><span class="name">FutureTransformer</span></a><span class="tparams">[<span name="A">-A</span>, <span name="B">+B</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">An alternative interface for performing Future transformations;
@@ -2100,7 +2100,7 @@ that supports cancellation.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A mixin to allow scala objects to be used from java." href="JavaSingleton.html"><span class="name">JavaSingleton</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A mixin to allow scala objects to be used from java." href="JavaSingleton.html"><span class="name">JavaSingleton</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A mixin to allow scala objects to be used from java.</p>
@@ -2171,7 +2171,7 @@ When the Queue is full, a push replaces the item.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Local is a ThreadLocal whose scope is flexible." href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Local is a ThreadLocal whose scope is flexible." href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Local is a <span class="extype" name="ThreadLocal">ThreadLocal</span> whose scope is flexible.</p><div class="fullcomment"><div class="comment cmt"><p>A Local is a <span class="extype" name="ThreadLocal">ThreadLocal</span> whose scope is flexible. The state of all Locals may
@@ -2195,7 +2195,7 @@ restore optimizations are dominant.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Managed[T] is a resource of type T which lifetime is explicitly managed." href="Managed.html"><span class="name">Managed</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Managed[T] is a resource of type T which lifetime is explicitly managed." href="Managed.html"><span class="name">Managed</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"><code>Managed[T]</code> is a resource of type <code>T</code> which lifetime is explicitly managed.</p><div class="fullcomment"><div class="comment cmt"><p><code>Managed[T]</code> is a resource of type <code>T</code> which lifetime is explicitly managed.
@@ -2237,7 +2237,7 @@ and so on.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A Monitor is a composable exception handler." href="Monitor.html"><span class="name">Monitor</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Monitor is a composable exception handler." href="Monitor.html"><span class="name">Monitor</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Monitor is a composable exception handler.</p><div class="fullcomment"><div class="comment cmt"><p>A Monitor is a composable exception handler.  It is independent of
@@ -2257,7 +2257,7 @@ exceptions that may require cleanup.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Wraps an exception that happens when handling another exception in a monitor." href="MonitorException.html"><span class="name">MonitorException</span></a><span class="params">(<span name="handlingExc">handlingExc: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="monitorExc">monitorExc: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Exception">Exception</span> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Wraps an exception that happens when handling another exception in a monitor." href="MonitorException.html"><span class="name">MonitorException</span></a><span class="params">(<span name="handlingExc">handlingExc: <span class="extype" name="scala.Throwable">Throwable</span></span>, <span name="monitorExc">monitorExc: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Exception">Exception</span> with <a href="http://www.scala-lang.org/api/2.12.8/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">Wraps an exception that happens when handling another exception in
@@ -2274,7 +2274,7 @@ a monitor.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java friendly APIs for the com.twitter.util.Monitor companion object." href="Monitors.html"><span class="name">Monitors</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java friendly APIs for the com.twitter.util.Monitor companion object." href="Monitors.html"><span class="name">Monitors</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java friendly APIs for the com.twitter.util.Monitor companion
@@ -2291,7 +2291,7 @@ object.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Future which can never be satisfied and is thus always in the pending state." href="NoFuture.html"><span class="name">NoFuture</span></a><span class="result"> extends <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Nothing.html#scala.Nothing" class="extype" name="scala.Nothing">Nothing</a>]</span>
+        <a title="A Future which can never be satisfied and is thus always in the pending state." href="NoFuture.html"><span class="name">NoFuture</span></a><span class="result"> extends <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Nothing.html#scala.Nothing" class="extype" name="scala.Nothing">Nothing</a>]</span>
       </span>
       
       <p class="shortcomment cmt">A <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> which can never be satisfied and is thus always in
@@ -2327,7 +2327,7 @@ and inline.</p>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="Pool.html"><span class="name">Pool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="Pool.html"><span class="name">Pool</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -2435,7 +2435,7 @@ intermediate promises are merged into the root promise.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="Return.html"><span class="name">Return</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="r">r: <span class="extype" name="com.twitter.util.Return.R">R</span></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>] with <a href="http://www.scala-lang.org/api/2.12.7/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="" href="Return.html"><span class="name">Return</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="r">r: <span class="extype" name="com.twitter.util.Return.R">R</span></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Return.R">R</span>] with <a href="http://www.scala-lang.org/api/2.12.8/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       
@@ -2467,7 +2467,7 @@ intermediate promises are merged into the root promise.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="SignalHandler.html"><span class="name">SignalHandler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="SignalHandler.html"><span class="name">SignalHandler</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -2528,7 +2528,7 @@ to be taking longer than the specified maximum runtime.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="StateMachine.html"><span class="name">StateMachine</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="StateMachine.html"><span class="name">StateMachine</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -2544,7 +2544,7 @@ to be taking longer than the specified maximum runtime.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A stopwatch may be used to measure elapsed time." href="Stopwatch.html"><span class="name">Stopwatch</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A stopwatch may be used to measure elapsed time." href="Stopwatch.html"><span class="name">Stopwatch</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A stopwatch may be used to measure elapsed time.</p>
@@ -2583,7 +2583,7 @@ from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><spa
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="StringEncoder.html"><span class="name">StringEncoder</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="StringEncoder.html"><span class="name">StringEncoder</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -2631,7 +2631,7 @@ from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><spa
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="" href="ThriftCodec.html"><span class="name">ThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="org.apache.thrift.TBase">TBase</span>[_, _]</span>, <span name="P">P &lt;: <span class="extype" name="org.apache.thrift.protocol.TProtocolFactory">TProtocolFactory</span></span>]</span><span class="result"> extends <a href="Codec.html" class="extype" name="com.twitter.util.Codec">Codec</a>[<span class="extype" name="com.twitter.util.ThriftCodec.T">T</span>, <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.12.7/scala/Byte.html#scala.Byte" class="extype" name="scala.Byte">Byte</a>]] with <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a></span>
+        <a title="" href="ThriftCodec.html"><span class="name">ThriftCodec</span></a><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="org.apache.thrift.TBase">TBase</span>[_, _]</span>, <span name="P">P &lt;: <span class="extype" name="org.apache.thrift.protocol.TProtocolFactory">TProtocolFactory</span></span>]</span><span class="result"> extends <a href="Codec.html" class="extype" name="com.twitter.util.Codec">Codec</a>[<span class="extype" name="com.twitter.util.ThriftCodec.T">T</span>, <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Byte.html#scala.Byte" class="extype" name="scala.Byte">Byte</a>]] with <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a></span>
       </span>
       
       
@@ -2663,7 +2663,7 @@ from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><spa
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="Throw.html"><span class="name">Throw</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>] with <a href="http://www.scala-lang.org/api/2.12.7/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="" href="Throw.html"><span class="name">Throw</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result"> extends <a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Throw.R">R</span>] with <a href="http://www.scala-lang.org/api/2.12.8/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       
@@ -2698,7 +2698,7 @@ nanoseconds since the Unix epoch.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="TimeControl.html"><span class="name">TimeControl</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="TimeControl.html"><span class="name">TimeControl</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       
@@ -2714,7 +2714,7 @@ nanoseconds since the Unix epoch.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A thread-safe wrapper around a SimpleDateFormat object." href="TimeFormat.html"><span class="name">TimeFormat</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A thread-safe wrapper around a SimpleDateFormat object." href="TimeFormat.html"><span class="name">TimeFormat</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A thread-safe wrapper around a SimpleDateFormat object.</p><div class="fullcomment"><div class="comment cmt"><p>A thread-safe wrapper around a SimpleDateFormat object.</p><p>The default timezone is UTC.
@@ -2758,7 +2758,7 @@ turn this means it can be used as keys in maps, etc.</p><p>Overflows are also ha
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="" href="TimeLikeOps.html"><span class="name">TimeLikeOps</span></a><span class="tparams">[<span name="This">This &lt;: <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<span class="extype" name="com.twitter.util.TimeLikeOps.This">This</span>]</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="" href="TimeLikeOps.html"><span class="name">TimeLikeOps</span></a><span class="tparams">[<span name="This">This &lt;: <a href="TimeLike.html" class="extype" name="com.twitter.util.TimeLike">TimeLike</a>[<span class="extype" name="com.twitter.util.TimeLikeOps.This">This</span>]</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt"></p>
@@ -2790,7 +2790,7 @@ turn this means it can be used as keys in maps, etc.</p><p>Overflows are also ha
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Timers are used to schedule tasks in the future." href="Timer.html"><span class="name">Timer</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Timers are used to schedule tasks in the future." href="Timer.html"><span class="name">Timer</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Timers are used to schedule tasks in the future.</p><div class="fullcomment"><div class="comment cmt"><p>Timers are used to schedule tasks in the future.
@@ -2827,7 +2827,7 @@ with <a href="Future.html" class="extype" name="com.twitter.util.Future">Future<
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A token bucket is used to control the relative rates of two processes: one fills the bucket, another empties it." href="TokenBucket.html"><span class="name">TokenBucket</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A token bucket is used to control the relative rates of two processes: one fills the bucket, another empties it." href="TokenBucket.html"><span class="name">TokenBucket</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A token bucket is used to control the relative rates of two
@@ -2844,7 +2844,7 @@ processes: one fills the bucket, another empties it.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="This class represents a computation that can succeed or fail." href="Try.html"><span class="name">Try</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="This class represents a computation that can succeed or fail." href="Try.html"><span class="name">Try</span></a><span class="tparams">[<span name="R">+R</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">This class represents a computation that can succeed or fail.</p><div class="fullcomment"><div class="comment cmt"><p>This class represents a computation that can succeed or fail. It has two
@@ -2862,7 +2862,7 @@ concrete implementations, Return (for success) and Throw (for failure)
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Denotes an updatable container." href="Updatable.html"><span class="name">Updatable</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Denotes an updatable container." href="Updatable.html"><span class="name">Updatable</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Denotes an updatable container.</p>
@@ -2878,7 +2878,7 @@ concrete implementations, Return (for success) and Throw (for failure)
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Vars are values that vary over time." href="Var.html"><span class="name">Var</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Vars are values that vary over time." href="Var.html"><span class="name">Var</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Vars are values that vary over time.</p><div class="fullcomment"><div class="comment cmt"><p>Vars are values that vary over time. To create one, you must give it an
@@ -2907,7 +2907,7 @@ Note: There is a Java-friendly API for this trait: <a href="AbstractVar.html" cl
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.util.Var companion object." href="Vars.html"><span class="name">Vars</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.util.Var companion object." href="Vars.html"><span class="name">Vars</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Var.html" class="extype" name="com.twitter.util.Var">com.twitter.util.Var</a></code> companion object.</p>
@@ -2923,7 +2923,7 @@ Note: There is a Java-friendly API for this trait: <a href="AbstractVar.html" cl
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A witness is the recipient of Event." href="Witness.html"><span class="name">Witness</span></a><span class="tparams">[<span name="N">-N</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A witness is the recipient of Event." href="Witness.html"><span class="name">Witness</span></a><span class="tparams">[<span name="N">-N</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A witness is the recipient of <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A witness is the recipient of <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractWitness.html" class="extype" name="com.twitter.util.AbstractWitness">com.twitter.util.AbstractWitness</a>.
@@ -2956,7 +2956,7 @@ Note: There is a Java-friendly API for this trait: <a href="AbstractVar.html" cl
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of com.twitter.util.Witness companion object." href="Witnesses.html"><span class="name">Witnesses</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of com.twitter.util.Witness companion object." href="Witnesses.html"><span class="name">Witnesses</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Witness.html" class="extype" name="com.twitter.util.Witness">com.twitter.util.Witness</a></code> companion object.</p>
@@ -3010,7 +3010,7 @@ from an expression should be marked as computed:</p><p>   var level = required[I
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="Note: There is a Java-friendly API for this object: com.twitter.util.Activities." href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Note: There is a Java-friendly API for this object: com.twitter.util.Activities." href="Activity$.html"><span class="name">Activity</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">Note: There is a Java-friendly API for this object: <a href="Activities.html" class="extype" name="com.twitter.util.Activities">com.twitter.util.Activities</a>.</p>
@@ -3260,7 +3260,7 @@ Keys can be any word character or '-' and values can be any character except new
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="Duration$.html"><span class="name">Duration</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="" href="Duration$.html"><span class="name">Duration</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a>] with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       
@@ -3593,7 +3593,7 @@ ephemeral ports.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="Return$.html"><span class="name">Return</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="" href="Return$.html"><span class="name">Return</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       
@@ -3755,7 +3755,7 @@ time manipulation on <a href="Time.html" class="extype" name="com.twitter.util.T
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="Throw$.html"><span class="name">Throw</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="" href="Throw$.html"><span class="name">Throw</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       
@@ -3787,7 +3787,7 @@ time manipulation on <a href="Time.html" class="extype" name="com.twitter.util.T
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="By using Time.now in your program instead of System.currentTimeMillis unit tests are able to adjust the current time to verify timeouts and other time-dependent behavior, without calling sleep, and providing deterministic tests." href="Time$.html"><span class="name">Time</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="By using Time.now in your program instead of System.currentTimeMillis unit tests are able to adjust the current time to verify timeouts and other time-dependent behavior, without calling sleep, and providing deterministic tests." href="Time$.html"><span class="name">Time</span></a><span class="result"> extends <a href="TimeLikeOps.html" class="extype" name="com.twitter.util.TimeLikeOps">TimeLikeOps</a>[<a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a>] with <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">By using <a href="Time$.html#now:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#now">Time.now</a> in your program instead of

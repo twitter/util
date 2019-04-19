@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Futures &#8212; Util 19.3.0 documentation</title>
+    <title>Futures &#8212; Util 19.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '19.3.0',
+        VERSION:     '19.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 19.3.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 19.4.0 documentation" href="../index.html" />
     <link rel="up" title="Util Cookbook" href="index.html" />
     <link rel="next" title="Input/Output" href="io.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -83,7 +83,7 @@ in Effective Scala for details on concurrent programming with futures.</p>
 <h2>Conversions between Twitter&#8217;s Future and Scala&#8217;s Future<a class="headerlink" href="#conversions-between-twitter-s-future-and-scala-s-future" title="Permalink to this headline">¶</a></h2>
 <p>Twitter&#8217;s <code class="docutils literal"><span class="pre">com.twitter.util.Future</span></code> is similar to, but
 <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html#futures">predates</a>,
-<a class="reference external" href="http://docs.scala-lang.org/overviews/core/futures.html">Scala&#8217;s</a>
+<a class="reference external" href="https://docs.scala-lang.org/overviews/core/futures.html">Scala&#8217;s</a>
 <code class="docutils literal"><span class="pre">scala.concurrent.Future</span></code> and as such they are not directly compatible
 (e.g. support for continuation-local variables and interruptibility).</p>
 <p>You can use the <a class="reference external" href="https://github.com/twitter/bijection">Twitter Bijection</a>
@@ -96,7 +96,7 @@ below to avoid the extra dependency.</p>
 
 <span class="cm">/** Convert from a Twitter Future to a Scala Future */</span>
 <span class="k">implicit</span> <span class="k">class</span> <span class="nc">RichTwitterFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="k">val</span> <span class="n">tf</span><span class="k">:</span> <span class="kt">TwitterFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">AnyVal</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">asScala</span><span class="o">(</span><span class="k">implicit</span> <span class="n">e</span><span class="k">:</span> <span class="kt">ExecutionContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">ScalaFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">asScala</span><span class="k">:</span> <span class="kt">ScalaFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">val</span> <span class="n">promise</span><span class="k">:</span> <span class="kt">ScalaPromise</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">ScalaPromise</span><span class="o">()</span>
     <span class="n">tf</span><span class="o">.</span><span class="n">respond</span> <span class="o">{</span>
       <span class="k">case</span> <span class="nc">Return</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">promise</span><span class="o">.</span><span class="n">success</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
@@ -308,8 +308,8 @@ for the correct behavior.</p>
 
 <h3>Useful Links</h3>
 <ul>
-  <li><a href="http://github.com/twitter/util">Util on GitHub</a></li>
-  <li><a href="http://github.com/twitter/util/issues">Issue Tracker</a></li>
+  <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
+  <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>

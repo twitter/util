@@ -336,7 +336,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A scala wrapper over a org.slf4j.Logger." href="Logger.html"><span class="name">Logger</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="A scala wrapper over a org.slf4j.Logger." href="Logger.html"><span class="name">Logger</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">A scala wrapper over a <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A scala wrapper over a <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><p>The Logger is <span class="extype" name="Serializable">Serializable</span> to support it's usage through the
@@ -357,7 +357,7 @@ into a <span class="extype" name="Serializable">Serializable</span> class.</p></
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A scala-friendly Logging trait which:" href="Logging.html"><span class="name">Logging</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A scala-friendly Logging trait which:" href="Logging.html"><span class="name">Logging</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A scala-friendly Logging trait which:</p><div class="fullcomment"><div class="comment cmt"><p>A scala-friendly Logging trait which:</p><ul><li>lazily provides a logger named according to the class in which the trait is mixed</li><li>convenience methods to proxy calls to the lazily provided logger. These methods are
@@ -388,7 +388,7 @@ into a <span class="extype" name="Serializable">Serializable</span> class.</p></
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="Companion object for com.twitter.util.logging.Logger which provides factory methods for creation." href="Logger$.html"><span class="name">Logger</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.7/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Companion object for com.twitter.util.logging.Logger which provides factory methods for creation." href="Logger$.html"><span class="name">Logger</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">Companion object for <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> which provides
@@ -427,14 +427,14 @@ factory methods for creation.
         <a title="A utility to safely install the slf4j-api SLF4JBridgeHandler." href="Slf4jBridgeUtility$.html"><span class="name">Slf4jBridgeUtility</span></a><span class="result"> extends <a href="Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></span>
       </span>
       
-      <p class="shortcomment cmt">A utility to safely install the <a href="http://www.slf4j.org/" target="_blank">slf4j-api</a> <a href="http://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A utility to safely install the <a href="http://www.slf4j.org/" target="_blank">slf4j-api</a> <a href="http://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a>.
+      <p class="shortcomment cmt">A utility to safely install the <a href="https://www.slf4j.org/" target="_blank">slf4j-api</a> <a href="https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A utility to safely install the <a href="https://www.slf4j.org/" target="_blank">slf4j-api</a> <a href="https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a>.
 The utility attempts to detect if the <code>slf4j-jdk14</code> dependency is present on
 the classpath as it is unwise to install the <code>jul-to-slf4j</code> bridge with the <code>slf4j-jdk14</code>
-dependency present as it may cause an <a href="http://www.slf4j.org/legacy.html#julRecursion" target="_blank">infinite loop</a>.</p><p>If the <a href="http://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a> is already installed we do not try to install
+dependency present as it may cause an <a href="https://www.slf4j.org/legacy.html#julRecursion" target="_blank">infinite loop</a>.</p><p>If the <a href="https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html" target="_blank">SLF4JBridgeHandler</a> is already installed we do not try to install
 it again.</p><p>Additionally note there is a performance impact for bridging jul log messages in this
-manner. However, using the <a href="http://logback.qos.ch/manual/configuration.html#LevelChangePropagator" target="_blank">Logback LevelChangePropagator</a>
+manner. However, using the <a href="https://logback.qos.ch/manual/configuration.html#LevelChangePropagator" target="_blank">Logback LevelChangePropagator</a>
 (&gt; 0.9.25) can eliminate this performance impact.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://www.slf4j.org/legacy.html#jul-to-slf4j" target="_blank">SLF4J: jul-to-slf4j bridge</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="https://www.slf4j.org/legacy.html#jul-to-slf4j" target="_blank">SLF4J: jul-to-slf4j bridge</a></p></span></dd></dl></div>
     </li>
               </ol>
             </div>

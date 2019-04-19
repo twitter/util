@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &#8212; Util 19.3.0 documentation</title>
+    <title>User Guide &#8212; Util 19.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '19.3.0',
+        VERSION:     '19.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 19.3.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 19.4.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -121,7 +121,7 @@ ids in your metric names).</p>
 <span id="gauges-in-members"></span><h2>Store gauges in member variables<a class="headerlink" href="#store-gauges-in-member-variables" title="Permalink to this headline">¶</a></h2>
 <p>While your application code is not likely to refer to the value returned from
 <code class="docutils literal"><span class="pre">StatsReceiver.addGauge</span></code>, you should store it in a member variable. This is due to the common
-implementation of <code class="docutils literal"><span class="pre">Gauge</span></code> being <code class="docutils literal"><span class="pre">CumulativeGauge</span></code>, which uses <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html">java.lang.ref.WeakReference</a>.
+implementation of <code class="docutils literal"><span class="pre">Gauge</span></code> being <code class="docutils literal"><span class="pre">CumulativeGauge</span></code>, which uses <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html">java.lang.ref.WeakReference</a>.
 If a <code class="docutils literal"><span class="pre">CumulativeGauge</span></code> is not held by a strong reference, <em>the gauge is eligible for garbage
 collection</em>, which would cause your metric to disappear unexpectedly at runtime.</p>
 <div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// bad, don&#39;t do this:</span>
@@ -223,8 +223,8 @@ using.</p>
 
 <h3>Useful Links</h3>
 <ul>
-  <li><a href="http://github.com/twitter/util">Util on GitHub</a></li>
-  <li><a href="http://github.com/twitter/util/issues">Issue Tracker</a></li>
+  <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
+  <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>

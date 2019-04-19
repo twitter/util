@@ -163,8 +163,8 @@
                         <a href="GlobalFlagVisible.html" title="">GlobalFlagVisible</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">JavaGlobalFlag</a>
+                        <a class="class" href="" title="In order to declare a new GlobalFlag in Java, it can be done with a bit of ceremony by following a few steps:"></a>
+                        <a href="" title="In order to declare a new GlobalFlag in Java, it can be done with a bit of ceremony by following a few steps:">JavaGlobalFlag</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="LoadService$.html" title="Load classes in the manner of java.util.ServiceLoader."></a>
@@ -197,11 +197,29 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>In order to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, it can be done with a bit
+of ceremony by following a few steps:</p><ol class="decimal"><li>the flag's class name must end with &quot;$&quot;, e.g. <code>javaGlobalWithDefault$</code>.
+ This is done to mimic the behavior of Scala's singleton <code>object</code>.</li><li>the class must have a method, <code>public static Flag&lt;?&gt; globalFlagInstance()</code>,
+ that returns the singleton instance of the <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.</li><li>the class should have a <code>static final</code> field holding the singleton
+ instance of the flag.</li><li>the class should extend <code>JavaGlobalFlag</code>.</li><li>to avoid extraneous creation of instances, thus forcing users to only
+ access the singleton, the constructor should be <code>private</code> and the class
+ should be <code>public final</code>.</li></ol><p>An example of a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> declared in Java:</p><pre><span class="kw">import</span> com.twitter.app.Flag;
+<span class="kw">import</span> com.twitter.app.Flaggable;
+<span class="kw">import</span> com.twitter.app.JavaGlobalFlag;
+
+public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGlobalFlag$ <span class="kw">extends</span> JavaGlobalFlag&lt;<span class="std">String</span>&gt; {
+  <span class="kw">private</span> exampleJavaGlobalFlag() {
+    <span class="kw">super</span>(<span class="lit">"The default value"</span>, <span class="lit">"The help string"</span>, Flaggable.ofString());
+  }
+  public static <span class="kw">final</span> Flag&lt;<span class="std">String</span>&gt; Flag = <span class="kw">new</span> exampleJavaGlobalFlag();
+  public static Flag&lt;?&gt; globalFlagInstance() {
+    <span class="kw">return</span> Flag;
+  }
+}</pre></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>], <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -262,29 +280,7 @@
         <span class="name">JavaGlobalFlag</span><span class="params">(<span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>, <span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>)</span>
       </span>
       
-      <p class="shortcomment cmt">A flag without a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag without a default value.</p><p>_declaration</p><p>In order to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, it can be done with a bit
-of ceremony by following a few steps:</p><p>1. the flag's class name must end with &quot;$&quot;, e.g. <code>javaGlobalWithDefault$</code>.
-This is done to mimic the behavior of Scala's singleton <code>object</code>.
-1. the class must have a method, <code>public static Flag&lt;?&gt; globalFlagInstance()</code>,
-that returns the singleton instance of the <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.
-1. the class should have a <code>static final</code> field holding the singleton
-instance of the flag.
-1. the class should extend <code>JavaGlobalFlag</code>.
-1. to avoid extraneous creation of instances, thus forcing users to only
-access the singleton, the constructor should be <code>private</code> and the class
-should be <code>public final</code>.</p><p>An example of a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> declared in Java:</p><pre><span class="kw">import</span> com.twitter.app.Flag;
-<span class="kw">import</span> com.twitter.app.Flaggable;
-<span class="kw">import</span> com.twitter.app.JavaGlobalFlag;
-
-public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGlobalFlag$ <span class="kw">extends</span> JavaGlobalFlag&lt;<span class="std">String</span>&gt; {
-  <span class="kw">private</span> exampleJavaGlobalFlag() {
-    <span class="kw">super</span>(<span class="lit">"The default value"</span>, <span class="lit">"The help string"</span>, Flaggable.ofString());
-  }
-  public static <span class="kw">final</span> Flag&lt;<span class="std">String</span>&gt; Flag = <span class="kw">new</span> exampleJavaGlobalFlag();
-  public static Flag&lt;?&gt; globalFlagInstance() {
-    <span class="kw">return</span> Flag;
-  }
-}</pre><p>_declaration
+      <p class="shortcomment cmt">A flag without a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag without a default value.</p><p>_declaration</p><p>If you'd like to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, see <a href="" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>._declaration
 </p></div><dl class="paramcmts block"><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this flag.</p></dd><dt class="param">clazz</dt><dd class="cmt"><p>the type of the flag</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li><li name="com.twitter.app.JavaGlobalFlag#&lt;init&gt;" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(default:T,help:String,flaggable:com.twitter.app.Flaggable[T]):com.twitter.app.JavaGlobalFlag[T]"></a><a id="&lt;init&gt;:JavaGlobalFlag[T]"></a>
@@ -301,29 +297,7 @@ public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGl
         <span class="name">JavaGlobalFlag</span><span class="params">(<span name="default">default: <span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span></span>, <span name="help">help: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="flaggable">flaggable: <a href="Flaggable.html" class="extype" name="com.twitter.app.Flaggable">Flaggable</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>)</span>
       </span>
       
-      <p class="shortcomment cmt">A flag with a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag with a default value.</p><p>_declaration</p><p>In order to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, it can be done with a bit
-of ceremony by following a few steps:</p><p>1. the flag's class name must end with &quot;$&quot;, e.g. <code>javaGlobalWithDefault$</code>.
-This is done to mimic the behavior of Scala's singleton <code>object</code>.
-1. the class must have a method, <code>public static Flag&lt;?&gt; globalFlagInstance()</code>,
-that returns the singleton instance of the <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>.
-1. the class should have a <code>static final</code> field holding the singleton
-instance of the flag.
-1. the class should extend <code>JavaGlobalFlag</code>.
-1. to avoid extraneous creation of instances, thus forcing users to only
-access the singleton, the constructor should be <code>private</code> and the class
-should be <code>public final</code>.</p><p>An example of a <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> declared in Java:</p><pre><span class="kw">import</span> com.twitter.app.Flag;
-<span class="kw">import</span> com.twitter.app.Flaggable;
-<span class="kw">import</span> com.twitter.app.JavaGlobalFlag;
-
-public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGlobalFlag$ <span class="kw">extends</span> JavaGlobalFlag&lt;<span class="std">String</span>&gt; {
-  <span class="kw">private</span> exampleJavaGlobalFlag() {
-    <span class="kw">super</span>(<span class="lit">"The default value"</span>, <span class="lit">"The help string"</span>, Flaggable.ofString());
-  }
-  public static <span class="kw">final</span> Flag&lt;<span class="std">String</span>&gt; Flag = <span class="kw">new</span> exampleJavaGlobalFlag();
-  public static Flag&lt;?&gt; globalFlagInstance() {
-    <span class="kw">return</span> Flag;
-  }
-}</pre><p>_declaration
+      <p class="shortcomment cmt">A flag with a default value.</p><div class="fullcomment"><div class="comment cmt"><p>A flag with a default value.</p><p>_declaration</p><p>If you'd like to declare a new <a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> in Java, see <a href="" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a>._declaration
 </p></div><dl class="paramcmts block"><dt class="param">default</dt><dd class="cmt"><p>the default value used if the value is not specified by the user.</p></dd><dt class="param">help</dt><dd class="cmt"><p>documentation regarding usage of this flag.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li></ol>
             </div>
@@ -347,7 +321,7 @@ public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -363,7 +337,7 @@ public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -379,7 +353,7 @@ public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGl
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -429,7 +403,7 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -469,7 +443,7 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -485,7 +459,7 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -501,7 +475,7 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -539,7 +513,7 @@ when the flag has not otherwise been set.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">get</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
+        <span class="name">get</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Get the value if it has been set.</p><div class="fullcomment"><div class="comment cmt"><p>Get the value if it has been set.
@@ -600,7 +574,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
+        <span class="name">getValue</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -616,7 +590,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getWithDefault</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
+        <span class="name">getWithDefault</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Get the value if it has been set or if there is a default value supplied.</p><div class="fullcomment"><div class="comment cmt"><p>Get the value if it has been set or if there is a default value supplied.
@@ -634,7 +608,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
@@ -669,7 +643,7 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isDefined</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">isDefined</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <p class="shortcomment cmt">True if the flag has been set.</p><div class="fullcomment"><div class="comment cmt"><p>True if the flag has been set.
@@ -687,7 +661,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -709,7 +683,7 @@ returned even when a default value is supplied.</p></span></dd></dl></div>
       <p class="shortcomment cmt">Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Override the value of this flag with <code>t</code>, only for the scope of the current
 <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#letParse[R](arg:String)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letParse">letParse</a></p></span><span class="cmt"><p><a href="Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.Flag#letClear" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="letClear[R](f:=&gt;R):R"></a><a id="letClear[R](⇒R):R"></a>
       <span class="permalink">
@@ -730,7 +704,27 @@ only for the scope of the current <a href="../util/Local.html" class="extype" na
 given function <code>f</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Unset the value of this flag, such that <a href="Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">isDefined</a> will return <code>false</code>,
 only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the
 given function <code>f</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span><span class="cmt"><p><a href="Flag.html#letParse[R](arg:String)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letParse">letParse</a></p></span></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#letParse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="letParse[R](arg:String)(f:=&gt;R):R"></a><a id="letParse[R](String)(⇒R):R"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/app/JavaGlobalFlag.html#letParse[R](arg:String)(f:=&gt;R):R" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">letParse</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="arg">arg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="com.twitter.app.Flag.letParse.R">R</span></span>)</span><span class="result">: <span class="extype" name="com.twitter.app.Flag.letParse.R">R</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Override the value of this flag with <code>arg</code> <span class="extype" name="String]">parsed to this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>'s <span class="extype" name="T">T</span> type,
+only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
+</span></p><div class="fullcomment"><div class="comment cmt"><p>Override the value of this flag with <code>arg</code> <span class="extype" name="String]">parsed to this <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>'s <span class="extype" name="T">T</span> type,
+only for the scope of the current <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">com.twitter.util.Local</a> for the given function <code>f</code>.
+</span></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a></p></span><span class="cmt"><p><a href="Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.GlobalFlag#name" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <span class="permalink">
@@ -763,7 +757,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -779,7 +773,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">noArgumentOk</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">noArgumentOk</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <p class="shortcomment cmt">Indicates whether or not the flag is valid without an argument.</p><div class="fullcomment"><div class="comment cmt"><p>Indicates whether or not the flag is valid without an argument.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -795,7 +789,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -814,7 +808,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -833,7 +827,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parse</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">parse</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Parse this flag with no argument.</p><div class="fullcomment"><div class="comment cmt"><p>Parse this flag with no argument.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -849,7 +843,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parse</span><span class="params">(<span name="raw">raw: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">parse</span><span class="params">(<span name="raw">raw: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Parse value <code>raw</code> into this flag.</p><div class="fullcomment"><div class="comment cmt"><p>Parse value <code>raw</code> into this flag.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -865,7 +859,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">parsingDone</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">parsingDone</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="GlobalFlag.html" class="extype" name="com.twitter.app.GlobalFlag">GlobalFlag</a> → <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -881,7 +875,7 @@ e.g. <code>-DyourGlobalFlagName=flagName</code>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">reset</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">reset</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Reset this flag's value</p><div class="fullcomment"><div class="comment cmt"><p>Reset this flag's value</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd></dl></div>
@@ -948,7 +942,7 @@ suitable for being used on the command line.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -970,7 +964,7 @@ suitable for being used on the command line.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.7/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -992,7 +986,7 @@ suitable for being used on the command line.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.7/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.7/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1019,9 +1013,9 @@ suitable for being used on the command line.
             </div><div class="parent" name="com.twitter.app.Flag">
               <h3>Inherited from <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>[<span class="extype" name="com.twitter.app.JavaGlobalFlag.T">T</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.7/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.7/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>
         
         </div>
