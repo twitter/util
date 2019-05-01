@@ -3,6 +3,7 @@ junit_tests(
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
+        "3rdparty/jvm/com/google/code/findbugs:jsr305",
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",
