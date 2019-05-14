@@ -21,13 +21,14 @@ import com.twitter.conversions.StringOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
+import java.io.ByteArrayOutputStream
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{
   ArrayBlockingQueue,
   RejectedExecutionHandler,
-  TimeUnit,
-  ThreadPoolExecutor
+  ThreadPoolExecutor,
+  TimeUnit
 }
 import java.util.{logging => javalog}
 import org.junit.runner.RunWith
@@ -222,6 +223,46 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually wit
       // There will be 1 task dequeued by the executor.
       // That leaves either 94 rejected tasks.
       assert(rejected.get() == 94)
+    }
+
+    "report batch sizes" in {
+      val statsReceiver = new InMemoryStatsReceiver
+      val mockSocket = mock[Socket]
+      when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
+
+      val scribe = ScribeHandler(
+        port = portWithoutListener,
+        category = "test",
+        bufferTime = 5.seconds,
+        formatter = BareFormatter,
+        level = None,
+        statsReceiver = statsReceiver
+      ).apply()
+
+      scribe.setSocket(Some(mockSocket))
+
+      // Get the buffer first to know the size before flushing
+      Time.withCurrentTimeFrozen { _ =>
+        scribe.updateLastTransmission()
+        scribe.publish(record2)
+        scribe.publish(record1)
+      }
+      val buffer = scribe.makeBuffer(2)
+
+      // Make sure multiple records get flushed together
+      Time.withCurrentTimeFrozen { _ =>
+        scribe.updateLastTransmission()
+        scribe.publish(record2)
+        scribe.publish(record1)
+      }
+
+      scribe.flush()
+
+      scribe.flusher.shutdown()
+      scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
+
+      assert(statsReceiver.stat("batch_size_bytes")() == Seq(buffer.capacity()))
+      assert(statsReceiver.stat("batch_size_messages")() == Seq(2))
     }
 
     "handle batch write errors" in {

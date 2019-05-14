@@ -21,9 +21,8 @@ import java.net._
 import java.nio.{ByteBuffer, ByteOrder}
 import java.nio.charset.StandardCharsets.ISO_8859_1
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.{ArrayBlockingQueue, LinkedBlockingQueue, TimeUnit, ThreadPoolExecutor}
+import java.util.concurrent.{ArrayBlockingQueue, LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 import java.util.{Arrays, logging => javalog}
-
 import com.twitter.concurrent.NamedPoolThreadFactory
 import com.twitter.conversions.StringOps._
 import com.twitter.conversions.DurationOps._
@@ -262,7 +261,7 @@ class ScribeHandler(
           while (remaining > 0 && socket.isDefined) {
             val count = maxMessagesPerTransaction min remaining
             val buffer = makeBuffer(count)
-            var offset = 0
+            stats.statBatchSize(count, buffer.capacity)
 
             try {
               outStream.write(buffer.array)
@@ -319,7 +318,6 @@ class ScribeHandler(
   // should be private, make it visible to tests
   private[logging] def makeBuffer(count: Int): ByteBuffer = {
     val texts = for (i <- 0 until count) yield queue.poll()
-
     val recordHeader = ByteBuffer.wrap(new Array[Byte](10 + category.length))
     recordHeader.order(ByteOrder.BIG_ENDIAN)
     recordHeader.put(11: Byte)
@@ -511,6 +509,9 @@ class ScribeHandler(
     val instances = statsReceiver.addGauge("instances") { 1 }
     val unsentQueue = statsReceiver.addGauge("unsent_queue") { queueSize }
 
+    val batchSizeBytesStat = statsReceiver.stat("batch_size_bytes")
+    val batchSizeCountStat = statsReceiver.stat("batch_size_messages")
+
     def incrSentRecords(count: Int): Unit = {
       sentRecords.addAndGet(count)
       totalSentRecords.incr(count)
@@ -536,6 +537,11 @@ class ScribeHandler(
     def incrConnection(): Unit = totalConnects.incr()
 
     def incrCloses(): Unit = totalCloses.incr()
+
+    def statBatchSize(numMessages: Int, bytes: Int): Unit = {
+      batchSizeCountStat.add(numMessages)
+      batchSizeBytesStat.add(bytes)
+    }
 
     def log(): Unit = {
       synchronized {
