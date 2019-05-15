@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-app: Track the registration of duplicated Flag names. Currently, we print a warning to
+  `stderr` but do not track the duplicated Flag names. Tracking them allows us to inspect and
+  warn over the entire set. ``PHAB_ID=D314410``
+
 19.4.0
 ------
 

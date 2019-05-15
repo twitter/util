@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import scala.collection.JavaConverters._
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -87,6 +88,8 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
 
   // thread-safety is provided by synchronization on `this`
   private[this] val flags = new mutable.HashMap[String, Flag[_]]
+  // when a flag with the same name as a previously added flag is added, track it here
+  private[this] val duplicates = new java.util.concurrent.ConcurrentSkipListSet[String]()
 
   @volatile private[this] var cmdUsage = ""
 
@@ -248,8 +251,10 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param f A concrete Flag to add
    */
   def add(f: Flag[_]): Unit = synchronized {
-    if (flags contains f.name)
-      System.err.printf("Flag %s already defined!\n", f.name)
+    if (flags.contains(f.name)) {
+      System.err.printf("Flag: \"%s\" already defined!\n", f.name)
+      duplicates.add(f.name)
+    }
     flags(f.name) = f.withFailFast(failFastUntilParsed)
   }
 
@@ -286,7 +291,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param help The help string of the flag.
    */
   def create[T](name: String, default: T, help: String, flaggable: Flaggable[T]): Flag[T] = {
-    implicit val impl = flaggable
+    implicit val impl: Flaggable[T] = flaggable
     apply(name, default, help)
   }
 
@@ -331,13 +336,9 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
 
     cmd + argv0 + " [<flag>...]\n" +
       "flags:\n" +
-      (lines mkString "\n") + (
-      if (globalLines.isEmpty) ""
-      else {
-        "\nglobal flags:\n" +
-          (globalLines mkString "\n")
-      }
-    )
+      lines.mkString("\n") +
+      (if (globalLines.isEmpty) ""
+       else "\nglobal flags:\n" + globalLines.mkString("\n"))
   }
 
   /**
@@ -401,4 +402,8 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
 
     lines.mkString("\n")
   }
+
+  /** Return the set of any registered duplicated flag names. */
+  protected[twitter] def registeredDuplicates: Set[String] =
+    duplicates.asScala.toSet
 }
