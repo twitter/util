@@ -280,11 +280,7 @@ sealed trait Spool[+A] {
 /**
  * Abstract `Spool` class for Java compatibility.
  */
-abstract class AbstractSpool[A] extends Spool[A] {
-  //overrides work around https://github.com/scala/bug/issues/11484
-  override def ++[B >: A](that: => Spool[B]): Spool[B] = super.++(that)
-  override def ++[B >: A](that: => Future[Spool[B]]): Future[Spool[B]] = super.++(that)
-}
+abstract class AbstractSpool[A] extends Spool[A]
 
 /**
  * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.

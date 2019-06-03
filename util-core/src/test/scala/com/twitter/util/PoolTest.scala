@@ -4,7 +4,6 @@ import scala.collection.mutable
 import scala.collection.Seq
 
 import org.scalatest.WordSpec
-
 import com.twitter.conversions.DurationOps._
 
 class PoolTest extends WordSpec {

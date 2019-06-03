@@ -161,7 +161,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
 
   private def jarClasspath(jarFile: File, manifest: java.util.jar.Manifest): Seq[URI] =
     for {
-      m  <- Option(manifest).toSeq
+      m <- Option(manifest).toSeq
       attr <- Option(m.getMainAttributes.getValue("Class-Path")).toSeq
       el <- attr.split(" ").toSeq
       uri <- uriFromJarClasspath(jarFile, el)

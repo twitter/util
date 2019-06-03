@@ -10,8 +10,8 @@ import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatestplus.mockito.MockitoSugar
 import scala.collection.JavaConverters._
 
 class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
