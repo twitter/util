@@ -2,6 +2,13 @@
 
 We'd love to get patches from you!
 
+## Building
+
+This library is built using [sbt][sbt]. When building please use the included
+[`./sbt`](https://github.com/twitter/util/blob/develop/sbt) script which
+provides a thin wrapper over [sbt][sbt] and correctly sets memory and other
+settings.
+
 If you have any questions or run into any problems, please create
 an issue here, chat with us in [gitter](https://gitter.im/twitter/finagle), or email
 the Finaglers [mailing list](https://groups.google.com/forum/#!forum/finaglers).
@@ -172,13 +179,14 @@ Please let us know if you have any questions about this process!
 
 [0]: https://github.com/twitter/util/pull/109
 [1]: https://github.com/twitter/util/blob/master/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
-[scaladoc]: https://docs.scala-lang.org/style/scaladoc.html
+[changes]: https://github.com/twitter/util/blob/develop/CHANGELOG.rst
 [es]: https://twitter.github.io/effectivescala/
-[sd]: https://docs.scala-lang.org/style/scaladoc.html
 [funsuite]: https://www.scalatest.org/getting_started_with_fun_suite
+[gendrivenprop]: https://www.scalatest.org/user_guide/generator_driven_property_checks
+[sbt]: https://www.scala-sbt.org/
+[scalacheck]: https://www.scalacheck.org/
+[scaladoc]: https://docs.scala-lang.org/style/scaladoc.html
 [scalatest]: https://www.scalatest.org/
+[sd]: https://docs.scala-lang.org/style/scaladoc.html
 [ssg]: https://docs.scala-lang.org/style/scaladoc.html
 [travis-ci]: https://travis-ci.org/twitter/util
-[changes]: https://github.com/twitter/util/blob/develop/CHANGELOG.rst
-[scalacheck]: https://www.scalacheck.org/
-[gendrivenprop]: https://www.scalatest.org/user_guide/generator_driven_property_checks
