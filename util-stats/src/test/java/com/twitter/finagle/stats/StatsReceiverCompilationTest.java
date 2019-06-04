@@ -79,12 +79,9 @@ public final class StatsReceiverCompilationTest {
     final StatsReceiver nullSr = NullStatsReceiver.get();
     StatsReceiver sr = new AbstractStatsReceiver() {
 
-      public Stat stat(Verbosity verbosity, scala.collection.Seq<String> name) {
+      @Override
+      public Stat statImpl(Verbosity verbosity, scala.collection.Seq<String> name) {
         return nullSr.stat(verbosity, name.toSeq());
-      }
-
-      public Stat stat(Verbosity verbosity, scala.collection.immutable.Seq<String> name) {
-        return nullSr.stat(verbosity, name);
       }
       
       @Override
@@ -97,20 +94,13 @@ public final class StatsReceiverCompilationTest {
         return false;
       }
 
-      public Counter counter(Verbosity verbosity, scala.collection.Seq<String> name) {
+      @Override
+      public Counter counterImpl(Verbosity verbosity, scala.collection.Seq<String> name) {
         return nullSr.counter(name.toSeq());
       }
 
-      public Counter counter(Verbosity verbosity, scala.collection.immutable.Seq<String> name) {
-        return nullSr.counter(name);
-      }
-
-      //one of these overrides, which one is a mystery. 
-      public Gauge addGauge(Verbosity verbosity, scala.collection.immutable.Seq<String> name, Function0<Object> f) {
-        return nullSr.addGauge(verbosity, name, f);
-      }
-
-      public Gauge addGauge(Verbosity verbosity, scala.collection.Seq<String> name, Function0<Object> f) {
+      @Override
+      public Gauge addGaugeImpl(Verbosity verbosity, scala.collection.Seq<String> name, Function0<Object> f) {
         return nullSr.addGauge(verbosity, name.toSeq(), f);
       }
     };
