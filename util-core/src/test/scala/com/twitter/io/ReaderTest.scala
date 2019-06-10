@@ -562,6 +562,25 @@ class ReaderTest
       assert(await(readAllString(reader2)) == l.mkString)
     }
   }
+
+  test(
+    "Reader.empty " +
+      "- return Future.None and update closep to be FullyRead after first read") {
+    val reader = Reader.empty
+    assert(await(reader.read()) == None)
+    assert(await(reader.onClose) == StreamTermination.FullyRead)
+  }
+
+  test(
+    "Reader.empty " +
+      "- return ReaderDiscardedException when reading from a discarded reader") {
+    val reader = Reader.empty
+    reader.discard()
+    intercept[ReaderDiscardedException] {
+      await(reader.read())
+    }
+    assert(await(reader.onClose) == StreamTermination.Discarded)
+  }
 }
 
 object ReaderTest {

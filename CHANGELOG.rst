@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Bug Fixes
+~~~~~~~~~
+
+* util-core: Fixed the behavior in `c.t.io.Reader` where reading from `Reader#empty` fails to return
+  a `ReaderDiscardedException` after it's discarded. ``PHAB_ID=D325465``
+
 19.5.1
 ------
 

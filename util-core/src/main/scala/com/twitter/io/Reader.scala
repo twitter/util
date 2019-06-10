@@ -142,8 +142,13 @@ object Reader {
   def empty[A]: Reader[A] = new Reader[A] {
     private[this] val closep = Promise[StreamTermination]()
     def read(): Future[Option[Nothing]] = {
-      closep.updateIfEmpty(StreamTermination.FullyRead.Return)
-      Future.None
+      if (closep.updateIfEmpty(StreamTermination.FullyRead.Return))
+        Future.None
+      else
+        closep.flatMap {
+          case StreamTermination.FullyRead => Future.None
+          case StreamTermination.Discarded => Future.exception(new ReaderDiscardedException)
+        }
     }
     def discard(): Unit = {
       closep.updateIfEmpty(StreamTermination.Discarded.Return)
