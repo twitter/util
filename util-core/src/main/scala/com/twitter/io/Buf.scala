@@ -864,7 +864,9 @@ object Buf {
     }
 
     override def equals(other: Any): Boolean = other match {
-      case ByteBuffer(otherBB) => underlying.equals(otherBB)
+      // while normally this might use `ByteBuffer.unapply` this
+      // approach avoids the unnecessary `java.nio.ByteBuffer` copies.
+      case bb: ByteBuffer => underlying.equals(bb.underlying)
       case buf: Buf => Buf.equals(this, buf)
       case _ => false
     }

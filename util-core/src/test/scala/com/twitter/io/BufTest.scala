@@ -103,6 +103,22 @@ class BufTest
     }
   }
 
+  test("Buf.equals") {
+    val bytes = Array[Byte](0, 1, 2)
+    val byteBuffer = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes))
+    val byteArray = Buf.ByteArray(bytes: _*)
+    val composite = Buf.ByteArray(0).concat(Buf.ByteArray(1)).concat(Buf.ByteArray(2))
+    val bufs = Seq(byteBuffer, byteArray, composite)
+
+    bufs.foreach { b0 =>
+      bufs.foreach { b1 =>
+        withClue(s"${b0.getClass.getName} and ${b1.getClass.getName}") {
+          assert(b0 == b1)
+        }
+      }
+    }
+  }
+
   test("Buf.write(Array[Byte], offset) validates output array is large enough") {
     // we skip Empty because we cannot create an array
     // too small for this test.
