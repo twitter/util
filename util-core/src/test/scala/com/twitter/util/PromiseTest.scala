@@ -203,4 +203,144 @@ class PromiseTest extends FunSuite {
     }
   }
 
+  test("maps use local state at the time of callback creation") {
+    val local = new Local[String]
+    local.set(Some("main thread"))
+    val p = new Promise[String]()
+    val f = p.map { _ =>
+      local().getOrElse("<unknown>")
+    }
+
+    val thread = new Thread(new Runnable {
+      def run(): Unit = {
+        local.set(Some("worker thread"))
+        p.setValue("go")
+      }
+    })
+    thread.start()
+
+    assert("main thread" == Await.result(f, 3.seconds))
+  }
+
+  test("interrupts use local state at the time of callback creation") {
+    Promise.useLocalInInterruptible(true)
+
+    val local = new Local[String]
+    implicit val timer: Timer = new JavaTimer(true)
+
+    local.set(Some("main thread"))
+    val p = new Promise[String]
+
+    p.setInterruptHandler({
+      case _ =>
+        val localVal = local().getOrElse("<empty>")
+        p.updateIfEmpty(Return(localVal))
+    })
+    val f = Future.sleep(1.second).before(p)
+
+    val thread = new Thread(new Runnable {
+      def run(): Unit = {
+        local.set(Some("worker thread"))
+        p.raise(new Exception)
+      }
+    })
+    thread.start()
+
+    assert("main thread" == Await.result(f, 3.seconds))
+  }
+
+  test("interrupts use raisers state") {
+    Promise.useLocalInInterruptible(false)
+
+    val local = new Local[String]
+    implicit val timer: Timer = new JavaTimer(true)
+
+    local.set(Some("main thread"))
+    val p = new Promise[String]
+
+    p.setInterruptHandler({
+      case _ =>
+        val localVal = local().getOrElse("<empty>")
+        p.updateIfEmpty(Return(localVal))
+    })
+    val f = Future.sleep(1.second).before(p)
+
+    val thread = new Thread(new Runnable {
+      def run(): Unit = {
+        local.set(Some("worker thread"))
+        p.raise(new Exception)
+      }
+    })
+    thread.start()
+
+    assert("worker thread" == Await.result(f, 3.seconds))
+  }
+
+  test("interrupt then map uses local state at the time of callback creation") {
+    val local = new Local[String]
+    implicit val timer: Timer = new JavaTimer(true)
+
+    local.set(Some("main thread"))
+    val p = new Promise[String]()
+    p.setInterruptHandler({
+      case _ =>
+        val localVal = local().getOrElse("<empty>")
+        p.updateIfEmpty(Return(localVal))
+    })
+    val fRes = p.transform { _ =>
+      val localVal = local().getOrElse("<empty>")
+      Future.value(localVal)
+    }
+    val f = Future.sleep(1.second).before(fRes)
+
+    val thread = new Thread(new Runnable {
+      def run(): Unit = {
+        local.set(Some("worker thread"))
+        p.raise(new Exception)
+      }
+    })
+    thread.start()
+
+    assert("main thread" == Await.result(f, 3.seconds))
+  }
+
+  test("locals in Interruptible after detatch") {
+    Promise.useLocalInInterruptible(true)
+
+    val local = new Local[String]
+    implicit val timer: Timer = new JavaTimer(true)
+
+    local.set(Some("main thread"))
+    val p = new Promise[String]
+
+    val p2 = Promise.attached(p) // p2 is the detachable promise
+
+    p2.setInterruptHandler({
+      case _ =>
+        val localVal = local().getOrElse("<empty>")
+        p2.updateIfEmpty(Return(localVal))
+    })
+
+    p.setInterruptHandler({
+      case _ =>
+        val localVal = local().getOrElse("<empty>")
+        p.updateIfEmpty(Return(localVal))
+    })
+
+    val thread = new Thread(new Runnable {
+      def run(): Unit = {
+        local.set(Some("worker thread"))
+
+        // We need to call detach explicitly
+        assert(p2.detach())
+
+        p2.raise(new Exception)
+        p.raise(new Exception)
+      }
+    })
+    thread.start()
+
+    assert("main thread" == Await.result(p2, 3.seconds))
+    assert("main thread" == Await.result(p, 3.seconds))
+  }
 }

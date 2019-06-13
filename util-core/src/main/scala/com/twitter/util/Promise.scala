@@ -7,6 +7,16 @@ import scala.util.control.NonFatal
 
 object Promise {
 
+  // An experimental property that enables the interrupt handler
+  // to use the state at the time of callback creation.
+  @volatile private var UseLocalInInterruptible: Boolean =
+    System.getProperty("com.twitter.util.UseLocalInInterruptible", "false").toBoolean
+
+  // Switches to enabling the interrupt handler to use
+  // the state at the time of callback creation.
+  private[twitter] def useLocalInInterruptible(useLocal: Boolean): Unit =
+    UseLocalInInterruptible = useLocal
+
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
    *
@@ -279,7 +289,8 @@ object Promise {
    */
   private class Interruptible[A](
     val waitq: WaitQueue[A],
-    val handler: PartialFunction[Throwable, Unit])
+    val handler: PartialFunction[Throwable, Unit],
+    val saved: Local.Context)
 
   /**
    * An unsatisfied [[Promise]] which forwards interrupts to `other`.
@@ -466,7 +477,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
 
   def this(handleInterrupt: PartialFunction[Throwable, Unit]) {
     this()
-    this.state = new Interruptible[A](WaitQueue.empty, handleInterrupt)
+    this.state = new Interruptible[A](WaitQueue.empty, handleInterrupt, Local.save())
   }
 
   def this(result: Try[A]) {
@@ -498,15 +509,15 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   @tailrec
   final def setInterruptHandler(f: PartialFunction[Throwable, Unit]): Unit = state match {
     case waitq: WaitQueue[A] =>
-      if (!cas(waitq, new Interruptible(waitq, f)))
+      if (!cas(waitq, new Interruptible(waitq, f, Local.save())))
         setInterruptHandler(f)
 
     case s: Interruptible[A] =>
-      if (!cas(s, new Interruptible(s.waitq, f)))
+      if (!cas(s, new Interruptible(s.waitq, f, Local.save())))
         setInterruptHandler(f)
 
     case s: Transforming[A] =>
-      if (!cas(s, new Interruptible(s.waitq, f)))
+      if (!cas(s, new Interruptible(s.waitq, f, Local.save())))
         setInterruptHandler(f)
 
     case s: Interrupted[A] =>
@@ -568,7 +579,15 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case s: Interruptible[A] =>
       if (!cas(s, new Interrupted(s.waitq, intr))) raise(intr)
       else {
-        s.handler.applyOrElse(intr, Promise.AlwaysUnit)
+        if (!UseLocalInInterruptible)
+          s.handler.applyOrElse(intr, Promise.AlwaysUnit)
+        else {
+          val current = Local.save()
+          if (current ne s.saved)
+            Local.restore(s.saved)
+          try s.handler.applyOrElse(intr, Promise.AlwaysUnit)
+          finally Local.restore(current)
+        }
       }
 
     case s: Transforming[A] =>
@@ -594,7 +613,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
         waitq.contains(k)
 
     case s: Interruptible[A] =>
-      if (!cas(s, new Interruptible(s.waitq.remove(k), s.handler)))
+      if (!cas(s, new Interruptible(s.waitq.remove(k), s.handler, s.saved)))
         detach(k)
       else
         s.waitq.contains(k)
@@ -802,7 +821,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
       if (!cas(waitq, WaitQueue(k, waitq)))
         continue(k)
     case s: Interruptible[A] =>
-      if (!cas(s, new Interruptible(WaitQueue(k, s.waitq), s.handler)))
+      if (!cas(s, new Interruptible(WaitQueue(k, s.waitq), s.handler, s.saved)))
         continue(k)
     case s: Transforming[A] =>
       if (!cas(s, new Transforming(WaitQueue(k, s.waitq), s.other)))

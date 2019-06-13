@@ -13,6 +13,14 @@ Bug Fixes
 * util-core: Fixed the behavior in `c.t.io.Reader` where reading from `Reader#empty` fails to return
   a `ReaderDiscardedException` after it's discarded. ``PHAB_ID=D325465``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Use Local at callback creation for Future's interrupt handler rather than
+  raiser's locals so that it is consistent with other callbacks. This functionality is
+  currently disabled and can be enabled by a toggle (com.twitter.util.UseLocalInInterruptible)
+  by setting it to 1.0 if you would like to try it out. ``PHAB_ID=D324315``
+
 19.5.1
 ------
 
