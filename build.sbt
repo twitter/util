@@ -22,7 +22,7 @@ val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.12", "2.12.8")
+  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0")
 )
 
 val baseSettings = Seq(
