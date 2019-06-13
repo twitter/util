@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import com.twitter.io.SeqReader._
 import com.twitter.util.{Future, Promise}
 
 /**
@@ -11,8 +12,6 @@ import com.twitter.util.{Future, Promise}
  * and by preventing changing the state when the reader is fully read or discarded.
  */
 private[io] final class SeqReader[A](seq: Seq[A]) extends Reader[A] {
-  import SeqReader._
-
   private[this] val closep = Promise[StreamTermination]()
   private[this] var value: Seq[A] = seq
   private[this] var state: State = State.Idle
@@ -63,8 +62,8 @@ object SeqReader {
   /**
    * Indicates reader state when the reader is created via SeqReader
    */
-  sealed trait State
-  object State {
+  private sealed trait State
+  private object State {
 
     /** Indicates the reader is ready to be read. */
     case object Idle extends State
