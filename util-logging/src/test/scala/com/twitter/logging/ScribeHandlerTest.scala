@@ -21,7 +21,7 @@ import com.twitter.conversions.StringOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.stats.InMemoryStatsReceiver
 import com.twitter.util.{RandomSocket, Time}
-import java.io.ByteArrayOutputStream
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{
@@ -122,7 +122,10 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually wit
       scribe.publish(record2)
 
       assert(statsReceiver.counter("dropped_records")() == 1l)
+      // Failures that never attempt to write to scribe do not have a latency
+      assert(statsReceiver.stat("failure_latency_ms")().size == 0)
       assert(statsReceiver.counter("sent_records")() == 0l)
+      assert(statsReceiver.stat("failure_latency_ms")().size == 0)
     }
 
     "have backoff on connection errors" in {
@@ -225,76 +228,95 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually wit
       assert(rejected.get() == 94)
     }
 
-    "report batch sizes" in {
-      val statsReceiver = new InMemoryStatsReceiver
-      val mockSocket = mock[Socket]
-      when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
+    "report scribe send stats" in {
+      Time.withCurrentTimeFrozen { timeControl =>
+        val statsReceiver = new InMemoryStatsReceiver
+        val mockSocket = mock[Socket]
+        when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
+        when(mockSocket.getInputStream)
+          .thenReturn(null) // First do not respond to attempts to use the old protocol
+          .thenAnswer(_ => {
+            timeControl.advance(707.millis)
+            new ByteArrayInputStream(ScribeHandler.ScribeReply)
+          })
 
-      val scribe = ScribeHandler(
-        port = portWithoutListener,
-        category = "test",
-        bufferTime = 5.seconds,
-        formatter = BareFormatter,
-        level = None,
-        statsReceiver = statsReceiver
-      ).apply()
+        val scribe = ScribeHandler(
+          port = portWithoutListener,
+          category = "test",
+          bufferTime = 5.seconds,
+          formatter = BareFormatter,
+          level = None,
+          statsReceiver = statsReceiver
+        ).apply()
 
-      scribe.setSocket(Some(mockSocket))
+        scribe.setSocket(Some(mockSocket))
 
-      // Get the buffer first to know the size before flushing
-      Time.withCurrentTimeFrozen { _ =>
+        // Get the buffer first to know the size before flushing
         scribe.updateLastTransmission()
         scribe.publish(record2)
         scribe.publish(record1)
-      }
-      val buffer = scribe.makeBuffer(2)
+        val buffer = scribe.makeBuffer(2)
 
-      // Make sure multiple records get flushed together
-      Time.withCurrentTimeFrozen { _ =>
+        // Make sure multiple records get flushed together
         scribe.updateLastTransmission()
         scribe.publish(record2)
         scribe.publish(record1)
+
+        scribe.sendBatch()
+
+        scribe.flusher.shutdown()
+        scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
+
+        assert(statsReceiver.stat("batch_size_bytes")() == Seq(buffer.capacity()))
+        assert(statsReceiver.stat("batch_size_messages")() == Seq(2))
+
+        assert(statsReceiver.counter("sent_records")() == 2L)
+        assert(statsReceiver.stat("success_latency_ms")() == Seq(707))
+        assert(statsReceiver.counter("dropped_records")() == 0L)
+        assert(statsReceiver.stat("failure_latency_ms")() == Seq.empty)
       }
-
-      scribe.flush()
-
-      scribe.flusher.shutdown()
-      scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
-
-      assert(statsReceiver.stat("batch_size_bytes")() == Seq(buffer.capacity()))
-      assert(statsReceiver.stat("batch_size_messages")() == Seq(2))
     }
 
     "handle batch write errors" in {
-      val statsReceiver = new InMemoryStatsReceiver
-      val mockSocket = mock[Socket]
-      when(mockSocket.getOutputStream).thenReturn(null)
+      Time.withCurrentTimeFrozen { timeControl =>
+        val statsReceiver = new InMemoryStatsReceiver
+        val mockSocket = mock[Socket]
+        when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
+        when(mockSocket.getInputStream)
+          .thenReturn(null) // First do not respond to attempts to use the old protocol
+          .thenAnswer(_ => {
+            timeControl.advance(1738.millis)
+            // An empty byte array ensures failure
+            new ByteArrayInputStream(Array.emptyByteArray)
+          })
 
-      val scribe = ScribeHandler(
-        port = portWithoutListener,
-        category = "test",
-        bufferTime = 5.seconds,
-        formatter = BareFormatter,
-        level = None,
-        statsReceiver = statsReceiver
-      ).apply()
+        val scribe = ScribeHandler(
+          port = portWithoutListener,
+          category = "test",
+          bufferTime = 5.seconds,
+          formatter = BareFormatter,
+          level = None,
+          statsReceiver = statsReceiver
+        ).apply()
 
-      scribe.setSocket(Some(mockSocket))
+        scribe.setSocket(Some(mockSocket))
 
-      // Make sure multiple records get flushed together
-      Time.withCurrentTimeFrozen { _ =>
+        // Make sure multiple records get flushed together
         scribe.updateLastTransmission()
         scribe.publish(record2)
         scribe.publish(record1)
+
+        // Throws exception reading an empty response
+        scribe.sendBatch()
+
+        scribe.flusher.shutdown()
+        scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
+
+        assert(statsReceiver.counter("dropped_records")() == 2L)
+        assert(statsReceiver.stat("failure_latency_ms")() == Seq(1738))
+        assert(statsReceiver.counter("sent_records")() == 0L)
+        assert(statsReceiver.stat("success_latency_ms")() == Seq.empty)
       }
-
-      // Throws exception writing to null output stream
-      scribe.flush()
-
-      scribe.flusher.shutdown()
-      scribe.flusher.awaitTermination(15, TimeUnit.SECONDS)
-
-      assert(statsReceiver.counter("dropped_records")() == 2L)
     }
   }
 }
