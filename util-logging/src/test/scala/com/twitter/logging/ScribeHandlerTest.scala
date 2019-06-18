@@ -31,15 +31,14 @@ import java.util.concurrent.{
   TimeUnit
 }
 import java.util.{logging => javalog}
-import org.junit.runner.RunWith
 import org.mockito.Mockito._
-import org.scalatest.junit.JUnitRunner
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.scalatest.{BeforeAndAfter, WordSpec}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Minutes, Span}
 
-@RunWith(classOf[JUnitRunner])
 class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually with MockitoSugar {
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
@@ -235,9 +234,11 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually wit
         when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
         when(mockSocket.getInputStream)
           .thenReturn(null) // First do not respond to attempts to use the old protocol
-          .thenAnswer(_ => {
-            timeControl.advance(707.millis)
-            new ByteArrayInputStream(ScribeHandler.ScribeReply)
+          .thenAnswer(new Answer[ByteArrayInputStream] {
+            def answer(invocation: InvocationOnMock): ByteArrayInputStream = {
+              timeControl.advance(707.millis)
+              new ByteArrayInputStream(ScribeHandler.ScribeReply)
+            }
           })
 
         val scribe = ScribeHandler(
@@ -284,10 +285,12 @@ class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually wit
         when(mockSocket.getOutputStream).thenReturn(new ByteArrayOutputStream())
         when(mockSocket.getInputStream)
           .thenReturn(null) // First do not respond to attempts to use the old protocol
-          .thenAnswer(_ => {
-            timeControl.advance(1738.millis)
-            // An empty byte array ensures failure
-            new ByteArrayInputStream(Array.emptyByteArray)
+          .thenAnswer(new Answer[ByteArrayInputStream] {
+            def answer(invocation: InvocationOnMock): ByteArrayInputStream = {
+              timeControl.advance(1738.millis)
+              // An empty byte array ensures failure
+              new ByteArrayInputStream(Array.emptyByteArray)
+            }
           })
 
         val scribe = ScribeHandler(
