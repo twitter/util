@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Removed deprecated `c.t.concurrent.Scheduler` methods `usrTime`,
+  `cpuTime`, and `wallTime`. These were deprecated in 2015 and have no
+  replacement. ``PHAB_ID=D330386``
+
 19.6.0
 ------
 

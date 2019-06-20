@@ -23,37 +23,6 @@ trait Scheduler {
    */
   def flush(): Unit
 
-  // A note on Hotspot's ThreadMXBean's CPU time. On Linux, this
-  // uses clock_gettime[1] which should both be fast and accurate.
-  //
-  // On OSX, the Mach thread_info call is used.
-  //
-  // [1] https://linux.die.net/man/3/clock_gettime
-  //
-  // Note, these clock stats were decommissioned as they only make
-  // sense relative to `wallTime` and the tracking error we have
-  // experienced `wallTime` and `*Time` make it impossible to
-  // use these reliably. It is not worth the performance and
-  // code complexity to support them.
-
-  /**
-   * The amount of User time that's been scheduled as per ThreadMXBean.
-   */
-  @deprecated("schedulers no longer export this", "2015-01-10")
-  def usrTime: Long = -1L
-
-  /**
-   * The amount of CPU time that's been scheduled as per ThreadMXBean.
-   */
-  @deprecated("schedulers no longer export this", "2015-01-10")
-  def cpuTime: Long = -1L
-
-  /**
-   * Total walltime spent in the scheduler.
-   */
-  @deprecated("schedulers no longer export this", "2015-01-10")
-  def wallTime: Long = -1L
-
   /**
    * The number of dispatches performed by this scheduler.
    */
