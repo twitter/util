@@ -1173,14 +1173,24 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @param fs a sequence of Futures
    * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
    */
-  def collectToTry[A](fs: Iterable[Future[A]]): Future[Seq[Try[A]]] =
-    Future.collect {
-      val buf = Vector.newBuilder[Future[Try[A]]]
-      buf.sizeHint(fs.size)
+  def collectToTry[A](fs: Iterable[Future[A]]): Future[Seq[Try[A]]] = {
+    //unroll cases 0 and 1
+    if (fs.isEmpty) Nil
+    else {
       val iterator = fs.iterator
-      while (iterator.hasNext) buf += iterator.next().liftToTry
-      buf.result
+      val h = iterator.next()
+      if (iterator.hasNext){
+        val buf = Vector.newBuilder[Future[Try[A]]]
+        buf.sizeHint(fs.size)
+        buf += h.liftToTry
+        buf += iterator.next().liftToTry
+        while (iterator.hasNext) buf += iterator.next().liftToTry
+        Future.collect(buf.result)
+      } else {
+        Future.collect(List(h.liftToTry))
+      }
     }
+  }
 
   /**
    * Collect the results from the given futures into a new future of java.util.List[Try[A]].
