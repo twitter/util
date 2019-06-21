@@ -1,13 +1,9 @@
 package com.twitter.concurrent
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
-
 import com.twitter.util.{Promise, Return}
 
-@RunWith(classOf[JUnitRunner])
 class FutureOfferTest extends WordSpec with MockitoSugar {
   "Future.toOffer" should {
     "activate when future is satisfied (poll)" in {

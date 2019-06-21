@@ -4,10 +4,8 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.util.concurrent.{Executors, TimeUnit}
 import java.util.logging.{Handler, Level, LogRecord}
-import org.junit.runner.RunWith
 import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatest.junit.JUnitRunner
 
 abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite with Matchers {
   private val scheduler = new LocalScheduler(lifo)
@@ -154,13 +152,10 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends FunSuite with Matchers 
 
 }
 
-@RunWith(classOf[JUnitRunner])
 class LocalSchedulerFifoTest extends LocalSchedulerTest(false)
 
-@RunWith(classOf[JUnitRunner])
 class LocalSchedulerLifoTest extends LocalSchedulerTest(true)
 
-@RunWith(classOf[JUnitRunner])
 class ThreadPoolSchedulerTest extends FunSuite with Eventually with IntegrationPatience {
   test("works") {
     val p = new Promise[Unit]

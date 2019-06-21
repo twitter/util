@@ -3,12 +3,9 @@ package com.twitter.io
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, FuturePool}
 import java.io.ByteArrayInputStream
-import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class InputStreamReaderTest extends FunSuite {
   def arr(i: Int, j: Int): Array[Byte] = Array.range(i, j).map(_.toByte)
   def buf(i: Int, j: Int): Buf = Buf.ByteArray.Owned(arr(i, j))

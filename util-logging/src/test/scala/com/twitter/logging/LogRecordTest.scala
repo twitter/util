@@ -1,11 +1,8 @@
 package com.twitter.logging
 
 import java.util.logging.{LogRecord => JRecord}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class LogRecordTest extends FunSuite {
   test("LogRecord should getMethod properly") {
     Logger.withLoggers(Nil) {

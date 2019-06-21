@@ -4,11 +4,8 @@ import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
 import java.security.cert.{CertificateException, X509Certificate}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class X509CertificateFileTest extends FunSuite {
 
   private[this] def assertIsCslCert(cert: X509Certificate): Unit = {

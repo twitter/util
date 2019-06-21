@@ -4,11 +4,8 @@ import com.twitter.io.TempFile
 import java.io.File
 import java.security.cert.X509Certificate
 import javax.net.ssl.{TrustManager, X509TrustManager}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class X509TrustManagerFactoryTest extends FunSuite {
 
   private[this] def loadCertFromResource(resourcePath: String): X509Certificate = {

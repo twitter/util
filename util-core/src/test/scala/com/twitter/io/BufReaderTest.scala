@@ -2,12 +2,9 @@ package com.twitter.io
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.Checkers
 
-@RunWith(classOf[JUnitRunner])
 class BufReaderTest extends FunSuite with Checkers {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)

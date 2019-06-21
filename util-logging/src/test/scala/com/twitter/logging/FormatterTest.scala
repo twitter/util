@@ -18,13 +18,10 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
 import com.twitter.conversions.StringOps._
 
-@RunWith(classOf[JUnitRunner])
 class FormatterTest extends WordSpec {
   val basicFormatter = new Formatter
 

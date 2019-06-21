@@ -2,11 +2,8 @@ package com.twitter.util
 
 import java.net.InetAddress
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class NetUtilTest extends WordSpec {
   "NetUtil" should {
     "isIpv4Address" in {

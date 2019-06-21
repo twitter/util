@@ -1,12 +1,9 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
 class DiffTest extends FunSuite with GeneratorDrivenPropertyChecks {
   val f: Int => String = _.toString
 

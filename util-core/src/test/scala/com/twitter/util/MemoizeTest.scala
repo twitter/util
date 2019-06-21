@@ -3,12 +3,9 @@ package com.twitter.util
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{TimeUnit, CountDownLatch => JavaCountDownLatch}
-import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class MemoizeTest extends FunSuite {
   test("Memoize.apply: only runs the function once for the same input") {
     // mockito can't spy anonymous classes,

@@ -2,11 +2,8 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Promise, Await}
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class OnceTest extends FunSuite {
   test("Once.apply should only be applied once") {
     var x = 0

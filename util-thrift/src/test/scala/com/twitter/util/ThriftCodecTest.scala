@@ -1,10 +1,7 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class ThriftCodecTest extends FunSuite {
 
   private def roundTrip(codec: ThriftCodec[TestThriftStructure, _]): Unit = {

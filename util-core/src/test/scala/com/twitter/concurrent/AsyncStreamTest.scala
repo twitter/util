@@ -2,13 +2,10 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
-import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
 class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
   import AsyncStream.{mk, of}
   import AsyncStreamTest._

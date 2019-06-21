@@ -1,12 +1,8 @@
 package com.twitter.concurrent
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
-
 import com.twitter.util.Return
 
-@RunWith(classOf[JUnitRunner])
 class TxTest extends WordSpec {
   "Tx.twoParty" should {
     "commit when everything goes dandy" in {

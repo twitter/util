@@ -2,13 +2,10 @@ package com.twitter.util
 
 import scala.collection.mutable
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
 import com.twitter.conversions.DurationOps._
 
-@RunWith(classOf[JUnitRunner])
 class PoolTest extends WordSpec {
   "SimplePool" should {
     "with a simple queue of items" should {

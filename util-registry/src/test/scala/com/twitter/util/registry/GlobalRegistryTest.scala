@@ -1,9 +1,6 @@
 package com.twitter.util.registry
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class GlobalRegistryTest extends RegistryTest {
   def mkRegistry(): Registry = GlobalRegistry.withRegistry(new SimpleRegistry) {
     GlobalRegistry.get

@@ -2,13 +2,10 @@ package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
 import java.nio.charset.StandardCharsets
-import org.junit.runner.RunWith
 import org.scalacheck.Gen
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
 class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
   import ByteReader._
 

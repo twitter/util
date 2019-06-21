@@ -18,15 +18,12 @@ package com.twitter.logging
 
 import java.io._
 import java.util.{Calendar, Date, logging => javalog}
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
 
-@RunWith(classOf[JUnitRunner])
 class FileHandlerTest extends WordSpec with TempFolder {
   def reader(filename: String) = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))

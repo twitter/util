@@ -16,11 +16,8 @@
 
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class ThriftSerializerTest extends WordSpec {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42

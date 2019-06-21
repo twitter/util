@@ -4,10 +4,8 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, 
 import java.util.{Locale, TimeZone}
 import java.util.concurrent.TimeUnit
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import com.twitter.conversions.DurationOps._
@@ -373,7 +371,6 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenProper
   }
 }
 
-@RunWith(classOf[JUnitRunner])
 class TimeFormatTest extends WordSpec {
   "TimeFormat" should {
     "format correctly with non US locale" in {
@@ -398,7 +395,6 @@ class TimeFormatTest extends WordSpec {
   }
 }
 
-@RunWith(classOf[JUnitRunner])
 class TimeTest extends { val ops: Time.type = Time } with TimeLikeSpec[Time] with Eventually
 with IntegrationPatience {
 

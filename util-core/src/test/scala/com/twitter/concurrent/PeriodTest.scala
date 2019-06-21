@@ -1,11 +1,8 @@
 package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class PeriodTest extends FunSuite {
   test("Period#numPeriods should behave reasonably") {
     val period = new Period(1.second)

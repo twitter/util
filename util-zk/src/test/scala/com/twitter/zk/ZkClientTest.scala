@@ -5,21 +5,18 @@ import scala.collection.Set
 
 import org.apache.zookeeper._
 import org.apache.zookeeper.data.{ACL, Stat}
-import org.junit.runner.RunWith
 import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.logging.{Level, Logger}
 import com.twitter.util._
 
-@RunWith(classOf[JUnitRunner])
 class ZkClientTest extends WordSpec with MockitoSugar {
   Logger.get("").setLevel(Level.FATAL)
 

@@ -2,11 +2,8 @@ package com.twitter.io
 
 import scala.util.Random
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class StreamIOTest extends WordSpec {
   "StreamIO.copy" should {
     "copy the entire stream" in {

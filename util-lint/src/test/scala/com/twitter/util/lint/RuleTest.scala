@@ -1,10 +1,7 @@
 package com.twitter.util.lint
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class RuleTest extends FunSuite {
 
   private def withName(name: String): Rule =

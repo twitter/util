@@ -1,10 +1,7 @@
 package com.twitter.logging
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class HasLogLevelTest extends FunSuite {
 
   private class WithLogLevel(val logLevel: Level, cause: Throwable = null)

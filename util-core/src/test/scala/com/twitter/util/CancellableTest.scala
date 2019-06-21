@@ -1,10 +1,7 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CancellableTest extends WordSpec {
   "CancellableSink" should {
     "cancel once" in {

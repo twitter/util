@@ -1,10 +1,7 @@
 package com.twitter.hashing
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class DiagnosticsTest extends WordSpec {
   "Diagnostics" should {
     "print distribution" in {

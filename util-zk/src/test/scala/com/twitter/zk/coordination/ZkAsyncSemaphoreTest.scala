@@ -7,16 +7,13 @@ import com.twitter.zk.{NativeConnector, RetryPolicy, ZkClient, ZNode}
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.zookeeper.KeeperException.NoNodeException
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
 import scala.collection.JavaConverters._
 
-@RunWith(classOf[JUnitRunner])
 class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
 
   "ZkAsyncSemaphore" should {

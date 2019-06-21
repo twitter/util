@@ -1,14 +1,11 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
-import org.junit.runner.RunWith
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.mutable
 
-@RunWith(classOf[JUnitRunner])
 class VarTest extends FunSuite with GeneratorDrivenPropertyChecks {
   private case class U[T](init: T) extends UpdatableVar[T](init) {
     import Var.Observer

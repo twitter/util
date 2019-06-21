@@ -1,16 +1,13 @@
 package com.twitter.hashing
 
-import org.junit.runner.RunWith
 import org.scalacheck.Gen
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.mutable
 import java.io.{BufferedReader, InputStreamReader}
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 
-@RunWith(classOf[JUnitRunner])
 class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks {
   "KetamaDistributor" should {
     val nodes = Seq(

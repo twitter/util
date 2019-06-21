@@ -1,9 +1,7 @@
 package com.twitter.util.reflect
 
 import com.twitter.util.{Future, Promise, Stopwatch}
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
 object ProxySpec {
   trait TestInterface {
@@ -34,7 +32,6 @@ object ProxySpec {
   }
 }
 
-@RunWith(classOf[JUnitRunner])
 class ProxyTest extends WordSpec {
 
   import ProxySpec._

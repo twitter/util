@@ -1,11 +1,8 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import com.twitter.conversions.DurationOps._
 
-@RunWith(classOf[JUnitRunner])
 class TokenBucketTest extends FunSuite {
   test("a leaky bucket is leaky") {
     Time.withCurrentTimeFrozen { tc =>

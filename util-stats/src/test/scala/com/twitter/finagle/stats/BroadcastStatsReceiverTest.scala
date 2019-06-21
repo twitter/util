@@ -2,11 +2,8 @@ package com.twitter.finagle.stats
 
 import com.twitter.util.{Future, Await}
 
-import org.junit.runner.RunWith
 import org.scalatest.{Matchers, FunSuite}
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class BroadcastStatsReceiverTest extends FunSuite with Matchers {
 
   test("counter") {

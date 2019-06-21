@@ -1,12 +1,9 @@
 package com.twitter.finagle.stats
 
-import org.junit.runner.RunWith
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-@RunWith(classOf[JUnitRunner])
 class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   class Ctx {

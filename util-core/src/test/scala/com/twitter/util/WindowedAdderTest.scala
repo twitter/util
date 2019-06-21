@@ -1,11 +1,8 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class WindowedAdderTest extends FunSuite {
   private def newAdder() = WindowedAdder(3 * 1000, 3, Stopwatch.timeMillis)
 
