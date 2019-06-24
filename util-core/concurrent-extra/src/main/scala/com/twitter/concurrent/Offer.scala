@@ -2,6 +2,7 @@ package com.twitter.concurrent
 
 import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
 import com.twitter.util.Return
+import scala.collection.compat.immutable.ArraySeq
 import scala.util.Random
 
 /**
@@ -280,7 +281,7 @@ object Offer {
           if (foundPos >= 0) {
             updateLosers(foundPos, prepd)
           } else {
-            Future.selectIndex(prepd) flatMap { winPos =>
+            Future.selectIndex(ArraySeq.unsafeWrapArray(prepd)) flatMap { winPos =>
               updateLosers(winPos, prepd)
             }
           }

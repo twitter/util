@@ -369,13 +369,10 @@ object Var {
         if (!filling) v() = build()
       }
 
-      val closes = new Array[Closable](N)
-      var i = 0
-      for (v <- vars) {
-        val j = i
-        closes(j) = v.observe(0, Observer(newValue => publish(j, newValue)))
-        i += 1
-      }
+      val closes = vars.iterator
+                       .zipWithIndex
+                       .map{ case (v, i) => v.observe(0, Observer(newValue => publish(i, newValue)))}
+                       .toSeq
 
       filling = false
       v() = build()

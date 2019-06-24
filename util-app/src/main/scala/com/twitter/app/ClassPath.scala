@@ -228,7 +228,7 @@ private[app] class LoadServiceClassPath extends ClassPath[ClassPath.LoadServiceI
 
   private[app] def readLines(source: Source): Seq[String] = {
     try {
-      source.getLines().toArray.flatMap { line =>
+      source.getLines().toVector.flatMap { line =>
         val commentIdx = line.indexOf('#')
         val end = if (commentIdx != -1) commentIdx else line.length
         val str = line.substring(0, end).trim

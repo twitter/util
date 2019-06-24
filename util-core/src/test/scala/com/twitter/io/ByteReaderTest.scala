@@ -29,7 +29,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   test("readString")(forAll { (str1: String, str2: String) =>
     val bytes1 = str1.getBytes(StandardCharsets.UTF_8)
     val bytes2 = str2.getBytes(StandardCharsets.UTF_8)
-    val br = readerWith(bytes1 ++ bytes2: _*)
+    val br = readerWith((bytes1 ++ bytes2).toSeq: _*)
     assert(br.readString(bytes1.length, StandardCharsets.UTF_8) == str1)
     assert(br.readString(bytes2.length, StandardCharsets.UTF_8) == str2)
     intercept[UnderflowException] { br.readByte() }

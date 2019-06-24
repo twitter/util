@@ -107,7 +107,7 @@ class BufTest
   test("Buf.equals") {
     val bytes = Array[Byte](0, 1, 2)
     val byteBuffer = Buf.ByteBuffer.Owned(java.nio.ByteBuffer.wrap(bytes))
-    val byteArray = Buf.ByteArray(bytes: _*)
+    val byteArray = Buf.ByteArray(bytes.toSeq: _*)
     val composite = Buf.ByteArray(0).concat(Buf.ByteArray(1)).concat(Buf.ByteArray(2))
     val bufs = Seq(byteBuffer, byteArray, composite)
 

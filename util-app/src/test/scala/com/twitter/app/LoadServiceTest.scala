@@ -9,7 +9,8 @@ import java.io.{File, InputStream}
 import java.net.URL
 import java.util
 import java.util.concurrent.{Callable, CountDownLatch, ExecutorService, Executors}
-import java.util.{Random, concurrent}
+import java.util.concurrent.{Future => JFuture}
+import java.util.Random
 import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
 import scala.collection.mutable
@@ -140,7 +141,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     // Run LoadService in a different thread from the custom classloader
     val clazz: Class[_] = loader.loadClass("com.twitter.app.LoadServiceCallable")
     val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    val future: concurrent.Future[Seq[Any]] =
+    val future: JFuture[Seq[Any]] =
       executor.submit(clazz.newInstance().asInstanceOf[Callable[Seq[Any]]])
 
     // Get the result
@@ -262,7 +263,6 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     assert(lsds0.size == 1)
     assert(lsds0.head.getClass == classOf[LoadServiceDeadlockImpl])
   }
-
 }
 
 class LoadServiceCallable extends Callable[Seq[Any]] {
