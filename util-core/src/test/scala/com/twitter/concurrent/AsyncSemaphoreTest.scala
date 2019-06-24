@@ -3,13 +3,10 @@ package com.twitter.concurrent
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException, CountDownLatch}
-import org.junit.runner.RunWith
 import org.scalatest.fixture.FunSpec
-import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable
 import org.scalatest.Outcome
 
-@RunWith(classOf[JUnitRunner])
 class AsyncSemaphoreTest extends FunSpec {
   class AsyncSemaphoreHelper(
     val sem: AsyncSemaphore,

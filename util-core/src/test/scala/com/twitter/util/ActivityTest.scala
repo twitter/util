@@ -1,11 +1,8 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class ActivityTest extends FunSuite {
   test("Activity#flatMap") {
     val v = Var(Activity.Pending: Activity.State[Int])

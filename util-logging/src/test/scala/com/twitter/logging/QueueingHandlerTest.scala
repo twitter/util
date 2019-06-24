@@ -18,12 +18,9 @@ package com.twitter.logging
 
 import com.twitter.util.Local
 import java.util.{logging => javalog}
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.{IntegrationPatience, Eventually}
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class QueueingHandlerTest extends WordSpec with Eventually with IntegrationPatience {
 
   class MockHandler extends Handler(BareFormatter, None) {

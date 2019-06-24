@@ -3,11 +3,8 @@ package com.twitter.util.security
 import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class PemFileTest extends FunSuite {
 
   private[this] val assertLogMessage =

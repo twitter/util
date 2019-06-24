@@ -2,11 +2,8 @@ package com.twitter.concurrent
 
 import com.twitter.util.{Return, Await}
 import java.util.concurrent.atomic.AtomicInteger
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class SpoolSourceTest extends WordSpec {
   "SpoolSource" should {
     class SpoolSourceHelper {

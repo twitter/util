@@ -3,11 +3,8 @@ package com.twitter.util
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import java.util.concurrent.{CountDownLatch, Executors}
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
 import scala.collection.mutable
 
-@RunWith(classOf[JUnitRunner])
 class EventTest extends FunSuite {
 
   test("pub/sub while active") {

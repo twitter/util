@@ -1,11 +1,8 @@
 package com.twitter.concurrent
 
 import com.twitter.util.{Await, Return, ObjectSizeCalculator}
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class BrokerTest extends WordSpec {
   "Broker" should {
     "send data (send, recv)" in {

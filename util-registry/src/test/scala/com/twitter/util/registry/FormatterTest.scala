@@ -1,11 +1,8 @@
 package com.twitter.util.registry
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import scala.util.control.NoStackTrace
 
-@RunWith(classOf[JUnitRunner])
 class FormatterTest extends FunSuite {
   test("asMap generates reasonable Maps") {
     val registry = new SimpleRegistry

@@ -1,12 +1,9 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
 import com.twitter.conversions.StorageUnitOps._
 
-@RunWith(classOf[JUnitRunner])
 class StorageUnitTest extends FunSuite {
   test("StorageUnit: should convert whole numbers into storage units (back and forth)") {
     assert(1.byte.inBytes == 1)

@@ -3,10 +3,7 @@ package com.twitter.cache.caffeine
 import com.github.benmanes.caffeine.cache.{Caffeine, CacheLoader, LoadingCache}
 import com.twitter.cache.AbstractFutureCacheTest
 import com.twitter.util.{Future, Promise}
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CaffeineCacheTest extends AbstractFutureCacheTest {
   def name: String = "CaffeineCache"
 

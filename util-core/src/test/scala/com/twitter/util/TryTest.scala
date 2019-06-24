@@ -1,10 +1,7 @@
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class TryTest extends FunSuite {
   class MyException extends Exception
   val e: Exception = new Exception("this is an exception")

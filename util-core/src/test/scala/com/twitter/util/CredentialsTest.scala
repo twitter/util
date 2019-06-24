@@ -16,12 +16,9 @@
 
 package com.twitter.util
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.Checkers
 
-@RunWith(classOf[JUnitRunner])
 class CredentialsTest extends FunSuite with Checkers {
   test("parse a simple auth file") {
     val content = "username: root\npassword: hellokitty\n"

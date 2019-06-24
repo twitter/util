@@ -4,14 +4,11 @@ import com.twitter.concurrent.Spool.{*::, seqToSpool}
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
-import org.junit.runner.RunWith
 import org.scalacheck.Arbitrary
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.collection.mutable.ArrayBuffer
 
-@RunWith(classOf[JUnitRunner])
 class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
   "Empty Spool" should {
     val s = Spool.empty[Int]

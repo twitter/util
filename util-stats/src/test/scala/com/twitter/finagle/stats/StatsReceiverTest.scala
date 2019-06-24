@@ -3,13 +3,10 @@ package com.twitter.finagle.stats
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
 import java.util.concurrent.TimeUnit
-import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 import scala.collection.mutable.ArrayBuffer
 
-@RunWith(classOf[JUnitRunner])
 class StatsReceiverTest extends FunSuite {
   test("RollupStatsReceiver counter/stats") {
     val mem = new InMemoryStatsReceiver

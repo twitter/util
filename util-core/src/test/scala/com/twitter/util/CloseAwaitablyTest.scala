@@ -1,11 +1,8 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CloseAwaitablyTest extends FunSuite {
   class Context extends Closable with CloseAwaitably {
     val p: Promise[Unit] = new Promise[Unit]

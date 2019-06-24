@@ -1,11 +1,8 @@
 package com.twitter.io
 
 import java.io.File
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class FilesTest extends WordSpec with TempFolder {
   "Files" should {
 

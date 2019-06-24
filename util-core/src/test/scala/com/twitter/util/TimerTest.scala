@@ -3,16 +3,13 @@ package com.twitter.util
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{CancellationException, ExecutorService, TimeUnit, CountDownLatch}
 import java.util.concurrent.atomic.AtomicInteger
-import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{IntegrationPatience, Eventually}
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.mockito.MockitoSugar
 
-@RunWith(classOf[JUnitRunner])
 class TimerTest extends FunSuite with MockitoSugar with Eventually with IntegrationPatience {
 
   private def testTimerRunsWithLocals(timer: Timer): Unit = {

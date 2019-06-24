@@ -2,11 +2,8 @@ package com.twitter.util
 
 import java.util.Locale
 
-import org.junit.runner.RunWith
 import org.scalatest.WordSpec
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class TwitterDateFormatTest extends WordSpec {
   "TwitterDateFormat" should {
     "disallow Y without w" in {

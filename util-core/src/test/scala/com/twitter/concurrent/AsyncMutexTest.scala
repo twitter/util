@@ -1,12 +1,8 @@
 package com.twitter.concurrent
 
-import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
-import org.scalatest.junit.JUnitRunner
-
 import com.twitter.util.Await
 
-@RunWith(classOf[JUnitRunner])
 class AsyncMutexTest extends FlatSpec {
   "AsyncMutex" should "admit only one operation at a time" in {
     val m = new AsyncMutex

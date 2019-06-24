@@ -1,10 +1,7 @@
 package com.twitter.util.registry
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
-@RunWith(classOf[JUnitRunner])
 class LibraryTest extends FunSuite {
   test("Library.register registers libraries") {
     val simple = new SimpleRegistry

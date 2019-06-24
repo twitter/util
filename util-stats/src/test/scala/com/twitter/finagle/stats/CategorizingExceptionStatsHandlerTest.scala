@@ -1,10 +1,7 @@
 package com.twitter.finagle.stats
 
-import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class CategorizingExceptionStatsHandlerTest extends FunSuite {
   val categorizer = (t: Throwable) => { "clienterrors" }
 

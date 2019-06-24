@@ -2,10 +2,7 @@ package com.twitter.cache
 
 import java.util.concurrent.ConcurrentHashMap
 import com.twitter.util.Future
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class KeyEncodingCacheTest extends AbstractFutureCacheTest {
   def name: String = "KeyEncodingCache"
 

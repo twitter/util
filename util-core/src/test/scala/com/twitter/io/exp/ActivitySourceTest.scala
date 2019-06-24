@@ -3,12 +3,9 @@ package com.twitter.io.exp
 import com.twitter.io.Buf
 import com.twitter.util.{Activity, FuturePool, MockTimer, Time}
 import java.io.{File, ByteArrayInputStream}
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import scala.util.Random
 
-@RunWith(classOf[JUnitRunner])
 class ActivitySourceTest extends FunSuite with BeforeAndAfter {
 
   val ok: ActivitySource[String] = new ActivitySource[String] {
