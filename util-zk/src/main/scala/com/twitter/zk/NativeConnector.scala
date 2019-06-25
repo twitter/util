@@ -48,16 +48,16 @@ case class NativeConnector(
    */
   def apply(): Future[ZooKeeper] =
     serialized {
-      connection getOrElse {
+      connection.getOrElse {
         val c = mkConnection
         c.sessionEvents foreach { event =>
           sessionBroker.send(event()).sync()
         }
         connection = Some(c)
         c
-      } apply ()
+      }.apply
     }.flatten
-      .rescue {
+     .rescue {
         case e: NativeConnector.ConnectTimeoutException =>
           release() flatMap { _ =>
             Future.exception(e)
@@ -194,7 +194,7 @@ object NativeConnector {
         log.debug("release")
         zk.close()
         zookeeper = None
-        releasePromise.setValue(Unit)
+        releasePromise.setValue(())
       }
     }
   }

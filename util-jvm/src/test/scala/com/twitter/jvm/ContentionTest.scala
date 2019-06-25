@@ -11,7 +11,7 @@ class Philosopher {
   private val lock = new ReentrantLock()
   def dine(neighbor: Philosopher): Unit = {
     lock.lockInterruptibly()
-    ready.setValue(Unit)
+    ready.setValue(())
     Await.ready(neighbor.ready)
     neighbor.dine(this)
     lock.unlock()

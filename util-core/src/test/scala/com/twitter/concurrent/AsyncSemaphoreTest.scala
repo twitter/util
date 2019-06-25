@@ -268,11 +268,11 @@ class AsyncSemaphoreTest extends FunSpec {
       assert(counter == 2)
       assert(semHelper.sem.numPermitsAvailable == 0)
 
-      queue.dequeue().setValue(Unit)
+      queue.dequeue().setValue(())
       assert(counter == 3)
       assert(semHelper.sem.numPermitsAvailable == 0)
 
-      queue.dequeue().setValue(Unit)
+      queue.dequeue().setValue(())
       assert(semHelper.sem.numPermitsAvailable == 1)
 
       queue.dequeue().setException(new RuntimeException("test"))
@@ -320,7 +320,7 @@ class AsyncSemaphoreTest extends FunSpec {
       // sync func is blocked at this point.
       // But it should be executed as soon as one of the queued up future functions finish
 
-      queue.dequeue().setValue(Unit)
+      queue.dequeue().setValue(())
       assert(counter == 3)
       val result = Await.result(future)
       assert(result == 3)
@@ -359,7 +359,7 @@ class AsyncSemaphoreTest extends FunSpec {
       // sync func is blocked at this point.
       // But it should be executed as soon as one of the queued up future functions finish
 
-      queue.dequeue().setValue(Unit)
+      queue.dequeue().setValue(())
       assert(counter == 2)
       assert(Try(Await.result(future)).isThrow)
       assert(semHelper.sem.numPermitsAvailable == 1)
