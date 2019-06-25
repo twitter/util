@@ -62,10 +62,11 @@ class CumulativeGaugeTest extends FunSuite {
       assert(0 == gauge.numDeregisters.get)
 
       added = null
-      System.gc()
-      gauge.cleanRefs()
-
-      assert(gauge.getValue == 0.0f)
+      for(i <- 1 to 10) {
+        System.gc()
+        gauge.cleanRefs()
+        assert(gauge.getValue == 0.0f)
+      }
       assert(gauge.numDeregisters.get > 0)
     }
 
