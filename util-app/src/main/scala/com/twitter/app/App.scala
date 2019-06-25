@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.Logger
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.collection.Seq
 import scala.util.control.NonFatal
 
 /**

@@ -60,7 +60,7 @@ public final class Offers {
    * @see Offer$#choose(scala.collection.Seq)
    */
   public static <T> Offer<T> choose(Collection<Offer<T>> offers) {
-    scala.collection.Seq<Offer<T>> scalaSeq = JavaConverters.collectionAsScalaIterableConverter(offers).asScala().toSeq();
+    scala.collection.immutable.Seq<Offer<T>> scalaSeq = JavaConverters.collectionAsScalaIterableConverter(offers).asScala().toVector();
     return Offer$.MODULE$.choose(scalaSeq);
   }
 

@@ -206,7 +206,7 @@ class Hotspot extends Jvm {
   def tenuringThreshold: Long = counter("sun.gc.policy.tenuringThreshold").map(long).getOrElse(0L)
 
   def snapCounters: Map[String, String] =
-    counters("").mapValues(_.getValue().toString)
+    counters("").map{case (k, v) => (k -> v.getValue().toString)}
 
   def forceGc(): Unit = System.gc()
 }

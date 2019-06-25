@@ -86,7 +86,7 @@ object Diffable {
     }
 
     def map[U](f: T => U): SeqDiff[U] =
-      SeqDiff(limit, insert.mapValues(f))
+      SeqDiff(limit, insert.mapValues(f).toMap)
   }
 
   implicit val ofSet: Diffable[Set] = new Diffable[Set] {

@@ -9,8 +9,9 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import scala.collection.Seq
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
 import scala.util.Random
@@ -38,7 +39,7 @@ private object FutureTest {
   }
 }
 
-class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
+class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropertyChecks {
   import FutureTest._
 
   implicit class FutureMatcher[A](future: Future[A]) {

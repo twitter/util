@@ -3,12 +3,13 @@ package com.twitter.util
 import java.util.concurrent.atomic.{AtomicLong, AtomicReference, AtomicReferenceArray}
 import java.util.{List => JList}
 import scala.annotation.tailrec
+import scala.collection.compat._
 import scala.collection.JavaConverters._
-import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable
 import scala.collection.mutable.Buffer
 import scala.language.higherKinds
 import scala.reflect.ClassTag
+import scala.Iterable
 
 /**
  * Vars are values that vary over time. To create one, you must give it an
@@ -296,10 +297,10 @@ object Var {
    *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
    * }}}
    */
-  def collect[T: ClassTag, CC[X] <: Traversable[X]](
+  def collect[T: ClassTag, CC[X] <: Iterable[X]](
     vars: CC[Var[T]]
   )(
-    implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]
+    implicit factory: Factory[T, CC[T]]
   ): Var[CC[T]] = {
     val vs = vars.toArray
 
@@ -316,7 +317,7 @@ object Var {
       }
 
     tree(0, vs.length).map { ts =>
-      val b = newBuilder()
+      val b = factory.newBuilder
       b ++= ts
       b.result()
     }
@@ -344,17 +345,17 @@ object Var {
    *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
    * }}}
    */
-  def collectIndependent[T: ClassTag, CC[X] <: Traversable[X]](
+  def collectIndependent[T: ClassTag, CC[X] <: Iterable[X]](
     vars: CC[Var[T]]
   )(
-    implicit newBuilder: CanBuildFrom[CC[T], T, CC[T]]
+    implicit factory: Factory[T, CC[T]]
   ): Var[CC[T]] =
-    async(newBuilder().result()) { v =>
+    async(factory.newBuilder.result()) { v =>
       val N = vars.size
       val cur = new AtomicReferenceArray[T](N)
       @volatile var filling = true
       def build() = {
-        val b = newBuilder()
+        val b = factory.newBuilder
         var i = 0
         while (i < N) {
           b += cur.get(i)

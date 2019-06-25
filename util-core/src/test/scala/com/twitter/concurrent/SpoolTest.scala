@@ -6,10 +6,10 @@ import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
 import org.scalacheck.Arbitrary
 import org.scalatest.WordSpec
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable.ArrayBuffer
 
-class SpoolTest extends WordSpec with GeneratorDrivenPropertyChecks {
+class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
   "Empty Spool" should {
     val s = Spool.empty[Int]
 

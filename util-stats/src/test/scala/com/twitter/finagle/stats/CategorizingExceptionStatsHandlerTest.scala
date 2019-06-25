@@ -10,7 +10,7 @@ class CategorizingExceptionStatsHandlerTest extends FunSuite {
 
     val esh = new CategorizingExceptionStatsHandler(
       _ => Some("clienterrors"),
-      PartialFunction.apply(_ => Some("service")),
+      {case _ => Some("service")},
       true
     )
 

@@ -5,6 +5,7 @@ import java.util.logging.Logger
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.Seq
 
 /**
  * A "batcher" that takes a function `Seq[In] => Future[Seq[Out]]` and
@@ -118,7 +119,7 @@ private[util] class BatchExecutor[In, Out](
   def flushBatch(): () => Unit = {
     // this must be executed within a `synchronized` block.
     val prevBatch = new mutable.ArrayBuffer[(In, Promise[Out])](buf.length)
-    buf.copyToBuffer(prevBatch)
+    prevBatch ++= buf
     buf.clear()
 
     scheduled foreach { _.cancel() }

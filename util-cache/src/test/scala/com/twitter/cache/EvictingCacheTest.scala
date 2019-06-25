@@ -4,7 +4,7 @@ import com.twitter.util.{Promise, Future}
 import java.util.concurrent.ConcurrentHashMap
 import org.mockito.Mockito.{verify, never}
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class EvictingCacheTest extends FunSuite with MockitoSugar {
   test("EvictingCache should evict on failed futures for set") {

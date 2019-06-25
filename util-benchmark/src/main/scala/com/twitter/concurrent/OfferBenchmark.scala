@@ -5,6 +5,7 @@ import com.twitter.util.{Future, Promise}
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.Seq
 import scala.util.Random
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Array(Mode.AverageTime))

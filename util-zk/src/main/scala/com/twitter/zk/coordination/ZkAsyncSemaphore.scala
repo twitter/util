@@ -161,9 +161,9 @@ class ZkAsyncSemaphore(
    *         The sequence includes both nodes that have entered the semaphore as well as waiters.
    */
   private[this] def permitNodes(): Future[Seq[ZNode]] = {
-    futureSemaphoreNode flatMap { semaphoreNode =>
+    futureSemaphoreNode.flatMap { semaphoreNode =>
       semaphoreNode.getChildren() map { zop =>
-        zop.children filter { child =>
+        zop.children.toSeq filter { child =>
           child.path.startsWith(permitNodePathPrefix)
         } sortBy (child => sequenceNumberOf(child.path))
       }
@@ -181,7 +181,7 @@ class ZkAsyncSemaphore(
     val monitor = node.getChildren.monitor()
     monitor foreach { tryChildren =>
       tryChildren map { zop =>
-        checkWaiters(zop.children)
+        checkWaiters(zop.children.toSeq)
       }
     }
   }

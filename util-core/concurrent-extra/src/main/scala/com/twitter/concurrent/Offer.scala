@@ -3,6 +3,7 @@ package com.twitter.concurrent
 import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
 import com.twitter.util.Return
 import scala.util.Random
+import scala.collection.Seq
 
 /**
  * An offer to communicate with another process. The offer is
@@ -206,6 +207,7 @@ object Offer {
    * The offer that chooses exactly one of the given offers. If there are any
    * Offers that are synchronizable immediately, one is chosen at random.
    */
+  @scala.annotation.varargs
   def choose[T](evs: Offer[T]*): Offer[T] = choose(rng, evs)
 
   /**

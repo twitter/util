@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class SpoolCompilationTest {
+
   private static class OwnSpool extends AbstractSpool<String> {
     @Override
     public boolean isEmpty() {
@@ -26,7 +27,7 @@ public class SpoolCompilationTest {
       return "spool";
     }
   }
-
+  
   @Test
   public void testOwnSpool() {
     Spool<String> a = new OwnSpool();
@@ -63,4 +64,5 @@ public class SpoolCompilationTest {
     Assert.assertArrayEquals(new String[] { "a", "b"}, listB.toArray());
     Assert.assertArrayEquals(new String[] { "a", "b", "c" , "d"}, listC.toArray());
   }
+  
 }

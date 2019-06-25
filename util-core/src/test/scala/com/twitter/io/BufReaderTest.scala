@@ -3,7 +3,7 @@ package com.twitter.io
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
 import org.scalatest.FunSuite
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
 class BufReaderTest extends FunSuite with Checkers {
 

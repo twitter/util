@@ -3,9 +3,9 @@ package com.twitter.util
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class LocalTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class LocalTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   test("Local: should be undefined by default") {
     val local = new Local[Int]
     assert(local() == None)

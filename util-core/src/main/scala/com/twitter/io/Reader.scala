@@ -6,6 +6,7 @@ import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
+import scala.collection.Seq
 
 /**
  * A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.

@@ -2,6 +2,7 @@ package com.twitter.util
 
 import com.twitter.concurrent.Offer
 import org.openjdk.jmh.annotations._
+import scala.collection.Seq
 
 // ./sbt 'project util-benchmark' 'jmh:run FutureBenchmark'
 class FutureBenchmark extends StdBenchAnnotations {

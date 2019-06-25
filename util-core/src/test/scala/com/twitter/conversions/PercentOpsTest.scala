@@ -4,9 +4,9 @@ import com.twitter.conversions.PercentOps._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class PercentOpsTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class PercentOpsTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   private[this] val Precision = 0.0000000001
 

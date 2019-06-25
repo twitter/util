@@ -4,6 +4,7 @@ import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent._
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control
+import com.twitter.util.Future
 
 /**
  * TimerTasks represent pending tasks scheduled by a [[Timer]].

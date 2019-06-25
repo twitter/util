@@ -6,6 +6,7 @@ import java.net.{URISyntaxException, URLClassLoader, URI}
 import java.nio.charset.MalformedInputException
 import java.util.jar.{JarEntry, JarFile}
 import scala.collection.mutable
+import scala.collection.Seq
 import scala.collection.JavaConverters._
 import scala.io.Source
 
@@ -94,17 +95,20 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf: mutable.Buffer[CpInfo],
     history: mutable.Set[URI]
   ): Unit = {
-    if (uri.getScheme != "file")
-      return
-
-    val f = new File(uri)
-    if (!(f.exists() && f.canRead))
-      return
-
-    if (f.isDirectory)
-      browseDir(f, loader, "", buf)
-    else
-      browseJar(f, loader, buf, history)
+    if (!history.contains(uri)) {
+      history.add(uri)
+      if (uri.getScheme != "file")
+        return
+  
+      val f = new File(uri)
+      if (!(f.exists() && f.canRead))
+        return
+    
+      if (f.isDirectory)
+        browseDir(f, loader, "", buf)
+      else
+        browseJar(f, loader, buf, history)
+    }
   }
 
   private[this] def browseDir(
@@ -117,8 +121,9 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
       return
 
     for (f <- dir.listFiles)
-      if (f.isDirectory && f.canRead)
+      if (f.isDirectory && f.canRead) {
         browseDir(f, loader, prefix + f.getName + "/", buf)
+      }
       else
         processFile(prefix, f, buf)
   }
@@ -138,10 +143,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
 
     try {
       for (uri <- jarClasspath(file, jarFile.getManifest)) {
-        if (!seenUris.contains(uri)) {
-          seenUris += uri
           browseUri0(uri, loader, buf, seenUris)
-        }
       }
 
       for {
@@ -166,11 +168,12 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
 
   private def jarClasspath(jarFile: File, manifest: java.util.jar.Manifest): Seq[URI] =
     for {
-      m <- Option(manifest).toSeq
+      m  <- Option(manifest).toSeq
       attr <- Option(m.getMainAttributes.getValue("Class-Path")).toSeq
-      el <- attr.split(" ")
+      el <- attr.split(" ").toSeq
       uri <- uriFromJarClasspath(jarFile, el)
     } yield uri
+    
 
   private def uriFromJarClasspath(jarFile: File, path: String): Option[URI] =
     try {

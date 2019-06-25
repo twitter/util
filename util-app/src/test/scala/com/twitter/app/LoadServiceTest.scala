@@ -11,7 +11,7 @@ import java.util
 import java.util.concurrent.{Callable, CountDownLatch, ExecutorService, Executors}
 import java.util.{Random, concurrent}
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import scala.collection.mutable
 
 // These traits correspond to files in:

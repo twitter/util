@@ -36,7 +36,7 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalatest.{BeforeAndAfter, WordSpec}
 import org.scalatest.concurrent.Eventually
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Minutes, Span}
 
 class ScribeHandlerTest extends WordSpec with BeforeAndAfter with Eventually with MockitoSugar {

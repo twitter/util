@@ -23,13 +23,13 @@ trait AsyncCallbackPromise[T] extends Promise[T] {
 
 class StringCallbackPromise extends AsyncCallbackPromise[String] with AsyncCallback.StringCallback {
   def processResult(rc: Int, path: String, ctx: AnyRef, name: String): Unit = {
-    process(rc, path) { name }
+    process(rc, path)(name)
   }
 }
 
 class UnitCallbackPromise extends AsyncCallbackPromise[Unit] with AsyncCallback.VoidCallback {
   def processResult(rc: Int, path: String, ctx: AnyRef): Unit = {
-    process(rc, path) { Unit }
+    process(rc, path)(())
   }
 }
 

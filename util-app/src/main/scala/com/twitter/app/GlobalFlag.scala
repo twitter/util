@@ -159,7 +159,7 @@ object GlobalFlag {
       //we don't hide the real issue that a developer just added an unparseable arg.
       case e: Throwable =>
         log.log(java.util.logging.Level.SEVERE, "failure reading in flags", e)
-        new ArrayBuffer[Flag[_]]
+        Nil
     }
   }
 
@@ -172,7 +172,7 @@ object GlobalFlag {
       className.endsWith("$") && !className.endsWith("package$")
 
     val markerClass = classOf[GlobalFlagVisible]
-    val flags = new ArrayBuffer[Flag[_]]
+    val flagBuilder = new scala.collection.immutable.VectorBuilder[Flag[_]]
 
     // Search for Scala objects annotated with GlobalFlagVisible:
     val cp = new FlagClassPath()
@@ -181,7 +181,8 @@ object GlobalFlag {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
           get(info.className) match {
-            case Some(f) => flags += f
+            case Some(f) =>
+              flagBuilder += f
             case None => println("failed for " + info.className)
           }
         }
@@ -189,6 +190,6 @@ object GlobalFlag {
         case _: IllegalStateException | _: NoClassDefFoundError | _: ClassNotFoundException =>
       }
     }
-    flags
+    flagBuilder.result()
   }
 }

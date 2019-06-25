@@ -5,6 +5,8 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReferenc
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList}
 import scala.collection.mutable
+import scala.collection.compat.immutable.ArraySeq
+import scala.collection.Seq
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NoStackTrace
 
@@ -1079,8 +1081,12 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
       extends Promise[Seq[A]]
       with Promise.InterruptHandler {
 
-    private[this] val results = new mutable.ArraySeq[A](fs.size)
-    private[this] val count = new AtomicInteger(results.size)
+    private[this] val results = Array.ofDim[Any](fs.size)
+    private[this] def setResultsAsValue() = {
+      val seq = ArraySeq.unsafeWrapArray(results).asInstanceOf[ArraySeq[A]]
+      setValue(seq)
+    }
+    private[this] val count = new AtomicInteger(fs.size)
 
     // Respond handler. It's safe to write into different array cells concurrently.
     // We guarantee the thread writing a last value will observe all previous writes
@@ -1089,7 +1095,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     def collectTo(index: Int): Try[A] => Unit = {
       case Return(a) =>
         results(index) = a
-        if (count.decrementAndGet() == 0) setValue(results)
+        if (count.decrementAndGet() == 0) setResultsAsValue()
       case t @ Throw(_) =>
         updateIfEmpty(t.cast[Seq[A]])
     }
@@ -1143,7 +1149,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     else {
       val (keys, values) = fs.toSeq.unzip
       Future.collect(values).map { seq =>
-        keys.zip(seq)(scala.collection.breakOut): Map[A, B]
+        keys.iterator.zip(seq.iterator).toMap: Map[A, B]
       }
     }
 

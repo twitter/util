@@ -3,7 +3,7 @@ package com.twitter.app
 import java.net.URLClassLoader
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class ClassPathTest extends FunSuite with MockitoSugar {
 

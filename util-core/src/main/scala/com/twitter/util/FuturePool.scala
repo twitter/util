@@ -4,6 +4,7 @@ import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
 import scala.runtime.NonLocalReturnControl
+import com.twitter.util.Future
 
 /**
  * A `FuturePool` executes tasks asynchronously, typically using a pool

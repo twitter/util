@@ -6,11 +6,11 @@ import java.util.concurrent.TimeUnit
 
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import com.twitter.conversions.DurationOps._
 
-trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with GeneratorDrivenPropertyChecks {
+trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ScalaCheckDrivenPropertyChecks {
   val ops: TimeLikeOps[T]
   import ops._
 

@@ -3,6 +3,8 @@ package com.twitter.concurrent
 import com.twitter.util.{Future, Return, Throw, Promise}
 import scala.annotation.varargs
 import scala.collection.mutable
+import scala.collection.Seq
+import scala.collection.immutable.{Seq => ISeq}
 
 /**
  * A representation of a lazy (and possibly infinite) sequence of asynchronous
@@ -448,7 +450,7 @@ sealed abstract class AsyncStream[+A] {
    * Note: forces the entire stream. If one asynchronous call fails, it fails
    * the aggregated result.
    */
-  def toSeq(): Future[Seq[A]] =
+  def toSeq(): Future[ISeq[A]] =
     observe().flatMap {
       case (s, None) => Future.value(s)
       case (_, Some(exc)) => Future.exception(exc)
@@ -462,7 +464,7 @@ sealed abstract class AsyncStream[+A] {
    *
    * Note: forces the stream. For infinite streams, the future never resolves.
    */
-  def observe(): Future[(Seq[A], Option[Throwable])] = {
+  def observe(): Future[(ISeq[A], Option[Throwable])] = {
     val buf: mutable.ListBuffer[A] = mutable.ListBuffer.empty
 
     def go(as: AsyncStream[A]): Future[Unit] =
@@ -497,7 +499,7 @@ sealed abstract class AsyncStream[+A] {
    */
   private[concurrent] def buffer(n: Int): Future[(Seq[A], () => AsyncStream[A])] = {
     // pre-allocate the buffer, unless it's very large
-    val buffer = new mutable.ArrayBuffer[A](n.min(1024))
+    val buffer = new mutable.ArrayBuffer[A](n.max(0).min(1024))
 
     def fillBuffer(
       sizeRemaining: Int
@@ -624,11 +626,8 @@ object AsyncStream {
    * {{{
    * AsyncStream(1,2,3)
    * }}}
-   *
-   * Note: we can't annotate this with varargs because of
-   * https://issues.scala-lang.org/browse/SI-8743. This seems to be fixed in a
-   * more recent scala version so we will revisit this soon.
    */
+  @varargs
   def apply[A](as: A*): AsyncStream[A] = fromSeq(as)
 
   /**

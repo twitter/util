@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import scala.Function0;
-import scala.collection.Seq;
+import scala.collection.immutable.Seq;
 
 /**
  * Java compatibility layer for {@link com.twitter.finagle.stats.StatsReceiver}.

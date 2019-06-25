@@ -116,7 +116,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
    *         or a Future.Exception[RejectedExecutionException]` if the configured maximum
    *         number of waiters would be exceeded.
    */
-  def acquire(): Future[Permit] = lock.synchronized {
+  def acquire(): com.twitter.util.Future[Permit] = lock.synchronized {
     if (closed.isDefined)
       return Future.exception(closed.get)
 

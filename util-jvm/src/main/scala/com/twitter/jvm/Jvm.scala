@@ -35,7 +35,7 @@ trait Jvm {
    */
   def snap: Snapshot
 
-  def edenPool: Pool
+  def edenPool: com.twitter.jvm.Pool
 
   /**
    * Gets the current usage of the metaspace, if available.

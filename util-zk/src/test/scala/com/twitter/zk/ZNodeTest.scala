@@ -4,7 +4,7 @@ package com.twitter.zk
  * @author ver@twitter.com
  */
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class ZNodeTest extends WordSpec with MockitoSugar {
   "ZNode" should {

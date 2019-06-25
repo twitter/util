@@ -4,9 +4,9 @@ import java.lang.{Double => JDouble, Float => JFloat}
 import java.nio.charset.StandardCharsets
 import org.scalacheck.Gen
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   import ByteReader._
 
   def readerWith(bytes: Byte*): ByteReader = ByteReader(Buf.ByteArray.Owned(bytes.toArray))
@@ -167,12 +167,12 @@ class ByteReaderTest extends FunSuite with GeneratorDrivenPropertyChecks {
 
   test("readUnsignedIntBE")(forAll { i: Int =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntBE() = i }
-    assert(br.readUnsignedIntBE() == (i & 0xffffffffl))
+    assert(br.readUnsignedIntBE() == (i & 0xffffffffL))
   })
 
   test("readUnsignedIntLE")(forAll { i: Int =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntLE() = i }
-    assert(br.readUnsignedIntLE() == (i & 0xffffffffl))
+    assert(br.readUnsignedIntLE() == (i & 0xffffffffL))
   })
 
   val uInt64s: Gen[BigInt] = Gen

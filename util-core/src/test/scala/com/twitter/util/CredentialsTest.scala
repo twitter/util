@@ -17,12 +17,13 @@
 package com.twitter.util
 
 import org.scalatest.FunSuite
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
 class CredentialsTest extends FunSuite with Checkers {
   test("parse a simple auth file") {
     val content = "username: root\npassword: hellokitty\n"
-    assert(Credentials(content) == Map("username" -> "root", "password" -> "hellokitty"))
+    val result = Credentials(content)
+    assert(result == Map("username" -> "root", "password" -> "hellokitty"))
   }
 
   test("parse a more complex auth file") {

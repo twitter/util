@@ -42,7 +42,7 @@ trait ZkClient {
   /* Settings */
 
   /** Default: Creator access */
-  val acl: Seq[ACL] = CREATOR_ALL_ACL.asScala
+  val acl: Seq[ACL] = CREATOR_ALL_ACL.asScala.toSeq
 
   /** Build a ZkClient with another default creation ACL. */
   def withAcl(a: Seq[ACL]): ZkClient = transform(_acl = a)

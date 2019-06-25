@@ -2,6 +2,7 @@ package com.twitter.io
 
 import com.twitter.io.SeqReader._
 import com.twitter.util.{Future, Promise}
+import scala.collection.Seq
 
 /**
  * We want to ensure that this reader always satisfies these invariants:

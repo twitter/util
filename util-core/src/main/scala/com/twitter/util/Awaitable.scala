@@ -2,8 +2,10 @@ package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
 import java.util.concurrent.atomic.AtomicBoolean
+import scala.annotation.varargs
 import scala.collection.JavaConverters._
 import scala.util.control.{NonFatal => NF}
+
 
 /**
  * Wait for the result of some action. Awaitable is not used
@@ -160,7 +162,7 @@ object Await {
   /** $all */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  @scala.annotation.varargs
+  @varargs
   def all(awaitables: Awaitable[_]*): Unit =
     all(awaitables, Duration.Top)
 

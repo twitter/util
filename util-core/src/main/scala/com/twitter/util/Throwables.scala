@@ -2,6 +2,7 @@ package com.twitter.util
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.Seq
 
 object Throwables {
 

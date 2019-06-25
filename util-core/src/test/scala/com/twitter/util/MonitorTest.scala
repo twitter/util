@@ -3,7 +3,7 @@ package com.twitter.util
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 object MonitorTest {
   class MockMonitor extends Monitor {
