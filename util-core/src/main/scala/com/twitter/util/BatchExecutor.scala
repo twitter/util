@@ -136,7 +136,7 @@ private[util] class BatchExecutor[In, Out](
   }
 
   def executeBatch(batch: Iterable[(In, Promise[Out])]): Unit = {
-    val uncancelled = batch filter {
+    val uncancelled = batch.filter {
       case (in, p) =>
         p.isInterrupted match {
           case Some(_cause) =>

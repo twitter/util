@@ -1422,12 +1422,12 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     sizeThreshold: Int,
     timeThreshold: Duration = Duration.Top,
     sizePercentile: => Float = 1.0f
-  )(f: Iterable[In] => Future[Seq[Out]]
+  )(f: scala.collection.Seq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {
     new Batcher[In, Out](
-      new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
+      new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f.compose(it => it.toSeq))
     )
   }
 }
