@@ -17,12 +17,13 @@
 package com.twitter.logging
 
 import java.io._
-import java.util.{Calendar, Date, logging => javalog}
+import java.util.{Calendar, Date, UUID, logging => javalog}
 import org.scalatest.WordSpec
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
+import java.nio.file.{Files, Paths}
 
 class FileHandlerTest extends WordSpec with TempFolder {
   def reader(filename: String) = {
@@ -32,6 +33,15 @@ class FileHandlerTest extends WordSpec with TempFolder {
   def writer(filename: String) = {
     new OutputStreamWriter(new FileOutputStream(new File(folderName, filename)), "UTF-8")
   }
+
+  // Looks for files that contain `name` in the given `dirToSearch`.
+  // This method is used in place of setting the `user.dir`
+  // system property to ensure JDK11 compatibility. See
+  // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8202127
+  private def filesContainingName(dirToSearch: String, name: String): Array[String] =
+    Files
+      .find(Paths.get(dirToSearch), 1, (p, _) => p.toFile.getName.contains(name)).toArray.map(
+        _.toString)
 
   "FileHandler" should {
     val record1 = new javalog.LogRecord(Level.INFO, "first post!")
@@ -226,38 +236,33 @@ class FileHandlerTest extends WordSpec with TempFolder {
     }
 
     "correctly handles relative paths" in {
-      withTempFolder {
-        // user.dir will be replaced with the temp folder,
-        // and will be restored when the test is complete
-        val wdir = System.getProperty("user.dir")
 
-        try {
-          System.setProperty("user.dir", folderName)
+      val userDir = System.getProperty("user.dir")
+      val filenamePrefix = UUID.randomUUID().toString
 
-          val handler = FileHandler(
-            filename = "test.log", // Note relative path!
-            rollPolicy = Policy.Hourly,
-            append = true,
-            rotateCount = 2,
-            formatter = BareFormatter
-          ).apply()
+      try {
+        val handler = FileHandler(
+          filename = filenamePrefix + ".log", // Note relative path!
+          rollPolicy = Policy.Hourly,
+          append = true,
+          rotateCount = 2,
+          formatter = BareFormatter
+        ).apply()
 
-          handler.publish(record1)
-          assert(new File(folderName).list().length == 1)
-          handler.roll()
+        handler.publish(record1)
+        assert(filesContainingName(userDir, filenamePrefix).length == 1)
+        handler.roll()
 
-          handler.publish(record1)
-          assert(new File(folderName).list().length == 2)
-          handler.roll()
+        handler.publish(record1)
+        assert(filesContainingName(userDir, filenamePrefix).length == 2)
+        handler.roll()
 
-          handler.publish(record1)
-          assert(new File(folderName).list().length == 2)
-          handler.close()
-        } finally {
-          // restore user.dir to its original configuration
-          System.setProperty("user.dir", wdir)
-        }
+        handler.publish(record1)
+        assert(filesContainingName(userDir, filenamePrefix).length == 2)
+        handler.close()
 
+      } finally {
+        filesContainingName(userDir, filenamePrefix).foreach(f => new File(f).delete())
       }
     }
 
