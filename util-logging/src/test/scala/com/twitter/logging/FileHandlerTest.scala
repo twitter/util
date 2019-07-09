@@ -23,15 +23,26 @@ import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
-import java.nio.file.{Files, Paths}
+import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.{Files, Path, Paths}
+import java.util.function.BiPredicate
 
 class FileHandlerTest extends WordSpec with TempFolder {
-  def reader(filename: String) = {
+  def reader(filename: String): BufferedReader = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }
 
-  def writer(filename: String) = {
+  def writer(filename: String):OutputStreamWriter = {
     new OutputStreamWriter(new FileOutputStream(new File(folderName, filename)), "UTF-8")
+  }
+
+  private[this] val matcher = (name: String) => new BiPredicate[Path, BasicFileAttributes] {
+    override def test(
+      path: Path,
+      attributes: BasicFileAttributes
+    ): Boolean = {
+      path.toFile.getName.contains(name)
+    }
   }
 
   // Looks for files that contain `name` in the given `dirToSearch`.
@@ -40,8 +51,11 @@ class FileHandlerTest extends WordSpec with TempFolder {
   // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8202127
   private def filesContainingName(dirToSearch: String, name: String): Array[String] =
     Files
-      .find(Paths.get(dirToSearch), 1, (p, _) => p.toFile.getName.contains(name)).toArray.map(
-        _.toString)
+      .find(
+        Paths.get(dirToSearch),
+        1,
+        matcher(name)
+      ).toArray.map(_.toString)
 
   "FileHandler" should {
     val record1 = new javalog.LogRecord(Level.INFO, "first post!")
@@ -51,7 +65,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
       withTempFolder {
         val f = writer("test.log")
         f.write("hello!\n")
-        f.close
+        f.close()
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -69,7 +83,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
       withTempFolder {
         val f = writer("test.log")
         f.write("hello!\n")
-        f.close
+        f.close()
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
@@ -131,9 +145,9 @@ class FileHandlerTest extends WordSpec with TempFolder {
             append = true,
             formatter = BareFormatter
           ).apply()
-          assert(handler.computeNextRollTime(1206769996722L) == Some(1206770400000L))
-          assert(handler.computeNextRollTime(1206770400000L) == Some(1206774000000L))
-          assert(handler.computeNextRollTime(1206774000001L) == Some(1206777600000L))
+          assert(handler.computeNextRollTime(1206769996722L).contains(1206770400000L))
+          assert(handler.computeNextRollTime(1206770400000L).contains(1206774000000L))
+          assert(handler.computeNextRollTime(1206774000001L).contains(1206777600000L))
         }
       }
 
@@ -145,11 +159,11 @@ class FileHandlerTest extends WordSpec with TempFolder {
             append = true,
             formatter = new Formatter(timezone = Some("GMT-7:00"))
           ).apply()
-          assert(handler.computeNextRollTime(1250354734000L) == Some(1250406000000L))
-          assert(handler.computeNextRollTime(1250404734000L) == Some(1250406000000L))
-          assert(handler.computeNextRollTime(1250406001000L) == Some(1251010800000L))
-          assert(handler.computeNextRollTime(1250486000000L) == Some(1251010800000L))
-          assert(handler.computeNextRollTime(1250496000000L) == Some(1251010800000L))
+          assert(handler.computeNextRollTime(1250354734000L).contains(1250406000000L))
+          assert(handler.computeNextRollTime(1250404734000L).contains(1250406000000L))
+          assert(handler.computeNextRollTime(1250406001000L).contains(1251010800000L))
+          assert(handler.computeNextRollTime(1250486000000L).contains(1251010800000L))
+          assert(handler.computeNextRollTime(1250496000000L).contains(1251010800000L))
         }
       }
     }
@@ -230,8 +244,8 @@ class FileHandlerTest extends WordSpec with TempFolder {
           flush()
         }
         val fileSet = new File(folderName).list().toSet
-        assert(fileSet.contains(name) == true)
-        assert(fileSet.contains(namePrefix) == true)
+        assert(fileSet.contains(name))
+        assert(fileSet.contains(namePrefix))
       }
     }
 
