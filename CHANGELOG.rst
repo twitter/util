@@ -31,6 +31,11 @@ Runtime Behavior Changes
   currently disabled and can be enabled by a toggle (com.twitter.util.UseLocalInInterruptible)
   by setting it to 1.0 if you would like to try it out. ``PHAB_ID=D324315``
 
+* util-core: Remove experimental toggle `com.twitter.util.BypassScheduler` used
+  for speeding up `ConstFuture.map` (`transformTry`). Now, we always run map
+  operations immediately instead of via the Scheduler, where they may be queued
+  and potentially reordered. ``PHAB_ID=D338487``
+
 19.5.1
 ------
 
