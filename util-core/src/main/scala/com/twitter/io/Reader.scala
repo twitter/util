@@ -483,5 +483,4 @@ object Reader {
    *       of the framer.
    */
   def framed(r: Reader[Buf], framer: Buf => Seq[Buf]): Reader[Buf] = new Framed(r, framer)
-
 }

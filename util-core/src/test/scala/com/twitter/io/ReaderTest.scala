@@ -3,7 +3,7 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
-import com.twitter.util.{Await, Awaitable, Future, Promise}
+import com.twitter.util.{Await, Awaitable, Future, Promise, Return, Try}
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
