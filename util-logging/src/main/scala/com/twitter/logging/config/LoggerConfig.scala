@@ -18,7 +18,7 @@ package com.twitter.logging
 package config
 
 import com.twitter.conversions.DurationOps._
-import com.twitter.util.{Config, Duration, NetUtil}
+import com.twitter.util.Config
 
 @deprecated("use LoggerFactory", "6.12.1")
 class LoggerConfig extends Config[Logger] {
@@ -111,43 +111,6 @@ object BareFormatterConfig extends FormatterConfig {
   override def apply() = BareFormatter
 }
 
-@deprecated("use SyslogFormatter directly", "6.12.1")
-class SyslogFormatterConfig extends FormatterConfig {
-
-  /**
-   * Hostname to prepend to log lines.
-   */
-  var hostname: String = NetUtil.getLocalHostName()
-
-  /**
-   * Optional server name to insert before log entries.
-   */
-  var serverName: Option[String] = None
-
-  /**
-   * Use new standard ISO-format timestamps instead of old BSD-format?
-   */
-  var useIsoDateFormat: Boolean = true
-
-  /**
-   * Priority level in syslog numbers.
-   */
-  var priority: Int = SyslogHandler.PRIORITY_USER
-
-  def serverName_=(name: String): Unit = { serverName = Some(name) }
-
-  override def apply() =
-    new SyslogFormatter(
-      hostname,
-      serverName,
-      useIsoDateFormat,
-      priority,
-      timezone,
-      truncateAt,
-      truncateStackTracesAt
-    )
-}
-
 @deprecated("use Formatter directly", "6.12.1")
 trait HandlerConfig extends Config[Handler] {
   var formatter: FormatterConfig = new FormatterConfig
@@ -158,28 +121,6 @@ trait HandlerConfig extends Config[Handler] {
 @deprecated("use HandlerFactory", "6.12.1")
 class ConsoleHandlerConfig extends HandlerConfig {
   def apply() = new ConsoleHandler(formatter(), level)
-}
-
-@deprecated("use HandlerFactory", "6.12.1")
-class ThrottledHandlerConfig extends HandlerConfig {
-
-  /**
-   * Timespan to consider duplicates. After this amount of time, duplicate entries will be logged
-   * again.
-   */
-  var duration: Duration = 0.seconds
-
-  /**
-   * Maximum duplicate log entries to pass before suppressing them.
-   */
-  var maxToDisplay: Int = Int.MaxValue
-
-  /**
-   * Wrapped handler.
-   */
-  var handler: HandlerConfig = null
-
-  def apply() = new ThrottledHandler(handler(), duration, maxToDisplay)
 }
 
 @deprecated("use HandlerFactory", "6.12.1")
@@ -221,22 +162,6 @@ class FileHandlerConfig extends HandlerConfig {
   var rotateCount: Int = -1
 
   def apply() = new FileHandler(filename, roll, append, rotateCount, formatter(), level)
-}
-
-@deprecated("use HandlerFactory", "6.12.1")
-class SyslogHandlerConfig extends HandlerConfig {
-
-  /**
-   * Syslog server hostname.
-   */
-  var server: String = "localhost"
-
-  /**
-   * Syslog server port.
-   */
-  var port: Int = SyslogHandler.DEFAULT_PORT
-
-  def apply() = new SyslogHandler(server, port, formatter(), level)
 }
 
 @deprecated("use HandlerFactory", "6.12.1")

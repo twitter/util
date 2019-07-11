@@ -14,6 +14,10 @@ Breaking API Changes
   `cpuTime`, and `wallTime`. These were deprecated in 2015 and have no
   replacement. ``PHAB_ID=D330386``
 
+* util-core: Removed deprecated `com.twitter.logging.config` classes `SyslogFormatterConfig`,
+  `ThrottledHandlerConfig`, `SyslogHandlerConfig`. These were deprecated in 2012 and have
+  no replacement. Users are encouraged to use 'util-slf4j-api' where possible. ``PHAB_ID=D339563``
+
 19.6.0
 ------
 
