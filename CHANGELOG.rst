@@ -7,6 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-logging: The namespace forwarders for `Level` and `Policy` in `com.twitter.logging.config`
+  have been removed. Code should be updated to use `com.twitter.logging.Level` and
+  `com.twitter.logging.Policy` where necessary. Users are encouraged to use 'util-slf4j-api' though
+  where possible. ``PHAB_ID=D344439``
+
 19.7.0
 ------
 
