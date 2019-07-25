@@ -15,6 +15,11 @@ Breaking API Changes
   `com.twitter.logging.Policy` where necessary. Users are encouraged to use 'util-slf4j-api' though
   where possible. ``PHAB_ID=D344439``
 
+* util-logging: The deprecated `com.twitter.logging.config.LoggerConfig` and associated
+  classes have been removed. These have been deprecated since 2012. Code should be updated
+  to use `com.twitter.logging.LoggerFactory` where necessary. Users are encouraged to use
+  'util-slf4j-api' though where possible. ``PHAB_ID=D345381``
+
 19.7.0
 ------
 
