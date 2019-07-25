@@ -20,6 +20,11 @@ Breaking API Changes
   to use `com.twitter.logging.LoggerFactory` where necessary. Users are encouraged to use
   'util-slf4j-api' though where possible. ``PHAB_ID=D345381``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Upgrade to Jackson 2.9.9. ``PHAB_ID=D345969``
+
 19.7.0
 ------
 
