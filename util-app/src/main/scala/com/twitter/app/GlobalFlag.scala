@@ -117,9 +117,13 @@ abstract class GlobalFlag[T] private[app] (
 object GlobalFlag {
 
   private[app] def get(flagName: String): Option[Flag[_]] = {
-    def tryMethod(className: String, methodName: String): Option[Flag[_]] =
+    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
+    get(Class.forName(className))
+  }
+
+  private[app] def get(cls: Class[_]): Option[Flag[_]] = {
+    def tryMethod(cls: Class[_], methodName: String): Option[Flag[_]] =
       try {
-        val cls = Class.forName(className)
         val m = cls.getMethod(methodName)
         val isValid = Modifier.isStatic(m.getModifiers) &&
           m.getReturnType == classOf[Flag[_]] &&
@@ -130,9 +134,8 @@ object GlobalFlag {
           None
       }
 
-    def tryModuleField(className: String): Option[Flag[_]] =
+    def tryModuleField(cls: Class[_]): Option[Flag[_]] =
       try {
-        val cls = Class.forName(className)
         val f = cls.getField("MODULE$")
         val isValid = Modifier.isStatic(f.getModifiers) && classOf[Flag[_]]
           .isAssignableFrom(f.getType)
@@ -142,10 +145,9 @@ object GlobalFlag {
           None
       }
 
-    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
-    tryModuleField(className).orElse {
+    tryModuleField(cls).orElse {
       // fallback for GlobalFlags declared in Java
-      tryMethod(className, "globalFlagInstance")
+      tryMethod(cls, "globalFlagInstance")
     }
   }
 
@@ -180,7 +182,7 @@ object GlobalFlag {
       try {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
-          get(info.className) match {
+          get(cls) match {
             case Some(f) => flags += f
             case None => println("failed for " + info.className)
           }

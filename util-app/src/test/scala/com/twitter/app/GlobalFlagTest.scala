@@ -8,6 +8,7 @@ object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no
 object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
 class GlobalFlagTest extends FunSuite {
+  val flagSet = Set(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
 
   test("GlobalFlag.get") {
     assert(MyGlobalBooleanFlag.get.isEmpty)
@@ -67,15 +68,14 @@ class GlobalFlagTest extends FunSuite {
   test("GlobalFlag.getAll") {
     val mockClassLoader = new MockClassLoader(getClass.getClassLoader.asInstanceOf[URLClassLoader])
     val flags = GlobalFlag.getAll(mockClassLoader)
-    assert(flags.length == 4)
+    assert(flags.toSet == flagSet)
     assert(flags.exists(_.help.equals("a package object test flag")))
   }
 
   private class MockClassLoader(realClassLoader: URLClassLoader)
       extends URLClassLoader(realClassLoader.getURLs) {
     private val isValidClassName = (className: String) =>
-      List(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault, PackageObjectTest)
-        .map(_.getClass.getName)
+      flagSet.map(_.getClass.getName)
         .contains(className)
 
     override def loadClass(name: String): Class[_] =
