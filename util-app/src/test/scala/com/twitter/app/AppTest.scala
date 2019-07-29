@@ -48,7 +48,7 @@ class AppTest extends FunSuite {
     test1.main(Array())
 
     assert(test1.reason.contains("Exception thrown in main on startup"))
-    assert(app.killed)
+    assert(test1.killed)
   }
 
   test("App: propagate underlying exception from fields in app") {
