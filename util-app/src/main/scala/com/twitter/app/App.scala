@@ -313,7 +313,7 @@ trait App extends Closable with CloseAwaitably {
     deadline: Time
   ): Future[Unit] = {
     Future
-      .collectToTry(lastExits.asScala.map(_.close(deadline)).toSeq)
+      .collectToTry(lastExits.asScala.toSeq.map(_.close(deadline)))
       .by(shutdownTimer, deadline)
       .transform {
         case Return(results) =>
