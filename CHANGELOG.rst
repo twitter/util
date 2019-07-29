@@ -25,6 +25,12 @@ Runtime Behavior Changes
 
 * util: Upgrade to Jackson 2.9.9. ``PHAB_ID=D345969``
 
+Bug Fixes
+~~~~~~~~~
+
+* util-app: Fixed race-condition in `com.twitter.app.App` where the App could be kept running if
+  `App#close` is not fulfilled within the graceful period
+
 19.7.0
 ------
 
