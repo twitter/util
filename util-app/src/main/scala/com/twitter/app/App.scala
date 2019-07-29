@@ -97,8 +97,14 @@ trait App extends Closable with CloseAwaitably {
     // want to ensure "reason" is written before attempting to write any details
     System.err.flush()
     System.err.println(details)
-    Await.ready(close(), closeDeadline - Time.now)
-    kill()
+    try {
+      Await.ready(close(), closeDeadline - Time.now)
+    } catch {
+      case t: TimeoutException =>
+        System.err.println(s"Timeout while closing the App ${t.getMessage}")
+    } finally {
+      kill()
+    }
   }
 
   /**
@@ -377,8 +383,13 @@ trait App extends Closable with CloseAwaitably {
     close(defaultCloseGracePeriod)
 
     // The deadline to 'close' is advisory; we enforce it here.
-    if (!suppressGracefulShutdownErrors) Await.result(this, closeDeadline - Time.now)
-    else {
+    if (!suppressGracefulShutdownErrors) {
+      try {
+        Await.result(this, closeDeadline - Time.now)
+      } catch {
+        case t: TimeoutException => throw newCloseException(Seq(t))
+      }
+    } else {
       try { // even if we suppress shutdown errors, we give the resources time to close
         Await.ready(this, closeDeadline - Time.now)
       } catch {
