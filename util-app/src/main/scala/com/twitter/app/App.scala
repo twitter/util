@@ -64,6 +64,10 @@ trait App extends Closable with CloseAwaitably {
    */
   protected def failfastOnFlagsNotParsed: Boolean = false
 
+
+  /** Forcibly exit the JVM without cleanup */
+  protected def kill(): Unit = System.exit(1)
+
   /** Exit on error with the given Throwable */
   protected def exitOnError(throwable: Throwable): Unit = {
     throwable.printStackTrace()
@@ -71,7 +75,7 @@ trait App extends Closable with CloseAwaitably {
       case _: CloseException =>
         // exception occurred while closing, do not attempt to close again
         System.err.println(throwable.getMessage)
-        System.exit(1)
+        kill()
       case _ =>
         exitOnError("Exception thrown in main on startup")
     }
@@ -94,7 +98,7 @@ trait App extends Closable with CloseAwaitably {
     System.err.flush()
     System.err.println(details)
     Await.ready(close(), closeDeadline - Time.now)
-    System.exit(1)
+    kill()
   }
 
   /**

@@ -9,8 +9,15 @@ import scala.language.reflectiveCalls
 
 class TestApp(f: () => Unit) extends App {
   var reason: Option[String] = None
+  var killed: Boolean = false
+
+  protected override def kill(): Unit = {
+    killed = true
+  }
+
   protected override def exitOnError(reason: String, details: => String): Unit = {
     this.reason = Some(reason)
+    super.exitOnError(reason, details)
   }
 
   def main(): Unit = f()
@@ -41,6 +48,7 @@ class AppTest extends FunSuite {
     test1.main(Array())
 
     assert(test1.reason.contains("Exception thrown in main on startup"))
+    assert(app.killed)
   }
 
   test("App: propagate underlying exception from fields in app") {
