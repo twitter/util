@@ -311,6 +311,21 @@ class AppTest extends FunSuite {
     assert(closed)
   }
 
+  test("App: exit even if the ShutdownTimer doesn't schedule timeout promptly") {
+    val app = new TestApp(() => ()) {
+     // We use a MockTimer to simulate jitter in the scheduling of timeout
+     override protected lazy val shutdownTimer = new MockTimer
+     def tick() = shutdownTimer.tick()
+    }
+
+    app.closeOnExit(Closable.make { _ => Future.never })
+
+    assert(!app.killed)
+    app.main(Array.empty)
+    app.tick()
+    assert(app.killed)
+  }
+
   test("App: exit functions properly capture non-fatal exceptions") {
     val app = new ErrorOnExitApp {
       def main(): Unit = {
