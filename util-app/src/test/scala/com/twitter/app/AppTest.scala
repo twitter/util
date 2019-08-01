@@ -311,18 +311,19 @@ class AppTest extends FunSuite {
     assert(closed)
   }
 
-  test("App: exit even if the ShutdownTimer doesn't schedule timeout promptly") {
+  test("App: exit even if `closing` is not fulfilled by `closeDeadline`") {
     val app = new TestApp(() => ()) {
-     // We use a MockTimer to simulate jitter in the scheduling of timeout
-     override protected lazy val shutdownTimer = new MockTimer
-     def tick() = shutdownTimer.tick()
+      // Timer that systematically miss its scheduling target by 500 milliseconds which could happen on a host under load
+      override lazy val shutdownTimer: Timer = new JavaTimer(isDaemon=true) {
+        override protected def scheduleOnce(when: Time)(f: => Unit): TimerTask =
+          super.scheduleOnce(when + 500.milliseconds)(f)
+      }
     }
 
     app.closeOnExit(Closable.make { _ => Future.never })
 
     assert(!app.killed)
     app.main(Array.empty)
-    app.tick()
     assert(app.killed)
   }
 
