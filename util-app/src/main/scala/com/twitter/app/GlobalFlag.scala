@@ -118,7 +118,12 @@ object GlobalFlag {
 
   private[app] def get(flagName: String): Option[Flag[_]] = {
     val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
-    get(Class.forName(className))
+    try {
+      get(Class.forName(className))
+    } catch {
+        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+          None
+      }
   }
 
   private[app] def get(cls: Class[_]): Option[Flag[_]] = {
