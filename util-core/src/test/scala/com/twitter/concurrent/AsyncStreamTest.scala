@@ -4,9 +4,9 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   import AsyncStream.{mk, of}
   import AsyncStreamTest._
 

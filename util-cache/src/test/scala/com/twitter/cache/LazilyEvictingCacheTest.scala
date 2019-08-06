@@ -6,7 +6,7 @@ import com.twitter.util.{Await, Future, Promise}
 import org.mockito.Matchers._
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
   private val explodingCacheLoader =

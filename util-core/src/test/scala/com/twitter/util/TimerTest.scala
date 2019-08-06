@@ -8,7 +8,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{IntegrationPatience, Eventually}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class TimerTest extends FunSuite with MockitoSugar with Eventually with IntegrationPatience {
 

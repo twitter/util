@@ -103,6 +103,7 @@ object Closable {
    * @note as with all `Closables`, the `deadline` passed to `close`
    *       is advisory.
    */
+  @varargs
   def sequence(closables: Closable*): Closable = new Closable {
     private final def closeSeq(
       deadline: Time,

@@ -2,9 +2,9 @@ package com.twitter.util
 
 import org.scalatest.FunSuite
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class DiffTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class DiffTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   val f: Int => String = _.toString
 
   test("Diffable.ofSet") {

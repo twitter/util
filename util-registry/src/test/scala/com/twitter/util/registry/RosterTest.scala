@@ -4,7 +4,7 @@ import java.util.logging.Logger
 import org.mockito.Mockito.{never, verify}
 import org.mockito.Matchers.anyObject
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 class RosterTest extends FunSuite with MockitoSugar {
   def withRoster(fn: (Roster, Logger) => Unit): Unit = {

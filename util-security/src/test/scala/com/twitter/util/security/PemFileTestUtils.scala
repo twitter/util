@@ -52,6 +52,16 @@ object PemFileTestUtils {
     assert(logMessage.contains(expectedExMessage))
   }
 
+  def assertAnyLogMessage(
+    name: String
+  )(logMessage: String,
+    filename: String,
+    expectedExMessages: String*
+  ): Unit = {
+    assert(logMessage.startsWith(s"$name ($filename) failed to load: "))
+    assert(expectedExMessages.exists(expectedExMessage => logMessage.contains(expectedExMessage)))
+  }
+
   def testFileDoesntExist[A](name: String, read: File => Try[A]): Unit = {
     val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
@@ -62,7 +72,11 @@ object PemFileTestUtils {
     assert(!tempFile.exists())
 
     val tryReadPem: Try[A] = read(tempFile)
-    assertLogMessage(name)(handler.get, tempFile.getName(), "No such file or directory")
+    assertAnyLogMessage(name)(
+      handler.get,
+      tempFile.getName(),
+      "No such file or directory",
+      "The system cannot find the file specified")
     assertIOException(tryReadPem)
   }
 
@@ -74,7 +88,11 @@ object PemFileTestUtils {
     val parentFile = tempFile.getParentFile()
     val tryReadPem: Try[A] = read(parentFile)
 
-    assertLogMessage(name)(handler.get, parentFile.getName(), "Is a directory")
+    assertAnyLogMessage(name)(
+      handler.get,
+      parentFile.getName(),
+      "Is a directory",
+      "Access is denied")
     assertIOException(tryReadPem)
   }
 

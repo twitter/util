@@ -2,13 +2,13 @@ package com.twitter.hashing
 
 import org.scalacheck.Gen
 import org.scalatest.WordSpec
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable
 import java.io.{BufferedReader, InputStreamReader}
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 
-class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks {
+class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
   "KetamaDistributor" should {
     val nodes = Seq(
       KetamaNode("10.0.1.1", 600, 1),
@@ -81,8 +81,7 @@ class KetamaDistributorTest extends WordSpec with GeneratorDrivenPropertyChecks 
         val md = MessageDigest.getInstance("MD5")
         ketama.hashInt(i, md)
         val array = md.digest()
-
-        assert(array.deep == md.digest(i.toString.getBytes("UTF-8")).deep)
+        assert(array.toSeq == md.digest(i.toString.getBytes("UTF-8")).toSeq)
       }
     }
 

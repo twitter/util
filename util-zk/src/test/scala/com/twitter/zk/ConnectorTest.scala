@@ -2,7 +2,7 @@ package com.twitter.zk
 
 import org.mockito.Mockito._
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 import com.twitter.util.Future
 

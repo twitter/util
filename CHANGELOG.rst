@@ -7,11 +7,36 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util: Enables cross-build for 2.13.0. ``PHAB_ID=D333021``
+
+Java Compatibility
+~~~~~~~~~~~~~~~~~~
+
+* util-stats: In `c.t.finagle.stats.AbstractStatsReceiver`, the `counter`, `stat` and
+  `addGauge` become final, override `counterImpl`, `statImpl` and `addGaugeImpl` instead.
+  ``PHAB_ID=D333021``
+
+* util-core:
+   `c.t.concurrent.Offer.choose`,
+   `c.t.concurrent.AsyncStream.apply`,
+   `c.t.util.Await.all`,
+   `c.t.util.Closable.sequence` become available to java for passing varargs. ``PHAB_ID=D333021``
+
+* util-stats:
+   `c.t.finagle.stats.StatsReceiver.provideGauge` and `addGauge` become available to java for
+   passing varags. ``PHAB_ID=D333021``
+
 19.8.0
 ------
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+
+* util-core: (not breaking) `c.t.util.Future.join` and `c.t.util.Future.collect` now take
+  `Iterable[Future[A]]` other than Seq. ``PHAB_ID=D333021``
 
 * util-logging: The namespace forwarders for `Level` and `Policy` in `com.twitter.logging.config`
   have been removed. Code should be updated to use `com.twitter.logging.Level` and
@@ -29,10 +54,12 @@ Runtime Behavior Changes
 * util: Upgrade to Jackson 2.9.9. ``PHAB_ID=D345969``
 
 19.7.0
-------
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `com.twitter.util.Event#build` now builds a Seq of events. `Event#buildAny` builds
+  against any collection of events. ``PHAB_ID=D333021``
 
 * util-core: Removed deprecated `c.t.concurrent.Scheduler` methods `usrTime`,
   `cpuTime`, and `wallTime`. These were deprecated in 2015 and have no

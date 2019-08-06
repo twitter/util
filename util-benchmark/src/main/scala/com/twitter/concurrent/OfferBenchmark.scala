@@ -56,7 +56,7 @@ object OfferBenchmark {
 
       ps(rng.nextInt(numToChooseFrom)).setValue(Tx.const(5))
 
-      ofs
+      ofs.toSeq
     }
   }
 }

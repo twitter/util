@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.concurrent.NamedPoolThreadFactory
-import java.util.concurrent._
+import java.util.concurrent.{Future => _, _}
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control
 

@@ -2,9 +2,9 @@ package com.twitter.finagle.stats
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class DelegatingStatsReceiverTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class DelegatingStatsReceiverTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   class Ctx {
     var leafCounter = 0

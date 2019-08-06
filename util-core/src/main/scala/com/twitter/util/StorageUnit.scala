@@ -126,7 +126,7 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def max(other: StorageUnit): StorageUnit =
     if (this > other) this else other
 
-  override def toString(): String = inBytes + ".bytes"
+  override def toString(): String = s"$inBytes.bytes"
 
   def toHuman(): String = {
     val prefix = "KMGTPE"

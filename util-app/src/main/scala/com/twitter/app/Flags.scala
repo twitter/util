@@ -196,7 +196,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
       if (helpFlag())
         Help(usage)
       else
-        Ok(remaining)
+        Ok(remaining.toSeq)
     }
 
   /**
@@ -379,7 +379,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
   ): (Iterable[String], Iterable[String]) = {
     val (set, unset) = getAll(includeGlobal, classLoader).partition { _.get.isDefined }
 
-    (set.map { _ + " \\" }, unset.map { _ + " \\" })
+    (set.map { _.toString + " \\" }, unset.map { _.toString + " \\" })
   }
 
   /**

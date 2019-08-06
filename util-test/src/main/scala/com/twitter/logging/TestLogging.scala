@@ -66,7 +66,7 @@ trait TestLogging extends BeforeAndAfter { self: WordSpec =>
     logger.addHandler(traceHandler)
   }
 
-  def logLines(): Seq[String] = traceHandler.get.split("\n")
+  def logLines(): Seq[String] = traceHandler.get.split("\n").toSeq
 
   /**
    * Verify that the logger set up with `traceLogger` has received a log line with the given

@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import scala.Function0;
-import scala.collection.Seq;
+import scala.collection.immutable.Seq;
 
 /**
  * Java compatibility layer for {@link com.twitter.finagle.stats.StatsReceiver}.
@@ -80,10 +80,10 @@ public final class StatsReceiverCompilationTest {
     StatsReceiver sr = new AbstractStatsReceiver() {
 
       @Override
-      public Stat stat(Verbosity verbosity, String... name) {
-        return nullSr.stat(verbosity, name);
+      public Stat statImpl(Verbosity verbosity, scala.collection.Seq<String> name) {
+        return nullSr.stat(verbosity, name.toSeq());
       }
-
+      
       @Override
       public Object repr() {
         return this;
@@ -95,18 +95,13 @@ public final class StatsReceiverCompilationTest {
       }
 
       @Override
-      public Counter counter(Verbosity verbosity, Seq<String> name) {
-        return nullSr.counter(name);
+      public Counter counterImpl(Verbosity verbosity, scala.collection.Seq<String> name) {
+        return nullSr.counter(name.toSeq());
       }
 
       @Override
-      public Stat stat(Verbosity verbosity, Seq<String> name) {
-        return nullSr.stat(name);
-      }
-
-      @Override
-      public Gauge addGauge(Verbosity verbosity, Seq<String> name, Function0<Object> f) {
-        return nullSr.addGauge(verbosity, name, f);
+      public Gauge addGaugeImpl(Verbosity verbosity, scala.collection.Seq<String> name, Function0<Object> f) {
+        return nullSr.addGauge(verbosity, name.toSeq(), f);
       }
     };
   }

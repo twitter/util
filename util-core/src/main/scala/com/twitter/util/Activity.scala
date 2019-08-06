@@ -2,12 +2,13 @@ package com.twitter.util
 
 import java.util.{List => JList}
 
-import scala.collection.generic.CanBuild
 import scala.collection.JavaConverters._
 import scala.collection.mutable.Buffer
 import scala.language.higherKinds
 import scala.reflect.ClassTag
 import scala.util.control.NonFatal
+import scala.Iterable
+import scala.collection.compat._
 
 /**
  * Activity, like [[com.twitter.util.Var Var]], is a value that varies over
@@ -183,10 +184,10 @@ object Activity {
    *
    * @usecase def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
-  def collect[T: ClassTag, CC[X] <: Traversable[X]](
+  def collect[T: ClassTag, CC[X] <: Iterable[X]](
     acts: CC[Activity[T]]
   )(
-    implicit newBuilder: CanBuild[T, CC[T]]
+    implicit factory: Factory[T, CC[T]]
   ): Activity[CC[T]] = {
     collect(acts, false)
   }
@@ -201,31 +202,31 @@ object Activity {
    *
    * @usecase def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
-  def collectIndependent[T: ClassTag, CC[X] <: Traversable[X]](
+  def collectIndependent[T: ClassTag, CC[X] <: Iterable[X]](
     acts: CC[Activity[T]]
   )(
-    implicit newBuilder: CanBuild[T, CC[T]]
+    implicit factory: Factory[T, CC[T]]
   ): Activity[CC[T]] = {
     collect(acts, true)
   }
 
-  private[this] def collect[T: ClassTag, CC[X] <: Traversable[X]](
+  private[this] def collect[T: ClassTag, CC[X] <: Iterable[X]](
     acts: CC[Activity[T]],
     collectIndependent: Boolean
   )(
-    implicit newBuilder: CanBuild[T, CC[T]]
+    implicit factory: Factory[T, CC[T]]
   ): Activity[CC[T]] = {
     if (acts.isEmpty)
-      return Activity.value(newBuilder().result)
+      return Activity.value(factory.fromSpecific(Nil))
 
-    val states: Traversable[Var[State[T]]] = acts.map(_.run)
-    val stateVar: Var[Traversable[State[T]]] = if (collectIndependent) {
+    val states: Iterable[Var[State[T]]] = acts.map(_.run)
+    val stateVar: Var[Iterable[State[T]]] = if (collectIndependent) {
       Var.collectIndependent(states)
     } else {
       Var.collect(states)
     }
 
-    def flip(states: Traversable[State[T]]): State[CC[T]] = {
+    def flip(states: Iterable[State[T]]): State[CC[T]] = {
       val notOk = states find {
         case Pending | Failed(_) => true
         case Ok(_) => false
@@ -238,7 +239,7 @@ object Activity {
         case Some(_) => assert(false)
       }
 
-      val ts = newBuilder()
+      val ts = factory.newBuilder
       states foreach {
         case Ok(t) => ts += t
         case _ => assert(false)

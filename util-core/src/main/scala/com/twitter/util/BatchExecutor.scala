@@ -3,7 +3,7 @@ package com.twitter.util
 import java.util.concurrent.CancellationException
 import java.util.logging.Logger
 
-import scala.collection.mutable
+import scala.collection.{mutable, Iterable}
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -30,7 +30,7 @@ private[util] class BatchExecutor[In, Out](
   sizeThreshold: Int,
   timeThreshold: Duration = Duration.Top,
   sizePercentile: => Float = 1.0f,
-  f: Seq[In] => Future[Seq[Out]]
+  f: Iterable[In] => Future[Seq[Out]]
 )(
   implicit timer: Timer)
     extends Function1[In, Future[Out]] { batcher =>
@@ -118,7 +118,7 @@ private[util] class BatchExecutor[In, Out](
   def flushBatch(): () => Unit = {
     // this must be executed within a `synchronized` block.
     val prevBatch = new mutable.ArrayBuffer[(In, Promise[Out])](buf.length)
-    buf.copyToBuffer(prevBatch)
+    prevBatch ++= buf
     buf.clear()
 
     scheduled foreach { _.cancel() }
@@ -134,8 +134,8 @@ private[util] class BatchExecutor[In, Out](
       }
   }
 
-  def executeBatch(batch: Seq[(In, Promise[Out])]): Unit = {
-    val uncancelled = batch filter {
+  def executeBatch(batch: Iterable[(In, Promise[Out])]): Unit = {
+    val uncancelled = batch.filter {
       case (in, p) =>
         p.isInterrupted match {
           case Some(_cause) =>

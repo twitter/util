@@ -20,6 +20,7 @@ scala_library(
     name = "util-core-util",
     sources = globs(
         "src/main/scala/com/twitter/util/*.scala",
+        "src/main/scala-2.12-/com/twitter/util/*.scala",
         "concurrent-extra/src/main/scala/com/twitter/concurrent/*.scala",
     ),
     compiler_option_sets = {"fatal_warnings"},
@@ -29,10 +30,12 @@ scala_library(
         repo = artifactory,
     ),
     dependencies = [
+        "3rdparty/jvm/org/scala-lang/modules:scala-collection-compat",
         "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
         "util/util-function/src/main/java",
     ],
     exports = [
+        "3rdparty/jvm/org/scala-lang/modules:scala-collection-compat",
         "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
         "util/util-function/src/main/java",
     ],

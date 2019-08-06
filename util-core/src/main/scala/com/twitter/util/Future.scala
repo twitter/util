@@ -4,7 +4,7 @@ import com.twitter.concurrent.{Offer, Tx}
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList}
-import scala.collection.mutable
+import scala.collection.compat.immutable.ArraySeq
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NoStackTrace
 
@@ -227,7 +227,7 @@ object Future {
   // but because these are both Function1 of different types, this cannot be done. Because
   // the respond handler is invoked for each Future in the sequence, and the interrupt handler is
   // only set once, we prefer to mix in Function1.
-  private[this] class JoinPromise[A](fs: Seq[Future[A]], size: Int)
+  private[this] class JoinPromise[A](fs: Iterable[Future[A]], size: Int)
       extends Promise[Unit]
       with (Try[A] => Unit) {
 
@@ -263,7 +263,7 @@ object Future {
    * @see [[collectToTry]] if you want to be able to see the results of each
    *     `Future` regardless of if they succeed or fail.
    */
-  def join[A](fs: Seq[Future[A]]): Future[Unit] = {
+  def join[A](fs: Iterable[Future[A]]): Future[Unit] = {
     if (fs.isEmpty) Future.Unit
     else {
       val size = fs.size
@@ -297,7 +297,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
 
   meths foreach println
   '
-   */
+   """*/
 
   /**
    * Join 2 futures. The returned future is complete when all
@@ -1065,12 +1065,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
       } yield results :+ nextResult
     }
 
-  private[this] final class CollectPromise[A](fs: Seq[Future[A]])
+  private[this] final class CollectPromise[A](fs: Iterable[Future[A]])
       extends Promise[Seq[A]]
       with Promise.InterruptHandler {
 
-    private[this] val results = new mutable.ArraySeq[A](fs.size)
-    private[this] val count = new AtomicInteger(results.size)
+    private[this] val results = Array.ofDim[Any](fs.size)
+    private[this] def setResultsAsValue() = {
+      val seq = ArraySeq.unsafeWrapArray(results).asInstanceOf[ArraySeq[A]]
+      setValue(seq)
+    }
+    private[this] val count = new AtomicInteger(fs.size)
 
     // Respond handler. It's safe to write into different array cells concurrently.
     // We guarantee the thread writing a last value will observe all previous writes
@@ -1079,7 +1083,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     def collectTo(index: Int): Try[A] => Unit = {
       case Return(a) =>
         results(index) = a
-        if (count.decrementAndGet() == 0) setValue(results)
+        if (count.decrementAndGet() == 0) setResultsAsValue()
       case t @ Throw(_) =>
         updateIfEmpty(t.cast[Seq[A]])
     }
@@ -1105,7 +1109,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @see [[join]] if you are not interested in the results of the individual
    *     `Futures`, only when they are complete.
    */
-  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] =
+  def collect[A](fs: Iterable[Future[A]]): Future[Seq[A]] =
     if (fs.isEmpty) emptySeq
     else {
       val result = new CollectPromise[A](fs)
@@ -1133,7 +1137,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     else {
       val (keys, values) = fs.toSeq.unzip
       Future.collect(values).map { seq =>
-        keys.zip(seq)(scala.collection.breakOut): Map[A, B]
+        keys.iterator.zip(seq.iterator).toMap: Map[A, B]
       }
     }
 
@@ -1158,13 +1162,24 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @param fs a sequence of Futures
    * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
    */
-  def collectToTry[A](fs: Seq[Future[A]]): Future[Seq[Try[A]]] =
-    Future.collect {
-      val seq = new mutable.ArrayBuffer[Future[Try[A]]](fs.size)
+  def collectToTry[A](fs: Iterable[Future[A]]): Future[Seq[Try[A]]] = {
+    //unroll cases 0 and 1
+    if (fs.isEmpty) Nil
+    else {
       val iterator = fs.iterator
-      while (iterator.hasNext) seq += iterator.next().liftToTry
-      seq
+      val h = iterator.next()
+      if (iterator.hasNext) {
+        val buf = Vector.newBuilder[Future[Try[A]]]
+        buf.sizeHint(fs.size)
+        buf += h.liftToTry
+        buf += iterator.next().liftToTry
+        while (iterator.hasNext) buf += iterator.next().liftToTry
+        Future.collect(buf.result)
+      } else {
+        Future.collect(List(h.liftToTry))
+      }
     }
+  }
 
   /**
    * Collect the results from the given futures into a new future of java.util.List[Try[A]].
@@ -1211,15 +1226,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
         a.respond { t =>
           if (!p.isDefined) {
             val filtered = {
-              val seq = new mutable.ArrayBuffer[Future[A]](size - 1)
+              val buf = Vector.newBuilder[Future[A]]
+              buf.sizeHint(size - 1)
               var j = 0
               while (j < size) {
                 val (_, fi) = as(j)
                 if (fi ne f)
-                  seq += fi
+                  buf += fi
                 j += 1
               }
-              seq
+              buf.result()
             }
             p.updateIfEmpty(Return(t -> filtered))
 
@@ -1348,17 +1364,18 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
 
   def parallel[A](n: Int)(f: => Future[A]): Seq[Future[A]] = {
     var i = 0
-    val result = new mutable.ArrayBuffer[Future[A]](n)
+    val buf = Vector.newBuilder[Future[A]]
+    buf.sizeHint(n)
     while (i < n) {
-      result += f
+      buf += f
       i += 1
     }
-    result
+    buf.result
   }
 
   /**
    * Creates a "batched" Future that, given a function
-   * `Seq[In] => Future[Seq[Out]]`, returns a `In => Future[Out]` interface
+   * `scala.collection.Seq[In] => Future[Seq[Out]]`, returns a `In => Future[Out]` interface
    * that batches the underlying asynchronous operations. Thus, one can
    * incrementally submit tasks to be performed when the criteria for batch
    * flushing is met.
@@ -1394,12 +1411,16 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     sizeThreshold: Int,
     timeThreshold: Duration = Duration.Top,
     sizePercentile: => Float = 1.0f
-  )(f: Seq[In] => Future[Seq[Out]]
+  )(f: scala.collection.Seq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {
     new Batcher[In, Out](
-      new BatchExecutor[In, Out](sizeThreshold, timeThreshold, sizePercentile, f)
+      new BatchExecutor[In, Out](
+        sizeThreshold,
+        timeThreshold,
+        sizePercentile,
+        f.compose(it => it.toSeq))
     )
   }
 }

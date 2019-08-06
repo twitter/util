@@ -10,8 +10,8 @@ import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.scalatest.WordSpec
 import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatestplus.mockito.MockitoSugar
 import scala.collection.JavaConverters._
 
 class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
@@ -27,7 +27,7 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
         val connector = NativeConnector(connectString, 5.seconds, 10.minutes)
         val zk = ZkClient(connector)
           .withRetryPolicy(RetryPolicy.Basic(3))
-          .withAcl(OPEN_ACL_UNSAFE.asScala)
+          .withAcl(OPEN_ACL_UNSAFE.asScala.toSeq)
 
         Await.result(Future { f(zk) } ensure { zk.release })
       }

@@ -2,6 +2,8 @@ package com.twitter.concurrent
 
 import com.twitter.util.{Await, Duration, Future, Promise, Time, Timer}
 import com.twitter.util.Return
+import scala.annotation.varargs
+import scala.collection.compat.immutable.ArraySeq
 import scala.util.Random
 
 /**
@@ -206,6 +208,7 @@ object Offer {
    * The offer that chooses exactly one of the given offers. If there are any
    * Offers that are synchronizable immediately, one is chosen at random.
    */
+  @varargs
   def choose[T](evs: Offer[T]*): Offer[T] = choose(rng, evs)
 
   /**
@@ -279,7 +282,7 @@ object Offer {
           if (foundPos >= 0) {
             updateLosers(foundPos, prepd)
           } else {
-            Future.selectIndex(prepd) flatMap { winPos =>
+            Future.selectIndex(ArraySeq.unsafeWrapArray(prepd)) flatMap { winPos =>
               updateLosers(winPos, prepd)
             }
           }

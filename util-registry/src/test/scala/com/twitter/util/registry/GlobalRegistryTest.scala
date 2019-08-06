@@ -1,6 +1,5 @@
 package com.twitter.util.registry
 
-
 class GlobalRegistryTest extends RegistryTest {
   def mkRegistry(): Registry = GlobalRegistry.withRegistry(new SimpleRegistry) {
     GlobalRegistry.get

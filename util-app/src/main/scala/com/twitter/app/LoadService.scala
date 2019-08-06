@@ -41,7 +41,7 @@ object LoadService {
      * @param implementations cannot be empty.
      */
     def this(iface: Class[T], implementations: java.util.List[T]) =
-      this(iface, implementations.asScala)
+      this(iface, implementations.asScala.toSeq)
 
     if (implementations.isEmpty) {
       throw new IllegalArgumentException("implementations cannot be empty")
@@ -157,7 +157,7 @@ object LoadService {
     val cp = new LoadServiceClassPath()
     val whenAbsent = new JFunction[ClassLoader, Seq[ClassPath.LoadServiceInfo]] {
       def apply(loader: ClassLoader): Seq[ClassPath.LoadServiceInfo] = {
-        cp.browse(loader)
+        cp.browse(loader).toSeq
       }
     }
 

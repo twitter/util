@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import scala.collection.mutable
+import scala.collection.Iterable
 
 trait Pool[A] {
   def reserve(): Future[A]
@@ -8,7 +9,7 @@ trait Pool[A] {
 }
 
 class SimplePool[A](items: mutable.Queue[Future[A]]) extends Pool[A] {
-  def this(initialItems: Seq[A]) = this {
+  def this(initialItems: Iterable[A]) = this {
     val queue = new mutable.Queue[Future[A]]
     queue ++= initialItems.map(Future(_))
     queue
@@ -52,40 +53,4 @@ abstract class FactoryPool[A](numItems: Int) extends Pool[A] {
 
   protected def makeItem(): Future[A]
   protected def isHealthy(a: A): Boolean
-}
-
-private class HealthyQueue[A](makeItem: () => Future[A], numItems: Int, isHealthy: A => Boolean)
-    extends mutable.Queue[Future[A]] {
-
-  0.until(numItems) foreach { _ =>
-    this += makeItem()
-  }
-
-  override def +=(elem: Future[A]): HealthyQueue.this.type = synchronized {
-    super.+=(elem)
-  }
-
-  override def +=:(elem: Future[A]): HealthyQueue.this.type = synchronized {
-    super.+=:(elem)
-  }
-
-  override def enqueue(elems: Future[A]*): Unit = synchronized {
-    super.enqueue(elems: _*)
-  }
-
-  override def dequeue(): Future[A] = synchronized {
-    if (isEmpty) throw new NoSuchElementException("queue empty")
-
-    super.dequeue() flatMap { item =>
-      if (isHealthy(item)) {
-        Future(item)
-      } else {
-        val item = makeItem()
-        synchronized {
-          enqueue(item)
-          dequeue()
-        }
-      }
-    }
-  }
 }

@@ -5,6 +5,7 @@ import com.twitter.util.Future;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 import scala.collection.immutable.List;
+import scala.collection.immutable.Nil$;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +27,7 @@ public final class Spools {
    */
   @SuppressWarnings("unchecked")
   public static <T> Spool<T> newSpool(Collection<T> elems) {
-    List<T> buffer = (List<T>)List.empty();
+    List<T> buffer = (List<T>)Nil$.MODULE$;
     for (T item : elems) {
       buffer = buffer.$colon$colon(item);
     }

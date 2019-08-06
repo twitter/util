@@ -2,7 +2,6 @@ package com.twitter.concurrent
 
 import com.twitter.util.{Future, Return, Throw, Promise}
 import scala.annotation.varargs
-import scala.collection.mutable
 
 /**
  * A representation of a lazy (and possibly infinite) sequence of asynchronous
@@ -463,7 +462,7 @@ sealed abstract class AsyncStream[+A] {
    * Note: forces the stream. For infinite streams, the future never resolves.
    */
   def observe(): Future[(Seq[A], Option[Throwable])] = {
-    val buf: mutable.ListBuffer[A] = mutable.ListBuffer.empty
+    val buf = Vector.newBuilder[A]
 
     def go(as: AsyncStream[A]): Future[Unit] =
       as match {
@@ -483,8 +482,8 @@ sealed abstract class AsyncStream[+A] {
       }
 
     go(this).transform {
-      case Throw(exc) => Future.value(buf.toList -> Some(exc))
-      case Return(_) => Future.value(buf.toList -> None)
+      case Throw(exc) => Future.value(buf.result -> Some(exc))
+      case Return(_) => Future.value(buf.result -> None)
     }
   }
 
@@ -497,21 +496,22 @@ sealed abstract class AsyncStream[+A] {
    */
   private[concurrent] def buffer(n: Int): Future[(Seq[A], () => AsyncStream[A])] = {
     // pre-allocate the buffer, unless it's very large
-    val buffer = new mutable.ArrayBuffer[A](n.min(1024))
+    val buffer = Vector.newBuilder[A]
+    buffer.sizeHint(n.max(0).min(1024))
 
     def fillBuffer(
       sizeRemaining: Int
     )(s: => AsyncStream[A]
     ): Future[(Seq[A], () => AsyncStream[A])] =
-      if (sizeRemaining < 1) Future.value((buffer, () => s))
+      if (sizeRemaining < 1) Future.value((buffer.result, () => s))
       else
         s match {
-          case Empty => Future.value((buffer, () => s))
+          case Empty => Future.value((buffer.result, () => s))
 
           case FromFuture(fa) =>
             fa.flatMap { a =>
               buffer += a
-              Future.value((buffer, () => empty))
+              Future.value((buffer.result, () => empty))
             }
 
           case Cons(fa, more) =>
@@ -624,11 +624,8 @@ object AsyncStream {
    * {{{
    * AsyncStream(1,2,3)
    * }}}
-   *
-   * Note: we can't annotate this with varargs because of
-   * https://issues.scala-lang.org/browse/SI-8743. This seems to be fixed in a
-   * more recent scala version so we will revisit this soon.
    */
+  @varargs
   def apply[A](as: A*): AsyncStream[A] = fromSeq(as)
 
   /**

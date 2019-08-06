@@ -1,7 +1,7 @@
 package com.twitter.concurrent
 
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import com.twitter.util.{Promise, Return}
 
 class FutureOfferTest extends WordSpec with MockitoSugar {

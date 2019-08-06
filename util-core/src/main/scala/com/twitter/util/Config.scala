@@ -140,10 +140,10 @@ trait Config[T] extends (() => T) {
         val syntheticTermNames: Set[String] = {
           val configSymbol = mirror.reflect(config).symbol
           val configMembers = configSymbol.toType.members
-          configMembers.collect {
+          configMembers.iterator.collect {
             case symbol if symbol.isTerm && symbol.isSynthetic =>
               symbol.name.decodedName.toString
-          }(scala.collection.breakOut)
+          }.toSet
         }
         for (method <- nullaryMethods) {
           val name = method.getName

@@ -9,10 +9,10 @@ import java.io.{File, InputStream}
 import java.net.URL
 import java.util
 import java.util.concurrent.{Callable, CountDownLatch, ExecutorService, Executors}
-import java.util.{Random, concurrent}
+import java.util.concurrent.{Future => JFuture}
+import java.util.Random
 import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
-import scala.collection.mutable
+import org.scalatestplus.mockito.MockitoSugar
 
 // These traits correspond to files in:
 // util-app/src/test/resources/META-INF/services
@@ -99,7 +99,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
 
   test("LoadService shouldn't fail on un-readable dir") {
     val loader = mock[ClassLoader]
-    val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+    val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
     val rand = new Random()
 
     val f = File.createTempFile("tmp", "__utilapp_loadservice" + rand.nextInt(10000))
@@ -108,14 +108,14 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       f.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.isEmpty)
+      assert(buf.result.isEmpty)
       f.delete()
     }
   }
 
   test("LoadService shouldn't fail on un-readable sub-dir") {
     val loader = mock[ClassLoader]
-    val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+    val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
     val rand = new Random()
 
     val f = File.createTempFile("tmp", "__utilapp_loadservice" + rand.nextInt(10000))
@@ -127,7 +127,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       subDir.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.isEmpty)
+      assert(buf.result.isEmpty)
 
       subDir.delete()
       f.delete()
@@ -140,7 +140,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     // Run LoadService in a different thread from the custom classloader
     val clazz: Class[_] = loader.loadClass("com.twitter.app.LoadServiceCallable")
     val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    val future: concurrent.Future[Seq[Any]] =
+    val future: JFuture[Seq[Any]] =
       executor.submit(clazz.newInstance().asInstanceOf[Callable[Seq[Any]]])
 
     // Get the result
@@ -165,7 +165,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       val jos = new JarOutputStream(new FileOutputStream(jarFile), manifest)
       jos.close()
       val loader = mock[ClassLoader]
-      val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+      val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
       new LoadServiceClassPath().browseUri(jarFile.toURI, loader, buf)
     } finally {
       jarFile.delete
@@ -187,7 +187,7 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
       attributes.put(CLASS_PATH, jar1.getName)
       new JarOutputStream(new FileOutputStream(jar2), manifest).close()
       val loader = mock[ClassLoader]
-      val buf = mutable.Buffer.empty[ClassPath.LoadServiceInfo]
+      val buf = Vector.newBuilder[ClassPath.LoadServiceInfo]
       new LoadServiceClassPath().browseUri(jar1.toURI, loader, buf)
     } finally {
       jar1.delete
@@ -262,7 +262,6 @@ class LoadServiceTest extends FunSuite with MockitoSugar {
     assert(lsds0.size == 1)
     assert(lsds0.head.getClass == classOf[LoadServiceDeadlockImpl])
   }
-
 }
 
 class LoadServiceCallable extends Callable[Seq[Any]] {

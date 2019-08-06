@@ -1,9 +1,9 @@
 package com.twitter.conversions
 
 import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class U64OpsTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class U64OpsTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   import com.twitter.conversions.U64Ops._
 
   test("toU64HextString") {

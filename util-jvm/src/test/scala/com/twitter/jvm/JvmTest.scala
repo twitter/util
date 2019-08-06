@@ -60,7 +60,7 @@ class JvmTest extends WordSpec with TestLogging {
         assert(jvm.executor.schedules == List())
         jvm foreachGc { b += _ }
         assert(jvm.executor.schedules.size == 1)
-        val Seq((r, _, _, _)) = jvm.executor.schedules
+        val r = jvm.executor.schedules.head._1
         r.run()
         assert(b == List())
         val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
@@ -97,7 +97,7 @@ class JvmTest extends WordSpec with TestLogging {
           jvm foreachGc { _ => /*ignore*/
           }
           assert(jvm.executor.schedules.size == 1)
-          val Seq((r, _, _, _)) = jvm.executor.schedules
+          val r = jvm.executor.schedules.head._1
           val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
           r.run()
           jvm.pushGc(gc)
@@ -130,7 +130,7 @@ class JvmTest extends WordSpec with TestLogging {
 
         val query = jvm.monitorGcs(10.seconds)
         assert(jvm.executor.schedules.size == 1)
-        val Seq((r, _, _, _)) = jvm.executor.schedules
+        val r = jvm.executor.schedules.head._1
         val gc0 = Gc(0, "pcopy", Time.now, 1.millisecond)
         val gc1 = Gc(1, "CMS", Time.now, 1.millisecond)
         jvm.pushGc(gc1)

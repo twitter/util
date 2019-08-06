@@ -20,12 +20,13 @@ object EstimatorApp extends App {
     case Array("windowed", n, windows) =>
       new WindowedMeans(
         n.toInt,
-        windows.split(",") map { w =>
-          w.split(":") match {
-            case Array(w, i) => (w.toInt, i.toInt)
-            case _ => throw new IllegalArgumentException("bad weight, count pair " + w)
-          }
-        }
+        windows
+          .split(",").iterator.map { w =>
+            w.split(":") match {
+              case Array(w, i) => (w.toInt, i.toInt)
+              case _ => throw new IllegalArgumentException("bad weight, count pair " + w)
+            }
+          }.toSeq
       )
     case Array("load", interval) =>
       new LoadAverage(interval.toDouble)

@@ -1,7 +1,5 @@
 package com.twitter.util.logging
 
-import com.twitter.util.logging.Item._
-
 object Item extends Logging {
 
   def baz: String = {
@@ -11,6 +9,7 @@ object Item extends Logging {
 }
 
 class Item(val name: String, val description: String, size: Int) extends Logging {
+  import Item._
   info(s"New item: name = $name, description = $description, size  = $size")
 
   def dimension: Int = {

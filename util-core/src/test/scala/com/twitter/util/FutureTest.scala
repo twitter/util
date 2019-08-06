@@ -9,8 +9,8 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.WordSpec
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.JavaConverters._
 import scala.runtime.NonLocalReturnControl
 import scala.util.Random
@@ -38,7 +38,7 @@ private object FutureTest {
   }
 }
 
-class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenPropertyChecks {
+class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropertyChecks {
   import FutureTest._
 
   implicit class FutureMatcher[A](future: Future[A]) {
@@ -263,92 +263,112 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
         val result = Seq(4, 5, 6)
 
         "execute after threshold is reached" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3)(f)
 
-          when(f.apply(Seq(1, 2, 3))).thenReturn(Future.value(result))
+          when(m.apply(Iterable(1, 2, 3))).thenReturn(Future.value(result))
           batcher(1)
-          verify(f, never()).apply(any[Seq[Int]])
+          verify(m, never()).apply(any[Seq[Int]])
           batcher(2)
-          verify(f, never()).apply(any[Seq[Int]])
+          verify(m, never()).apply(any[Seq[Int]])
           batcher(3)
-          verify(f).apply(Seq(1, 2, 3))
+          verify(m).apply(Iterable(1, 2, 3))
         }
 
         "execute after bufSizeFraction threshold is reached" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
-          val batcher = Future.batched(3, sizePercentile = 0.67f)(f)
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
 
-          when(f.apply(Seq(1, 2, 3))).thenReturn(Future.value(result))
+          val batcher = Future.batched(3, sizePercentile = 0.67f)(f)
+          when(m.apply(Iterable(1, 2, 3))).thenReturn(Future.value(result))
           batcher(1)
-          verify(f, never()).apply(any[Seq[Int]])
+          verify(m, never()).apply(any[Seq[Int]])
           batcher(2)
-          verify(f).apply(Seq(1, 2))
+          verify(m).apply(Iterable(1, 2))
         }
 
         "treat bufSizeFraction return value < 0.0f as 1" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3, sizePercentile = 0.4f)(f)
 
-          when(f.apply(Seq(1, 2, 3))).thenReturn(Future.value(result))
+          when(m.apply(Iterable(1, 2, 3))).thenReturn(Future.value(result))
           batcher(1)
-          verify(f).apply(Seq(1))
+          verify(m).apply(Iterable(1))
         }
 
         "treat bufSizeFraction return value > 1.0f should return maxSizeThreshold" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3, sizePercentile = 1.3f)(f)
 
-          when(f.apply(Seq(1, 2, 3))).thenReturn(Future.value(result))
+          when(m.apply(Iterable(1, 2, 3))).thenReturn(Future.value(result))
           batcher(1)
-          verify(f, never()).apply(any[Seq[Int]])
+          verify(m, never()).apply(any[Seq[Int]])
           batcher(2)
-          verify(f, never()).apply(any[Seq[Int]])
+          verify(m, never()).apply(any[Seq[Int]])
           batcher(3)
-          verify(f).apply(Seq(1, 2, 3))
+          verify(m).apply(Iterable(1, 2, 3))
         }
 
         "execute after time threshold" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3, 3.seconds)(f)
 
           Time.withCurrentTimeFrozen { control =>
-            when(f(Seq(1))).thenReturn(Future.value(Seq(4)))
+            when(m(Iterable(1))).thenReturn(Future.value(Seq(4)))
             batcher(1)
-            verify(f, never()).apply(any[Seq[Int]])
+            verify(m, never()).apply(any[Seq[Int]])
 
             control.advance(1.second)
             timer.tick()
-            verify(f, never()).apply(any[Seq[Int]])
+            verify(m, never()).apply(any[Seq[Int]])
 
             control.advance(1.second)
             timer.tick()
-            verify(f, never()).apply(any[Seq[Int]])
+            verify(m, never()).apply(any[Seq[Int]])
 
             control.advance(1.second)
             timer.tick()
-            verify(f).apply(Seq(1))
+            verify(m).apply(Iterable(1))
           }
         }
 
         "only execute once if both are reached" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3)(f)
 
           Time.withCurrentTimeFrozen { control =>
-            when(f(Seq(1, 2, 3))).thenReturn(Future.value(result))
+            when(m(Iterable(1, 2, 3))).thenReturn(Future.value(result))
             batcher(1)
             batcher(2)
             batcher(3)
             control.advance(10.seconds)
             timer.tick()
 
-            verify(f).apply(Seq(1, 2, 3))
+            verify(m).apply(Iterable(1, 2, 3))
           }
         }
 
         "execute when flushBatch is called" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(4)(f)
 
           batcher(1)
@@ -356,11 +376,14 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           batcher(3)
           batcher.flushBatch()
 
-          verify(f).apply(Seq(1, 2, 3))
+          verify(m).apply(Iterable(1, 2, 3))
         }
 
         "only execute for remaining items when flushBatch is called after size threshold is reached" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(4)(f)
 
           batcher(1)
@@ -368,14 +391,17 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
           batcher(3)
           batcher(4)
           batcher(5)
-          verify(f, times(1)).apply(Seq(1, 2, 3, 4))
+          verify(m, times(1)).apply(Iterable(1, 2, 3, 4))
 
           batcher.flushBatch()
-          verify(f, times(1)).apply(Seq(5))
+          verify(m, times(1)).apply(Iterable(5))
         }
 
         "only execute once when time threshold is reached after flushBatch is called" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(4, 3.seconds)(f)
 
           Time.withCurrentTimeFrozen { control =>
@@ -386,12 +412,15 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             control.advance(10.seconds)
             timer.tick()
 
-            verify(f, times(1)).apply(Seq(1, 2, 3))
+            verify(m, times(1)).apply(Iterable(1, 2, 3))
           }
         }
 
         "only execute once when time threshold is reached before flushBatch is called" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(4, 3.seconds)(f)
 
           Time.withCurrentTimeFrozen { control =>
@@ -402,16 +431,19 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             timer.tick()
             batcher.flushBatch()
 
-            verify(f, times(1)).apply(Seq(1, 2, 3))
+            verify(m, times(1)).apply(Iterable(1, 2, 3))
           }
         }
 
         "propagates results" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3)(f)
 
           Time.withCurrentTimeFrozen { _ =>
-            when(f(Seq(1, 2, 3))).thenReturn(Future.value(result))
+            when(m(Iterable(1, 2, 3))).thenReturn(Future.value(result))
             val res1 = batcher(1)
             assert(!res1.isDefined)
             val res2 = batcher(2)
@@ -425,28 +457,31 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             assert(await(res2) == 5)
             assert(await(res3) == 6)
 
-            verify(f).apply(Seq(1, 2, 3))
+            verify(m).apply(Iterable(1, 2, 3))
           }
         }
 
         "not block other batches" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3)(f)
 
           Time.withCurrentTimeFrozen { _ =>
             val blocker = new Promise[Unit]
             val thread = new Thread {
               override def run(): Unit = {
-                when(f(result)).thenReturn(Future.value(Seq(7, 8, 9)))
+                when(m(result)).thenReturn(Future.value(Seq(7, 8, 9)))
                 batcher(4)
                 batcher(5)
                 batcher(6)
-                verify(f).apply(result)
+                verify(m).apply(result)
                 blocker.setValue(())
               }
             }
 
-            when(f(Seq(1, 2, 3))).thenAnswer {
+            when(m(Seq(1, 2, 3))).thenAnswer {
               new Answer[Future[Seq[Int]]] {
                 def answer(invocation: InvocationOnMock): Future[Seq[Int]] = {
                   thread.start()
@@ -459,15 +494,18 @@ class FutureTest extends WordSpec with MockitoSugar with GeneratorDrivenProperty
             batcher(1)
             batcher(2)
             batcher(3)
-            verify(f).apply(Seq(1, 2, 3))
+            verify(m).apply(Iterable(1, 2, 3))
           }
         }
 
         "swallow exceptions" in {
-          val f = mock[Seq[Int] => Future[Seq[Int]]]
+          val m = mock[Any => Future[Seq[Int]]]
+          val f = mock[scala.collection.Seq[Int] => Future[Seq[Int]]]
+          when(f.compose(any())).thenReturn(m)
+
           val batcher = Future.batched(3)(f)
 
-          when(f(Seq(1, 2, 3))).thenAnswer {
+          when(m(Iterable(1, 2, 3))).thenAnswer {
             new Answer[Unit] {
               def answer(invocation: InvocationOnMock): Unit = {
                 throw new Exception

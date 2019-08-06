@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import java.util.concurrent.{CountDownLatch, Executors}
 import org.scalatest.FunSuite
 import scala.collection.mutable
+import scala.collection.compat._
 
 class EventTest extends FunSuite {
 
@@ -327,8 +328,7 @@ class EventTest extends FunSuite {
 
   test("Event.dedupWith") {
     val e = Event[Int]()
-    val ref = new AtomicReference[IndexedSeq[Int]]
-
+    val ref = new AtomicReference[Seq[Int]]
     e.dedupWith { (a, b) =>
         a >= b
       }
@@ -347,9 +347,8 @@ class EventTest extends FunSuite {
 
   test("Event.dedup") {
     val e = Event[Int]()
-    val ref = new AtomicReference[IndexedSeq[Int]]
-
-    e.dedup.build.register(Witness(ref))
+    val ref = new AtomicReference[Seq[Int]]
+    e.dedup.buildAny[IndexedSeq[Int]].register(Witness(ref))
     e.notify(0)
     e.notify(0)
     e.notify(1)
@@ -359,4 +358,5 @@ class EventTest extends FunSuite {
 
     assert(ref.get() == List(0, 1, 0))
   }
+
 }

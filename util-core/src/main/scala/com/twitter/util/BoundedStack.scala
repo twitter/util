@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import scala.reflect.ClassTag
+import scala.collection.Seq
 
 /**
  * A "stack" with a bounded size.  If you push a new element on the top
@@ -11,8 +12,7 @@ class BoundedStack[A: ClassTag](val maxSize: Int) extends Seq[A] {
   private var top = 0
   private var count_ = 0
 
-  def length: Int = count_
-  override def size: Int = count_
+  override def length: Int = count_
 
   def clear(): Unit = {
     top = 0

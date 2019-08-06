@@ -162,8 +162,8 @@ object Reader {
     require(chunkSize > 0, s"chunkSize should be > 0 but was $chunkSize")
 
     @tailrec
-    private def loop(acc: Seq[Buf], in: Buf): Seq[Buf] = {
-      if (in.length < chunkSize) acc :+ in
+    private def loop(acc: ListBuffer[Buf], in: Buf): Seq[Buf] = {
+      if (in.length < chunkSize) (acc :+ in).toSeq
       else {
         loop(
           acc :+ in.slice(0, chunkSize),

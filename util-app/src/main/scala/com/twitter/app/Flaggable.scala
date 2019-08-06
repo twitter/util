@@ -172,14 +172,14 @@ object Flaggable {
   private[app] class SetFlaggable[T: Flaggable] extends Flaggable[Set[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
-    override def parse(v: String): Set[T] = v.split(",").map(flag.parse(_)).toSet
+    override def parse(v: String): Set[T] = v.split(",").iterator.map(flag.parse(_)).toSet
     override def show(set: Set[T]): String = set.map(flag.show).mkString(",")
   }
 
   private[app] class SeqFlaggable[T: Flaggable] extends Flaggable[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
-    def parse(v: String): Seq[T] = v.split(",").map(flag.parse)
+    def parse(v: String): Seq[T] = v.split(",").toSeq.map(flag.parse)
     override def show(seq: Seq[T]): String = seq.map(flag.show).mkString(",")
   }
 
@@ -225,7 +225,7 @@ object Flaggable {
   implicit def ofJavaList[T: Flaggable]: Flaggable[JList[T]] = new Flaggable[JList[T]] {
     val seqFlaggable = new SeqFlaggable[T]
     override def parse(v: String): JList[T] = seqFlaggable.parse(v).asJava
-    override def show(list: JList[T]): String = seqFlaggable.show(list.asScala)
+    override def show(list: JList[T]): String = seqFlaggable.show(list.asScala.toSeq)
   }
 
   implicit def ofJavaMap[K: Flaggable, V: Flaggable]: Flaggable[JMap[K, V]] = {

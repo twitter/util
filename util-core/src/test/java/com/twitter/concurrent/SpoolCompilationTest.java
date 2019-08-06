@@ -25,8 +25,7 @@ public class SpoolCompilationTest {
     public String head() {
       return "spool";
     }
-  }
-
+  }  
   @Test
   public void testOwnSpool() {
     Spool<String> a = new OwnSpool();
