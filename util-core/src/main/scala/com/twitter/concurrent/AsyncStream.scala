@@ -673,6 +673,34 @@ object AsyncStream {
     }
 
   /**
+   * Like `flatMap` but can be arbitrarily nested.
+   *
+   * The 19.7.0 release introduces an optimization that makes `Future#map`
+   * bypass the scheduler and run immediately, which means the `flatMap`
+   * implementation for `AsyncStream` is no longer stack-safe. The
+   * implementation here uses `flatMap` on futures to avoid the issue and
+   * maintain stack safety.
+   */
+  private def stackSafeFlatMap[A, B](as: AsyncStream[A])(f: A => AsyncStream[B]): AsyncStream[B] =
+    as match {
+      case Empty => empty
+      case FromFuture(fa) => Embed(fa.flatMap(a => Future.value(f(a))))
+      case Cons(fa, more) =>
+        Embed(fa.flatMap(a => Future.value(f(a)))) ++ stackSafeFlatMap(more())(f)
+      case Embed(fas) =>
+        Embed(fas.flatMap(as => Future.value(stackSafeFlatMap(as)(f))))
+    }
+
+  /**
+   * Provides stack-safe monadic recursion for `AsyncStream`.
+   */
+  def tailRecM[A, B](a: A)(f: A => AsyncStream[Either[A, B]]): AsyncStream[B] =
+    stackSafeFlatMap(f(a)) {
+      case Right(b) => AsyncStream.of(b)
+      case Left(a) => tailRecM(a)(f)
+    }
+
+  /**
    * Lift from [[Future]] into `AsyncStream` and then flatten.
    */
   private[concurrent] def embed[A](fas: Future[AsyncStream[A]]): AsyncStream[A] =

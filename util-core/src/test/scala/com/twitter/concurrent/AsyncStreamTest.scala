@@ -735,6 +735,15 @@ class AsyncStreamTest extends FunSuite with GeneratorDrivenPropertyChecks {
       }
     }
 
+    test(s"$impl: tailRecM is stack-safe") {
+      val n = 10000
+
+      val stream = AsyncStream.tailRecM(0) { i =>
+        AsyncStream.of(if (i < n) Left(i + 1) else Right(i))
+      }
+
+      assert(Await.result(stream.toSeq) == Seq(n))
+    }
   }
 
 }
