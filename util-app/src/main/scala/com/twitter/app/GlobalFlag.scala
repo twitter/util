@@ -120,10 +120,7 @@ object GlobalFlag {
     val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
     try {
       get(Class.forName(className))
-    } catch {
-        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
-          None
-      }
+    } catch { case _: ClassNotFoundException  => None }
   }
 
   private[app] def get(cls: Class[_]): Option[Flag[_]] = {
@@ -135,7 +132,7 @@ object GlobalFlag {
           m.getParameterCount == 0
         if (isValid) Some(m.invoke(null).asInstanceOf[Flag[_]]) else None
       } catch {
-        case _: ClassNotFoundException | _: NoSuchMethodException | _: IllegalArgumentException =>
+        case _: NoSuchMethodException | _: IllegalArgumentException =>
           None
       }
 
@@ -146,7 +143,7 @@ object GlobalFlag {
           .isAssignableFrom(f.getType)
         if (isValid) Some(f.get(null).asInstanceOf[Flag[_]]) else None
       } catch {
-        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+        case _: NoSuchFieldException | _: IllegalArgumentException =>
           None
       }
 
