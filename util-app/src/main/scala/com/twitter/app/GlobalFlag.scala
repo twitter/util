@@ -116,35 +116,39 @@ abstract class GlobalFlag[T] private[app] (
 object GlobalFlag {
 
   private[app] def get(flagName: String): Option[Flag[_]] = {
-    def tryMethod(className: String, methodName: String): Option[Flag[_]] =
+    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
+    try {
+      get(Class.forName(className))
+    } catch { case _: ClassNotFoundException => None }
+  }
+
+  private[app] def get(cls: Class[_]): Option[Flag[_]] = {
+    def tryMethod(cls: Class[_], methodName: String): Option[Flag[_]] =
       try {
-        val cls = Class.forName(className)
         val m = cls.getMethod(methodName)
         val isValid = Modifier.isStatic(m.getModifiers) &&
           m.getReturnType == classOf[Flag[_]] &&
           m.getParameterCount == 0
         if (isValid) Some(m.invoke(null).asInstanceOf[Flag[_]]) else None
       } catch {
-        case _: ClassNotFoundException | _: NoSuchMethodException | _: IllegalArgumentException =>
+        case _: NoSuchMethodException | _: IllegalArgumentException =>
           None
       }
 
-    def tryModuleField(className: String): Option[Flag[_]] =
+    def tryModuleField(cls: Class[_]): Option[Flag[_]] =
       try {
-        val cls = Class.forName(className)
         val f = cls.getField("MODULE$")
         val isValid = Modifier.isStatic(f.getModifiers) && classOf[Flag[_]]
           .isAssignableFrom(f.getType)
         if (isValid) Some(f.get(null).asInstanceOf[Flag[_]]) else None
       } catch {
-        case _: ClassNotFoundException | _: NoSuchFieldException | _: IllegalArgumentException =>
+        case _: NoSuchFieldException | _: IllegalArgumentException =>
           None
       }
 
-    val className = if (!flagName.endsWith("$")) flagName + "$" else flagName
-    tryModuleField(className).orElse {
+    tryModuleField(cls).orElse {
       // fallback for GlobalFlags declared in Java
-      tryMethod(className, "globalFlagInstance")
+      tryMethod(cls, "globalFlagInstance")
     }
   }
 
@@ -179,10 +183,9 @@ object GlobalFlag {
       try {
         val cls: Class[_] = Class.forName(info.className, false, loader)
         if (cls.isAnnotationPresent(markerClass)) {
-          get(info.className) match {
-            case Some(f) =>
-              flagBuilder += f
-            case None => println("failed for " + info.className)
+          get(cls) match {
+            case Some(f) => flagBuilder += f
+            case None => log.log(java.util.logging.Level.INFO, "failed for " + info.className)
           }
         }
       } catch {
