@@ -217,13 +217,18 @@ sealed abstract class AsyncStream[+A] {
   /**
    * Map a function `f` over the elements in this stream and concatenate the
    * results.
+   *
+   * @note We use `flatMap` on `Future` instead of `map` to maintain
+   * stack-safety for monadic recursion.
    */
   def flatMap[B](f: A => AsyncStream[B]): AsyncStream[B] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => Embed(fa.map(f))
-      case Cons(fa, more) => Embed(fa.map(f)) ++ more().flatMap(f)
-      case Embed(fas) => Embed(fas.map(_.flatMap(f)))
+      case FromFuture(fa) => Embed(fa.flatMap(a => Future.value(f(a))))
+      case Cons(fa, more) =>
+        Embed(fa.flatMap(a => Future.value(f(a)))) ++ more().flatMap(f)
+      case Embed(fas) =>
+        Embed(fas.flatMap(as => Future.value(as.flatMap(f))))
     }
 
   /**
@@ -670,34 +675,6 @@ object AsyncStream {
     o match {
       case None => empty
       case Some(a) => of(a)
-    }
-
-  /**
-   * Like `flatMap` but can be arbitrarily nested.
-   *
-   * The 19.7.0 release introduces an optimization that makes `Future#map`
-   * bypass the scheduler and run immediately, which means the `flatMap`
-   * implementation for `AsyncStream` is no longer stack-safe. The
-   * implementation here uses `flatMap` on futures to avoid the issue and
-   * maintain stack safety.
-   */
-  private def stackSafeFlatMap[A, B](as: AsyncStream[A])(f: A => AsyncStream[B]): AsyncStream[B] =
-    as match {
-      case Empty => empty
-      case FromFuture(fa) => Embed(fa.flatMap(a => Future.value(f(a))))
-      case Cons(fa, more) =>
-        Embed(fa.flatMap(a => Future.value(f(a)))) ++ stackSafeFlatMap(more())(f)
-      case Embed(fas) =>
-        Embed(fas.flatMap(as => Future.value(stackSafeFlatMap(as)(f))))
-    }
-
-  /**
-   * Provides stack-safe monadic recursion for `AsyncStream`.
-   */
-  def tailRecM[A, B](a: A)(f: A => AsyncStream[Either[A, B]]): AsyncStream[B] =
-    stackSafeFlatMap(f(a)) {
-      case Right(b) => AsyncStream.of(b)
-      case Left(a) => tailRecM(a)(f)
     }
 
   /**
