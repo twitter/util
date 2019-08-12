@@ -15,7 +15,8 @@ object JsonTunableMapper {
   private case class JsonTunable(
     @JsonProperty(required = true) id: String,
     @JsonProperty(value = "type", required = true) valueType: Class[Any],
-    @JsonProperty(required = true) value: Any)
+    @JsonProperty(required = true) value: Any,
+    @JsonProperty(required = false) comment: String)
 
   private case class JsonTunables(@JsonProperty(required = true) tunables: Seq[JsonTunable])
 
@@ -92,7 +93,8 @@ object JsonTunableMapper {
  *         {
  *           "id" : "$id2",
  *           "value" : $value,
- *           "type" : "$class"
+ *           "type" : "$class",
+ *           "comment": "optional comment"
  *         }
  *     ]
  * }

@@ -82,7 +82,8 @@ class JsonTunableMapperTest extends FunSuite {
      |{ "tunables": [
      |   { "id" : "timeoutId1",
      |     "value" : "5.seconds",
-     |     "type" : "com.twitter.util.Duration"
+     |     "type" : "com.twitter.util.Duration",
+     |     "comment": "a very important timeout"
      |   },
      |   { "id" : "timeoutId2",
      |     "value" : "Duration.Top",
@@ -94,7 +95,8 @@ class JsonTunableMapperTest extends FunSuite {
      |   },
      |   { "id" : "timeoutId4",
      |     "value" : "Duration.Undefined",
-     |     "type" : "com.twitter.util.Duration"
+     |     "type" : "com.twitter.util.Duration",
+     |     "comment": "You'll never believe it: *another* timeout."
      |   }
      | ]
      |}""".stripMargin
