@@ -59,6 +59,8 @@ Runtime Behavior Changes
 
 * util: Upgrade to Jackson 2.9.9. ``PHAB_ID=D345969``
 
+* util-app: It is now illegal to define GlobalFlags enclosed in package objects. ``PHAB_ID=D353045``
+
 19.7.0
 ------
 
