@@ -735,6 +735,21 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       }
     }
 
+    test(s"$impl: flatMap is stack-safe") {
+      val n = 10000
+
+      def tailRecM[A, B](a: A)(f: A => AsyncStream[Either[A, B]]): AsyncStream[B] =
+        f(a).flatMap {
+          case Right(b) => AsyncStream.of(b)
+          case Left(a) => tailRecM(a)(f)
+        }
+
+      val stream = tailRecM(0) { i =>
+        AsyncStream.of(if (i < n) Left(i + 1) else Right(i))
+      }
+
+      assert(Await.result(stream.toSeq) == Seq(n))
+    }
   }
 
 }

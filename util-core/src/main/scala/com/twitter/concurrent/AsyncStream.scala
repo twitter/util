@@ -216,13 +216,18 @@ sealed abstract class AsyncStream[+A] {
   /**
    * Map a function `f` over the elements in this stream and concatenate the
    * results.
+   *
+   * @note We use `flatMap` on `Future` instead of `map` to maintain
+   * stack-safety for monadic recursion.
    */
   def flatMap[B](f: A => AsyncStream[B]): AsyncStream[B] =
     this match {
       case Empty => empty
-      case FromFuture(fa) => Embed(fa.map(f))
-      case Cons(fa, more) => Embed(fa.map(f)) ++ more().flatMap(f)
-      case Embed(fas) => Embed(fas.map(_.flatMap(f)))
+      case FromFuture(fa) => Embed(fa.flatMap(a => Future.value(f(a))))
+      case Cons(fa, more) =>
+        Embed(fa.flatMap(a => Future.value(f(a)))) ++ more().flatMap(f)
+      case Embed(fas) =>
+        Embed(fas.flatMap(as => Future.value(as.flatMap(f))))
     }
 
   /**
