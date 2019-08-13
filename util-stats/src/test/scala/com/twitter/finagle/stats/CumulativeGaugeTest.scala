@@ -3,8 +3,9 @@ package com.twitter.finagle.stats
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicInteger
 import org.scalatest.FunSuite
+import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 
-class CumulativeGaugeTest extends FunSuite {
+class CumulativeGaugeTest extends FunSuite with Eventually with IntegrationPatience {
 
   private[this] val sameThreadExecutor = new Executor {
     def execute(command: Runnable): Unit = command.run()
@@ -53,21 +54,22 @@ class CumulativeGaugeTest extends FunSuite {
     assert(0 == gauge.numDeregisters.get)
   }
 
-  if (!sys.props.contains("SKIP_FLAKY"))
-    test(
-      "a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto, after enough gets"
-    ) {
-      val gauge = new TestGauge()
-      var added = gauge.addGauge { 1.0f }
-      assert(0 == gauge.numDeregisters.get)
+  test(
+    "a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto, after enough gets"
+  ) {
+    val gauge = new TestGauge()
+    var added = gauge.addGauge { 1.0f }
+    assert(0 == gauge.numDeregisters.get)
 
-      added = null
-      System.gc()
+    added = null
+    System.gc()
+
+    eventually {
       gauge.cleanRefs()
-
       assert(gauge.getValue == 0.0f)
       assert(gauge.numDeregisters.get > 0)
     }
+  }
 
   test("a CumulativeGauge should sum values across all registered gauges") {
     val gauge = new TestGauge()
