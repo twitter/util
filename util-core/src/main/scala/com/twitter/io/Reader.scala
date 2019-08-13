@@ -107,12 +107,20 @@ trait Reader[+A] { self =>
   /**
    * Construct a new Reader by applying `f` to every item read from this Reader
    * @param f the function constructs a new Reader[B] from the value of this Reader.read
+   *
+   * @note All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+   *       will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+   *       onClose will be resolved immediately with the same value.
    */
   final def flatMap[B](f: A => Reader[B]): Reader[B] = Reader.flatten(map(f))
 
   /**
    * Construct a new Reader by applying `f` to every item read from this Reader
    * @param f the function transforms data of type A to B
+   *
+   * @note All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+   *       will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+   *       onClose will be resolved immediately with the same value.
    */
   final def map[B](f: A => B): Reader[B] = new Reader[B] {
     def read(): Future[Option[B]] = self.read().map(oa => oa.map(f))
