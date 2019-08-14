@@ -130,6 +130,13 @@ trait Reader[+A] { self =>
 
   /**
    * Converts a `Reader[Reader[B]]` into a `Reader[B]`
+   *
+   * @define flattenBehavior
+   * @note All operations of the new Reader will be in sync with the outermost Reader. Discarding
+   *       one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+   *       Reader's onClose will be resolved immediately with the same value.
+   *       The subsequent readers are unmanaged, the caller is responsible for discarding those
+   *       when abandoned.
    */
   def flatten[B](implicit ev: A <:< Reader[B]): Reader[B] =
     Reader.flatten(this.asInstanceOf[Reader[Reader[B]]])
@@ -379,10 +386,10 @@ object Reader {
   }
 
   /**
-   * Convenient abstraction to read from a stream (Reader) of Readers as if
-   * it were a single Reader. The subsequent readers are unmanaged, the caller is
-   * responsible for discarding those when abandoned.
+   * Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.
    * @param readers A Reader holds a stream of Reader[A]
+   *
+   * $flattenBehavior
    */
   def flatten[A](readers: Reader[Reader[A]]): Reader[A] = new Reader[A] { self =>
     // access currentReader and curReaderClosep are synchronized on `self`
