@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReferenc
 import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 import java.util.{List => JList}
 import scala.collection.compat.immutable.ArraySeq
+import scala.collection.{Seq => AnySeq}
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NoStackTrace
 
@@ -263,7 +264,7 @@ object Future {
    * @see [[collectToTry]] if you want to be able to see the results of each
    *     `Future` regardless of if they succeed or fail.
    */
-  def join[A](fs: Iterable[Future[A]]): Future[Unit] = {
+  def join[A](fs: AnySeq[Future[A]]): Future[Unit] = {
     if (fs.isEmpty) Future.Unit
     else {
       val size = fs.size
@@ -1109,7 +1110,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @see [[join]] if you are not interested in the results of the individual
    *     `Futures`, only when they are complete.
    */
-  def collect[A](fs: Iterable[Future[A]]): Future[Seq[A]] =
+  def collect[A](fs: AnySeq[Future[A]]): Future[Seq[A]] =
     if (fs.isEmpty) emptySeq
     else {
       val result = new CollectPromise[A](fs)
@@ -1162,7 +1163,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @param fs a sequence of Futures
    * @return a `Future[Seq[Try[A]]]` containing the collected values from fs.
    */
-  def collectToTry[A](fs: Iterable[Future[A]]): Future[Seq[Try[A]]] = {
+  def collectToTry[A](fs: AnySeq[Future[A]]): Future[Seq[Try[A]]] = {
     //unroll cases 0 and 1
     if (fs.isEmpty) Nil
     else {
@@ -1411,7 +1412,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     sizeThreshold: Int,
     timeThreshold: Duration = Duration.Top,
     sizePercentile: => Float = 1.0f
-  )(f: scala.collection.Seq[In] => Future[Seq[Out]]
+  )(f: AnySeq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {

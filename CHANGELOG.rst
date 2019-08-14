@@ -35,6 +35,9 @@ Breaking API Changes
 * util-core: (not breaking) `c.t.util.Future.join` and `c.t.util.Future.collect` now take
   `Iterable[Future[A]]` other than Seq. ``PHAB_ID=D333021``
 
+* util-core:  Revert the change above, in `c.t.util.Future`, `collect`, `collectToTry` and `join`
+  take `scala.collection.Seq[Future[A]]`. ``PHAB_ID=D355403``
+
 * util-core: `com.twitter.util.Event#build` now builds a Seq of events. `Event#buildAny` builds
   against any collection of events. ``PHAB_ID=D333021``
 
