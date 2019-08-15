@@ -20,6 +20,38 @@ val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 
+def travisTestJavaOptions: Seq[String] = {
+  // We have some custom configuration for the Travis environment
+  // https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
+  val travisBuild = sys.env.getOrElse("TRAVIS", "false").toBoolean
+  if (travisBuild) {
+    Seq(
+      "-DSKIP_FLAKY=true",
+      "-DSKIP_FLAKY_TRAVIS=true",
+      "-Dsbt.log.noformat=true"
+    )
+  } else {
+    Seq(
+      "-DSKIP_FLAKY=true"
+    )
+  }
+}
+
+def gcJavaOptions: Seq[String] = {
+  Seq(
+    "-XX:+UseParNewGC",
+    "-XX:+UseConcMarkSweepGC",
+    "-XX:+CMSParallelRemarkEnabled",
+    "-XX:+CMSClassUnloadingEnabled",
+    "-XX:ReservedCodeCacheSize=128m",
+    "-XX:SurvivorRatio=128",
+    "-XX:MaxTenuringThreshold=0",
+    "-Xss8M",
+    "-Xms512M",
+    "-Xmx2G"
+  )
+}
+
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.8",
   crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0")
@@ -37,7 +69,7 @@ val baseSettings = Seq(
     "org.mockito" % "mockito-all" % "1.10.19" % "test",
     "org.scalatest" %% "scalatest" % "3.0.8" % "test"
   ),
-  fork in Test := true,
+  fork in Test := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
   // 2.12- with 2.13+.
   unmanagedSourceDirectories in Compile += {
@@ -67,6 +99,16 @@ val baseSettings = Seq(
   // warnings are resolved
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
   javacOptions in doc := Seq("-source", "1.8"),
+
+  javaOptions ++= Seq(
+    "-Djava.net.preferIPv4Stack=true",
+    "-XX:+AggressiveOpts",
+    "-server"
+  ),
+
+  javaOptions ++= gcJavaOptions,
+
+  javaOptions in Test ++= travisTestJavaOptions,
 
   // -a: print stack traces for failing asserts
   testOptions += Tests.Argument(TestFrameworks.JUnit, "-a"),
