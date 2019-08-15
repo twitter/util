@@ -774,7 +774,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>], <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>], <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>], <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>], <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -911,9 +911,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.twitter.util.Event#build" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="build[U&gt;:T,That](implicitcbf:collection.generic.CanBuild[U,That]):com.twitter.util.Event[That]"></a><a id="build[U&gt;:T,That](CanBuild[U,That]):Event[That]"></a>
+      <a id="build[U&gt;:T,That&lt;:Seq[U]](implicitfactory:collection.compat.Factory[U,That]):com.twitter.util.Event[That]"></a><a id="build[U&gt;:T,That&lt;:Seq[U]](scala.collection.compat.Factory[U,That]):Event[That]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/WitnessedEvent.html#build[U&gt;:T,That](implicitcbf:collection.generic.CanBuild[U,That]):com.twitter.util.Event[That]" title="Permalink">
+      <a href="../../../com/twitter/util/WitnessedEvent.html#build[U&gt;:T,That&lt;:Seq[U]](implicitfactory:collection.compat.Factory[U,That]):com.twitter.util.Event[That]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -922,11 +922,31 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">build</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span></span>, <span name="That">That</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="cbf">cbf: <span class="extype" name="scala.collection.generic.CanBuild">CanBuild</span>[<span class="extype" name="com.twitter.util.Event.build.U">U</span>, <span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>
+        <span class="name">build</span><span class="tparams">[<span name="U">U &gt;: <span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span></span>, <span name="That">That &lt;: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.Event.build.U">U</span>]</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="factory">factory: <a href="../../../scala/collection/compat/index.html#Factory[-A,+C]=scala.collection.generic.CanBuildFrom[Nothing,A,C]" class="extmbr" name="scala.collection.compat.Factory">scala.collection.compat.Factory</a>[<span class="extype" name="com.twitter.util.Event.build.U">U</span>, <span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.build.That">That</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Progressively build a collection of events using the passed-in
-builder.</p><div class="fullcomment"><div class="comment cmt"><p>Progressively build a collection of events using the passed-in
+      <p class="shortcomment cmt">Progressively build a Seq of events using the passed-in
+builder.</p><div class="fullcomment"><div class="comment cmt"><p>Progressively build a Seq of events using the passed-in
+builder. A value containing the current version of the collection
+is notified for each incoming event.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a></dd></dl></div>
+    </li><li name="com.twitter.util.Event#buildAny" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="buildAny[That](implicitfactory:collection.compat.Factory[T,That]):com.twitter.util.Event[That]"></a><a id="buildAny[That](scala.collection.compat.Factory[T,That]):Event[That]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/WitnessedEvent.html#buildAny[That](implicitfactory:collection.compat.Factory[T,That]):com.twitter.util.Event[That]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">buildAny</span><span class="tparams">[<span name="That">That</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="factory">factory: <a href="../../../scala/collection/compat/index.html#Factory[-A,+C]=scala.collection.generic.CanBuildFrom[Nothing,A,C]" class="extmbr" name="scala.collection.compat.Factory">scala.collection.compat.Factory</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>, <span class="extype" name="com.twitter.util.Event.buildAny.That">That</span>]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.buildAny.That">That</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Progressively build any collection of events using the passed-in
+builder.</p><div class="fullcomment"><div class="comment cmt"><p>Progressively build any collection of events using the passed-in
 builder. A value containing the current version of the collection
 is notified for each incoming event.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a></dd></dl></div>
@@ -942,7 +962,7 @@ is notified for each incoming event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -1062,7 +1082,7 @@ incremental computation on large data structures.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1283,7 +1303,7 @@ to each element in this Event.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1414,7 +1434,7 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">select</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="other">other: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.select.U">U</span>]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>, <span class="extype" name="com.twitter.util.Event.select.U">U</span>]]</span>
+        <span class="name">select</span><span class="tparams">[<span name="U">U</span>]</span><span class="params">(<span name="other">other: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.Event.select.U">U</span>]</span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<a href="../../../scala/index.html#Either[+A,+B]=scala.util.Either[A,B]" class="extmbr" name="scala.Either">Either</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>, <span class="extype" name="com.twitter.util.Event.select.U">U</span>]]</span>
       </span>
       
       <p class="shortcomment cmt">Merge two Events of different types.</p><div class="fullcomment"><div class="comment cmt"><p>Merge two Events of different types.
@@ -1431,7 +1451,7 @@ deregistered by the returned <a href="Closable.html" class="extype" name="com.tw
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">sliding</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>]]</span>
+        <span class="name">sliding</span><span class="params">(<span name="n">n: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>]]</span>
       </span>
       
       <p class="shortcomment cmt">Build a new Event representing a sliding window of at-most <code>n</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Build a new Event representing a sliding window of at-most <code>n</code>.
@@ -1612,7 +1632,7 @@ fashion.</p></span></dd></dl></div>
             </div><div class="parent" name="com.twitter.util.Event">
               <h3>Inherited from <a href="Event.html" class="extype" name="com.twitter.util.Event">Event</a>[<span class="extype" name="com.twitter.util.WitnessedEvent.T">T</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>

@@ -249,7 +249,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="org.apache.zookeeper.AsyncCallback.Children2Callback">Children2Callback</span>, <span class="extype" name="org.apache.zookeeper.AsyncCallback">AsyncCallback</span>, <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a>[<a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]], <a href="../util/Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="org.apache.zookeeper.AsyncCallback.Children2Callback">Children2Callback</span>, <span class="extype" name="org.apache.zookeeper.AsyncCallback">AsyncCallback</span>, <a href="AsyncCallbackPromise.html" class="extype" name="com.twitter.zk.AsyncCallbackPromise">AsyncCallbackPromise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a>[<a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]], <a href="../util/Promise$$Responder.html" class="extype" name="com.twitter.util.Promise.Responder">Responder</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>], <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -475,7 +475,7 @@ discards the result of <code>this</code>. Note that this applies only
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">by</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="when">when: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="exc">exc: ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">by</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="when">when: <a href="../util/Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>, <span name="exc">exc: ⇒ <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns a new Future that fails if it is not satisfied before the given time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if it is not satisfied before the given time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.</p><p><i>Note</i>: Interrupting a returned future would not prevent it from being satisfied
@@ -527,7 +527,7 @@ discards the result of <code>this</code>. Note that this applies only
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -674,7 +674,7 @@ callbacks(a) <span class="cmt">// prints "1" and then "always printed"</span></p
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -856,7 +856,7 @@ the resulting state may not be as expected.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">handle</span><span class="tparams">[<span name="B">B &gt;: <a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>
+        <span class="name">handle</span><span class="tparams">[<span name="B">B &gt;: <a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.handle.B">B</span>]</span>
       </span>
       
       <p class="shortcomment cmt">If this, the original future, results in an exceptional computation,
@@ -988,7 +988,7 @@ for signalling.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInterrupted</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Throwable">Throwable</span>]</span>
+        <span class="name">isInterrupted</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns this promise's interrupt if it is interrupted.</p><div class="fullcomment"><div class="comment cmt"><p>Returns this promise's interrupt if it is interrupted.
@@ -1173,7 +1173,7 @@ Await.result(newf) <span class="cmt">// throws java.lang.Exception: boom!</span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mask</span><span class="params">(<span name="pred">pred: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">mask</span><span class="params">(<span name="pred">pred: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns an identical <code>Future</code> except that it ignores interrupts which match a predicate.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an identical <code>Future</code> except that it ignores interrupts which match a predicate.</p><p>This means that a <a href="../util/Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise's interrupt handler</a>
@@ -1226,7 +1226,7 @@ f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Excepti
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1280,7 +1280,7 @@ f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Excepti
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onFailure</span><span class="params">(<span name="fn">fn: (<span class="extype" name="scala.Throwable">Throwable</span>) ⇒ <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">onFailure</span><span class="params">(<span name="fn">fn: (<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>) ⇒ <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Invoke the function on the error, if the computation was
@@ -1397,7 +1397,7 @@ satisfied, returns Some(result), otherwise None.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">processResult</span><span class="params">(<span name="rc">rc: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ctx">ctx: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>, <span name="children">children: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="stat">stat: <span class="extype" name="org.apache.zookeeper.data.Stat">Stat</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">processResult</span><span class="params">(<span name="rc">rc: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ctx">ctx: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>, <span name="children">children: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="stat">stat: <span class="extype" name="org.apache.zookeeper.data.Stat">Stat</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.zk.ChildrenCallbackPromise">ChildrenCallbackPromise</a> → Children2Callback</dd></dl></div>
@@ -1435,7 +1435,7 @@ to raise on f. In some cases, using
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">raise</span><span class="params">(<span name="intr">intr: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">raise</span><span class="params">(<span name="intr">intr: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Raise the given throwable as an interrupt.</p><div class="fullcomment"><div class="comment cmt"><p>Raise the given throwable as an interrupt. Interrupts are
@@ -1483,7 +1483,7 @@ p1.setValue(<span class="num">1</span>) <span class="cmt">// will print "p2 inte
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">raiseWithin</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">raiseWithin</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns a new Future that fails if this Future does not return in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if this Future does not return in time.</p><p><i>Note</i>: On timeout, the underlying future is interrupted.
@@ -1500,7 +1500,7 @@ p1.setValue(<span class="num">1</span>) <span class="cmt">// will print "p2 inte
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">raiseWithin</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">raiseWithin</span><span class="params">(<span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns a new Future that fails if this Future does not return in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if this Future does not return in time.</p><p>Same as the other <code>raiseWithin</code>, but with an implicit timer. Sometimes this is more convenient.</p><p><i>Note</i>: On timeout, the underlying future is interrupted.
@@ -1564,7 +1564,7 @@ method.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">rescue</span><span class="tparams">[<span name="B">B &gt;: <a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]</span>
+        <span class="name">rescue</span><span class="tparams">[<span name="B">B &gt;: <a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a></span>]</span><span class="params">(<span name="rescueException">rescueException: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.rescue.B">B</span>]</span>
       </span>
       
       <p class="shortcomment cmt">If this, the original future, results in an exceptional computation,
@@ -1676,7 +1676,7 @@ Future[Unit] are used for signalling.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setException</span><span class="params">(<span name="throwable">throwable: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">setException</span><span class="params">(<span name="throwable">throwable: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">Populate the Promise with the given exception.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given exception.
@@ -1693,7 +1693,7 @@ Future[Unit] are used for signalling.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setInterruptHandler</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="scala.Throwable">Throwable</span>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+        <span class="name">setInterruptHandler</span><span class="params">(<span name="f">f: <a href="http://www.scala-lang.org/api/2.12.8/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
       <p class="shortcomment cmt">(Re)sets the interrupt handler.</p><div class="fullcomment"><div class="comment cmt"><p>(Re)sets the interrupt handler. There is only
@@ -2034,7 +2034,7 @@ conditions are acceptable.</p></span></dd></dl></div>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">within</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
+        <span class="name">within</span><span class="params">(<span name="timer">timer: <a href="../util/Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>, <span name="timeout">timeout: <a href="../util/Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>, <span name="exc">exc: ⇒ <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Returns a new Future that fails if it is not satisfied in time.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a new Future that fails if it is not satisfied in time.</p><p><i>Note</i>: On timeout, the underlying future is not interrupted.
@@ -2100,7 +2100,7 @@ conditions are acceptable.</p></span></dd></dl></div>
             </div><div class="parent" name="com.twitter.util.Awaitable">
               <h3>Inherited from <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="ZNode$$Children.html" class="extype" name="com.twitter.zk.ZNode.Children">Children</a>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>

@@ -271,7 +271,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -418,7 +418,7 @@ reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -512,7 +512,7 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -544,7 +544,7 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Throwable">Throwable</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.exception.A">A</span>]</span>
+        <span class="name">exception</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="e">e: <a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.exception.A">A</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Construct a <code>Reader</code> from an exception <code>e</code>
@@ -586,10 +586,8 @@ caller is responsible for finalization and error handling, e.g.:</p><pre>Reader.
         <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="readers">readers: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Convenient abstraction to read from a stream (Reader) of Readers as if
-it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (Reader) of Readers as if
-it were a single Reader. The subsequent readers are unmanaged, the caller is
-responsible for discarding those when abandoned.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>A Reader holds a stream of Reader[A]</p></dd></dl></div>
+      <p class="shortcomment cmt">Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>A Reader holds a stream of Reader[A]
+$flattenBehavior</p></dd></dl></div>
     </li><li name="com.twitter.io.Reader#framed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="framed(r:com.twitter.io.Reader[com.twitter.io.Buf],framer:com.twitter.io.Buf=&gt;Seq[com.twitter.io.Buf]):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="framed(Reader[Buf],(Buf)⇒Seq[Buf]):Reader[Buf]"></a>
       <span class="permalink">
@@ -602,7 +600,7 @@ responsible for discarding those when abandoned.</p></div><dl class="paramcmts b
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">framed</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>, <span name="framer">framer: (<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>) ⇒ <span class="extype" name="scala.Seq">Seq</span>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
+        <span class="name">framed</span><span class="params">(<span name="r">r: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>, <span name="framer">framer: (<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>) ⇒ <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Wraps a <span class="extype" name="">Reader[Buf] </span> and emits frames as decided by <code>framer</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Wraps a <span class="extype" name="">Reader[Buf] </span> and emits frames as decided by <code>framer</code>.
@@ -729,7 +727,7 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>
+        <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
@@ -839,7 +837,7 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -1040,7 +1038,7 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>

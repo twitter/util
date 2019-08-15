@@ -262,7 +262,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">Reader</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">Reader</span><span class="tparams">[<span name="A">+A</span>]</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       </h4>
 
@@ -299,7 +299,7 @@ and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">
               Known Subclasses
@@ -492,7 +492,7 @@ that you must do once the stream is no longer being used.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -516,7 +516,7 @@ that you must do once the stream is no longer being used.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -573,7 +573,9 @@ that you must do once the stream is no longer being used.
         <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.io.Reader.A">A</span>) ⇒ <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl></div>
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+      will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+      onClose will be resolved immediately with the same value.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]"></a><a id="flatten[B](&lt;:&lt;[A,Reader[B]]):Reader[B]"></a>
       <span class="permalink">
@@ -589,8 +591,7 @@ that you must do once the stream is no longer being used.
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.io.Reader.A">A</span>, <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
-</p>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -660,7 +661,9 @@ that you must do once the stream is no longer being used.
         <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.io.Reader.A">A</span>) ⇒ <span class="extype" name="com.twitter.io.Reader.map.B">B</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.map.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function transforms data of type A to B</p></dd></dl></div>
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function transforms data of type A to B</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+      will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+      onClose will be resolved immediately with the same value.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -673,7 +676,7 @@ that you must do once the stream is no longer being used.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -826,7 +829,7 @@ that you must do once the stream is no longer being used.
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>

@@ -273,7 +273,7 @@ reaches the EOF or a call to <span class="extype" name="discard()">discard()</sp
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>], <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../util/CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>], <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -423,7 +423,7 @@ emits chunks of at most <code>chunkSize</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -538,7 +538,7 @@ the resource has been fully relinquished.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -595,7 +595,9 @@ the resource has been fully relinquished.
         <span class="name">flatMap</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>) ⇒ <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatMap.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+      will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+      onClose will be resolved immediately with the same value.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]"></a><a id="flatten[B](&lt;:&lt;[Buf,Reader[B]]):Reader[B]"></a>
       <span class="permalink">
@@ -611,9 +613,7 @@ the resource has been fully relinquished.
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -703,7 +703,9 @@ the resource has been fully relinquished.
         <span class="name">map</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="f">f: (<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>) ⇒ <span class="extype" name="com.twitter.io.Reader.map.B">B</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.map.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function transforms data of type A to B</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function transforms data of type A to B</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader
+      will discard the other Reader. When one Reader's onClose resolves, the other Reader's
+      onClose will be resolved immediately with the same value.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -716,7 +718,7 @@ the resource has been fully relinquished.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -957,7 +959,7 @@ method.
             </div><div class="parent" name="com.twitter.io.Reader">
               <h3>Inherited from <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/AnyRef.html#scala.AnyRef" class="extype" name="scala.AnyRef">AnyRef</a></h3>
+              <h3>Inherited from <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>
             </div>
