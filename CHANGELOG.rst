@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core:  BoundedStack is unused and really old code. Delete it. ``PHAB_ID=D357338``
+
 19.8.1
 ------
 
