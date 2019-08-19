@@ -32,7 +32,6 @@ object ThrottledHandler {
    * NOTE: ThrottledHandler emits plain-text messages regarding any throttling it does.
    * This means that using it to wrap any logger which you expect to produce easily parseable,
    * well-structured logs (as opposed to just plain text logs) will break your format.
-   * Specifically, wrapping ScribeHandler with ThrottledHandler is usually a bug.
    *
    * @param handler
    * Wrapped handler.

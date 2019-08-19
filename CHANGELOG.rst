@@ -12,6 +12,12 @@ Breaking API Changes
 
 * util-core:  BoundedStack is unused and really old code. Delete it. ``PHAB_ID=D357338``
 
+* util-logging: `com.twitter.logging.ScribeHandler` and `com.twitter.logging.ScribeHandlers` have
+  been removed. Users are encouraged to use slf4j for logging. However, if a util-logging integrated
+  ScribeHandler is still required, users can either build their own Finagle-based scribe client as
+  in `ScribeRawZipkinTracer` in finagle-zipkin-scribe, or copy the old `ScribeHandler`
+  implementation directly into their code. ``PHAB_ID=D357008``
+
 19.8.1
 ------
 

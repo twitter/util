@@ -352,15 +352,6 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
             level = Some(Level.OFF),
             useParents = false
           ) :: LoggerFactory(
-            node = "stats",
-            level = Some(Level.INFO),
-            useParents = false,
-            handlers = ScribeHandler(
-              formatter = BareFormatter,
-              maxMessagesToBuffer = 100,
-              category = "cuckoo_json"
-            ) :: Nil
-          ) :: LoggerFactory(
             node = "bad_jobs",
             level = Some(Level.INFO),
             useParents = false,
@@ -373,7 +364,6 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
           Logger.configure(factories)
           assert(Logger.get("").getLevel == Level.INFO)
           assert(Logger.get("w3c").getLevel == Level.OFF)
-          assert(Logger.get("stats").getLevel == Level.INFO)
           assert(Logger.get("bad_jobs").getLevel == Level.INFO)
           try {
             Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
@@ -391,11 +381,6 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
             case _: ClassCastException => fail("not a FileHandler")
           }
           assert(Logger.get("w3c").getHandlers().size == 0)
-          try {
-            Logger.get("stats").getHandlers()(0).asInstanceOf[ScribeHandler]
-          } catch {
-            case _: ClassCastException => fail("not a ScribeHandler")
-          }
           try {
             Logger.get("bad_jobs").getHandlers()(0).asInstanceOf[FileHandler]
           } catch {
