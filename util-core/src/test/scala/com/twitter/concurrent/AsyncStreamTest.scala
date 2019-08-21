@@ -10,6 +10,43 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   import AsyncStream.{mk, of}
   import AsyncStreamTest._
 
+  test("++ with a long stream") {
+    var count = 0
+    def genLongStream(len: Int): AsyncStream[Int] =
+      if (len == 0) {
+        AsyncStream.of(1)
+      } else {
+        count = count + 1
+        1 +:: genLongStream(len - 1)
+      }
+    // concat a long stream does not stack overflow
+    val s = genLongStream(1000000) ++ genLongStream(3)
+    s.foreach(_ => ())
+    val first = count
+    s.foreach(_ => ())
+    // the values are evaluated once
+    assert(count == first)
+  }
+
+  test("flatMap with a long stream") {
+    var count = 0
+    def genLongStream(len: Int): AsyncStream[Int] =
+      if (len == 0) {
+        AsyncStream.of(1)
+      } else AsyncStream.of(1).flatMap { i =>
+        count = count + 1
+        i +:: genLongStream(len - 1)
+      }
+
+    // a long stream created via flatMap does not stack overflow
+    val s = genLongStream(1000000) ++ genLongStream(3)
+    s.foreach(_ => ())
+    val first = count
+    s.foreach(_ => ())
+    // the values are evaluated once
+    assert(count == first)
+  }
+
   // Test all AsyncStream constructors: Empty, FromFuture, Cons, Embed.
   seqImpl.foreach { impl =>
     def fromSeq[A](seq: Seq[A]): AsyncStream[A] = impl.apply(seq)
@@ -222,24 +259,6 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       forAll { (a: List[Int], b: List[Int]) =>
         assert(toSeq(fromSeq(a) ++ fromSeq(b)) == a ++ b)
       }
-    }
-
-    test(s"$impl: ++ with a long stream") {
-      var count = 0
-      def genLongStream(len: Int): AsyncStream[Int] =
-        if (len == 0) {
-          AsyncStream.of(1)
-        } else {
-          count = count + 1
-          1 +:: genLongStream(len - 1)
-        }
-      // concat a long stream does not stack overflow
-      val s = genLongStream(1000000) ++ genLongStream(3)
-      s.foreach(_ => ())
-      val first = count
-      s.foreach(_ => ())
-      // the values are evaluated once
-      assert(count == first)
     }
 
     test(s"$impl: foldRight") {
