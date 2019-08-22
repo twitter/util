@@ -26,6 +26,32 @@ object VeryBadApp extends App {
   def main(): Unit = {}
 }
 
+class WeNeverClose extends App {
+  override def exitOnError(throwable: Throwable): Unit = {
+    throwable match {
+      case _: CloseException =>
+        throw throwable
+      case _ =>
+        exitOnError("Exception thrown in main on startup")
+    }
+  }
+
+  private[this] val unClosable = new Closable {
+    override def close(deadline: Time): Future[Unit] = Future.never
+  }
+
+  closeOnExit(unClosable)
+
+  // and we're never ready
+  override def isReady(implicit permit: Awaitable.CanAwait): Boolean = false
+
+  def main(): Unit = {}
+}
+
+class WeNeverCloseButWeDoNotCare extends WeNeverClose {
+  override protected val suppressGracefulShutdownErrors: Boolean = true
+}
+
 trait ErrorOnExitApp extends App {
   override val defaultCloseGracePeriod: Duration = 2.seconds
 
@@ -75,6 +101,8 @@ class AppTest extends FunSuite {
   }
 
   test("App: order of hooks") {
+    import scala.collection.JavaConverters._
+
     val q = new ConcurrentLinkedQueue[Int]
     class Test1 extends App {
       onExit(q.add(4))
@@ -84,7 +112,7 @@ class AppTest extends FunSuite {
       init(q.add(0))
     }
     new Test1().main(Array.empty)
-    assert(q.toArray.toSeq == Seq(0, 1, 2, 3, 4))
+    assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4))
   }
 
   test("loadServiceBinds") {
@@ -375,5 +403,39 @@ class AppTest extends FunSuite {
     }
 
     app.main(Array.empty)
+  }
+
+  test("never closing exits with exception") {
+    val t = new MockTimer
+    val app = new WeNeverClose {
+      override lazy val shutdownTimer: Timer = t
+    }
+
+    Time.withTimeAt(Time.epoch) { _ =>
+      val exc = intercept[CloseException] {
+        app.main(Array.empty)
+      }
+
+      // the CloseException should be suppressing a com.twitter.util.TimeoutException
+      assert(exc.getSuppressed.length == 1)
+      assert(exc.getSuppressed.head.getClass == classOf[com.twitter.util.TimeoutException])
+    }
+  }
+
+  test("never closing exits with a timeout exception") {
+    val t = new MockTimer
+    val app = new WeNeverCloseButWeDoNotCare {
+      override lazy val shutdownTimer: Timer = t
+    }
+
+    Time.withTimeAt(Time.epoch) { _ =>
+      val exc = intercept[CloseException] {
+        app.main(Array.empty)
+      }
+
+      // the CloseException should be suppressing a com.twitter.util.TimeoutException
+      assert(exc.getSuppressed.length == 1)
+      assert(exc.getSuppressed.head.getClass == classOf[com.twitter.util.TimeoutException])
+    }
   }
 }

@@ -93,7 +93,13 @@ trait App extends Closable with CloseAwaitably {
     // want to ensure "reason" is written before attempting to write any details
     System.err.flush()
     System.err.println(details)
-    Await.ready(close(), closeDeadline - Time.now)
+    // if we have gotten here we may not yet have attempted to close, ensure we do.
+    try {
+      Await.ready(close(), closeDeadline - Time.now)
+    } catch {
+      case NonFatal(exc) =>
+        exitOnError(newCloseException(Seq(exc)))
+    }
     System.exit(1)
   }
 
@@ -378,6 +384,8 @@ trait App extends Closable with CloseAwaitably {
       try { // even if we suppress shutdown errors, we give the resources time to close
         Await.ready(this, closeDeadline - Time.now)
       } catch {
+        case e: TimeoutException =>
+          throw e // we want TimeoutExceptions to propagate
         case NonFatal(_) => ()
       }
     }

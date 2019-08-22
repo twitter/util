@@ -7,6 +7,15 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-app: Better handling of exceptions when awaiting on the `c.t.app.App` to close at
+  the end of the main function. We `Await.ready` on `this` as the last step of 
+  `App#nonExitingMain` which can potentially throw a `TimeoutException` which was previously 
+  unhandled. We have updated the logic to ensure that `TimeoutException`s are handled accordingly. 
+  ``PHAB_ID=D356846``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
