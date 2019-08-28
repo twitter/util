@@ -150,7 +150,6 @@ trait StatsReceiver {
    * @see [[StatsReceiver.addGauge]] if you can properly control the lifecycle
    *     of the returned [[Gauge gauge]].
    */
-  @varargs
   def provideGauge(name: String*)(f: => Float): Unit = {
     val gauge = addGauge(name: _*)(f)
     StatsReceiver.synchronized {
@@ -175,7 +174,6 @@ trait StatsReceiver {
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  @varargs
   def addGauge(name: String*)(f: => Float): Gauge = addGauge(Verbosity.Default, name: _*)(f)
 
   /**
@@ -195,7 +193,6 @@ trait StatsReceiver {
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  @varargs
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
 
   /**
