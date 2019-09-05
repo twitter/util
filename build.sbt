@@ -62,7 +62,7 @@ val baseSettings = Seq(
   // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
   unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
   libraryDependencies ++= Seq(
-    "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.1",
+    "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.2",
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
     "org.mockito" % "mockito-all" % "1.10.19" % "test",

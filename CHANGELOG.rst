@@ -16,6 +16,8 @@ Runtime Behavior Changes
   unhandled. We have updated the logic to ensure that `TimeoutException`s are handled accordingly. 
   ``PHAB_ID=D356846``
 
+* util: Upgrade to Scala Collections Compat 2.1.2. ``PHAB_ID=D364013``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
