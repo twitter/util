@@ -104,16 +104,28 @@ class KetamaDistributor[A](
   def nodes: Seq[A] = ketamaNodes.map(_.handle)
   def nodeCount: Int = ketamaNodes.size
 
+  // hashes are 32-bit because they are 32-bit on the libmemcached and
+  // we need to maintain compatibility with libmemcached
+  private[this] def truncateHash(hash: Long): Long = hash & 0xffffffffL
+
   private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, KetamaNode[A]] = {
-    // hashes are 32-bit because they are 32-bit on the libmemcached and
-    // we need to maintain compatibility with libmemcached
-    val truncatedHash = hash & 0xffffffffL
+    val truncatedHash = truncateHash(hash)
 
     val entry = continuum.ceilingEntry(truncatedHash)
     if (entry == null)
       continuum.firstEntry
     else
       entry
+  }
+
+  def partitionIdForHash(hash: Long): Long = {
+    val truncatedHash = truncateHash(hash)
+
+    val key: java.lang.Long = continuum.ceilingKey(truncatedHash)
+    if (key == null)
+      continuum.firstKey()
+    else
+      key
   }
 
   def entryForHash(hash: Long): (Long, A) = {

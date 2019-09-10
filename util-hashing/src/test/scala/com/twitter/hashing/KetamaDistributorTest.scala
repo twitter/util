@@ -25,6 +25,7 @@ class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks
     val ketamaDistributor = new KetamaDistributor(nodes, 160)
     val ketamaDistributorInoldLibMemcachedVersionComplianceMode =
       new KetamaDistributor(nodes, 160, true)
+
     "pick the correct node with ketama hash function" in {
       // Test from Smile's KetamaNodeLocatorSpec.scala
 
@@ -95,6 +96,22 @@ class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks
         assert(ketama.byteArrayToLE(ba, 4) == bb.getInt(4))
         assert(ketama.byteArrayToLE(ba, 8) == bb.getInt(8))
         assert(ketama.byteArrayToLE(ba, 12) == bb.getInt(12))
+      }
+    }
+
+    // these two methods use slightly different code paths to determine
+    // the partitionId for a given hash, but should return equal values
+    // for the same input.
+
+    "partitionIdForHash is the same as entryForHash 1st tuple element" in {
+      val keyHasher = KeyHasher.MURMUR3
+
+      forAll { s: String =>
+        val hash = keyHasher.hashKey(s.getBytes("UTF-8"))
+        val (pid1, _) = ketamaDistributor.entryForHash(hash)
+        val pid2 = ketamaDistributor.partitionIdForHash(hash)
+
+        assert(pid1 == pid2)
       }
     }
   }
