@@ -415,6 +415,11 @@ object Time extends TimeLikeOps[Time] {
   /**
    * Creates a [[Time]] instance at the given `datetime` string in the
    * "yyyy-MM-dd HH:mm:ss Z" format.
+   *
+   * {{{
+   * val time = Time.at("2019-05-12 00:00:00 -0800")
+   * time.toString // 2019-05-12 08:00:00 +0000
+   * }}}
    */
   def at(datetime: String): Time = defaultFormat.parse(datetime)
 
