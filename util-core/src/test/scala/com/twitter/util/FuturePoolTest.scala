@@ -55,7 +55,8 @@ class FuturePoolTest extends FunSuite with Eventually {
     val result1 = pool { runCount.incrementAndGet(); Await.result(source1) }
     val result2 = pool { runCount.incrementAndGet(); Await.result(source2) }
 
-    result2.raise(new Exception)
+    val exc = new CancellationException
+    result2.raise(exc)
     source1.setValue(1)
 
     // The executor will run the task for result 2, but the wrapper

@@ -7,6 +7,18 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: When a computation from FuturePool is interrupted, its promise is
+  set to the interrupt, wrapped in a j.u.c.CancellationException. This wrapper
+  was introduced because, all interrupts were once CancellationExceptions. In
+  RB_ID=98612, this changed to allow the user to raise specific exceptions as
+  interrupts, and in the aid of compatibility, we wrapped this raised exception
+  in a CancellationException. This change removes the wrapper and fails the
+  promise directly with the raised exception. This will affect users that
+  explicitly handle CancellationException. ``PHAB_ID=D371872``
+
 Bug Fixes
 ~~~~~~~~~
 
