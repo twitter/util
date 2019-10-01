@@ -99,6 +99,11 @@ trait StatsReceiver {
   def isNull: Boolean = false
 
   /**
+   * Get a [[MetricBuilder metricBuilder]] for this StatsReceiver.
+   */
+  def metricBuilder(): MetricBuilder = new MetricBuilder(statsReceiver = this)
+
+  /**
    * Get a [[Counter counter]] with the given `name`.
    */
   @varargs
@@ -109,6 +114,16 @@ trait StatsReceiver {
    */
   @varargs
   def counter(verbosity: Verbosity, name: String*): Counter
+
+  /**
+   * Get a [[Counter counter]] with the given schema.
+   *
+   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
+   * StatsReceivers with support for schemas/metadata will override this to make better use of that
+   * information.
+   */
+  private[stats] def counter(schema: CounterSchema): Counter =
+    counter(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)
 
   /**
    * Get a [[Counter counter]] with the given `name`.
@@ -130,6 +145,16 @@ trait StatsReceiver {
    */
   @varargs
   def stat(verbosity: Verbosity, name: String*): Stat
+
+  /**
+   * Get a [[Stat stat]] with the given schema.
+   *
+   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
+   * StatsReceivers with support for schemas/metadata will override this to make better use of that
+   * information.
+   */
+  private[stats] def stat(schema: HistogramSchema): Stat =
+    stat(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)
 
   /**
    * Get a [[Stat stat]] with the given name. This method is a convenience for Java
@@ -194,6 +219,29 @@ trait StatsReceiver {
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
+
+  /**
+   * Add the function `f` as a [[Gauge gauge]] with the given name.
+   *
+   * The returned [[Gauge gauge]] value is only weakly referenced by the
+   * [[StatsReceiver]], and if garbage collected will eventually cease to
+   * be a part of this measurement: thus, it needs to be retained by the
+   * caller. Or put another way, the measurement is only guaranteed to exist
+   * as long as there exists a strong reference to the returned
+   * [[Gauge gauge]] and typically should be stored in a member variable.
+   *
+   * Measurements under the same name are added together.
+   *
+   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
+   * StatsReceivers with support for schemas/metadata will override this to make better use of that
+   * information.
+   *
+   * @see [[StatsReceiver.provideGauge]] when there is not a good location
+   *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
+   * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
+   */
+  private[stats] def addGauge(schema: GaugeSchema)(f: => Float): Gauge =
+    addGauge(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)(f)
 
   /**
    * Prepend `namespace` to the names of the returned [[StatsReceiver]].
