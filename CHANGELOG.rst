@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Bug Fixes
+~~~~~~~~~
+
+* util-core: Fixed bug in `c.t.io.Reader.framed` where if the `framer` didn't emit a `List` the
+  emitted frames were skipped. ``PHAB_ID=D378048``
+
 19.9.0
 ------
 
