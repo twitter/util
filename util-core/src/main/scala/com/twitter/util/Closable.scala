@@ -45,6 +45,14 @@ abstract class AbstractClosable extends Closable
  */
 object Closable {
   private[this] val logger = Logger.getLogger("")
+  private[this] var collectorThreadEnabled = true
+  
+  
+  /** Stop CollectClosables thread. */
+  def stopCollectClosablesThread() {
+	collectorThreadEnabled = false
+	collectorThread.interrupt()
+  }
 
   /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
   def close(o: AnyRef): Future[Unit] = o match {
@@ -161,7 +169,7 @@ object Closable {
 
   private val collectorThread = new Thread("CollectClosables") {
     override def run(): Unit = {
-      while (true) {
+      while (collectorThreadEnabled) {
         try {
           val ref = refq.remove()
           val closable = refs.synchronized(refs.remove(ref))
