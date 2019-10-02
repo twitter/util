@@ -427,6 +427,11 @@ class ReaderTest
     assert(await(r.read()).isEmpty)
   }
 
+  test("Framed works on non-list collections") {
+    val r = Reader.framed(BufReader(Buf.U32BE(0)), i => Vector(i))
+    assert(await(r.read()).isDefined)
+  }
+
   test("Reader.flatMap") {
     forAll { s: String =>
       val reader1 = Reader.fromBuf(Buf.Utf8(s), 8)

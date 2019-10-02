@@ -197,7 +197,7 @@ object Reader {
       extends Reader[Buf]
       with (Option[Buf] => Future[Option[Buf]]) {
 
-    private[this] var frames: Seq[Buf] = Seq.empty
+    private[this] var frames: Seq[Buf] = Nil
 
     // we only enter here when `frames` is empty.
     def apply(in: Option[Buf]): Future[Option[Buf]] = synchronized {
@@ -211,13 +211,13 @@ object Reader {
     }
 
     def read(): Future[Option[Buf]] = synchronized {
-      frames match {
-        case nextFrame :: rst =>
-          frames = rst
-          Future.value(Some(nextFrame))
-        case _ =>
-          // flatMap to `this` to prevent allocating
-          r.read().flatMap(this)
+      if (frames.isEmpty) {
+        // flatMap to `this` to prevent allocating
+        r.read().flatMap(this)
+      } else {
+        val nextFrame = frames.head
+        frames = frames.tail
+        Future.value(Some(nextFrame))
       }
     }
 
