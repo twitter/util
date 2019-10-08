@@ -1,7 +1,7 @@
 import scoverage.ScoverageKeys
 
 // All Twitter library releases are date versioned as YY.MM.patch
-val releaseVersion = "19.10.0"
+val releaseVersion = "19.11.0-SNAPSHOT"
 
 val zkVersion = "3.5.0-alpha"
 val zkClientVersion = "0.0.81"
