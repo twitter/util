@@ -25,6 +25,9 @@ Bug Fixes
 * util-core: Fixed bug in `c.t.io.Reader.framed` where if the `framer` didn't emit a `List` the
   emitted frames were skipped. ``PHAB_ID=D378048``
 
+* util-hashing: Fix a bug where `partitionIdForHash` was returning incosistent values w.r.t
+  `entryForHash` in `KetamaDistributor`. ``PHAB_ID=D381128``
+
 19.9.0
 ------
 
@@ -32,9 +35,9 @@ Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * util-app: Better handling of exceptions when awaiting on the `c.t.app.App` to close at
-  the end of the main function. We `Await.ready` on `this` as the last step of 
-  `App#nonExitingMain` which can potentially throw a `TimeoutException` which was previously 
-  unhandled. We have updated the logic to ensure that `TimeoutException`s are handled accordingly. 
+  the end of the main function. We `Await.ready` on `this` as the last step of
+  `App#nonExitingMain` which can potentially throw a `TimeoutException` which was previously
+  unhandled. We have updated the logic to ensure that `TimeoutException`s are handled accordingly.
   ``PHAB_ID=D356846``
 
 * util: Upgrade to Scala Collections Compat 2.1.2. ``PHAB_ID=D364013``

@@ -99,18 +99,23 @@ class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks
       }
     }
 
-    // these two methods use slightly different code paths to determine
-    // the partitionId for a given hash, but should return equal values
-    // for the same input.
-
     "partitionIdForHash is the same as entryForHash 1st tuple element" in {
       val keyHasher = KeyHasher.MURMUR3
+
+      {
+        // Special case this unicode string since this test has failed
+        // on it in the past.
+        val s = "ퟲ狂✟풻棇埲蟂덧➀缘็滀佳黟韕숻᩿볯箿䜐㫌홻ᖛ磌ᡎ油"
+        val hash = keyHasher.hashKey(s.getBytes("UTF-8"))
+        val (pid1, _) = ketamaDistributor.entryForHash(hash)
+        val pid2 = ketamaDistributor.partitionIdForHash(hash)
+        assert(pid1 == pid2)
+      }
 
       forAll { s: String =>
         val hash = keyHasher.hashKey(s.getBytes("UTF-8"))
         val (pid1, _) = ketamaDistributor.entryForHash(hash)
         val pid2 = ketamaDistributor.partitionIdForHash(hash)
-
         assert(pid1 == pid2)
       }
     }

@@ -110,23 +110,12 @@ class KetamaDistributor[A](
 
   private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, KetamaNode[A]] = {
     val truncatedHash = truncateHash(hash)
-
     val entry = continuum.ceilingEntry(truncatedHash)
-    if (entry == null)
-      continuum.firstEntry
-    else
-      entry
+    if (entry == null) continuum.firstEntry else entry
   }
 
-  def partitionIdForHash(hash: Long): Long = {
-    val truncatedHash = truncateHash(hash)
-
-    val key: java.lang.Long = continuum.ceilingKey(truncatedHash)
-    if (key == null)
-      continuum.firstKey()
-    else
-      key
-  }
+  def partitionIdForHash(hash: Long): Long =
+    mapEntryForHash(hash).getKey
 
   def entryForHash(hash: Long): (Long, A) = {
     val entry = mapEntryForHash(hash)
