@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
 import scala.annotation.{tailrec, varargs}
 import scala.util.control.{NonFatal => NF}
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Closable is a mixin trait to describe a closable ``resource``.
@@ -45,13 +46,13 @@ abstract class AbstractClosable extends Closable
  */
 object Closable {
   private[this] val logger = Logger.getLogger("")
-  private[this] var collectorThreadEnabled = true
+  private[this] val collectorThreadEnabled = new AtomicBoolean(true)
   
   
   /** Stop CollectClosables thread. */
   def stopCollectClosablesThread() {
-	collectorThreadEnabled = false
-	collectorThread.interrupt()
+    if (collectorThreadEnabled.compareAndSet(true, false))
+      Try(collectorThread.interrupt).onFailure(fatal => logger.log(Level.SEVERE, "Current thread cannot interrupt CollectClosables thread", fatal))()
   }
 
   /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
@@ -169,7 +170,7 @@ object Closable {
 
   private val collectorThread = new Thread("CollectClosables") {
     override def run(): Unit = {
-      while (collectorThreadEnabled) {
+      while (collectorThreadEnabled.get()) {
         try {
           val ref = refq.remove()
           val closable = refs.synchronized(refs.remove(ref))
