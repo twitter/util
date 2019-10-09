@@ -318,10 +318,6 @@
                         <a class="class" href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol."></a>
                         <a href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol.">BinaryThriftSerializer</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size."></a>
-                        <a href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size.">BoundedStack</a>
-                      </li><li class="current-entities indented3">
                         <a class="object" href="Cancellable$.html" title=""></a>
                         <a class="trait" href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*."></a>
                         <a href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*.">Cancellable</a>
@@ -999,7 +995,7 @@ representing a time infinitely far into the future.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.Time#at" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.util.Time#at" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="at(datetime:String):com.twitter.util.Time"></a><a id="at(String):Time"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/Time$.html#at(datetime:String):com.twitter.util.Time" title="Permalink">
@@ -1015,7 +1011,9 @@ representing a time infinitely far into the future.
       </span>
       
       <p class="shortcomment cmt">Creates a <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> instance at the given <code>datetime</code> string in the
-&quot;yyyy-MM-dd HH:mm:ss Z&quot; format.</p>
+&quot;yyyy-MM-dd HH:mm:ss Z&quot; format.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> instance at the given <code>datetime</code> string in the
+&quot;yyyy-MM-dd HH:mm:ss Z&quot; format.</p><pre><span class="kw">val</span> time = Time.at(<span class="lit">"2019-05-12 00:00:00 -0800"</span>)
+time.toString <span class="cmt">// 2019-05-12 08:00:00 +0000</span></pre></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">

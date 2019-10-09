@@ -494,10 +494,6 @@
                         <a class="class" href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol."></a>
                         <a href="BinaryThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TBinaryProtocol.">BinaryThriftSerializer</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size."></a>
-                        <a href="BoundedStack.html" title="A &quot;stack&quot; with a bounded size.">BoundedStack</a>
-                      </li><li class="current-entities indented3">
                         <a class="object" href="Cancellable$.html" title=""></a>
                         <a class="trait" href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*."></a>
                         <a href="Cancellable.html" title="Defines a trait that makes the underlying object *cancellable*.">Cancellable</a>
@@ -1274,24 +1270,6 @@ and decoding from strings encoded in base64 to byte arrays.</p><p>The encoding f
       <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TBinaryProtocol">TBinaryProtocol</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TBinaryProtocol">TBinaryProtocol</span>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>an implementation using <code>com.twitter.finagle.thrift.Protocols.binaryFactory</code>
       instead of this is recommended.</p></span></dd></dl></div>
-    </li><li name="com.twitter.util.BoundedStack" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BoundedStack[A]extendsSeq[A]"></a><a id="BoundedStack[A]:BoundedStack[A]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#BoundedStack[A]extendsSeq[A]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="A &quot;stack&quot; with a bounded size." href="BoundedStack.html"><span class="name">BoundedStack</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.8/scala/collection/Seq.html#scala.collection.Seq" class="extype" name="scala.collection.Seq">Seq</a>[<span class="extype" name="com.twitter.util.BoundedStack.A">A</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">A &quot;stack&quot; with a bounded size.</p><div class="fullcomment"><div class="comment cmt"><p>A &quot;stack&quot; with a bounded size.  If you push a new element on the top
-when the stack is full, the oldest element gets dropped off the bottom.
-</p></div></div>
     </li><li name="com.twitter.util.Cancellable" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="CancellableextendsAnyRef"></a><a id="Cancellable:Cancellable"></a>
       <span class="permalink">

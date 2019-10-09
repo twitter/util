@@ -342,14 +342,6 @@
                         <a class="class" href="QueueingHandler.html" title="Proxy handler that queues log records and publishes them in another thread to a nested handler."></a>
                         <a href="QueueingHandler.html" title="Proxy handler that queues log records and publishes them in another thread to a nested handler.">QueueingHandler</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="ScribeHandler$.html" title=""></a>
-                        <a class="class" href="ScribeHandler.html" title="NOTE: ScribeHandler is usually used to write structured binary data."></a>
-                        <a href="ScribeHandler.html" title="NOTE: ScribeHandler is usually used to write structured binary data.">ScribeHandler</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="object" href="ScribeHandlers$.html" title=""></a>
-                        <a href="ScribeHandlers$.html" title="">ScribeHandlers</a>
-                      </li><li class="current-entities indented3">
                         <a class="object" href="StringHandler$.html" title=""></a>
                         <a class="class" href="StringHandler.html" title="Mostly useful for unit tests: logging goes directly into a string buffer."></a>
                         <a href="StringHandler.html" title="Mostly useful for unit tests: logging goes directly into a string buffer.">StringHandler</a>
@@ -819,25 +811,6 @@ log handlers.
 a nested handler.</p><div class="fullcomment"><div class="comment cmt"><p>Proxy handler that queues log records and publishes them in another thread to
 a nested handler. Useful for when a handler may block.
 </p></div></div>
-    </li><li name="com.twitter.logging.ScribeHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ScribeHandlerextendsHandler"></a><a id="ScribeHandler:ScribeHandler"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/logging/index.html#ScribeHandlerextendsHandler" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="NOTE: ScribeHandler is usually used to write structured binary data." href="ScribeHandler.html"><span class="name">ScribeHandler</span></a><span class="result"> extends <a href="Handler.html" class="extype" name="com.twitter.logging.Handler">Handler</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">NOTE: ScribeHandler is usually used to write structured binary data.</p><div class="fullcomment"><div class="comment cmt"><p>NOTE: ScribeHandler is usually used to write structured binary data.
-When used in this way, wrapping this in other handlers, such as ThrottledHandler,
-which emit plain-text messages into the log, will corrupt the resulting data.
-</p></div></div>
     </li><li name="com.twitter.logging.StringHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StringHandlerextendsHandler"></a><a id="StringHandler:StringHandler"></a>
       <span class="permalink">
@@ -1134,38 +1107,6 @@ Specifically, DO NOT wrap Thrift Scribing loggers with ThrottledHandler.</p></di
       </span>
       <span class="symbol">
         <a title="" href="QueueingHandler$.html"><span class="name">QueueingHandler</span></a>
-      </span>
-      
-      
-    </li><li name="com.twitter.logging.ScribeHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ScribeHandler"></a><a id="ScribeHandler:ScribeHandler"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/logging/index.html#ScribeHandler" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="ScribeHandler$.html"><span class="name">ScribeHandler</span></a>
-      </span>
-      
-      
-    </li><li name="com.twitter.logging.ScribeHandlers" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ScribeHandlers"></a><a id="ScribeHandlers:ScribeHandlers"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/logging/index.html#ScribeHandlers" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="ScribeHandlers$.html"><span class="name">ScribeHandlers</span></a>
       </span>
       
       
