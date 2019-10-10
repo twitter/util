@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Created public method Closable.stopCollectClosablesThread that stops CollectClosables
+thread. ``PHAB_ID=D382800``
+
 19.10.0
 -------
 

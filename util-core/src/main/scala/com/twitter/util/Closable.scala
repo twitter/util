@@ -2,7 +2,7 @@ package com.twitter.util
 
 import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
 import java.{util => ju}
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicReference}
 import java.util.logging.{Level, Logger}
 import scala.annotation.{tailrec, varargs}
 import scala.util.control.{NonFatal => NF}
@@ -45,6 +45,16 @@ abstract class AbstractClosable extends Closable
  */
 object Closable {
   private[this] val logger = Logger.getLogger("")
+  private[this] val collectorThreadEnabled = new AtomicBoolean(true)
+
+  /** Stop CollectClosables thread. */
+  def stopCollectClosablesThread(): Unit = {
+    if (collectorThreadEnabled.compareAndSet(true, false))
+      Try(collectorThread.interrupt).onFailure(
+        fatal =>
+          logger
+            .log(Level.SEVERE, "Current thread cannot interrupt CollectClosables thread", fatal))()
+  }
 
   /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
   def close(o: AnyRef): Future[Unit] = o match {
@@ -161,7 +171,7 @@ object Closable {
 
   private val collectorThread = new Thread("CollectClosables") {
     override def run(): Unit = {
-      while (true) {
+      while (collectorThreadEnabled.get()) {
         try {
           val ref = refq.remove()
           val closable = refs.synchronized(refs.remove(ref))
