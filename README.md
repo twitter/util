@@ -6,7 +6,7 @@
 [![Gitter](https://badges.gitter.im/twitter/finagle.svg)](https://gitter.im/twitter/finagle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twitter/util-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.twitter/util-core_2.12)
 
-A bunch of idiomatic, small, general purpose tools.
+A bunch of idiomatic, small, general-purpose tools.
 
 See the Scaladoc [here](https://twitter.github.com/util).
 
@@ -25,7 +25,7 @@ public API breaks and changes in runtime behavior.
 ## Contributing
 
 The `master` branch of this repository contains the latest stable release of
-Util, and weekly snapshots are published to the `develop` branch. In general
+Util and weekly snapshots are published to the `develop` branch. In general
 pull requests should be submitted against `develop`. See
 [CONTRIBUTING.md](https://github.com/twitter/util/blob/master/CONTRIBUTING.md)
 for more details about how to contribute.
@@ -145,12 +145,12 @@ It checks the health when you successfully reserve an object (i.e., when the Fut
 
 # Hashing
 
-`util-hashing` is a collection of hash functions and hashing distributors (eg. ketama).
+`util-hashing` is a collection of hash functions and hashing distributors (eg. katana).
 
 To use one of the available hash functions:
 
 ```scala
-import com.twitter.hashing.KeyHasher
+import com.twitter.hashing.Keyser
 
 KeyHasher.FNV1_32.hashKey("string".getBytes)
 ```
@@ -181,7 +181,7 @@ distributor.nodeForHash("abc".##) // => client
 
 Like arithmetic on doubles, `Time` and `Duration` arithmetic is now free of overflows. Instead, they overflow to `Top` and `Bottom` values, which are analogous to positive and negative infinity.
 
-Since the resolution of `Time.now` has been reduced (and is also more expensive due to its use of system time), a new `Stopwatch` API has been introduced in order to calculate durations of time.
+Since the resolution of `Time.now` has been reduced (and is also more expensive due to its use of system time), a new `Stopwatch` API has been introduced to calculate durations of time.
 
 It's used simply:
 
@@ -193,5 +193,5 @@ val elapsed: () => Duration = Stopwatch.start()
 which is read by applying `elapsed`:
 
 ```scala
-val duration: Duration = elapsed()
+Val duration: Duration = elapsed()
 ```
