@@ -24,7 +24,7 @@ import org.scalatest.{BeforeAndAfter, WordSpec}
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
 trait TestLogging extends BeforeAndAfter { self: WordSpec =>
-  val logLevel =
+  val logLevel: Level =
     Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 
   private val logger = Logger.get("")
@@ -72,7 +72,7 @@ trait TestLogging extends BeforeAndAfter { self: WordSpec =>
    * Verify that the logger set up with `traceLogger` has received a log line with the given
    * substring somewhere inside it.
    */
-  def mustLog(substring: String) = {
+  def mustLog(substring: String): org.scalatest.Assertion = {
     assert(logLines().filter { _ contains substring }.size > 0)
   }
 }

@@ -24,7 +24,7 @@ object Logging {
 trait Logging { self: App =>
   import Logging._
 
-  lazy val log = Logger(name)
+  lazy val log: Logger = Logger(name)
 
   def defaultFormatter: Formatter = new Formatter()
   def defaultOutput: String = "/dev/stderr"

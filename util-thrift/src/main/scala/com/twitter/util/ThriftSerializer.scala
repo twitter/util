@@ -36,7 +36,7 @@ trait ThriftSerializer extends StringEncoder {
  * A thread-safe [[ThriftSerializer]] that uses [[TSimpleJSONProtocol]].
  */
 class JsonThriftSerializer extends ThriftSerializer {
-  override def protocolFactory = new TSimpleJSONProtocol.Factory
+  override def protocolFactory: TProtocolFactory = new TSimpleJSONProtocol.Factory
 
   override def fromBytes(obj: TBase[_, _], bytes: Array[Byte]): Unit = {
     val binarySerializer = new BinaryThriftSerializer
@@ -52,12 +52,12 @@ class JsonThriftSerializer extends ThriftSerializer {
  *       instead of this is recommended.
  */
 class BinaryThriftSerializer extends ThriftSerializer with Base64StringEncoder {
-  override def protocolFactory = new TBinaryProtocol.Factory
+  override def protocolFactory: TProtocolFactory = new TBinaryProtocol.Factory
 }
 
 /**
  * A thread-safe [[ThriftSerializer]] that uses [[TCompactProtocol]].
  */
 class CompactThriftSerializer extends ThriftSerializer with Base64StringEncoder {
-  override def protocolFactory = new TCompactProtocol.Factory
+  override def protocolFactory: TProtocolFactory = new TCompactProtocol.Factory
 }

@@ -296,9 +296,9 @@ object Spool {
 
   private class LazyCons[A](val head: A, next: => Future[Spool[A]]) extends Spool[A] {
     def isEmpty = false
-    lazy val tail = next
+    lazy val tail: Future[Spool[A]] = next
     // NB: not touching tail, to avoid forcing unnecessarily
-    override def toString = "Cons(%s, ?)".format(head)
+    override def toString: String = "Cons(%s, ?)".format(head)
   }
 
   object Empty extends Spool[Nothing] {

@@ -51,7 +51,8 @@ abstract class GlobalFlag[T] private[app] (
     extends Flag[T](null, help, defaultOrUsage, false) {
 
   // Flags defined inside package objects have unexpected names.
-  require(!GlobalFlag.isEnclosedInPackageObject(getClass),
+  require(
+    !GlobalFlag.isEnclosedInPackageObject(getClass),
     s"package object encloses flag definition: $getClass")
 
   override protected[this] def parsingDone: Boolean = true
@@ -121,7 +122,7 @@ object GlobalFlag {
 
   private def isEnclosedInPackageObject(klass: Class[_]): Boolean =
     klass.getEnclosingClass != null &&
-    klass.getEnclosingClass.getSimpleName == "package"
+      klass.getEnclosingClass.getSimpleName == "package"
 
   private[app] def get(flagName: String): Option[Flag[_]] = {
     val className = if (!flagName.endsWith("$")) flagName + "$" else flagName

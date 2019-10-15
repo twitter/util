@@ -32,6 +32,6 @@ class StopwatchBenchmark {
 object StopwatchBenchmark {
   @State(Scope.Benchmark)
   class StopwatchState {
-    val elapsed = Stopwatch.start()
+    val elapsed: Stopwatch.Elapsed = Stopwatch.start()
   }
 }

@@ -22,7 +22,7 @@ object OfferBenchmark {
   // to focus on the benchmarking the impl of `choose`, use dumbed-down impls
   // of the offer and tx classes.
   private class SimpleOffer[T](fut: Future[Tx[T]]) extends Offer[T] {
-    override def prepare() = fut
+    override def prepare(): Future[Tx[T]] = fut
   }
 
   private class SimpleTx[T](t: T) extends Tx[T] {
@@ -36,8 +36,8 @@ object OfferBenchmark {
     @Param(Array("3", "10", "100"))
     var numToChooseFrom: Int = 3
 
-    val rng = new Random(3102957159L)
-    val rngOpt = Some(rng)
+    val rng: Random = new Random(3102957159L)
+    val rngOpt: Some[Random] = Some(rng)
 
     // N.B. Traditionally you'd put this type of setup inside of a benchmark setup method per invocation
     // but because the runtime of each invocation is so small, the overhead is high JMH advises against

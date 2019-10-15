@@ -18,7 +18,7 @@ import com.twitter.util.{Duration, Future, Timer}
  */
 trait ZkClient {
   val name = "zk.client"
-  protected[zk] val log = Logger.get(name)
+  protected[zk] val log: Logger = Logger.get(name)
 
   /** Build a ZNode handle using this ZkClient. */
   def apply(path: String): ZNode = ZNode(this, path)
@@ -71,7 +71,7 @@ trait ZkClient {
     _acl: Seq[ACL] = acl,
     _mode: CreateMode = mode,
     _retryPolicy: RetryPolicy = retryPolicy
-  ) = new ZkClient {
+  ): ZkClient = new ZkClient {
     val connector = _connector
     override val acl = _acl
     override val mode = _mode
@@ -82,7 +82,7 @@ trait ZkClient {
 object ZkClient {
 
   /** Build a ZkClient with a provided Connector */
-  def apply(_connector: Connector) = new ZkClient {
+  def apply(_connector: Connector): ZkClient = new ZkClient {
     protected[this] val connector = _connector
   }
 

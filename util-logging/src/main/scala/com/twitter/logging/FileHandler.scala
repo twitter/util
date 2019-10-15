@@ -60,7 +60,7 @@ object Policy {
 }
 
 object FileHandler {
-  val UTF8 = Charset.forName("UTF-8")
+  val UTF8: Charset = Charset.forName("UTF-8")
 
   /**
    * Generates a HandlerFactory that returns a FileHandler
@@ -84,7 +84,8 @@ object FileHandler {
     rotateCount: Int = -1,
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ) = () => new FileHandler(filename, rollPolicy, append, rotateCount, formatter, level)
+  ): () => FileHandler =
+    () => new FileHandler(filename, rollPolicy, append, rotateCount, formatter, level)
 }
 
 /**
@@ -183,7 +184,7 @@ class FileHandler(
   /**
    * Compute the suffix for a rolled logfile, based on the roll policy.
    */
-  def timeSuffix(date: Date) = {
+  def timeSuffix(date: Date): String = {
     val dateFormat = rollPolicy match {
       case Policy.Never => TwitterDateFormat("yyyy")
       case Policy.SigHup => TwitterDateFormat("yyyy")
@@ -257,7 +258,7 @@ class FileHandler(
     }
   }
 
-  def roll() = synchronized {
+  def roll(): Unit = synchronized {
     stream.close()
     val newFilename = filenamePrefix + "-" + timeSuffix(new Date(openTime)) + filenameSuffix
     new File(filename).renameTo(new File(newFilename))

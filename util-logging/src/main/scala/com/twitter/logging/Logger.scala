@@ -95,20 +95,20 @@ class LoggingException(reason: String) extends Exception(reason)
  */
 class Logger protected (val name: String, private val wrapped: javalog.Logger) {
   // wrapped methods:
-  def addHandler(handler: javalog.Handler) = wrapped.addHandler(handler)
-  def getFilter() = wrapped.getFilter()
-  def getHandlers() = wrapped.getHandlers()
-  def getLevel() = wrapped.getLevel()
-  def getParent() = wrapped.getParent()
-  def getUseParentHandlers() = wrapped.getUseParentHandlers()
-  def isLoggable(level: javalog.Level) = wrapped.isLoggable(level)
-  def log(record: javalog.LogRecord) = wrapped.log(record)
-  def removeHandler(handler: javalog.Handler) = wrapped.removeHandler(handler)
-  def setFilter(filter: javalog.Filter) = wrapped.setFilter(filter)
-  def setLevel(level: javalog.Level) = wrapped.setLevel(level)
-  def setUseParentHandlers(use: Boolean) = wrapped.setUseParentHandlers(use)
+  def addHandler(handler: javalog.Handler): Unit = wrapped.addHandler(handler)
+  def getFilter(): javalog.Filter = wrapped.getFilter()
+  def getHandlers(): Array[javalog.Handler] = wrapped.getHandlers()
+  def getLevel(): javalog.Level = wrapped.getLevel()
+  def getParent(): javalog.Logger = wrapped.getParent()
+  def getUseParentHandlers(): Boolean = wrapped.getUseParentHandlers()
+  def isLoggable(level: javalog.Level): Boolean = wrapped.isLoggable(level)
+  def log(record: javalog.LogRecord): Unit = wrapped.log(record)
+  def removeHandler(handler: javalog.Handler): Unit = wrapped.removeHandler(handler)
+  def setFilter(filter: javalog.Filter): Unit = wrapped.setFilter(filter)
+  def setLevel(level: javalog.Level): Unit = wrapped.setLevel(level)
+  def setUseParentHandlers(use: Boolean): Unit = wrapped.setUseParentHandlers(use)
 
-  override def toString = {
+  override def toString: String = {
     "<%s name='%s' level=%s handlers=%s use_parent=%s>".format(
       getClass.getName,
       name,
@@ -146,42 +146,47 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
     }
   }
 
-  final def apply(level: Level, message: String, items: Any*) = log(level, message, items: _*)
+  final def apply(level: Level, message: String, items: Any*): Unit = log(level, message, items: _*)
 
-  final def apply(level: Level, thrown: Throwable, message: String, items: Any*) =
+  final def apply(level: Level, thrown: Throwable, message: String, items: Any*): Unit =
     log(level, thrown, message, items)
 
   // convenience methods:
   @varargs
-  def fatal(msg: String, items: Any*) = log(Level.FATAL, msg, items: _*)
+  def fatal(msg: String, items: Any*): Unit = log(Level.FATAL, msg, items: _*)
   @varargs
-  def fatal(thrown: Throwable, msg: String, items: Any*) = log(Level.FATAL, thrown, msg, items: _*)
+  def fatal(thrown: Throwable, msg: String, items: Any*): Unit =
+    log(Level.FATAL, thrown, msg, items: _*)
   @varargs
-  def critical(msg: String, items: Any*) = log(Level.CRITICAL, msg, items: _*)
+  def critical(msg: String, items: Any*): Unit = log(Level.CRITICAL, msg, items: _*)
   @varargs
-  def critical(thrown: Throwable, msg: String, items: Any*) =
+  def critical(thrown: Throwable, msg: String, items: Any*): Unit =
     log(Level.CRITICAL, thrown, msg, items: _*)
   @varargs
-  def error(msg: String, items: Any*) = log(Level.ERROR, msg, items: _*)
+  def error(msg: String, items: Any*): Unit = log(Level.ERROR, msg, items: _*)
   @varargs
-  def error(thrown: Throwable, msg: String, items: Any*) = log(Level.ERROR, thrown, msg, items: _*)
+  def error(thrown: Throwable, msg: String, items: Any*): Unit =
+    log(Level.ERROR, thrown, msg, items: _*)
   @varargs
-  def warning(msg: String, items: Any*) = log(Level.WARNING, msg, items: _*)
+  def warning(msg: String, items: Any*): Unit = log(Level.WARNING, msg, items: _*)
   @varargs
-  def warning(thrown: Throwable, msg: String, items: Any*) =
+  def warning(thrown: Throwable, msg: String, items: Any*): Unit =
     log(Level.WARNING, thrown, msg, items: _*)
   @varargs
-  def info(msg: String, items: Any*) = log(Level.INFO, msg, items: _*)
+  def info(msg: String, items: Any*): Unit = log(Level.INFO, msg, items: _*)
   @varargs
-  def info(thrown: Throwable, msg: String, items: Any*) = log(Level.INFO, thrown, msg, items: _*)
+  def info(thrown: Throwable, msg: String, items: Any*): Unit =
+    log(Level.INFO, thrown, msg, items: _*)
   @varargs
-  def debug(msg: String, items: Any*) = log(Level.DEBUG, msg, items: _*)
+  def debug(msg: String, items: Any*): Unit = log(Level.DEBUG, msg, items: _*)
   @varargs
-  def debug(thrown: Throwable, msg: String, items: Any*) = log(Level.DEBUG, thrown, msg, items: _*)
+  def debug(thrown: Throwable, msg: String, items: Any*): Unit =
+    log(Level.DEBUG, thrown, msg, items: _*)
   @varargs
-  def trace(msg: String, items: Any*) = log(Level.TRACE, msg, items: _*)
+  def trace(msg: String, items: Any*): Unit = log(Level.TRACE, msg, items: _*)
   @varargs
-  def trace(thrown: Throwable, msg: String, items: Any*) = log(Level.TRACE, thrown, msg, items: _*)
+  def trace(thrown: Throwable, msg: String, items: Any*): Unit =
+    log(Level.TRACE, thrown, msg, items: _*)
 
   def debugLazy(msg: => AnyRef): Unit = logLazy(Level.DEBUG, null, msg)
   def traceLazy(msg: => AnyRef): Unit = logLazy(Level.TRACE, null, msg)
@@ -209,20 +214,22 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
   }
 
   // convenience methods:
-  def ifFatal(message: => AnyRef) = logLazy(Level.FATAL, message)
-  def ifFatal(thrown: Throwable, message: => AnyRef) = logLazy(Level.FATAL, thrown, message)
-  def ifCritical(message: => AnyRef) = logLazy(Level.CRITICAL, message)
-  def ifCritical(thrown: Throwable, message: => AnyRef) = logLazy(Level.CRITICAL, thrown, message)
-  def ifError(message: => AnyRef) = logLazy(Level.ERROR, message)
-  def ifError(thrown: Throwable, message: => AnyRef) = logLazy(Level.ERROR, thrown, message)
-  def ifWarning(message: => AnyRef) = logLazy(Level.WARNING, message)
-  def ifWarning(thrown: Throwable, message: => AnyRef) = logLazy(Level.WARNING, thrown, message)
-  def ifInfo(message: => AnyRef) = logLazy(Level.INFO, message)
-  def ifInfo(thrown: Throwable, message: => AnyRef) = logLazy(Level.INFO, thrown, message)
-  def ifDebug(message: => AnyRef) = logLazy(Level.DEBUG, message)
-  def ifDebug(thrown: Throwable, message: => AnyRef) = logLazy(Level.DEBUG, thrown, message)
-  def ifTrace(message: => AnyRef) = logLazy(Level.TRACE, message)
-  def ifTrace(thrown: Throwable, message: => AnyRef) = logLazy(Level.TRACE, thrown, message)
+  def ifFatal(message: => AnyRef): Unit = logLazy(Level.FATAL, message)
+  def ifFatal(thrown: Throwable, message: => AnyRef): Unit = logLazy(Level.FATAL, thrown, message)
+  def ifCritical(message: => AnyRef): Unit = logLazy(Level.CRITICAL, message)
+  def ifCritical(thrown: Throwable, message: => AnyRef): Unit =
+    logLazy(Level.CRITICAL, thrown, message)
+  def ifError(message: => AnyRef): Unit = logLazy(Level.ERROR, message)
+  def ifError(thrown: Throwable, message: => AnyRef): Unit = logLazy(Level.ERROR, thrown, message)
+  def ifWarning(message: => AnyRef): Unit = logLazy(Level.WARNING, message)
+  def ifWarning(thrown: Throwable, message: => AnyRef): Unit =
+    logLazy(Level.WARNING, thrown, message)
+  def ifInfo(message: => AnyRef): Unit = logLazy(Level.INFO, message)
+  def ifInfo(thrown: Throwable, message: => AnyRef): Unit = logLazy(Level.INFO, thrown, message)
+  def ifDebug(message: => AnyRef): Unit = logLazy(Level.DEBUG, message)
+  def ifDebug(thrown: Throwable, message: => AnyRef): Unit = logLazy(Level.DEBUG, thrown, message)
+  def ifTrace(message: => AnyRef): Unit = logLazy(Level.TRACE, message)
+  def ifTrace(thrown: Throwable, message: => AnyRef): Unit = logLazy(Level.TRACE, thrown, message)
 
   /**
    * Lazily logs a throwable. If the throwable contains a log level (via [[HasLogLevel]]), it
@@ -244,7 +251,7 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
   /**
    * Remove all existing log handlers.
    */
-  def clearHandlers() = {
+  def clearHandlers(): Unit = {
     // some custom Logger implementations may return null from getHandlers
     val handlers = getHandlers()
     if (handlers ne null) {
@@ -292,37 +299,37 @@ object Logger extends Iterable[Logger] {
   // ----- convenience methods:
 
   /** OFF is used to turn off logging entirely. */
-  def OFF = Level.OFF
+  def OFF: Level.OFF.type = Level.OFF
 
   /** Describes an event which will cause the application to exit immediately, in failure. */
-  def FATAL = Level.FATAL
+  def FATAL: Level.FATAL.type = Level.FATAL
 
   /** Describes an event which will cause the application to fail to work correctly, but
    *  keep attempt to continue. The application may be unusable.
    */
-  def CRITICAL = Level.CRITICAL
+  def CRITICAL: Level.CRITICAL.type = Level.CRITICAL
 
   /** Describes a user-visible error that may be transient or not affect other users. */
-  def ERROR = Level.ERROR
+  def ERROR: Level.ERROR.type = Level.ERROR
 
   /** Describes a problem which is probably not user-visible but is notable and/or may be
    *  an early indication of a future error.
    */
-  def WARNING = Level.WARNING
+  def WARNING: Level.WARNING.type = Level.WARNING
 
   /** Describes information about the normal, functioning state of the application. */
-  def INFO = Level.INFO
+  def INFO: Level.INFO.type = Level.INFO
 
   /** Describes information useful for general debugging, but probably not normal,
    *  day-to-day use.
    */
-  def DEBUG = Level.DEBUG
+  def DEBUG: Level.DEBUG.type = Level.DEBUG
 
   /** Describes information useful for intense debugging. */
-  def TRACE = Level.TRACE
+  def TRACE: Level.TRACE.type = Level.TRACE
 
   /** ALL is used to log everything. */
-  def ALL = Level.ALL
+  def ALL: Level.ALL.type = Level.ALL
 
   /**
    * Return a map of log level values to the corresponding Level objects.
@@ -339,7 +346,7 @@ object Logger extends Iterable[Logger] {
    * INFO level and goes to the console (stderr). Any existing log
    * handlers are removed.
    */
-  def reset() = {
+  def reset(): Unit = {
     clearHandlers()
     loggersCache.clear()
     root.addHandler(new ConsoleHandler(new Formatter(), None))
@@ -348,7 +355,7 @@ object Logger extends Iterable[Logger] {
   /**
    * Remove all existing log handlers from all existing loggers.
    */
-  def clearHandlers() = {
+  def clearHandlers(): Unit = {
     foreach { logger =>
       logger.clearHandlers()
       logger.setLevel(null)
@@ -400,7 +407,7 @@ object Logger extends Iterable[Logger] {
   }
 
   /** An alias for `get(name)` */
-  def apply(name: String) = get(name)
+  def apply(name: String): Logger = get(name)
 
   private def get(depth: Int): Logger = {
     val st = new Throwable().getStackTrace
@@ -421,7 +428,7 @@ object Logger extends Iterable[Logger] {
   def get(): Logger = get(2)
 
   /** An alias for `get()` */
-  def apply() = get(2)
+  def apply(): Logger = get(2)
 
   private def getForClassName(className: String) = {
     if (className.endsWith("$")) {
@@ -437,7 +444,7 @@ object Logger extends Iterable[Logger] {
   def get(cls: Class[_]): Logger = getForClassName(cls.getName)
 
   /** An alias for `get(class)` */
-  def apply(cls: Class[_]) = get(cls)
+  def apply(cls: Class[_]): Logger = get(cls)
 
   /**
    * Iterate the Logger objects that have been created.

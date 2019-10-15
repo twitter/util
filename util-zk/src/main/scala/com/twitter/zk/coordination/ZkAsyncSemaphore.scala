@@ -51,8 +51,8 @@ class ZkAsyncSemaphore(
   private[this] val waitq = new ConcurrentLinkedQueue[(Promise[ZkSemaphorePermit], ZNode)]
 
   private[this] class ZkSemaphorePermit(node: ZNode) extends Permit {
-    val zkPath = node.path
-    val sequenceNumber = sequenceNumberOf(zkPath)
+    val zkPath: String = node.path
+    val sequenceNumber: Int = sequenceNumberOf(zkPath)
     override def release(): Unit = {
       node.delete()
     }

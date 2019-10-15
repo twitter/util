@@ -121,7 +121,7 @@ sealed trait ShardPermit {
 
 case class Shard(id: Int, private val node: ZNode, private val permit: Permit) extends ShardPermit {
 
-  def release() = {
+  def release(): Unit = {
     node.delete() ensure { permit.release() }
   }
 }

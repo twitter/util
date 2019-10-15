@@ -71,7 +71,7 @@ object Diffable {
     def map[U](f: T => U): SetDiff[U] =
       SetDiff(add.map(f), remove.map(f))
 
-    override def toString = s"Diff(+$add, -$remove)"
+    override def toString: String = s"Diff(+$add, -$remove)"
   }
 
   private case class SeqDiff[T](limit: Int, insert: Map[Int, T]) extends Diff[Seq, T] {

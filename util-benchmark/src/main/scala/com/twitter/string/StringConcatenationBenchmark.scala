@@ -10,8 +10,8 @@ class StringConcatenationBenchmark extends StdBenchAnnotations {
 
   val Length = 16
   val N = 10000
-  val rng = new Random(1010101)
-  val words = rng.alphanumeric.grouped(Length).map(_.mkString).take(N).toArray
+  val rng: Random = new Random(1010101)
+  val words: Array[String] = rng.alphanumeric.grouped(Length).map(_.mkString).take(N).toArray
   var i = 0
 
   private[this] def word(): String = {

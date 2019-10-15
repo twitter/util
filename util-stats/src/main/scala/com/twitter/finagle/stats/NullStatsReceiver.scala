@@ -1,7 +1,7 @@
 package com.twitter.finagle.stats
 
 object NullStatsReceiver extends NullStatsReceiver {
-  def get() = this
+  def get(): NullStatsReceiver.type = this
 }
 
 /**

@@ -56,7 +56,7 @@ class Kalman(N: Int) {
     else ebuf
   )
 
-  def estimate = est
+  def estimate: Double = est
 
   private[this] def variance(samples: Array[Double]): Double = {
     if (samples.length == 1)
@@ -70,7 +70,7 @@ class Kalman(N: Int) {
     diff / (samples.length - 1)
   }
 
-  override def toString =
+  override def toString: String =
     "Kalman<estimate=%f, weight=%f, mvar=%f, evar=%f>".format(estimate, weight, mvar, evar)
 }
 
@@ -123,7 +123,7 @@ class WindowedMeans(N: Int, windows: Seq[(Int, Int)]) extends Estimator[Double] 
     n += 1
   }
 
-  def estimate = {
+  def estimate: Double = {
     require(n > 0)
     val weightedMeans = normalized map { case (w, i) => w * mean(n, i) }
     weightedMeans.sum
@@ -146,5 +146,5 @@ class LoadAverage(interval: Double) extends Estimator[Double] {
       else load * a + m * (1 - a)
   }
 
-  def estimate = load
+  def estimate: Double = load
 }

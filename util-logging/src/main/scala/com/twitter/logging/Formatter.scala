@@ -21,6 +21,7 @@ import java.text.{MessageFormat, DateFormat}
 import java.util.regex.Pattern
 import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
 import scala.collection.mutable
+import java.{util => ju}
 
 private[logging] object Formatter {
   // FIXME: might be nice to unmangle some scala names here.
@@ -42,7 +43,7 @@ private[logging] object Formatter {
     out.toList
   }
 
-  val DateFormatRegex = Pattern.compile("<([^>]+)>")
+  val DateFormatRegex: Pattern = Pattern.compile("<([^>]+)>")
   val DefaultStackTraceSizeLimit = 30
   val DefaultPrefix = "%.3s [<yyyyMMdd-HH:mm:ss.SSS>] %s: "
 }
@@ -108,7 +109,7 @@ class Formatter(
   /**
    * Calendar to use for time zone display in date-time formatting.
    */
-  val calendar = if (timezone.isDefined) {
+  val calendar: ju.GregorianCalendar = if (timezone.isDefined) {
     new GregorianCalendar(TimeZone.getTimeZone(timezone.get))
   } else {
     new GregorianCalendar
@@ -219,7 +220,7 @@ class Formatter(
   /**
    * Truncates the text from a java LogRecord, if necessary
    */
-  def truncateText(message: String) =
+  def truncateText(message: String): String =
     if ((truncateAt > 0) && (message.length > truncateAt))
       message.take(truncateAt) + "..."
     else
@@ -230,5 +231,5 @@ class Formatter(
  * Formatter that logs only the text of a log message, with no prefix (no date, etc).
  */
 object BareFormatter extends Formatter {
-  override def format(record: javalog.LogRecord) = formatText(record) + lineTerminator
+  override def format(record: javalog.LogRecord): String = formatText(record) + lineTerminator
 }

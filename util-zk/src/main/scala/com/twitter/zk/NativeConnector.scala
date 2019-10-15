@@ -18,7 +18,7 @@ case class NativeConnector(
     with Serialized {
   override val name = "native-zk-connector"
 
-  protected[this] def mkConnection = {
+  protected[this] def mkConnection: NativeConnector.Connection = {
     new NativeConnector.Connection(
       connectString,
       connectTimeout,
@@ -128,7 +128,7 @@ object NativeConnector {
 
     @volatile protected[this] var zookeeper: Option[ZooKeeper] = None
 
-    protected[this] val connectPromise = new Promise[ZooKeeper]
+    protected[this] val connectPromise: Promise[ZooKeeper] = new Promise[ZooKeeper]
 
     /** A ZooKeeper handle that will error if connectTimeout is specified and exceeded. */
     lazy val connected: Future[ZooKeeper] = connectTimeout
@@ -140,10 +140,10 @@ object NativeConnector {
       }
       .getOrElse(connectPromise)
 
-    protected[this] val releasePromise = new Promise[Unit]
+    protected[this] val releasePromise: Promise[Unit] = new Promise[Unit]
     val released: Future[Unit] = releasePromise
 
-    protected[this] val sessionBroker = new EventBroker
+    protected[this] val sessionBroker: EventBroker = new EventBroker
 
     /**
      * Publish session events, but intercept Connected events and use them to satisfy the pending
@@ -185,7 +185,7 @@ object NativeConnector {
       connected
     }
 
-    protected[this] def mkZooKeeper = {
+    protected[this] def mkZooKeeper: ZooKeeper = {
       new ZooKeeper(connectString, sessionTimeout.inMillis.toInt, sessionBroker)
     }
 

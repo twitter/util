@@ -41,7 +41,11 @@ class Heapster(klass: Class[_]) {
   def dumpProfile(forceGC: java.lang.Boolean): Array[Byte] =
     dumpProfileM.invoke(null, forceGC).asInstanceOf[Array[Byte]]
 
-  def profile(howlong: Duration, samplingPeriod: Int = 10 << 19, forceGC: Boolean = true) = {
+  def profile(
+    howlong: Duration,
+    samplingPeriod: Int = 10 << 19,
+    forceGC: Boolean = true
+  ): Array[Byte] = {
     clearProfile()
     setSamplingPeriod(samplingPeriod)
 

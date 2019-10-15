@@ -4,6 +4,7 @@ import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 import scala.util.Random
+import java.lang.management.ThreadMXBean
 
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Array(Mode.AverageTime))
@@ -30,12 +31,12 @@ class CpuProfileBenchmark {
 object CpuProfileBenchmark {
   @State(Scope.Benchmark)
   class ThreadState {
-    val bean = ManagementFactory.getThreadMXBean()
+    val bean: ThreadMXBean = ManagementFactory.getThreadMXBean()
 
     // TODO: change dynamically.  bounce up & down
     // the stack.  μ and σ are for *this* stack.
     class Stack(rng: Random, μ: Int, σ: Int) {
-      def apply() = {
+      def apply(): Int = {
         val depth = math.max(1, μ + (rng.nextGaussian * σ).toInt)
         dive(depth)
       }

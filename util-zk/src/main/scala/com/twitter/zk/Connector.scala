@@ -14,7 +14,7 @@ trait Connector {
   import Connector.EventHandler
 
   val name = "zk-connector"
-  protected lazy val log = Logger.get(name)
+  protected lazy val log: Logger = Logger.get(name)
 
   private[this] val listeners = new AtomicReference[List[EventHandler]](Nil)
 
@@ -60,10 +60,10 @@ object Connector {
    */
   case class RoundRobin(connectors: Connector*) extends Connector {
     require(connectors.length > 0)
-    override val name = "round-robin-zk-connector:%d".format(connectors.length)
+    override val name: String = "round-robin-zk-connector:%d".format(connectors.length)
 
     private[this] var index = 0
-    protected[this] def nextConnector() = {
+    protected[this] def nextConnector(): Connector = {
       val i = synchronized {
         if (index == Int.MaxValue) {
           index = 0

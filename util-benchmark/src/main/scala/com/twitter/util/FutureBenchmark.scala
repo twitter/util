@@ -275,9 +275,9 @@ object FutureBenchmark {
 
   @State(Scope.Benchmark)
   class ByState {
-    val timer = Timer.Nil
+    val timer: Timer = Timer.Nil
     val now: Time = Time.now
-    val exc = new TimeoutException("")
+    val exc: TimeoutException = new TimeoutException("")
   }
 
   @State(Scope.Benchmark)
@@ -313,12 +313,12 @@ object FutureBenchmark {
 
   @State(Scope.Benchmark)
   class FlattenState {
-    val future = Future.value(Future.Unit)
+    val future: Future[Future[Unit]] = Future.value(Future.Unit)
   }
 
   @State(Scope.Benchmark)
   class LowerFromTryState {
-    val future = Future.Unit.liftToTry
+    val future: Future[Try[Unit]] = Future.Unit.liftToTry
   }
 
   @State(Scope.Benchmark)
@@ -333,7 +333,7 @@ object FutureBenchmark {
     @Param(Array("0", "1", "10", "100"))
     var numToSelect = 0
 
-    val p = new Promise[Unit]
+    val p: Promise[Unit] = new Promise[Unit]
     val futures: Seq[Future[Unit]] =
       if (numToSelect == 0)
         IndexedSeq.empty
@@ -347,7 +347,7 @@ object FutureBenchmark {
     @Param(Array("0", "1", "10", "100"))
     var numToSelect = 0
 
-    val p = new Promise[Unit]
+    val p: Promise[Unit] = new Promise[Unit]
     val futures: IndexedSeq[Future[Unit]] =
       if (numToSelect == 0)
         IndexedSeq.empty

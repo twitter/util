@@ -12,7 +12,7 @@ trait RetryPolicy {
 
 /** Matcher for connection-related KeeperExceptions. */
 object KeeperConnectionException {
-  def unapply(e: KeeperException) = e match {
+  def unapply(e: KeeperException): Option[KeeperException] = e match {
     case e: KeeperException.ConnectionLossException => Some(e)
     case e: KeeperException.SessionExpiredException => Some(e)
     case e: KeeperException.SessionMovedException => Some(e)
@@ -69,6 +69,6 @@ object RetryPolicy {
 
   /** A single try */
   object None extends RetryPolicy {
-    def apply[T](op: => Future[T]) = op
+    def apply[T](op: => Future[T]): Future[T] = op
   }
 }

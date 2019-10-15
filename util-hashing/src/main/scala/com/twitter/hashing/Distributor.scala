@@ -9,9 +9,9 @@ trait Distributor[A] {
 }
 
 class SingletonDistributor[A](node: A) extends Distributor[A] {
-  def entryForHash(hash: Long) = (hash, node)
+  def entryForHash(hash: Long): (Long, A) = (hash, node)
   def partitionIdForHash(hash: Long): Long = hash
-  def nodeForHash(hash: Long) = node
+  def nodeForHash(hash: Long): A = node
   def nodeCount = 1
-  def nodes = Seq(node)
+  def nodes: Seq[A] = Seq(node)
 }

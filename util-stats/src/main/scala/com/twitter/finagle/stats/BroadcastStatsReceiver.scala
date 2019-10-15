@@ -15,7 +15,7 @@ object BroadcastStatsReceiver {
   private class Two(first: StatsReceiver, second: StatsReceiver)
       extends StatsReceiver
       with DelegatingStatsReceiver {
-    val repr = this
+    val repr: AnyRef = this
 
     def counter(verbosity: Verbosity, names: String*): Counter = new BroadcastCounter.Two(
       first.counter(verbosity, names: _*),
@@ -41,7 +41,7 @@ object BroadcastStatsReceiver {
   }
 
   private class N(srs: Seq[StatsReceiver]) extends StatsReceiver with DelegatingStatsReceiver {
-    val repr = this
+    val repr: AnyRef = this
 
     def counter(verbosity: Verbosity, names: String*): Counter =
       BroadcastCounter(srs.map { _.counter(verbosity, names: _*) })

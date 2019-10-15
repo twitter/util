@@ -14,17 +14,19 @@ private[twitter] object json {
    * Deserialize a String representation of a [[com.twitter.util.Duration]] using
    * [[com.twitter.util.Duration.parse]]
    */
-  val DurationFromString = new StdDeserializer[util.Duration](classOf[util.Duration]) {
-    override def deserialize(
-      jsonParser: JsonParser,
-      deserializationContext: DeserializationContext
-    ): util.Duration = util.Duration.parse(jsonParser.getText)
-  }
+  val DurationFromString: StdDeserializer[util.Duration] =
+    new StdDeserializer[util.Duration](classOf[util.Duration]) {
+      override def deserialize(
+        jsonParser: JsonParser,
+        deserializationContext: DeserializationContext
+      ): util.Duration = util.Duration.parse(jsonParser.getText)
+    }
 
-  val StorageUnitFromString = new StdDeserializer[util.StorageUnit](classOf[util.StorageUnit]) {
-    override def deserialize(
-      jsonParser: JsonParser,
-      deserializationContext: DeserializationContext
-    ): util.StorageUnit = util.StorageUnit.parse(jsonParser.getText)
-  }
+  val StorageUnitFromString: StdDeserializer[util.StorageUnit] =
+    new StdDeserializer[util.StorageUnit](classOf[util.StorageUnit]) {
+      override def deserialize(
+        jsonParser: JsonParser,
+        deserializationContext: DeserializationContext
+      ): util.StorageUnit = util.StorageUnit.parse(jsonParser.getText)
+    }
 }

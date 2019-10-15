@@ -17,6 +17,6 @@ class OnceBenchmark {
 object OnceBenchmark {
   @State(Scope.Benchmark)
   class OnceState {
-    val once = Once(())
+    val once: () => Unit = Once(())
   }
 }

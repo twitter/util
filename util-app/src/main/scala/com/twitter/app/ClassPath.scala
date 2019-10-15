@@ -12,7 +12,7 @@ import scala.io.Source
 
 private[app] object ClassPath {
 
-  val IgnoredPackages = Set(
+  val IgnoredPackages: Set[String] = Set(
     "apple/",
     "ch/epfl/",
     "com/apple/",

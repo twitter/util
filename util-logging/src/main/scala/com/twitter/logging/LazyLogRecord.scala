@@ -21,7 +21,7 @@ import java.util.{logging => javalog}
 class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef)
     extends LogRecord(level, "") {
 
-  override lazy val getMessage = messageGenerator.toString
+  override lazy val getMessage: String = messageGenerator.toString
 }
 
 /**
@@ -30,5 +30,5 @@ class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef)
 class LazyLogRecordUnformatted(level: javalog.Level, message: String, items: Any*)
     extends LazyLogRecord(level, { message.format(items: _*) }) {
   require(items.size > 0)
-  val preformatted = message
+  val preformatted: String = message
 }

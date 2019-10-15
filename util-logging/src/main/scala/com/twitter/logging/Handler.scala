@@ -29,7 +29,7 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
     setLevel(x)
   }
 
-  override def toString = {
+  override def toString: String = {
     "<%s level=%s formatter=%s>".format(getClass.getName, getLevel, formatter.toString)
   }
 }
@@ -40,34 +40,34 @@ abstract class Handler(val formatter: Formatter, val level: Option[Level]) exten
  */
 abstract class ProxyHandler(val handler: Handler)
     extends Handler(handler.formatter, handler.level) {
-  override def close() = handler.close()
+  override def close(): Unit = handler.close()
 
-  override def flush() = handler.flush()
+  override def flush(): Unit = handler.flush()
 
-  override def getEncoding() = handler.getEncoding()
+  override def getEncoding(): String = handler.getEncoding()
 
-  override def getErrorManager() = handler.getErrorManager()
+  override def getErrorManager(): javalog.ErrorManager = handler.getErrorManager()
 
-  override def getFilter() = handler.getFilter()
+  override def getFilter(): javalog.Filter = handler.getFilter()
 
-  override def getFormatter() = handler.getFormatter()
+  override def getFormatter(): javalog.Formatter = handler.getFormatter()
 
-  override def getLevel() = handler.getLevel()
+  override def getLevel(): javalog.Level = handler.getLevel()
 
-  override def isLoggable(record: javalog.LogRecord) = handler.isLoggable(record)
+  override def isLoggable(record: javalog.LogRecord): Boolean = handler.isLoggable(record)
 
-  override def publish(record: javalog.LogRecord) = handler.publish(record)
+  override def publish(record: javalog.LogRecord): Unit = handler.publish(record)
 
-  override def setEncoding(encoding: String) = handler.setEncoding(encoding)
+  override def setEncoding(encoding: String): Unit = handler.setEncoding(encoding)
 
-  override def setErrorManager(errorManager: javalog.ErrorManager) =
+  override def setErrorManager(errorManager: javalog.ErrorManager): Unit =
     handler.setErrorManager(errorManager)
 
-  override def setFilter(filter: javalog.Filter) = handler.setFilter(filter)
+  override def setFilter(filter: javalog.Filter): Unit = handler.setFilter(filter)
 
-  override def setFormatter(formatter: javalog.Formatter) = handler.setFormatter(formatter)
+  override def setFormatter(formatter: javalog.Formatter): Unit = handler.setFormatter(formatter)
 
-  override def setLevel(level: javalog.Level) = handler.setLevel(level)
+  override def setLevel(level: javalog.Level): Unit = handler.setLevel(level)
 }
 
 object NullHandler extends Handler(BareFormatter, None) {
@@ -84,13 +84,16 @@ object StringHandler {
   /**
    * Generates a HandlerFactory that returns a StringHandler
    */
-  def apply(formatter: Formatter = new Formatter(), level: Option[Level] = None) =
+  def apply(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): () => StringHandler =
     () => new StringHandler(formatter, level)
 
   /**
    * for java compatibility
    */
-  def apply() = () => new StringHandler()
+  def apply(): () => StringHandler = () => new StringHandler()
 }
 
 /**
@@ -102,19 +105,19 @@ class StringHandler(formatter: Formatter = new Formatter(), level: Option[Level]
   // thread-safe logging
   private val buffer = new StringBuffer()
 
-  def publish(record: javalog.LogRecord) = {
+  def publish(record: javalog.LogRecord): Unit = {
     buffer append getFormatter().format(record)
   }
 
-  def close() = {}
+  def close(): Unit = {}
 
-  def flush() = {}
+  def flush(): Unit = {}
 
-  def get = {
+  def get: String = {
     buffer.toString
   }
 
-  def clear() = {
+  def clear(): Unit = {
     buffer.setLength(0)
     buffer.trimToSize()
   }
@@ -125,13 +128,16 @@ object ConsoleHandler {
   /**
    * Generates a HandlerFactory that returns a ConsoleHandler
    */
-  def apply(formatter: Formatter = new Formatter(), level: Option[Level] = None) =
+  def apply(
+    formatter: Formatter = new Formatter(),
+    level: Option[Level] = None
+  ): () => ConsoleHandler =
     () => new ConsoleHandler(formatter, level)
 
   /**
    * for java compatibility
    */
-  def apply() = () => new ConsoleHandler()
+  def apply(): () => ConsoleHandler = () => new ConsoleHandler()
 }
 
 /**
@@ -140,11 +146,11 @@ object ConsoleHandler {
 class ConsoleHandler(formatter: Formatter = new Formatter(), level: Option[Level] = None)
     extends Handler(formatter, level) {
 
-  def publish(record: javalog.LogRecord) = {
+  def publish(record: javalog.LogRecord): Unit = {
     System.err.print(getFormatter().format(record))
   }
 
-  def close() = {}
+  def close(): Unit = {}
 
-  def flush() = Console.flush
+  def flush(): Unit = Console.flush
 }
