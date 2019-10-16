@@ -13,6 +13,11 @@ New Features
 * util-core: Created public method Closable.stopCollectClosablesThread that stops CollectClosables
 thread. ``PHAB_ID=D382800``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Upgrade to caffeine 2.8.0 ``PHAB_ID=D384592``
+
 19.10.0
 -------
 
