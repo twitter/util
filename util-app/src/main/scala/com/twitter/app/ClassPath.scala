@@ -1,9 +1,10 @@
 package com.twitter.app
 
 import com.twitter.finagle.util.loadServiceIgnoredPaths
-import java.io.{IOException, File}
-import java.net.{URISyntaxException, URLClassLoader, URI}
+import java.io.{File, IOException}
+import java.net.{URI, URISyntaxException, URL, URLClassLoader}
 import java.nio.charset.MalformedInputException
+import java.nio.file.Paths
 import java.util.jar.{JarEntry, JarFile}
 import scala.collection.mutable
 import scala.collection.mutable.Builder
@@ -62,12 +63,28 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf.result
   }
 
+  // Note: In JDK 9+ URLClassLoader is no longer the default ClassLoader.
+  // This method allows us to scan URL's on the class path that can be used
+  // but does NOT include the ModulePath introduced in JDK9. This method is
+  // used as a bridge between JDK 8 and JDK 9+.
+  // The method used here is attributed to https://stackoverflow.com/a/49557901.
+  // TODO - add suppport for the ModulePath after dropping JDK 8 support.
+  private[this] def urlsFromClasspath(): Array[URL] = {
+    val classpath: String = System.getProperty("java.class.path")
+    classpath.split(File.pathSeparator).map { pathEntry: String =>
+      Paths.get(pathEntry).toAbsolutePath().toUri().toURL
+    }
+  }
+
   // package protected for testing
   private[app] def getEntries(loader: ClassLoader): Seq[(URI, ClassLoader)] = {
     val parent = Option(loader.getParent)
 
     val ownURIs: Vector[(URI, ClassLoader)] = for {
-      urlLoader <- Vector(loader).collect { case u: URLClassLoader => u }
+      urlLoader <- Vector(loader).map {
+        case urlClassLoader: URLClassLoader => urlClassLoader
+        case cl => new URLClassLoader(urlsFromClasspath(), cl)
+      }
       urls <- Option(urlLoader.getURLs()).toVector
       url <- urls if url != null
     } yield (url.toURI -> loader)

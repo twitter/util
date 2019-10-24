@@ -961,18 +961,20 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
           }
         }
 
-        "doesn't leak the underlying promise after completion" in {
-          new MonitoredHelper {
-            val inner1 = new Promise[String]
-            val inner2 = new Promise[String]
-            val f: Future[String] = Future.monitored { inner2.ensure(()); inner1 }
-            val s: String = "." * 1024
-            val sSize: Long = ObjectSizeCalculator.getObjectSize(s)
-            inner1.setValue(s)
-            val inner2Size: Long = ObjectSizeCalculator.getObjectSize(inner2)
-            assert(inner2Size < sSize)
+        // we only know this works as expected when running with JDK 8
+        if (System.getProperty("java.version").startsWith("1.8"))
+          "doesn't leak the underlying promise after completion" in {
+            new MonitoredHelper {
+              val inner1 = new Promise[String]
+              val inner2 = new Promise[String]
+              val f: Future[String] = Future.monitored { inner2.ensure(()); inner1 }
+              val s: String = "." * 1024
+              val sSize: Long = ObjectSizeCalculator.getObjectSize(s)
+              inner1.setValue(s)
+              val inner2Size: Long = ObjectSizeCalculator.getObjectSize(inner2)
+              assert(inner2Size < sSize)
+            }
           }
-        }
       }
     }
 
