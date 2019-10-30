@@ -3,7 +3,7 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
-import com.twitter.util.{Await, Awaitable, Future, Promise, Return, Try}
+import com.twitter.util.{Await, Awaitable, Future, Promise}
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
@@ -53,16 +53,6 @@ class ReaderTest
     intercept[Exception] {
       await(r.read())
     }
-  }
-
-  private def readAllString(r: Reader[String]): Future[String] = {
-    def loop(left: StringBuilder): Future[String] = {
-      r.read.flatMap {
-        case Some(right) => loop(left.append(right))
-        case _ => Future.value(left.toString())
-      }
-    }
-    loop(StringBuilder.newBuilder)
   }
 
   private def writeLoop[T](from: List[T], to: Writer[T]): Future[Unit] =
@@ -150,9 +140,10 @@ class ReaderTest
 
   test("Reader.concat") {
     forAll { ss: List[String] =>
-      val readers = ss.map(s => Reader.fromBuf(Buf.Utf8(s), 16))
-      val buf = Reader.readAll(Reader.concat(AsyncStream.fromSeq(readers)))
-      assert(await(buf) == Buf.Utf8(ss.mkString))
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val concatedReaders = Reader.concat(AsyncStream.fromSeq(readers))
+      val values = Reader.readAllItems(concatedReaders)
+      assert(await(values) == ss)
     }
   }
 
@@ -205,7 +196,7 @@ class ReaderTest
     }
 
     val combined = Reader.concat(head +:: tail)
-    val buf = Reader.readAll(combined)
+    val buf = Reader.readAllItems(combined)
     intercept[Exception] {
       await(buf)
     }
@@ -214,17 +205,17 @@ class ReaderTest
 
   test("Reader.flatten") {
     forAll { ss: List[String] =>
-      val readers = ss.map(s => Reader.fromBuf(Buf.Utf8(s), 16))
-      val buf = Reader.readAll(Reader.flatten(Reader.fromSeq(readers)))
-      assert(await(buf) == Buf.Utf8(ss.mkString))
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val value = Reader.readAllItems(Reader.flatten(Reader.fromSeq(readers)))
+      assert(await(value) == ss)
     }
   }
 
   test("Reader#flatten") {
     forAll { ss: List[String] =>
-      val readers = ss.map(s => Reader.fromBuf(Buf.Utf8(s), 16))
-      val buf = Reader.readAll((Reader.fromSeq(readers).flatten))
-      assert(await(buf) == Buf.Utf8(ss.mkString))
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val buf = Reader.readAllItems((Reader.fromSeq(readers).flatten))
+      assert(await(buf) == ss)
     }
   }
 
@@ -337,8 +328,8 @@ class ReaderTest
 
   test("Reader.fromStream closes resources on EOF read") {
     val in = spy(new ByteArrayInputStream(arr(0, 10)))
-    val r = Reader.fromStream(in, 4)
-    val f = Reader.readAll(r)
+    val r: Reader[Buf] = Reader.fromStream(in, 4)
+    val f = BufReader.readAll(r)
     assert(await(f) == buf(0, 10))
     eventually {
       verify(in).close()
@@ -362,7 +353,7 @@ class ReaderTest
   test("Reader.fromAsyncStream fails on exceptional stream") {
     val as = AsyncStream.exception(new Exception())
     val r = Reader.fromAsyncStream(as)
-    val f = Reader.readAll(r)
+    val f = Reader.readAllItems(r)
     intercept[Exception] {
       await(f)
     }
@@ -441,7 +432,7 @@ class ReaderTest
         pipe
       }
 
-      assert(Buf.decodeString(await(Reader.readAll(reader2)), JChar.UTF_8) == s)
+      assert(Buf.decodeString(await(BufReader.readAll(reader2)), JChar.UTF_8) == s)
     }
   }
 
@@ -564,7 +555,7 @@ class ReaderTest
       val pipe = new Pipe[Int]
       writeLoop(l, pipe)
       val reader2 = pipe.map(_.toString)
-      assert(await(readAllString(reader2)) == l.mkString)
+      assert(await(Reader.readAllItems(reader2)) == l.map(_.toString))
     }
   }
 
@@ -585,6 +576,25 @@ class ReaderTest
       await(reader.read())
     }
     assert(await(reader.onClose) == StreamTermination.Discarded)
+  }
+
+  test("Reader.readAll") {
+    val genBuf: Gen[Buf] = {
+      for {
+        // limit arrays to a few kilobytes, otherwise we may generate a very large amount of data
+        numBytes <- Gen.choose(0.bytes.inBytes, 2.kilobytes.inBytes)
+        bytes <- Gen.containerOfN[Array, Byte](numBytes.toInt, Arbitrary.arbitrary[Byte])
+      } yield {
+        Buf.ByteArray.Owned(bytes)
+      }
+    }
+
+    val genList =
+      Gen.listOf(Gen.oneOf(Gen.alphaLowerStr, Gen.alphaNumStr, Gen.choose(1, 100), genBuf))
+    forAll(genList) { l =>
+      val r = Reader.fromSeq(l)
+      assert(await(Reader.readAllItems(r)) == l)
+    }
   }
 }
 

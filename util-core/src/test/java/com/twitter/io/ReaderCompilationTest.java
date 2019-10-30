@@ -18,7 +18,7 @@ public class ReaderCompilationTest {
 
   @Test
   public void testReadAll() {
-    Readers.readAll(Readers.newEmptyReader());
+    BufReaders.readAll(Readers.newEmptyReader());
   }
 
   @Test

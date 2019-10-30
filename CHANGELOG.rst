@@ -7,11 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
-* util: Add initial support for JDK 11 compatibility. ``PHAB_ID=D365075``
-
-
 New Features
 ~~~~~~~~~~~~
+
+* util: Add initial support for JDK 11 compatibility. ``PHAB_ID=D365075``
 
 * util-core: Created public method Closable.stopCollectClosablesThread that stops CollectClosables
 thread. ``PHAB_ID=D382800``
@@ -20,6 +19,13 @@ Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * util: Upgrade to caffeine 2.8.0 ``PHAB_ID=D384592``
+
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Add `c.t.io.BufReader.readAll` to consume a `Reader[Buf]` and concat values to a Buf.
+  Replace `c.t.io.Reader.readAll` with `Reader.readAllItems`, the new API consumes a generic Reader[T],
+  and return a Seq of items. ``PHAB_ID=D391346``
 
 19.10.0
 -------

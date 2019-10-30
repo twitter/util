@@ -72,7 +72,7 @@ class PipeTest extends FunSuite with Matchers {
 
   test("Reader.readAll") {
     val rw = new Pipe[Buf]
-    val all = Reader.readAll(rw)
+    val all = BufReader.readAll(rw)
     assert(!all.isDefined)
     assertWrite(rw, 0, 3)
     assertWrite(rw, 3, 6)
@@ -430,7 +430,7 @@ class PipeTest extends FunSuite with Matchers {
       rw.close(1.second)
 
       assert(!writef.isDefined)
-      assert(await(Reader.readAll(rw)) == buf)
+      assert(await(BufReader.readAll(rw)) == buf)
       assertReadNone(rw)
       assert(writef.isDefined)
 

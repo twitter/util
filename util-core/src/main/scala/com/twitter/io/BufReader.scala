@@ -52,4 +52,17 @@ object BufReader {
    */
   def apply(buf: Buf, chunkSize: Int): Reader[Buf] =
     if (buf.isEmpty) Reader.empty[Buf] else new BufReader(buf, chunkSize)
+
+  /**
+   * Read the entire bytestream presented by `r`.
+   */
+  def readAll(r: Reader[Buf]): Future[Buf] = {
+    def loop(left: Buf): Future[Buf] =
+      r.read().flatMap {
+        case Some(right) => loop(left.concat(right))
+        case _ => Future.value(left)
+      }
+
+    loop(Buf.Empty)
+  }
 }

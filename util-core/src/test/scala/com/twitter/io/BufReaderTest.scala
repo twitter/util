@@ -13,7 +13,7 @@ class BufReaderTest extends FunSuite with Checkers {
     check { bytes: String =>
       val buf = Buf.Utf8(bytes)
       val r = Reader.fromBuf(buf, 8)
-      await(Reader.readAll(r)) == buf
+      await(BufReader.readAll(r)) == buf
     }
   }
 
@@ -28,6 +28,12 @@ class BufReaderTest extends FunSuite with Checkers {
         .ready(r.read(), 5.seconds).poll.exists(
           _.throwable.isInstanceOf[ReaderDiscardedException]
         )
+    }
+  }
+  test("BufReader - readAll") {
+    check { bytes: String =>
+      val r = Reader.fromBuf(Buf.Utf8(bytes))
+      await(BufReader.readAll(r)) == Buf.Utf8(bytes)
     }
   }
 }

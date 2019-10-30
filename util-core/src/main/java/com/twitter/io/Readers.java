@@ -14,7 +14,8 @@ import scala.collection.JavaConverters;
 import scala.runtime.BoxedUnit;
 
 /**
- * Java APIs for Reader.
+ * Better Java APIs of Reader for Scala 2.11.
+ * This will be removed when drop Scala 2.11 support.
  *
  * @see com.twitter.io.Reader
  */
@@ -31,13 +32,6 @@ public final class Readers {
    */
   public static Reader<Buf> newBufReader(Buf buf, int chunkSize) {
     return Reader$.MODULE$.fromBuf(buf, chunkSize);
-  }
-
-  /**
-   * See {@code com.twitter.io.Reader.readAll}.
-   */
-  public static Future<Buf> readAll(Reader<Buf> r) {
-    return Reader$.MODULE$.readAll(r);
   }
 
   /**

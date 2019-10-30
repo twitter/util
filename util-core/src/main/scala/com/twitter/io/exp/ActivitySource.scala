@@ -1,8 +1,8 @@
 package com.twitter.io.exp
 
-import com.twitter.io.{InputStreamReader, Buf, Reader}
+import com.twitter.io.{Buf, BufReader, InputStreamReader}
 import com.twitter.util._
-import java.io.{FileInputStream, File}
+import java.io.{File, FileInputStream}
 import java.lang.ref.{ReferenceQueue, WeakReference}
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.HashMap
@@ -138,7 +138,7 @@ class FilePollingActivitySource private[exp] (
               InputStreamReader.DefaultMaxBufferSize,
               pool
             )
-            Reader.readAll(reader) respond {
+            BufReader.readAll(reader) respond {
               case Return(buf) =>
                 value() = Activity.Ok(buf)
               case Throw(cause) =>
@@ -187,7 +187,7 @@ class ClassLoaderActivitySource private[exp] (classLoader: ClassLoader, pool: Fu
             case stream =>
               val reader =
                 new InputStreamReader(stream, InputStreamReader.DefaultMaxBufferSize, pool)
-              Reader.readAll(reader) respond {
+              BufReader.readAll(reader) respond {
                 case Return(buf) =>
                   p.setValue(Activity.Ok(buf))
                 case Throw(cause) =>

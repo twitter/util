@@ -248,16 +248,18 @@ object Reader {
   def exception[A](e: Throwable): Reader[A] = fromFuture[A](Future.exception(e))
 
   /**
-   * Read the entire bytestream presented by `r`.
+   * Read all items from the Reader r.
+   * @return A Sequence of items.
    */
-  def readAll(r: Reader[Buf]): Future[Buf] = {
-    def loop(left: Buf): Future[Buf] =
-      r.read().flatMap {
-        case Some(right) => loop(left concat right)
-        case _ => Future.value(left)
-      }
-
-    loop(Buf.Empty)
+  def readAllItems[A](r: Reader[A]): Future[Seq[A]] = {
+    val acc = List.newBuilder[A]
+    def loop(): Future[List[A]] = r.read().flatMap {
+      case None => Future.value(acc.result())
+      case Some(t) =>
+        acc += t
+        loop()
+    }
+    loop()
   }
 
   /**

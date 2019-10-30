@@ -62,16 +62,16 @@ class InputStreamReaderTest extends FunSuite {
     val r1 = new InputStreamReader(s1, 100)
     val r2 = new InputStreamReader(s2, 500)
 
-    val f1 = Reader.readAll(r1)
+    val f1 = BufReader.readAll(r1)
     assert(Await.result(f1, 5.seconds) == buf(0, 250))
 
-    val f2 = Reader.readAll(r1)
+    val f2 = BufReader.readAll(r1)
     assert(Await.result(f2, 5.seconds).isEmpty)
 
-    val f3 = Reader.readAll(r2)
+    val f3 = BufReader.readAll(r2)
     assert(Await.result(f3, 5.seconds) == buf(0, 250))
 
-    val f4 = Reader.readAll(r2)
+    val f4 = BufReader.readAll(r2)
     assert(Await.result(f4, 5.seconds).isEmpty)
   }
 
@@ -108,7 +108,7 @@ class InputStreamReaderTest extends FunSuite {
   test("reading EOF closes the InputStream") {
     val in = spy(new ByteArrayInputStream(arr(0, 10)))
     val reader = new InputStreamReader(in, 100, FuturePool.immediatePool)
-    val f = Reader.readAll(reader)
+    val f = BufReader.readAll(reader)
     assert(Await.result(f, 5.seconds) == buf(0, 10))
     verify(in, times(1)).close()
   }
