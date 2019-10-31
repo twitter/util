@@ -254,6 +254,21 @@ trait StatsReceiver {
    * }}}
    *
    * will generate [[Counter counters]] named `/client/adds` and `/client/backend/adds`.
+   *
+   * Note it's recommended to be mindful with usage of the `scope` method as it's almost always
+   * more efficient to pass a full metric name directly to a constructing method.
+   *
+   * Put this way, whenever possible prefer
+   *
+   * {{{
+   *   statsReceiver.counter("client", "adds")
+   * }}}
+   *
+   * to
+   *
+   * {{{
+   *   statsReceiver.scope("client").counter("adds")
+   * }}}
    */
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
@@ -274,6 +289,21 @@ trait StatsReceiver {
    * }}}
    *
    * will generate a [[Counter counter]] named `/client/backend/pool/adds`.
+   *
+   * Note it's recommended to be mindful with usage of the `scope` method as it's almost always
+   * more efficient to pass a full metric name directly to a constructing method.
+   *
+   * Put this way, whenever possible prefer
+   *
+   * {{{
+   *   statsReceiver.counter("client", "backend", "pool", "adds")
+   * }}}
+   *
+   * to
+   *
+   * {{{
+   *   statsReceiver.scope("client", "backend", "pool").counter("adds")
+   * }}}
    */
   @varargs
   final def scope(namespaces: String*): StatsReceiver =
