@@ -56,19 +56,19 @@ object BufReader {
   private final class ChunkedFramer(chunkSize: Int) extends (Buf => Seq[Buf]) {
     require(chunkSize > 0, s"chunkSize should be > 0 but was $chunkSize")
 
-    @tailrec
-    private def loop(acc: ListBuffer[Buf], in: Buf): Seq[Buf] = {
-      if (in.length < chunkSize) (acc :+ in).toSeq
-      else {
-        loop(
-          acc :+ in.slice(0, chunkSize),
-          in.slice(chunkSize, in.length)
-        )
-      }
-    }
+    def apply(input: Buf): Seq[Buf] = {
+      val acc = ListBuffer[Buf]()
 
-    def apply(in: Buf): Seq[Buf] = {
-      loop(ListBuffer(), in)
+      @tailrec
+      def loop(buf: Buf): Seq[Buf] = {
+        if (buf.length < chunkSize) (acc += buf).result()
+        else {
+          acc += buf.slice(0, chunkSize)
+          loop(buf.slice(chunkSize, buf.length))
+        }
+      }
+
+      loop(input)
     }
   }
 

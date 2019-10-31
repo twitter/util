@@ -72,6 +72,19 @@ class BufReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     forAll(stringAndChunk) {
       case (s, i) =>
         val r = BufReader.chunked(Reader.fromBuf(Buf.Utf8(s), 32), i)
+        assert(await(BufReader.readAll(r)) == Buf.Utf8(s))
+    }
+  }
+
+  test("BufReader.chunked by the chunkSize") {
+    val stringAndChunk = for {
+      s <- Gen.alphaStr
+      i <- Gen.posNum[Int].suchThat(_ <= s.length)
+    } yield (s, i)
+
+    forAll(stringAndChunk) {
+      case (s, i) =>
+        val r = BufReader.chunked(Reader.fromBuf(Buf.Utf8(s), 32), i)
 
         def readLoop(): Unit = await(r.read()) match {
           case Some(b) =>
