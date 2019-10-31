@@ -306,6 +306,18 @@ object Reader {
   def fromFile(f: File, chunkSize: Int): Reader[Buf] = fromStream(new FileInputStream(f), chunkSize)
 
   /**
+   * Create a new [[Reader]] from a given [[Iterator]].
+   *
+   * The resources held by the returned [[Reader]] are released on reading of EOF and
+   * [[Reader.discard()]].
+   *
+   * @note It is not recommended to call `it.next()` after creating a `Reader` from it.
+   *       Doing so will affect the behavior of `Reader.read()` because it will skip
+   *       the value returned from `it.next`.
+   */
+  def fromIterator[A](it: Iterator[A]): Reader[A] = new IteratorReader[A](it)
+
+  /**
    * Create a new [[Reader]] from a given [[InputStream]]. The output of a returned reader is
    * chunked by at most `chunkSize` (bytes).
    *
@@ -334,7 +346,7 @@ object Reader {
    *
    * @note Multiple outstanding reads are not allowed on this reader.
    */
-  def fromSeq[A](seq: Seq[A]): Reader[A] = new SeqReader(seq)
+  def fromSeq[A](seq: Seq[A]): Reader[A] = fromIterator(seq.iterator)
 
   /**
    * Allow [[AsyncStream]] to be consumed as a [[Reader]]

@@ -2,6 +2,8 @@ package com.twitter.io
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
+import org.scalacheck.Prop.forAll
+import org.scalacheck.Gen
 import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.Checkers
 
@@ -18,16 +20,44 @@ class BufReaderTest extends FunSuite with Checkers {
   }
 
   test("BufReader - discard") {
-    check { (bytes: String, n: Int) =>
-      val r = Reader.fromBuf(Buf.Utf8(bytes), n)
-      r.discard()
+    val alphaString = for {
+      s <- Gen.alphaStr
+    } yield s
+    val positiveInt = for {
+      n <- Gen.posNum[Int]
+    } yield n
 
-      n < 0 ||
-      bytes.length == 0 ||
-      Await
-        .ready(r.read(), 5.seconds).poll.exists(
-          _.throwable.isInstanceOf[ReaderDiscardedException]
-        )
+    check {
+      forAll(alphaString, positiveInt) { (bytes, n) =>
+        val r = Reader.fromBuf(Buf.Utf8(bytes), n)
+        r.discard()
+
+        bytes.length == 0 ||
+        Await
+          .ready(r.read(), 5.seconds).poll.exists(
+            _.throwable.isInstanceOf[ReaderDiscardedException]
+          )
+      }
+    }
+  }
+
+  test("BufReader - iterator") {
+    val alphaString = for {
+      s <- Gen.alphaStr
+    } yield s
+    val positiveInt = for {
+      n <- Gen.posNum[Int]
+    } yield n
+
+    check {
+      forAll(alphaString, positiveInt) { (bytes, n) =>
+        var result = Buf.Empty
+        val iterator = BufReader.iterator(Buf.Utf8(bytes), n)
+        while (iterator.hasNext) {
+          result = result.concat(iterator.next)
+        }
+        Buf.Utf8(bytes) == result
+      }
     }
   }
   test("BufReader - readAll") {

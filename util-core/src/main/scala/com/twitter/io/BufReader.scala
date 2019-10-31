@@ -1,41 +1,7 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, Return, Try, Throw, ConstFuture, Promise}
-
-/**
- * Construct a [[Reader]] from a [[Buf]].
- */
-private[io] final class BufReader(buf: Buf, chunkSize: Int) extends Reader[Buf] {
-  private[this] var state: Try[Buf] = Return(buf)
-  private[this] val closep = Promise[StreamTermination]()
-
-  def read(): Future[Option[Buf]] = {
-    val result: Future[Option[Buf]] = synchronized {
-      state match {
-        case Return(Buf.Empty) => Future.None
-        case Return(b) =>
-          state = Return(b.slice(chunkSize, Int.MaxValue))
-          Future.value(Some(b.slice(0, chunkSize)))
-
-        case t: Throw[_] =>
-          new ConstFuture[Option[Buf]](t.cast[Option[Buf]])
-      }
-    }
-    if (result eq Future.None) {
-      closep.updateIfEmpty(StreamTermination.FullyRead.Return)
-    }
-    result
-  }
-
-  def discard(): Unit = {
-    synchronized {
-      state = Throw(new ReaderDiscardedException)
-    }
-    closep.updateIfEmpty(StreamTermination.Discarded.Return)
-  }
-
-  def onClose: Future[StreamTermination] = closep
-}
+import com.twitter.util.Future
+import java.util.NoSuchElementException
 
 object BufReader {
 
@@ -50,8 +16,26 @@ object BufReader {
    * Creates a [[BufReader]] out of a given `buf`. The result [[Reader]] emits chunks of at most
    * `chunkSize`.
    */
-  def apply(buf: Buf, chunkSize: Int): Reader[Buf] =
-    if (buf.isEmpty) Reader.empty[Buf] else new BufReader(buf, chunkSize)
+  def apply(buf: Buf, chunkSize: Int): Reader[Buf] = {
+    if (buf.isEmpty) Reader.empty[Buf]
+    else new IteratorReader[Buf](iterator(buf, chunkSize))
+  }
+
+  /**
+   * Returns an iterator that iterates over the given [[Buf]] by `chunkSize`.
+   */
+  private[io] def iterator(buf: Buf, chunkSize: Int): Iterator[Buf] = new Iterator[Buf] {
+    require(chunkSize > 0, s"Then chunkSize should be greater than 0, but received: $chunkSize")
+    private[this] var remainingBuf: Buf = buf
+
+    def hasNext: Boolean = !remainingBuf.isEmpty
+    def next(): Buf = {
+      if (!hasNext) throw new NoSuchElementException("next() on empty iterator")
+      val nextChuck = remainingBuf.slice(0, chunkSize)
+      remainingBuf = remainingBuf.slice(chunkSize, Int.MaxValue)
+      nextChuck
+    }
+  }
 
   /**
    * Read the entire bytestream presented by `r`.

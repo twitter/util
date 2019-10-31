@@ -15,6 +15,11 @@ New Features
 * util-core: Created public method Closable.stopCollectClosablesThread that stops CollectClosables
 thread. ``PHAB_ID=D382800``
 
+* util-core: Introduced `Reader.fromIterator` to create a Reader from an iterator. It is not
+recommended to call `iterator.next()` after creating a `Reader` from it. Doing so will affect the
+behavior of `Reader.read()` because it will skip the value returned from `iterator.next`.
+``PHAB_ID=D391769``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
