@@ -10,9 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatest.{FunSuite, Matchers}
-import scala.annotation.tailrec
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable.ArrayBuffer
 
 class ReaderTest
@@ -115,27 +114,6 @@ class ReaderTest
     assert(await(dest.read()) == Some(1))
     f.raise(new Exception("Freeze!"))
     assert(cancelled)
-  }
-
-  test("Reader.chunked") {
-    val stringAndChunk = for {
-      s <- Gen.alphaStr
-      i <- Gen.posNum[Int].suchThat(_ <= s.length)
-    } yield (s, i)
-
-    forAll(stringAndChunk) {
-      case (s, i) =>
-        val r = Reader.chunked(Reader.fromBuf(Buf.Utf8(s), 32), i)
-
-        def readLoop(): Unit = await(r.read()) match {
-          case Some(b) =>
-            assert(b.length <= i)
-            readLoop()
-          case None => ()
-        }
-
-        readLoop()
-    }
   }
 
   test("Reader.concat") {
@@ -388,41 +366,6 @@ class ReaderTest
     }
   }
 
-  test("Reader.framed reads framed data") {
-    val getByteArrays: Gen[Seq[Buf]] = Gen.listOf(
-      for {
-        // limit arrays to a few kilobytes, otherwise we may generate a very large amount of data
-        numBytes <- Gen.choose(0.bytes.inBytes, 2.kilobytes.inBytes)
-        bytes <- Gen.containerOfN[Array, Byte](numBytes.toInt, Arbitrary.arbitrary[Byte])
-      } yield Buf.ByteArray.Owned(bytes)
-    )
-
-    forAll(getByteArrays) { buffers: Seq[Buf] =>
-      val buffersWithLength = buffers.map(buf => Buf.U32BE(buf.length).concat(buf))
-
-      val r = Reader.framed(BufReader(Buf(buffersWithLength)), new ReaderTest.U32BEFramer())
-
-      // read all of the frames
-      buffers.foreach { buf =>
-        assert(await(r.read()).contains(buf))
-      }
-
-      // make sure the reader signals EOF
-      assert(await(r.read()).isEmpty)
-    }
-  }
-
-  test("Reader.framed reads empty frames") {
-    val r = Reader.framed(BufReader(Buf.U32BE(0)), new ReaderTest.U32BEFramer())
-    assert(await(r.read()).contains(Buf.Empty))
-    assert(await(r.read()).isEmpty)
-  }
-
-  test("Framed works on non-list collections") {
-    val r = Reader.framed(BufReader(Buf.U32BE(0)), i => Vector(i))
-    assert(await(r.read()).isDefined)
-  }
-
   test("Reader.flatMap") {
     forAll { s: String =>
       val reader1 = Reader.fromBuf(Buf.Utf8(s), 8)
@@ -578,7 +521,7 @@ class ReaderTest
     assert(await(reader.onClose) == StreamTermination.Discarded)
   }
 
-  test("Reader.readAll") {
+  test("Reader.readAllItems") {
     val genBuf: Gen[Buf] = {
       for {
         // limit arrays to a few kilobytes, otherwise we may generate a very large amount of data
@@ -594,33 +537,6 @@ class ReaderTest
     forAll(genList) { l =>
       val r = Reader.fromSeq(l)
       assert(await(Reader.readAllItems(r)) == l)
-    }
-  }
-}
-
-object ReaderTest {
-
-  /**
-   * Used to test Reader.framed, extract fields in terms of
-   * frames, signified by a 32-bit BE value preceding
-   * each frame.
-   */
-  private class U32BEFramer() extends (Buf => Seq[Buf]) {
-    var state: Buf = Buf.Empty
-
-    @tailrec
-    private def loop(acc: Seq[Buf], buf: Buf): Seq[Buf] = {
-      buf match {
-        case Buf.U32BE(l, d) if d.length >= l =>
-          loop(acc :+ d.slice(0, l), d.slice(l, d.length))
-        case _ =>
-          state = buf
-          acc
-      }
-    }
-
-    def apply(buf: Buf): Seq[Buf] = synchronized {
-      loop(Seq.empty, state concat buf)
     }
   }
 }

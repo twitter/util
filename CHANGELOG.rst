@@ -32,6 +32,9 @@ Breaking API Changes
   Replace `c.t.io.Reader.readAll` with `Reader.readAllItems`, the new API consumes a generic Reader[T],
   and return a Seq of items. ``PHAB_ID=D391346``
 
+* util-core: Moved `c.t.io.Reader.chunked` to `c.t.io.BufReader.chunked`, and `Reader.framed` to
+  `BufReader.framed`. ``PHAB_ID=D392198``
+
 19.10.0
 -------
 

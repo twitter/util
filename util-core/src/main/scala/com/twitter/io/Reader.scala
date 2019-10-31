@@ -4,8 +4,6 @@ import com.twitter.concurrent.AsyncStream
 import com.twitter.util.Promise.Detachable
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
-import scala.annotation.tailrec
-import scala.collection.mutable.ListBuffer
 
 /**
  * A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.
@@ -172,63 +170,6 @@ object Reader {
     def onClose: Future[StreamTermination] = closep
   }
 
-  // see Reader.chunked
-  private final class ChunkedFramer(chunkSize: Int) extends (Buf => Seq[Buf]) {
-    require(chunkSize > 0, s"chunkSize should be > 0 but was $chunkSize")
-
-    @tailrec
-    private def loop(acc: ListBuffer[Buf], in: Buf): Seq[Buf] = {
-      if (in.length < chunkSize) (acc :+ in).toSeq
-      else {
-        loop(
-          acc :+ in.slice(0, chunkSize),
-          in.slice(chunkSize, in.length)
-        )
-      }
-    }
-
-    def apply(in: Buf): Seq[Buf] = {
-      loop(ListBuffer(), in)
-    }
-  }
-
-  // see Reader.framed
-  private final class Framed(r: Reader[Buf], framer: Buf => Seq[Buf])
-      extends Reader[Buf]
-      with (Option[Buf] => Future[Option[Buf]]) {
-
-    private[this] var frames: Seq[Buf] = Nil
-
-    // we only enter here when `frames` is empty.
-    def apply(in: Option[Buf]): Future[Option[Buf]] = synchronized {
-      in match {
-        case Some(data) =>
-          frames = framer(data)
-          read()
-        case None =>
-          Future.None
-      }
-    }
-
-    def read(): Future[Option[Buf]] = synchronized {
-      if (frames.isEmpty) {
-        // flatMap to `this` to prevent allocating
-        r.read().flatMap(this)
-      } else {
-        val nextFrame = frames.head
-        frames = frames.tail
-        Future.value(Some(nextFrame))
-      }
-    }
-
-    def discard(): Unit = synchronized {
-      frames = Seq.empty
-      r.discard()
-    }
-
-    def onClose: Future[StreamTermination] = r.onClose
-  }
-
   /**
    * Construct a `Reader` from a `Future`
    *
@@ -261,13 +202,6 @@ object Reader {
     }
     loop()
   }
-
-  /**
-   * Chunk the output of a given [[Reader]] by at most `chunkSize` (bytes). This consumes the
-   * reader.
-   */
-  def chunked(r: Reader[Buf], chunkSize: Int): Reader[Buf] =
-    new Framed(r, new ChunkedFramer(chunkSize))
 
   /**
    * Create a new [[Reader]] from a given [[Buf]]. The output of a returned reader is chunked by
@@ -504,12 +438,4 @@ object Reader {
     p.setInterruptHandler { case _ => r.discard() }
     p
   }
-
-  /**
-   * Wraps a [[ Reader[Buf] ]] and emits frames as decided by `framer`.
-   *
-   * @note The returned `Reader` may not be thread safe depending on the behavior
-   *       of the framer.
-   */
-  def framed(r: Reader[Buf], framer: Buf => Seq[Buf]): Reader[Buf] = new Framed(r, framer)
 }
