@@ -24,7 +24,7 @@ public final class StatsReceiverCompilationTest {
   @Test
   public void testStatMethods() {
     InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
-    Stat stat = StatsReceivers.stat(sr, "hello", "world");
+    Stat stat = sr.stat("hello", "world");
     Callable<Integer> callable = new Callable<Integer>() {
       public Integer call() {
         return 3;
@@ -61,7 +61,7 @@ public final class StatsReceiverCompilationTest {
   public void testCounterMethods() {
     InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
     sr.isNull();
-    Counter counter = StatsReceivers.counter(sr, "hello", "world");
+    Counter counter = sr.counter("hello", "world");
     counter.incr();
     counter.incr(100);
   }
