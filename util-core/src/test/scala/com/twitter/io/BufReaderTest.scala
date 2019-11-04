@@ -12,47 +12,25 @@ class BufReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 
-  test("BufReader") {
+  test("BufReader - apply(buf)") {
     forAll { bytes: String =>
       val buf = Buf.Utf8(bytes)
-      val r = Reader.fromBuf(buf, 8)
+      val r = BufReader(buf)
       assert(await(BufReader.readAll(r)) == buf)
     }
   }
 
-  test("BufReader - discard") {
+  test("BufReader - apply(buf, chunkSize)") {
     val stringAndChunk = for {
       s <- Gen.alphaStr
       i <- Gen.posNum[Int].suchThat(_ <= s.length)
     } yield (s, i)
 
     forAll(stringAndChunk) {
-      case (bytes, n) =>
-        val r = Reader.fromBuf(Buf.Utf8(bytes), n)
-        r.discard()
-
-        assert(
-          bytes.length == 0 ||
-            Await
-              .ready(r.read(), 5.seconds).poll
-              .exists(_.throwable.isInstanceOf[ReaderDiscardedException]))
-    }
-  }
-
-  test("BufReader - iterator") {
-    val stringAndChunk = for {
-      s <- Gen.alphaStr
-      i <- Gen.posNum[Int].suchThat(_ <= s.length)
-    } yield (s, i)
-
-    forAll(stringAndChunk) {
-      case (bytes, n) =>
-        var result = Buf.Empty
-        val iterator = BufReader.iterator(Buf.Utf8(bytes), n)
-        while (iterator.hasNext) {
-          result = result.concat(iterator.next)
-        }
-        assert(Buf.Utf8(bytes) == result)
+      case (bytes, chunkSize) =>
+        val buf = Buf.Utf8(bytes)
+        val r = BufReader(buf, chunkSize)
+        assert(await(BufReader.readAll(r)) == buf)
     }
   }
 
@@ -86,6 +64,7 @@ class BufReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       case (s, i) =>
         val r = BufReader.chunked(Reader.fromBuf(Buf.Utf8(s), 32), i)
 
+        @tailrec
         def readLoop(): Unit = await(r.read()) match {
           case Some(b) =>
             assert(b.length <= i)

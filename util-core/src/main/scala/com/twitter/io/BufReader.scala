@@ -19,24 +19,22 @@ object BufReader {
    * `chunkSize`.
    */
   def apply(buf: Buf, chunkSize: Int): Reader[Buf] = {
+    // Returns an iterator that iterates over the given [[Buf]] by `chunkSize`.
+    def iterator(buf: Buf, chunkSize: Int): Iterator[Buf] = new Iterator[Buf] {
+      require(chunkSize > 0, s"Then chunkSize should be greater than 0, but received: $chunkSize")
+      private[this] var remainingBuf: Buf = buf
+
+      def hasNext: Boolean = !remainingBuf.isEmpty
+      def next(): Buf = {
+        if (!hasNext) throw new NoSuchElementException("next() on empty iterator")
+        val nextChuck = remainingBuf.slice(0, chunkSize)
+        remainingBuf = remainingBuf.slice(chunkSize, Int.MaxValue)
+        nextChuck
+      }
+    }
+
     if (buf.isEmpty) Reader.empty[Buf]
     else new IteratorReader[Buf](iterator(buf, chunkSize))
-  }
-
-  /**
-   * Returns an iterator that iterates over the given [[Buf]] by `chunkSize`.
-   */
-  private[io] def iterator(buf: Buf, chunkSize: Int): Iterator[Buf] = new Iterator[Buf] {
-    require(chunkSize > 0, s"Then chunkSize should be greater than 0, but received: $chunkSize")
-    private[this] var remainingBuf: Buf = buf
-
-    def hasNext: Boolean = !remainingBuf.isEmpty
-    def next(): Buf = {
-      if (!hasNext) throw new NoSuchElementException("next() on empty iterator")
-      val nextChuck = remainingBuf.slice(0, chunkSize)
-      remainingBuf = remainingBuf.slice(chunkSize, Int.MaxValue)
-      nextChuck
-    }
   }
 
   /**
