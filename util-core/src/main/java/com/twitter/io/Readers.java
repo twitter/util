@@ -44,17 +44,17 @@ public final class Readers {
   }
 
   /**
-   * See {@code com.twitter.io.Reader.copy}.
+   * See {@code com.twitter.io.Pipe.copy}.
    */
   public static Future<BoxedUnit> copy(Reader<Buf> r, Writer<Buf> w) {
-    return Reader$.MODULE$.copy(r, w);
+    return Pipe$.MODULE$.copy(r, w);
   }
 
   /**
-   * See {@code com.twitter.io.Reader.copyMany}.
+   * See {@code com.twitter.io.Pipe.copyMany}.
    */
   public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w) {
-    return Reader$.MODULE$.copyMany(readers, w);
+    return Pipe$.MODULE$.copyMany(readers, w);
   }
 
   /**

@@ -4,7 +4,7 @@ import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.util.{Await, Awaitable, Future, Promise}
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.io.ByteArrayInputStream
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
@@ -59,62 +59,6 @@ class ReaderTest
       case h :: t => to.write(h).flatMap(_ => writeLoop(t, to))
       case _ => to.close()
     }
-
-  test("Reader.copy - source and destination equality") {
-    forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
-      val rw = new Pipe[Buf]
-      val bos = new ByteArrayOutputStream
-
-      val w = Writer.fromOutputStream(bos, 31)
-      val f = Reader.copy(rw, w).ensure(w.close())
-      val g =
-        rw.write(Buf.ByteArray.Owned(p)).before {
-          rw.write(Buf.ByteArray.Owned(q)).before {
-            rw.write(Buf.ByteArray.Owned(r)).before {
-              rw.close()
-            }
-          }
-        }
-
-      await(Future.join(f, g))
-
-      val b = new ByteArrayOutputStream
-      b.write(p)
-      b.write(q)
-      b.write(r)
-      b.flush()
-
-      bos.toByteArray should equal(b.toByteArray)
-    }
-  }
-
-  test("Reader.copy - discard the source if cancelled") {
-    var cancelled = false
-    val src = new Reader[Int] {
-      def read(): Future[Option[Int]] = Future.value(Some(1))
-      def discard(): Unit = cancelled = true
-      def onClose: Future[StreamTermination] = Future.never
-    }
-    val dest = new Pipe[Int]
-    Reader.copy(src, dest)
-    assert(await(dest.read()) == Some(1))
-    dest.discard()
-    assert(cancelled)
-  }
-
-  test("Reader.copy - discard the source if interrupted") {
-    var cancelled = false
-    val src = new Reader[Int] {
-      def read(): Future[Option[Int]] = Future.value(Some(1))
-      def discard(): Unit = cancelled = true
-      def onClose: Future[StreamTermination] = Future.never
-    }
-    val dest = new Pipe[Int]
-    val f = Reader.copy(src, dest)
-    assert(await(dest.read()) == Some(1))
-    f.raise(new Exception("Freeze!"))
-    assert(cancelled)
-  }
 
   test("Reader.concat") {
     forAll { ss: List[String] =>

@@ -59,7 +59,7 @@ private[io] final class IteratorReader[A](it: Iterator[A]) extends Reader[A] {
 private object IteratorReader {
 
   /**
-   * Indicates reader state when the reader is created via SeqReader
+   * Indicates reader state when the reader is created via IteratorReader
    */
   sealed trait State
   object State {

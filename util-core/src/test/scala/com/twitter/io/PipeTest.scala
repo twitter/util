@@ -2,9 +2,11 @@ package com.twitter.io
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, MockTimer, Return, Time}
+import java.io.ByteArrayOutputStream
 import org.scalatest.{FunSuite, Matchers}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class PipeTest extends FunSuite with Matchers {
+class PipeTest extends FunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 
@@ -439,6 +441,62 @@ class PipeTest extends FunSuite with Matchers {
 
       assertReadEofAndClosed(rw)
     }
+  }
+
+  test("Pipe.copy - source and destination equality") {
+    forAll { (p: Array[Byte], q: Array[Byte], r: Array[Byte]) =>
+      val rw = new Pipe[Buf]
+      val bos = new ByteArrayOutputStream
+
+      val w = Writer.fromOutputStream(bos, 31)
+      val f = Pipe.copy(rw, w).ensure(w.close())
+      val g =
+        rw.write(Buf.ByteArray.Owned(p)).before {
+          rw.write(Buf.ByteArray.Owned(q)).before {
+            rw.write(Buf.ByteArray.Owned(r)).before {
+              rw.close()
+            }
+          }
+        }
+
+      await(Future.join(f, g))
+
+      val b = new ByteArrayOutputStream
+      b.write(p)
+      b.write(q)
+      b.write(r)
+      b.flush()
+
+      bos.toByteArray should equal(b.toByteArray)
+    }
+  }
+
+  test("Pipe.copy - discard the source if cancelled") {
+    var cancelled = false
+    val src = new Reader[Int] {
+      def read(): Future[Option[Int]] = Future.value(Some(1))
+      def discard(): Unit = cancelled = true
+      def onClose: Future[StreamTermination] = Future.never
+    }
+    val dest = new Pipe[Int]
+    Pipe.copy(src, dest)
+    assert(await(dest.read()) == Some(1))
+    dest.discard()
+    assert(cancelled)
+  }
+
+  test("Pipe.copy - discard the source if interrupted") {
+    var cancelled = false
+    val src = new Reader[Int] {
+      def read(): Future[Option[Int]] = Future.value(Some(1))
+      def discard(): Unit = cancelled = true
+      def onClose: Future[StreamTermination] = Future.never
+    }
+    val dest = new Pipe[Int]
+    val f = Pipe.copy(src, dest)
+    assert(await(dest.read()) == Some(1))
+    f.raise(new Exception("Freeze!"))
+    assert(cancelled)
   }
 
 }

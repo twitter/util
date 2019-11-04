@@ -35,6 +35,9 @@ Breaking API Changes
 * util-core: Moved `c.t.io.Reader.chunked` to `c.t.io.BufReader.chunked`, and `Reader.framed` to
   `BufReader.framed`. ``PHAB_ID=D392198``
 
+* util-core: Moved `c.t.io.Reader.copy` to `c.t.io.Pipe.copy`, and `Reader.copyMany` to
+  `Pipe.copyMany`. ``PHAB_ID=D393650``
+
 Deprecations
 ~~~~~~~~~~~~
 

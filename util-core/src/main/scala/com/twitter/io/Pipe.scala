@@ -1,5 +1,6 @@
 package com.twitter.io
 
+import com.twitter.concurrent.AsyncStream
 import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
 
 /**
@@ -296,5 +297,46 @@ object Pipe {
 
     /** Indicates the reader has seen the EOF. No more reads or writes are allowed. */
     case object Closed extends State[Nothing]
+  }
+
+  /**
+   * Copy elements from many Readers to a Writer. Readers will be discarded if
+   * `copy` is cancelled (discarding the target). The Writer is unmanaged, the
+   * caller is responsible for finalization and error handling, e.g.:
+   *
+   * {{{
+   * Pipe.copyMany(readers, writer) ensure writer.close()
+   * }}}
+   * @param readers An AsyncStream holds a stream of Reader[A]
+   */
+  def copyMany[A](readers: AsyncStream[Reader[A]], target: Writer[A]): Future[Unit] =
+    readers.foreachF(copy(_, target))
+
+  /**
+   * Copy elements from a Reader to a Writer. The Reader will be discarded if
+   * `copy` is cancelled (discarding the writer). The Writer is unmanaged, the caller
+   * is responsible for finalization and error handling, e.g.:
+   *
+   * {{{
+   * Pipe.copy(r, w, n) ensure w.close()
+   * }}}
+   */
+  def copy[A](r: Reader[A], w: Writer[A]): Future[Unit] = {
+    def loop(): Future[Unit] =
+      r.read().flatMap {
+        case None => Future.Done
+        case Some(elem) => w.write(elem) before loop()
+      }
+
+    w.onClose.respond {
+      case Return(StreamTermination.Discarded) => r.discard()
+      case _ => ()
+    }
+    val p = new Promise[Unit]
+    // We have to do this because discarding the writer doesn't interrupt read
+    // operations, it only fails the next write operation.
+    loop().proxyTo(p)
+    p.setInterruptHandler { case _ => r.discard() }
+    p
   }
 }
