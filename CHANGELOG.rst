@@ -35,6 +35,13 @@ Breaking API Changes
 * util-core: Moved `c.t.io.Reader.chunked` to `c.t.io.BufReader.chunked`, and `Reader.framed` to
   `BufReader.framed`. ``PHAB_ID=D392198``
 
+Deprecations
+~~~~~~~~~~~~
+
+* util-core: Mark `c.t.io.BufReaders`, `c.t.io.Bufs`, `c.t.io.Readers`, and `c.t.io.Writers` as
+  Deprecated. These classes will no longer be needed, and will be removed, after 2.11 support is
+  dropped. ``PHAB_ID=D393913``
+
 * util-stats: Removed deprecated methods `stat0` and `counter0` from `StatsReceiver`. ``PHAB_ID=D393063``
 
 19.10.0

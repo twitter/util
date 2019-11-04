@@ -4,7 +4,10 @@ import java.nio.ByteBuffer;
 
 /**
  * A Java adaptation of the {@link com.twitter.io.Buf} companion object.
+ *
+ * @deprecated This will no longer be necessary when 2.11 support is dropped. 2019-10-04
  */
+@Deprecated
 public final class Bufs {
   private Bufs() { }
 

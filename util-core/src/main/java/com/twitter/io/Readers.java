@@ -18,7 +18,9 @@ import scala.runtime.BoxedUnit;
  * This will be removed when drop Scala 2.11 support.
  *
  * @see com.twitter.io.Reader
+ * @deprecated This will no longer be necessary when 2.11 support is dropped. 2019-10-04
  */
+@Deprecated
 public final class Readers {
 
   private Readers() { throw new IllegalStateException(); }

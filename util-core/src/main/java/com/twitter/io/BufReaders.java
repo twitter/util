@@ -7,7 +7,9 @@ import com.twitter.util.Future;
  * This will be removed when drop Scala 2.11 support.
  *
  * @see com.twitter.io.BufReader
+ * @deprecated This will no longer be necessary when 2.11 support is dropped. 2019-10-04
  */
+@Deprecated()
 public final class BufReaders {
 
   private BufReaders() {
