@@ -88,6 +88,31 @@ along with code that holds a strong reference to the gauge in a global linked li
 such you should only rely on ``provideGauge`` when you do not have a place to keep a strong
 reference.
 
+
+Prefer fully-qualified names over scoping
+-----------------------------------------
+There is a convenient API method (``scope``) allowing to spawn a "scoped" version of a given
+``StatsReceiver``. Although it enables effortless code reuse, scoping comes at the cost of extra
+allocations. Inlining a fully-qualified metric name directly into the constructing method yields
+the same outcome yet avoids the overhead needed to accommodate interim structures.
+
+Put this way, if possible, prefer this
+
+.. code-block:: scala
+
+    statsReceiver.counter("foo", "bar", "baz")
+
+over this
+
+.. code-block:: scala
+
+    statsReceiver.scope("foo").scope("bar").counter("baz")
+
+It's important to note that while this optimization is appealing like an easy win, it shouldn't
+be universally applied. There are many legitimate use-cases when scoping a ``StatsReceiver``
+is very reasonable thing to do, and otherwise, would require an alternative channel for the scope
+to be propagated between components, presumably introducing the overhead somewhere else.
+
 .. _testing_code:
 
 Testing code that use StatsReceivers

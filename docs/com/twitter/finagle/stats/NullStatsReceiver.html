@@ -867,8 +867,8 @@ are only reported once per receiver.
       </span>
       
       <p class="shortcomment cmt">Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)
-statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"backend"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counters</a> named <code>/client/adds</code> and <code>/client/backend/adds</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"backend"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counters</a> named <code>/client/adds</code> and <code>/client/backend/adds</code>.</p><p>Note it's recommended to be mindful with usage of the <code>scope</code> method as it's almost always
+more efficient to pass a full metric name directly to a constructing method.</p><p>Put this way, whenever possible prefer</p><pre>statsReceiver.counter(<span class="lit">"client"</span>, <span class="lit">"adds"</span>)</pre><p>to</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String*):StatsReceiver"></a>
       <span class="permalink">
@@ -884,8 +884,8 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
         <span class="name">scope</span><span class="params">(<span name="namespaces">namespaces: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
       </span>
       
-      <p class="shortcomment cmt">Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>, <span class="lit">"backend"</span>, <span class="lit">"pool"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/backend/pool/adds</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> and <code>namespaces</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>, <span class="lit">"backend"</span>, <span class="lit">"pool"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/backend/pool/adds</code>.</p><p>Note it's recommended to be mindful with usage of the <code>scope</code> method as it's almost always
+more efficient to pass a full metric name directly to a constructing method.</p><p>Put this way, whenever possible prefer</p><pre>statsReceiver.counter(<span class="lit">"client"</span>, <span class="lit">"backend"</span>, <span class="lit">"pool"</span>, <span class="lit">"adds"</span>)</pre><p>to</p><pre>statsReceiver.scope(<span class="lit">"client"</span>, <span class="lit">"backend"</span>, <span class="lit">"pool"</span>).counter(<span class="lit">"adds"</span>)</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@varargs</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -1049,53 +1049,7 @@ statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"
 
         
 
-        <div class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.finagle.stats.StatsReceiver#counter0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="counter0(name:String):com.twitter.finagle.stats.Counter"></a><a id="counter0(String):Counter"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#counter0(name:String):com.twitter.finagle.stats.Counter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2017-6-16) Use vararg counter() instead">counter0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given <code>name</code>.</p><p>This method is a convenience for Java programs, but is no longer needed because
-<a href="StatsReceivers$.html#counter(statsReceiver:com.twitter.finagle.stats.StatsReceiver,name:String*):com.twitter.finagle.stats.Counter" class="extmbr" name="com.twitter.finagle.stats.StatsReceivers#counter">StatsReceivers.counter</a> is usable from java.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-6-16)</i> Use vararg counter() instead</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.StatsReceiver#stat0" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stat0(name:String):com.twitter.finagle.stats.Stat"></a><a id="stat0(String):Stat"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#stat0(name:String):com.twitter.finagle.stats.Stat" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2017-6-16) Use vararg stat() instead">stat0</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given name. This method is a convenience for Java
-programs, but is no longer needed because <a href="StatsReceivers$.html#counter(statsReceiver:com.twitter.finagle.stats.StatsReceiver,name:String*):com.twitter.finagle.stats.Counter" class="extmbr" name="com.twitter.finagle.stats.StatsReceivers#counter">StatsReceivers.counter</a> is
-usable from java.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2017-6-16)</i> Use vararg stat() instead</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">

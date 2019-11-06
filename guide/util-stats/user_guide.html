@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>User Guide &#8212; Util 19.10.0 documentation</title>
+    <title>User Guide &#8212; Util 19.11.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '19.10.0',
+        VERSION:     '19.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="Util 19.10.0 documentation" href="../index.html" />
+    <link rel="top" title="Util 19.11.0 documentation" href="../index.html" />
     <link rel="up" title="util-stats Guide" href="index.html" />
     <link rel="next" title="FAQ" href="faq.html" />
     <link rel="prev" title="Basics" href="basics.html" />
@@ -150,6 +150,25 @@ along with code that holds a strong reference to the gauge in a global linked li
 such you should only rely on <code class="docutils literal"><span class="pre">provideGauge</span></code> when you do not have a place to keep a strong
 reference.</p>
 </div>
+<div class="section" id="prefer-fully-qualified-names-over-scoping">
+<h2>Prefer fully-qualified names over scoping<a class="headerlink" href="#prefer-fully-qualified-names-over-scoping" title="Permalink to this headline">¶</a></h2>
+<p>There is a convenient API method (<code class="docutils literal"><span class="pre">scope</span></code>) allowing to spawn a &#8220;scoped&#8221; version of a given
+<code class="docutils literal"><span class="pre">StatsReceiver</span></code>. Although it enables effortless code reuse, scoping comes at the cost of extra
+allocations. Inlining a fully-qualified metric name directly into the constructing method yields
+the same outcome yet avoids the overhead needed to accommodate interim structures.</p>
+<p>Put this way, if possible, prefer this</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">,</span> <span class="s">&quot;baz&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>over this</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="o">.</span><span class="n">scope</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">).</span><span class="n">scope</span><span class="o">(</span><span class="s">&quot;bar&quot;</span><span class="o">).</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;baz&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>It&#8217;s important to note that while this optimization is appealing like an easy win, it shouldn&#8217;t
+be universally applied. There are many legitimate use-cases when scoping a <code class="docutils literal"><span class="pre">StatsReceiver</span></code>
+is very reasonable thing to do, and otherwise, would require an alternative channel for the scope
+to be propagated between components, presumably introducing the overhead somewhere else.</p>
+</div>
 <div class="section" id="testing-code-that-use-statsreceivers">
 <span id="testing-code"></span><h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>If your tests do not need to verify the value of stats, you should use a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a>
@@ -234,6 +253,7 @@ using.</p>
 <li><a class="reference internal" href="#prefer-storing-counters-and-stats-in-member-variables">Prefer storing counters and stats in member variables</a></li>
 <li><a class="reference internal" href="#store-gauges-in-member-variables">Store gauges in member variables</a></li>
 <li><a class="reference internal" href="#prefer-addgauge-over-providegauge">Prefer <cite>addGauge</cite> over <cite>provideGauge</cite></a></li>
+<li><a class="reference internal" href="#prefer-fully-qualified-names-over-scoping">Prefer fully-qualified names over scoping</a></li>
 <li><a class="reference internal" href="#testing-code-that-use-statsreceivers">Testing code that use StatsReceivers</a></li>
 <li><a class="reference internal" href="#usage-from-java">Usage from Java</a></li>
 <li><a class="reference internal" href="#thread-safety">Thread-safety</a></li>
