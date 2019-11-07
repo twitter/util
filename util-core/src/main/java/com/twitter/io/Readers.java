@@ -51,13 +51,6 @@ public final class Readers {
   }
 
   /**
-   * See {@code com.twitter.io.Pipe.copyMany}.
-   */
-  public static Future<BoxedUnit> copyMany(AsyncStream<Reader<Buf>> readers, Writer<Buf> w) {
-    return Pipe$.MODULE$.copyMany(readers, w);
-  }
-
-  /**
    * See {@code com.twitter.io.Reader.fromFile()}.
    */
   public static Reader<Buf> newFileReader(File f, int chunkSize) throws FileNotFoundException {

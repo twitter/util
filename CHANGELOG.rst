@@ -31,6 +31,9 @@ Runtime Behavior Changes
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
+* util-core: Removed `c.t.io.Pipe.copyMany` (was `Reader.copyMany`). Use `AsyncStream.foreachF`
+  link to `Pipe.copy` for substitution. ``PHAB_ID=D396590``
+
 * util-core: Add `c.t.io.BufReader.readAll` to consume a `Reader[Buf]` and concat values to a Buf.
   Replace `c.t.io.Reader.readAll` with `Reader.readAllItems`, the new API consumes a generic Reader[T],
   and return a Seq of items. ``PHAB_ID=D391346``

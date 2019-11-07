@@ -312,7 +312,7 @@ object Reader {
    */
   def concat[A](readers: AsyncStream[Reader[A]]): Reader[A] = {
     val target = new Pipe[A]
-    val copied = Pipe.copyMany(readers, target).respond {
+    val copied = readers.foreachF(Pipe.copy(_, target)).respond {
       case Throw(exc) => target.fail(exc)
       case _ => target.close()
     }

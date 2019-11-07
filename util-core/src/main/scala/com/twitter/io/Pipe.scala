@@ -1,6 +1,5 @@
 package com.twitter.io
 
-import com.twitter.concurrent.AsyncStream
 import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
 
 /**
@@ -298,19 +297,6 @@ object Pipe {
     /** Indicates the reader has seen the EOF. No more reads or writes are allowed. */
     case object Closed extends State[Nothing]
   }
-
-  /**
-   * Copy elements from many Readers to a Writer. Readers will be discarded if
-   * `copy` is cancelled (discarding the target). The Writer is unmanaged, the
-   * caller is responsible for finalization and error handling, e.g.:
-   *
-   * {{{
-   * Pipe.copyMany(readers, writer) ensure writer.close()
-   * }}}
-   * @param readers An AsyncStream holds a stream of Reader[A]
-   */
-  def copyMany[A](readers: AsyncStream[Reader[A]], target: Writer[A]): Future[Unit] =
-    readers.foreachF(copy(_, target))
 
   /**
    * Copy elements from a Reader to a Writer. The Reader will be discarded if
