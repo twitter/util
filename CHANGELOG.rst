@@ -28,6 +28,9 @@ Runtime Behavior Changes
 
 * util: Upgrade to caffeine 2.8.0 ``PHAB_ID=D384592``
 
+* util-jvm: Stop double-exporting `postGC` stats under both `jvm` and `jvm/mem`. These are now
+  only exported under `jvm/mem/postGC`. ``PHAB_ID=D392230``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 

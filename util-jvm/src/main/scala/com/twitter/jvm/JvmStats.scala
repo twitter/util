@@ -1,7 +1,7 @@
 package com.twitter.jvm
 
 import com.twitter.conversions.StringOps._
-import com.twitter.finagle.stats.{BroadcastStatsReceiver, StatsReceiver}
+import com.twitter.finagle.stats.StatsReceiver
 import java.lang.management.{ManagementFactory, BufferPoolMXBean}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -75,10 +75,7 @@ object JvmStats {
     val memPool = ManagementFactory.getMemoryPoolMXBeans.asScala
     val memStats = stats.scope("mem")
     val currentMem = memStats.scope("current")
-    // TODO: Refactor postGCStats when we confirmed that no one is using this stats anymore
-    // val postGCStats = memStats.scope("postGC")
-    val postGCMem = memStats.scope("postGC")
-    val postGCStats = BroadcastStatsReceiver(Seq(stats.scope("postGC"), postGCMem))
+    val postGCStats = memStats.scope("postGC")
     memPool.foreach { pool =>
       val name = pool.getName.regexSub("""[^\w]""".r) { m =>
         "_"
