@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: The lightly used `com.twitter.util.JavaSingleton` trait has been removed. It
+  did not work as intended. Users should provide Java friendly objects, classes, and methods
+  instead. ``PHAB_ID=D399947``
+
 19.11.0
 -------
 
