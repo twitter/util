@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-stats: Introduces `c.t.f.stats.LazyStatsReceiver` which ensures that counters and histograms
+  don't export metrics until after they have been `incr`ed or `add`ed at least once. ``PHAB_ID=D398898``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
