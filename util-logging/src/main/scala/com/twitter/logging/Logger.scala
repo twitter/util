@@ -18,75 +18,9 @@ package com.twitter.logging
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{logging => javalog}
-import scala.annotation.{tailrec, varargs}
+import scala.annotation.varargs
 import scala.collection.JavaConverters._
 import scala.collection.Map
-
-// replace java's ridiculous log levels with the standard ones.
-sealed abstract class Level(val name: String, val value: Int) extends javalog.Level(name, value) {
-  // for java compat
-  def get(): Level = this
-}
-
-object Level {
-  case object OFF extends Level("OFF", Int.MaxValue)
-  case object FATAL extends Level("FATAL", 1000)
-  case object CRITICAL extends Level("CRITICAL", 970)
-  case object ERROR extends Level("ERROR", 930)
-  case object WARNING extends Level("WARNING", 900)
-  case object INFO extends Level("INFO", 800)
-  case object DEBUG extends Level("DEBUG", 500)
-  case object TRACE extends Level("TRACE", 400)
-  case object ALL extends Level("ALL", Int.MinValue)
-
-  private[logging] val AllLevels: Seq[Level] =
-    Seq(OFF, FATAL, CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE, ALL)
-
-  /**
-   * Associate [[java.util.logging.Level]] and `Level` by their integer
-   * values. If there is no match, we return `None`.
-   */
-  def fromJava(level: javalog.Level): Option[Level] =
-    AllLevels.find(_.value == level.intValue)
-
-  /**
-   * Get a `Level` by its name, or `None` if there is no match.
-   */
-  def parse(name: String): Option[Level] = AllLevels.find(_.name == name)
-}
-
-/**
- * Typically mixed into `Exceptions` to indicate what [[Level]]
- * they should be logged at.
- *
- * @see Finagle's `com.twitter.finagle.Failure`.
- */
-trait HasLogLevel {
-  def logLevel: Level
-}
-
-object HasLogLevel {
-
-  /**
-   * Finds the first [[HasLogLevel]] for the given `Throwable` including
-   * its chain of causes and returns its `logLevel`.
-   *
-   * @note this finds the first [[HasLogLevel]], and should be there
-   *       be multiple in the chain of causes, it '''will not use'''
-   *       the most severe.
-   *
-   * @return `None` if neither `t` nor any of its causes are a
-   *        [[HasLogLevel]]. Otherwise, returns `Some` of the first
-   *        one found.
-   */
-  @tailrec
-  def unapply(t: Throwable): Option[Level] = t match {
-    case null => None
-    case hll: HasLogLevel => Some(hll.logLevel)
-    case _ => unapply(t.getCause)
-  }
-
-}
 
 class LoggingException(reason: String) extends Exception(reason)
 
