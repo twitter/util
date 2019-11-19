@@ -1,27 +1,11 @@
 package com.twitter.util.security
 
-import com.twitter.logging.{BareFormatter, Logger, StringHandler}
 import com.twitter.util.Try
 import java.io.{File, IOException}
 import org.scalatest.Assertions._
 import scala.reflect.ClassTag
 
 object PemFileTestUtils {
-
-  def newLogger(): Logger = {
-    val logger = Logger.get("com.twitter.util.security")
-    logger.clearHandlers()
-    logger.setLevel(Logger.WARNING)
-    logger.setUseParentHandlers(false)
-    logger
-  }
-
-  def newHandler(): StringHandler = {
-    val logger = newLogger()
-    val handler = new StringHandler(BareFormatter, None)
-    logger.addHandler(handler)
-    handler
-  }
 
   def assertException[A <: AnyRef, B](tryValue: Try[B])(implicit classTag: ClassTag[A]): Unit = {
     assert(tryValue.isThrow)
@@ -42,28 +26,7 @@ object PemFileTestUtils {
   def assertIOException[A](tryValue: Try[A]): Unit =
     assertException[IOException, A](tryValue)
 
-  def assertLogMessage(
-    name: String
-  )(logMessage: String,
-    filename: String,
-    expectedExMessage: String
-  ): Unit = {
-    assert(logMessage.startsWith(s"$name ($filename) failed to load: "))
-    assert(logMessage.contains(expectedExMessage))
-  }
-
-  def assertAnyLogMessage(
-    name: String
-  )(logMessage: String,
-    filename: String,
-    expectedExMessages: String*
-  ): Unit = {
-    assert(logMessage.startsWith(s"$name ($filename) failed to load: "))
-    assert(expectedExMessages.exists(expectedExMessage => logMessage.contains(expectedExMessage)))
-  }
-
   def testFileDoesntExist[A](name: String, read: File => Try[A]): Unit = {
-    val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
 
@@ -72,32 +35,20 @@ object PemFileTestUtils {
     assert(!tempFile.exists())
 
     val tryReadPem: Try[A] = read(tempFile)
-    assertAnyLogMessage(name)(
-      handler.get,
-      tempFile.getName(),
-      "No such file or directory",
-      "The system cannot find the file specified")
     assertIOException(tryReadPem)
   }
 
   def testFilePathIsntFile[A](name: String, read: File => Try[A]): Unit = {
-    val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
 
     val parentFile = tempFile.getParentFile()
     val tryReadPem: Try[A] = read(parentFile)
 
-    assertAnyLogMessage(name)(
-      handler.get,
-      parentFile.getName(),
-      "Is a directory",
-      "Access is denied")
     assertIOException(tryReadPem)
   }
 
   def testFilePathIsntReadable[A](name: String, read: File => Try[A]): Unit = {
-    val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
 
@@ -107,7 +58,6 @@ object PemFileTestUtils {
 
     val tryReadPem: Try[A] = read(tempFile)
 
-    assertLogMessage(name)(handler.get, tempFile.getName(), "Permission denied")
     assertIOException(tryReadPem)
   }
 
@@ -117,13 +67,11 @@ object PemFileTestUtils {
   )(
     implicit classTag: ClassTag[A]
   ): Unit = {
-    val handler = newHandler()
     val tempFile = File.createTempFile("test", "ext")
     tempFile.deleteOnExit()
 
     val tryReadPem: Try[B] = read(tempFile)
 
-    assertLogMessage(name)(handler.get, tempFile.getName(), "Empty input")
     assertException[A, B](tryReadPem)
   }
 

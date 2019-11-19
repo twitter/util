@@ -7,9 +7,6 @@ import org.scalatest.FunSuite
 
 class PemFileTest extends FunSuite {
 
-  private[this] val assertLogMessage =
-    PemFileTestUtils.assertLogMessage("PemFile") _
-
   private[this] def readPemFileMessage(messageType: String)(tempFile: File): Try[String] = {
     val pemFile = new PemFile(tempFile)
     pemFile.readMessage(messageType).map(new String(_))

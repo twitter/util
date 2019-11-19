@@ -13,9 +13,6 @@ class X509CertificateFileTest extends FunSuite {
     assert(subjectData.contains("Core Systems Libraries"))
   }
 
-  private[this] val assertLogMessage =
-    PemFileTestUtils.assertLogMessage("X509Certificate") _
-
   private[this] def assertCertException(tryCert: Try[X509Certificate]): Unit =
     PemFileTestUtils.assertException[CertificateException, X509Certificate](tryCert)
 
@@ -45,7 +42,6 @@ class X509CertificateFileTest extends FunSuite {
   }
 
   test("File is garbage") {
-    val handler = PemFileTestUtils.newHandler()
     // Lines were manually deleted from a real certificate file
     val tempFile = TempFile.fromResourcePath("/certs/test-rsa-garbage.crt")
     // deleteOnExit is handled by TempFile
@@ -53,7 +49,6 @@ class X509CertificateFileTest extends FunSuite {
     val certFile = new X509CertificateFile(tempFile)
     val tryCert = certFile.readX509Certificate()
 
-    assertLogMessage(handler.get, tempFile.getName, "Incomplete BER/DER data.")
     assertCertException(tryCert)
   }
 

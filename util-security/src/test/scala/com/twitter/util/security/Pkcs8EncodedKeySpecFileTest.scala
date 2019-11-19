@@ -8,9 +8,6 @@ import org.scalatest.FunSuite
 
 class Pkcs8EncodedKeySpecFileTest extends FunSuite {
 
-  private[this] val assertLogMessage =
-    PemFileTestUtils.assertLogMessage("PKCS8EncodedKeySpec") _
-
   private[this] val readKeySpecFromFile: File => Try[PKCS8EncodedKeySpec] =
     (tempFile) => {
       val keyFile = new Pkcs8EncodedKeySpecFile(tempFile)

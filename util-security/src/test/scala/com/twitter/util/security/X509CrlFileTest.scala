@@ -8,9 +8,6 @@ import org.scalatest.FunSuite
 
 class X509CrlFileTest extends FunSuite {
 
-  private[this] val assertLogMessage =
-    PemFileTestUtils.assertLogMessage("X509Crl") _
-
   private[this] def assertCrlException(tryCrl: Try[X509CRL]): Unit =
     PemFileTestUtils.assertException[CRLException, X509CRL](tryCrl)
 
@@ -36,7 +33,6 @@ class X509CrlFileTest extends FunSuite {
   }
 
   test("File is garbage") {
-    val handler = PemFileTestUtils.newHandler()
     // Lines were manually deleted from a real crl file
     val tempFile = TempFile.fromResourcePath("/crl/csl-intermediate-garbage.crl")
     // deleteOnExit is handled by TempFile
@@ -44,7 +40,6 @@ class X509CrlFileTest extends FunSuite {
     val crlFile = new X509CrlFile(tempFile)
     val tryCrl = crlFile.readX509Crl()
 
-    assertLogMessage(handler.get, tempFile.getName, "Incomplete BER/DER data.")
     assertCrlException(tryCrl)
   }
 
