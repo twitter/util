@@ -136,6 +136,7 @@ class MemoizeTest extends FunSuite {
     assert(2 == memoizer(1))
     assert(3 == memoizer(2))
     assertResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
+    assert(memoizer.size == 2)
   }
 
   test("Memoize.snappable: snap ignores in-process computations") {
@@ -161,7 +162,10 @@ class MemoizeTest extends FunSuite {
     callReadyLatch.countDown()
 
     assert(3 == Await.result(result))
-    assertResult(Map(1 -> 2, 2 -> 3))(memoizer.snap)
+    val snap = memoizer.snap
+    assertResult(Map(1 -> 2, 2 -> 3))(snap)
+    assert(memoizer.size == snap.size)
+    assert(snap.size == 2)
   }
 
   test("Memoize.snappable: snap ignores failed computations") {
@@ -175,8 +179,12 @@ class MemoizeTest extends FunSuite {
       memoizer(2)
     }
     assert(memoizer.snap.isEmpty)
+    assert(memoizer.size == memoizer.snap.size)
+    assert(memoizer.snap.size == 0)
 
     assert(2 == memoizer(1))
     assertResult(Map(1 -> 2))(memoizer.snap)
+    assert(memoizer.size == memoizer.snap.size)
+    assert(memoizer.snap.size == 1)
   }
 }

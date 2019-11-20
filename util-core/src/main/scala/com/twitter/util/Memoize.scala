@@ -36,6 +36,12 @@ object Memoize {
      * [[scala.collection.immutable.Map]]
      */
     def snap: Map[A, B]
+
+    /**
+     * Returns the most recent size of the currently memoized computations.
+     * Useful for stats reporting.
+     */
+    def size: Long
   }
 
   /**
@@ -78,6 +84,8 @@ object Memoize {
   def snappable[A, B](f: A => B): Snappable[A, B] =
     new Snappable[A, B] {
       private[this] var memo = Map.empty[A, Either[GuardedCountDownLatch, B]]
+
+      override def size: Long = memo.size
 
       def snap: Map[A, B] =
         synchronized(memo) collect {
