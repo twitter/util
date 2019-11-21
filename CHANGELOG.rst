@@ -20,6 +20,13 @@ Breaking API Changes
   did not work as intended. Users should provide Java friendly objects, classes, and methods
   instead. ``PHAB_ID=D399947``
 
+Deprecations
+~~~~~~~~~~~~
+
+* util-test: The `c.t.logging.TestLogging` mixin has been deprecated. Users are encouraged to
+  move to slf4j for logging and minimize dependencies on `com.twitter.logging` in general, as
+  it is intended to be replaced entirely by slf4j. ``PHAB_ID=D403574``
+
 19.11.0
 -------
 
