@@ -12,7 +12,7 @@ val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
   ExclusionRule("javax.jms", "jms")
 )
 val slf4jVersion = "1.7.21"
-val jacksonVersion = "2.9.9"
+val jacksonVersion = "2.10.1"
 
 val guavaLib = "com.google.guava" % "guava" % "19.0"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.0"
