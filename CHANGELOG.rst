@@ -59,6 +59,12 @@ Runtime Behavior Changes
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
+* util-stats: abstract methods of StatsReceiver now take Schemas. The old APIs
+  are now final and cannot be overriden. For custom implementations, define
+  schema based methods (eg, counter(verbosity, name) is now 
+  counter(CounterSchema)). NB: users can continue to call the old interface;
+  only implementors must migrate.``PHAB_ID=D385068``
+
 * util-core: Removed `c.t.io.Pipe.copyMany` (was `Reader.copyMany`). Use `AsyncStream.foreachF`
   link to `Pipe.copy` for substitution. ``PHAB_ID=D396590``
 

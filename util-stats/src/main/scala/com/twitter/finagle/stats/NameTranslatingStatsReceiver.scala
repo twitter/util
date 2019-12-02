@@ -17,16 +17,21 @@ abstract class NameTranslatingStatsReceiver(
 
   protected def translate(name: Seq[String]): Seq[String]
 
-  override def counter(verbosity: Verbosity, name: String*): Counter =
-    self.counter(verbosity, translate(name): _*)
+  override def counter(counterSchema: CounterSchema): Counter = {
+    self.counter(
+      CounterSchema(
+        counterSchema.metricBuilder.withName(translate(counterSchema.metricBuilder.name))))
+  }
 
-  override def stat(verbosity: Verbosity, name: String*): Stat =
-    self.stat(verbosity, translate(name): _*)
+  override def stat(histogramSchema: HistogramSchema): Stat = {
+    self.stat(
+      HistogramSchema(
+        histogramSchema.metricBuilder.withName(translate(histogramSchema.metricBuilder.name))))
+  }
 
-  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
-    // scalafix:off StoreGaugesAsMemberVariables
-    self.addGauge(verbosity, translate(name): _*)(f)
-    // scalafix:on StoreGaugesAsMemberVariables
+  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
+    self.addGauge(
+      GaugeSchema(gaugeSchema.metricBuilder.withName(translate(gaugeSchema.metricBuilder.name))))(f)
   }
 
   override def toString: String = s"$self/$namespacePrefix"

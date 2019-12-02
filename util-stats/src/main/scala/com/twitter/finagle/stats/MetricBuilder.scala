@@ -92,6 +92,8 @@ class MetricBuilder(
 
   def withRole(role: SourceRole): MetricBuilder = this.copy(role = role)
 
+  def withName(name: Seq[String]): MetricBuilder = this.copy(name = name)
+
   /**
    * Generates a CounterSchema which can be used to create a counter in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
@@ -139,4 +141,40 @@ class MetricBuilder(
     val schema = this.copy(name = name).histogramSchema
     this.statsReceiver.stat(schema)
   }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[MetricBuilder]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: MetricBuilder =>
+      (that.canEqual(this)) &&
+        keyIndicator == that.keyIndicator &&
+        description == that.description &&
+        units == that.units &&
+        role == that.role &&
+        verbosity == that.verbosity &&
+        sourceClass == that.sourceClass &&
+        sourceLibrary == that.sourceLibrary &&
+        name == that.name &&
+        identifier == that.identifier &&
+        percentiles == that.percentiles
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq[AnyRef](
+      description,
+      units,
+      role,
+      verbosity,
+      sourceClass,
+      sourceLibrary,
+      name,
+      identifier,
+      percentiles)
+    val hashCodes = keyIndicator.hashCode() +: state.map(_.hashCode())
+    hashCodes.foldLeft(0)((a, b) => 31 * a + b)
+  }
+
+  override def toString =
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $sourceLibrary, $name, $identifier, $percentiles, $statsReceiver)"
 }

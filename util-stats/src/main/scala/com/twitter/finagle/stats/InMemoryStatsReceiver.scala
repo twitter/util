@@ -66,83 +66,84 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
   override def counter(name: String*): ReadableCounter =
-    counter(Verbosity.Default, name: _*)
+    counter(CounterSchema(new MetricBuilder(name = name, statsReceiver = this)))
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
    */
-  def counter(v: Verbosity, name: String*): ReadableCounter =
+  def counter(schema: CounterSchema): ReadableCounter =
     new ReadableCounter {
 
-      verbosity += name -> v
+      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
 
       // eagerly initialize
       counters.synchronized {
-        if (!counters.contains(name)) {
-          counters(name) = 0
+        if (!counters.contains(schema.metricBuilder.name)) {
+          counters(schema.metricBuilder.name) = 0
         }
       }
 
       def incr(delta: Long): Unit = counters.synchronized {
         val oldValue = apply()
-        counters(name) = oldValue + delta
+        counters(schema.metricBuilder.name) = oldValue + delta
       }
 
-      def apply(): Long = counters.getOrElse(name, 0)
+      def apply(): Long = counters.getOrElse(schema.metricBuilder.name, 0)
 
       override def toString: String =
-        s"Counter(${name.mkString("/")}=${apply()})"
+        s"Counter(${schema.metricBuilder.name.mkString("/")}=${apply()})"
     }
 
-  override def stat(name: String*): ReadableStat = stat(Verbosity.Default, name: _*)
+  override def stat(name: String*): ReadableStat =
+    stat(HistogramSchema(new MetricBuilder(name = name, statsReceiver = this)))
 
   /**
    * Creates a [[ReadableStat]] of the given `name`.
    */
-  def stat(v: Verbosity, name: String*): ReadableStat =
+  def stat(schema: HistogramSchema): ReadableStat =
     new ReadableStat {
 
-      verbosity += name -> v
+      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
 
       // eagerly initialize
       stats.synchronized {
-        if (!stats.contains(name)) {
-          stats(name) = Nil
+        if (!stats.contains(schema.metricBuilder.name)) {
+          stats(schema.metricBuilder.name) = Nil
         }
       }
 
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
-        stats(name) = oldValue :+ value
+        stats(schema.metricBuilder.name) = oldValue :+ value
       }
-      def apply(): Seq[Float] = stats.getOrElse(name, Seq.empty)
+      def apply(): Seq[Float] = stats.getOrElse(schema.metricBuilder.name, Seq.empty)
 
       override def toString: String = {
         val vals = apply()
-        s"Stat(${name.mkString("/")}=${statValuesToStr(vals)})"
+        s"Stat(${schema.metricBuilder.name.mkString("/")}=${statValuesToStr(vals)})"
       }
     }
 
   /**
    * Creates a [[Gauge]] of the given `name`.
    */
-  def addGauge(v: Verbosity, name: String*)(f: => Float): Gauge =
+  def addGauge(schema: GaugeSchema)(f: => Float) =
     new Gauge {
 
-      gauges += name -> (() => f)
-      verbosity += name -> v
+      gauges += schema.metricBuilder.name -> (() => f)
+      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
 
       def remove(): Unit = {
-        gauges -= name
+        gauges -= schema.metricBuilder.name
       }
 
       override def toString: String = {
         // avoid holding a reference to `f`
-        val current = gauges.get(name) match {
+        val current = gauges.get(schema.metricBuilder.name) match {
           case Some(fn) => fn()
           case None => -0.0f
         }
-        s"Gauge(${name.mkString("/")}=$current)"
+        s"Gauge(${schema.metricBuilder.name.mkString("/")}=$current)"
       }
     }
 

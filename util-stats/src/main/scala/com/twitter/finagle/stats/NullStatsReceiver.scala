@@ -16,11 +16,9 @@ class NullStatsReceiver extends StatsReceiver {
   private[this] val NullStat = new Stat { def add(value: Float): Unit = () }
   private[this] val NullGauge = new Gauge { def remove(): Unit = () }
 
-  def counter(verbosity: Verbosity, name: String*): Counter = NullCounter
-  def stat(verbosity: Verbosity, name: String*): Stat = NullStat
-  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = NullGauge
-
-  override def provideGauge(name: String*)(f: => Float): Unit = ()
+  def counter(schema: CounterSchema) = NullCounter
+  def stat(schema: HistogramSchema) = NullStat
+  def addGauge(schema: GaugeSchema)(f: => Float) = NullGauge
 
   override def scope(namespace: String): StatsReceiver = this
 
@@ -29,4 +27,5 @@ class NullStatsReceiver extends StatsReceiver {
   override def isNull: Boolean = true
 
   override def toString: String = "NullStatsReceiver"
+
 }

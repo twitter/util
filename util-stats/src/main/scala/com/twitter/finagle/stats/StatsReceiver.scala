@@ -98,17 +98,14 @@ trait StatsReceiver {
    * Get a [[Counter counter]] with the given `name`.
    */
   @varargs
-  def counter(verbosity: Verbosity, name: String*): Counter
+  def counter(verbosity: Verbosity, name: String*): Counter =
+    counter(
+      CounterSchema(new MetricBuilder(verbosity = verbosity, name = name, statsReceiver = this)))
 
   /**
    * Get a [[Counter counter]] with the given schema.
-   *
-   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
-   * StatsReceivers with support for schemas/metadata will override this to make better use of that
-   * information.
    */
-  private[stats] def counter(schema: CounterSchema): Counter =
-    counter(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)
+  def counter(schema: CounterSchema): Counter
 
   /**
    * Get a [[Stat stat]] with the given name.
@@ -120,17 +117,14 @@ trait StatsReceiver {
    * Get a [[Stat stat]] with the given name.
    */
   @varargs
-  def stat(verbosity: Verbosity, name: String*): Stat
+  def stat(verbosity: Verbosity, name: String*): Stat =
+    stat(
+      HistogramSchema(new MetricBuilder(verbosity = verbosity, name = name, statsReceiver = this)))
 
   /**
    * Get a [[Stat stat]] with the given schema.
-   *
-   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
-   * StatsReceivers with support for schemas/metadata will override this to make better use of that
-   * information.
    */
-  private[stats] def stat(schema: HistogramSchema): Stat =
-    stat(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)
+  def stat(schema: HistogramSchema): Stat
 
   /**
    * Register a function `f` as a [[Gauge gauge]] with the given name that has
@@ -186,7 +180,9 @@ trait StatsReceiver {
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge
+  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
+    addGauge(
+      GaugeSchema(new MetricBuilder(name = name, verbosity = verbosity, statsReceiver = this)))(f)
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.
@@ -200,16 +196,11 @@ trait StatsReceiver {
    *
    * Measurements under the same name are added together.
    *
-   * This default implementation passes the relevant fields to the pre-schema/pre-metadata interface.
-   * StatsReceivers with support for schemas/metadata will override this to make better use of that
-   * information.
-   *
    * @see [[StatsReceiver.provideGauge]] when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  private[stats] def addGauge(schema: GaugeSchema)(f: => Float): Gauge =
-    addGauge(schema.metricBuilder.verbosity, schema.metricBuilder.name: _*)(f)
+  def addGauge(schema: GaugeSchema)(f: => Float): Gauge
 
   /**
    * Prepend `namespace` to the names of the returned [[StatsReceiver]].
@@ -305,23 +296,20 @@ trait StatsReceiver {
 }
 
 abstract class AbstractStatsReceiver extends StatsReceiver {
-  @varargs
-  final override def counter(name: String*): Counter = counter(Verbosity.Default, name: _*)
-  @varargs
-  final def counter(verbosity: Verbosity, name: String*): Counter =
-    counterImpl(verbosity, name)
+
+  final def counter(schema: CounterSchema): Counter =
+    counterImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name)
+
   protected def counterImpl(verbosity: Verbosity, name: scala.collection.Seq[String]): Counter
 
-  @varargs
-  final override def stat(name: String*): Stat = stat(Verbosity.Default, name: _*)
-  @varargs
-  final def stat(verbosity: Verbosity, name: String*): Stat = statImpl(verbosity, name)
+  final def stat(schema: HistogramSchema): Stat =
+    statImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name)
+
   protected def statImpl(verbosity: Verbosity, name: scala.collection.Seq[String]): Stat
 
-  final override def addGauge(name: String*)(f: => Float): Gauge =
-    addGauge(Verbosity.Default, name: _*)(f)
-  final def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
-    addGaugeImpl(verbosity, name, f)
+  final def addGauge(schema: GaugeSchema)(f: => Float): Gauge =
+    addGaugeImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name, f)
+
   protected def addGaugeImpl(
     verbosity: Verbosity,
     name: scala.collection.Seq[String],

@@ -24,22 +24,25 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
     }
   }
 
-  override def counter(verbosity: Verbosity, names: String*): Counter = new Counter {
+  override def counter(schema: CounterSchema) = new Counter {
     private[this] val allCounters = BroadcastCounter(
-      tails(names).map(n => self.counter(verbosity, n: _*))
+      tails(schema.metricBuilder.name).map(n =>
+        self.counter(CounterSchema(schema.metricBuilder.withName(n))))
     )
     def incr(delta: Long): Unit = allCounters.incr(delta)
   }
-
-  override def stat(verbosity: Verbosity, names: String*): Stat = new Stat {
+  override def stat(schema: HistogramSchema) = new Stat {
     private[this] val allStats = BroadcastStat(
-      tails(names).map(n => self.stat(verbosity, n: _*))
+      tails(schema.metricBuilder.name).map(n =>
+        self.stat(HistogramSchema(schema.metricBuilder.withName(n))))
     )
     def add(value: Float): Unit = allStats.add(value)
   }
 
-  override def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
-    private[this] val underlying = tails(names).map(n => self.addGauge(verbosity, n: _*)(f))
+  override def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
+    private[this] val underlying =
+      tails(schema.metricBuilder.name).map(n =>
+        self.addGauge(GaugeSchema(schema.metricBuilder.withName(n)))(f))
     def remove(): Unit = underlying.foreach(_.remove())
   }
 }

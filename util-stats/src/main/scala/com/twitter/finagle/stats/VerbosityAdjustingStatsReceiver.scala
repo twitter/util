@@ -9,15 +9,16 @@ class VerbosityAdjustingStatsReceiver(
   defaultVerbosity: Verbosity)
     extends StatsReceiverProxy {
 
-  override def counter(verbosity: Verbosity, names: String*): Counter =
-    self.counter(defaultVerbosity, names: _*)
-
-  override def stat(verbosity: Verbosity, names: String*): Stat =
-    self.stat(defaultVerbosity, names: _*)
-
-  override def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = {
-    // scalafix:off StoreGaugesAsMemberVariables
-    self.addGauge(defaultVerbosity, names: _*)(f)
-    // scalafix:on StoreGaugesAsMemberVariables
+  override def stat(histogramSchema: HistogramSchema): Stat = {
+    self.stat(HistogramSchema(histogramSchema.metricBuilder.withVerbosity(defaultVerbosity)))
   }
+
+  override def counter(counterSchema: CounterSchema): Counter = {
+    self.counter(CounterSchema(counterSchema.metricBuilder.withVerbosity(defaultVerbosity)))
+  }
+
+  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
+    self.addGauge(GaugeSchema(gaugeSchema.metricBuilder.withVerbosity(defaultVerbosity)))(f)
+  }
+
 }

@@ -173,10 +173,12 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
       }
     }
 
-  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
+  def addGauge(schema: GaugeSchema)(f: => Float): Gauge = {
     var gauge: Gauge = null
     while (gauge == null) {
-      val cumulativeGauge = gauges.computeIfAbsent(name, getWhenNotPresent(verbosity))
+      val cumulativeGauge = gauges.computeIfAbsent(
+        schema.metricBuilder.name,
+        getWhenNotPresent(schema.metricBuilder.verbosity))
       gauge = cumulativeGauge.addGauge(f)
     }
     gauge

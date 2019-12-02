@@ -17,17 +17,19 @@ object BroadcastStatsReceiver {
       with DelegatingStatsReceiver {
     val repr: AnyRef = this
 
-    def counter(verbosity: Verbosity, names: String*): Counter = new BroadcastCounter.Two(
-      first.counter(verbosity, names: _*),
-      second.counter(verbosity, names: _*)
+    def counter(schema: CounterSchema) = new BroadcastCounter.Two(
+      first.counter(schema),
+      second.counter(schema)
     )
 
-    def stat(verbosity: Verbosity, names: String*): Stat =
-      new BroadcastStat.Two(first.stat(verbosity, names: _*), second.stat(verbosity, names: _*))
+    def stat(schema: HistogramSchema) = new BroadcastStat.Two(
+      first.stat(schema),
+      second.stat(schema)
+    )
 
-    def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
-      val firstGauge = first.addGauge(verbosity, names: _*)(f)
-      val secondGauge = second.addGauge(verbosity, names: _*)(f)
+    def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
+      val firstGauge = first.addGauge(schema)(f)
+      val secondGauge = second.addGauge(schema)(f)
       def remove(): Unit = {
         firstGauge.remove()
         secondGauge.remove()
@@ -43,14 +45,14 @@ object BroadcastStatsReceiver {
   private class N(srs: Seq[StatsReceiver]) extends StatsReceiver with DelegatingStatsReceiver {
     val repr: AnyRef = this
 
-    def counter(verbosity: Verbosity, names: String*): Counter =
-      BroadcastCounter(srs.map { _.counter(verbosity, names: _*) })
+    def counter(schema: CounterSchema) =
+      BroadcastCounter(srs.map { _.counter(schema) })
 
-    def stat(verbosity: Verbosity, names: String*): Stat =
-      BroadcastStat(srs.map { _.stat(verbosity, names: _*) })
+    def stat(schema: HistogramSchema) =
+      BroadcastStat(srs.map { _.stat(schema) })
 
-    def addGauge(verbosity: Verbosity, names: String*)(f: => Float): Gauge = new Gauge {
-      val gauges = srs.map { _.addGauge(verbosity, names: _*)(f) }
+    def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
+      val gauges = srs.map { _.addGauge(schema)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
     }
 

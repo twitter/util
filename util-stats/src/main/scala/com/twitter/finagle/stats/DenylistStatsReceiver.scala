@@ -12,14 +12,14 @@ package com.twitter.finagle.stats
 class DenylistStatsReceiver(protected val self: StatsReceiver, denylisted: Seq[String] => Boolean)
     extends StatsReceiverProxy {
 
-  override def counter(verbosity: Verbosity, name: String*): Counter =
-    getStatsReceiver(name).counter(verbosity, name: _*)
+  override def counter(schema: CounterSchema) =
+    getStatsReceiver(schema.metricBuilder.name).counter(schema)
 
-  override def stat(verbosity: Verbosity, name: String*): Stat =
-    getStatsReceiver(name).stat(verbosity, name: _*)
+  override def stat(schema: HistogramSchema) =
+    getStatsReceiver(schema.metricBuilder.name).stat(schema)
 
-  override def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
-    getStatsReceiver(name).addGauge(verbosity, name: _*)(f)
+  override def addGauge(schema: GaugeSchema)(f: => Float) =
+    getStatsReceiver(schema.metricBuilder.name).addGauge(schema)(f)
 
   private[this] def getStatsReceiver(name: Seq[String]): StatsReceiver =
     if (denylisted(name)) NullStatsReceiver else self

@@ -19,13 +19,13 @@ package com.twitter.finagle.stats
  *       modeling whether a gauge is "used" or not.
  */
 final class LazyStatsReceiver(val self: StatsReceiver) extends StatsReceiverProxy {
-  override def counter(verbosity: Verbosity, names: String*): Counter = new Counter {
-    private[this] lazy val underlying = self.counter(verbosity, names: _*)
+  override def counter(schema: CounterSchema): Counter = new Counter {
+    private[this] lazy val underlying = self.counter(schema)
     def incr(delta: Long): Unit = underlying.incr(delta)
   }
 
-  override def stat(verbosity: Verbosity, names: String*): Stat = new Stat {
-    private[this] lazy val underlying = self.stat(verbosity, names: _*)
+  override def stat(schema: HistogramSchema): Stat = new Stat {
+    private[this] lazy val underlying = self.stat(schema)
     def add(value: Float): Unit = underlying.add(value)
   }
 }
