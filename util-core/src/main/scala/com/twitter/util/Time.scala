@@ -17,6 +17,7 @@
 package com.twitter.util
 
 import java.io.Serializable
+import java.time.{Clock, Instant}
 import java.util.concurrent.TimeUnit
 import java.util.{Date, Locale, TimeZone}
 
@@ -295,6 +296,8 @@ object Time extends TimeLikeOps[Time] {
   override def fromMilliseconds(millis: Long): Time = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Time = super.fromMicroseconds(micros)
 
+  private[this] val SystemClock = Clock.systemUTC()
+
   /**
    * Time `Top` is greater than any other definable time, and is
    * equal only to itself. It may be used as a sentinel value,
@@ -388,6 +391,31 @@ object Time extends TimeLikeOps[Time] {
     localGetTime() match {
       case None =>
         Time.fromMilliseconds(System.currentTimeMillis())
+      case Some(f) =>
+        f()
+    }
+  }
+
+  /**
+   * Returns the current [[Time]] with, at best, nanosecond precision.
+   *
+   * Note that nanosecond precision is only available in JDK versions
+   * greater than JDK8. In JDK8 this API has the same precision as
+   * [[Time#now]] and [[System#currentTimeMillis]]. In JDK9+ this will
+   * change and all timestamps taken from this API will have nanosecond
+   * resolution.
+   *
+   * Note that returned values are '''not''' monotonic. This
+   * means it is not suitable for measuring durations where
+   * the clock cannot drift backwards. If monotonicity is desired
+   * prefer a monotonic [[Stopwatch]].
+   *
+   */
+  def nowNanoPrecision: Time = {
+    localGetTime() match {
+      case None =>
+        val rightNow = Instant.now(SystemClock)
+        fromNanoseconds((rightNow.getEpochSecond * Duration.NanosPerSecond) + rightNow.getNano)
       case Some(f) =>
         f()
     }

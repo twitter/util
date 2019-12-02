@@ -13,6 +13,9 @@ New Features
 * util-stats: Introduces `c.t.f.stats.LazyStatsReceiver` which ensures that counters and histograms
   don't export metrics until after they have been `incr`ed or `add`ed at least once. ``PHAB_ID=D398898``
 
+* util-core: Introduce `Time#nowNanoPrecision` to produce nanosecond resolution timestamps in JDK9
+  or later. ``PHAB_ID=D400661``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 

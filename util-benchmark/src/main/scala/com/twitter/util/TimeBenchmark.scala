@@ -32,4 +32,10 @@ class TimeBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def timeDiffOverflow: Duration = t5.diff(t4)
+
+  @Benchmark
+  def timeNow: Time = Time.now
+
+  @Benchmark
+  def nowNanoPrecision: Time = Time.nowNanoPrecision
 }
