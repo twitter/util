@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.{ConcurrentLinkedQueue, ExecutionException, Future => JFuture}
 import java.util.concurrent.atomic.AtomicInteger
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, times, verify, when}
@@ -858,50 +858,59 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
       testJoin("f join g", _ join _)
       testJoin("Future.join(f, g)", Future.join(_, _))
 
-      "toJavaFuture" should {
-        "return the same thing as our Future when initialized" which {
-          val f = const.value(1)
-          val jf = f.toJavaFuture
-          assert(await(f) == jf.get())
-          "must both be done" in {
-            assert(f.isDefined)
-            assert(jf.isDone)
-            assert(!jf.isCancelled)
+      def testJavaFuture(methodName: String, fn: Future[Int] => JFuture[_ <: Int]): Unit = {
+        methodName should {
+          "return the same thing as our Future when initialized" which {
+            val f = const.value(1)
+            val jf = fn(f)
+            assert(await(f) == jf.get())
+            "must both be done" in {
+              assert(f.isDefined)
+              assert(jf.isDone)
+              assert(!jf.isCancelled)
+            }
           }
-        }
 
-        "return the same thing as our Future when set later" which {
-          val f = new Promise[Int]
-          val jf = f.toJavaFuture
-          f.setValue(1)
-          assert(await(f) == jf.get())
-          "must both be done" in {
-            assert(f.isDefined)
-            assert(jf.isDone)
-            assert(!jf.isCancelled)
+          "return the same thing as our Future when set later" which {
+            val f = new Promise[Int]
+            val jf = fn(f)
+            f.setValue(1)
+            assert(await(f) == jf.get())
+            "must both be done" in {
+              assert(f.isDefined)
+              assert(jf.isDone)
+              assert(!jf.isCancelled)
+            }
           }
-        }
 
-        "java future should throw an exception" in {
-          val f = new Promise[Int]
-          val jf = f.toJavaFuture
-          val e = new RuntimeException()
-          f.setException(e)
-          val actual = intercept[RuntimeException] { jf.get() }
-          assert(actual == e)
-        }
+          "java future should throw an exception" in {
+            val f = new Promise[Int]
+            val jf = fn(f)
+            val e = new RuntimeException()
+            f.setException(e)
+            val actual = intercept[ExecutionException] { jf.get() }
+            val cause = intercept[RuntimeException] { throw actual.getCause }
+            assert(cause == e)
+          }
 
-        "interrupt Future when cancelled" in {
-          val f = new HandledPromise[Int]
-          val jf = f.toJavaFuture
-          assert(f.handled.isEmpty)
-          jf.cancel(true)
-          assert(f.handled match {
-            case Some(_: java.util.concurrent.CancellationException) => true
-            case _ => false
-          })
+          "interrupt Future when cancelled" in {
+            val f = new HandledPromise[Int]
+            val jf = fn(f)
+            assert(f.handled.isEmpty)
+            jf.cancel(true)
+            intercept[java.util.concurrent.CancellationException] {
+              throw f.handled.get
+            }
+          }
         }
       }
+
+      testJavaFuture("toJavaFuture", { f: Future[Int] =>
+        f.toJavaFuture
+      })
+      testJavaFuture("toCompletableFuture", { f: Future[Int] =>
+        f.toCompletableFuture
+      })
 
       "monitored" should {
         trait MonitoredHelper {

@@ -16,6 +16,9 @@ New Features
 * util-core: Introduce `Time#nowNanoPrecision` to produce nanosecond resolution timestamps in JDK9
   or later. ``PHAB_ID=D400661``
 
+* util-core: Introduce `Future#toCompletableFuture`, which derives a `CompletableFuture` from
+  a `com.twitter.util.Future` to make integrating with Java APIs simpler. ``PHAB_ID=D408656``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -29,6 +32,13 @@ Deprecations
 * util-test: The `c.t.logging.TestLogging` mixin has been deprecated. Users are encouraged to
   move to slf4j for logging and minimize dependencies on `com.twitter.logging` in general, as
   it is intended to be replaced entirely by slf4j. ``PHAB_ID=D403574``
+
+Bug Fixes
+~~~~~~~~~
+
+ * util-core: `Future#toJavaFuture` incorrectly threw the exception responsible for failing it,
+   instead of a `j.u.c.ExecutionException` wrapping the exception responsible for failing it.
+   ``PHAB_ID=D408656``
 
 19.11.0
 -------

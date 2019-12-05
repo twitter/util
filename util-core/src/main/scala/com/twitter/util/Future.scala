@@ -1,8 +1,13 @@
 package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Tx}
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger, AtomicReference}
-import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
+import java.util.concurrent.{
+  CancellationException,
+  CompletableFuture,
+  Future => JavaFuture
+}
+import java.util.function.BiConsumer
 import java.util.{List => JList}
 import scala.collection.compat.immutable.ArraySeq
 import scala.collection.{Seq => AnySeq}
@@ -2153,35 +2158,45 @@ abstract class Future[+A] extends Awaitable[A] { self =>
   /**
    * Convert a Twitter Future to a Java native Future. This should
    * match the semantics of a Java Future as closely as possible to
-   * avoid issues with the way another API might use them. See:
+   * avoid issues with the way another API might use them. At the same time,
+   * its semantics should be similar to those of a Twitter Future, so it
+   * propagates cancellation. See:
    *
    * https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
    */
-  def toJavaFuture: JavaFuture[_ <: A] = {
-    new JavaFuture[A] {
-      private[this] val wasCancelled = new AtomicBoolean(false)
+  def toJavaFuture: JavaFuture[_ <: A] = toCompletableFuture
 
-      def cancel(mayInterruptIfRunning: Boolean): Boolean = {
-        if (wasCancelled.compareAndSet(false, true))
-          self.raise(new CancellationException)
-        true
-      }
-
-      def isCancelled: Boolean = wasCancelled.get
-      def isDone: Boolean = isCancelled || self.isDefined
-
-      def get(): A = {
-        if (isCancelled)
-          throw new CancellationException
-        Await.result(self)
-      }
-
-      def get(time: Long, timeUnit: TimeUnit): A = {
-        if (isCancelled)
-          throw new CancellationException
-        Await.result(self, Duration.fromTimeUnit(time, timeUnit))
-      }
+  /**
+   * Convert a Twitter Future to a Java native CompletableFuture. This should
+   * match the semantics of a Java Future as closely as possible to
+   * avoid issues with the way another API might use them. At the same time,
+   * its semantics should be similar to those of a Twitter Future, so it
+   * propagates cancellation. See:
+   *
+   * https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+   */
+  def toCompletableFuture[B >: A]: CompletableFuture[B] = {
+    if (self.isDefined) {
+      return CompletableFuture.completedFuture(Await.result(self))
     }
+
+    val f = new CompletableFuture[B]()
+    this.respond {
+      case Return(result) => f.complete(result)
+      case Throw(t) => f.completeExceptionally(t)
+    }
+
+    f.whenComplete(new BiConsumer[B, Throwable] {
+      def accept(result: B, t: Throwable): Unit = {
+        if (t != null && t.isInstanceOf[CancellationException]) {
+          self.raise(t)
+        }
+      }
+    })
+
+    // we have to return the original one because cancellation isn't propagated
+    // by CompletionStages
+    f
   }
 
   /**
