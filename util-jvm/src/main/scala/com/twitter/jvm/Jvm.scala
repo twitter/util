@@ -16,6 +16,9 @@ import scala.util.control.NonFatal
 trait Jvm {
   import Jvm.log
 
+  // This is intended to only be overridden by tests
+  protected def logger: Logger = log
+
   trait Opts {
     def compileThresh: Option[Int]
   }
@@ -87,8 +90,8 @@ trait Jvm {
         } else if (lastCount != count) {
           missedCollections += count - 1 - lastCount
           if (missedCollections > 0 && Time.now - lastLog > LogPeriod) {
-            if (log.isLoggable(Level.FINE)) {
-              log.fine(
+            if (logger.isLoggable(Level.FINE)) {
+              logger.fine(
                 "Missed %d collections for %s due to sampling"
                   .format(missedCollections, name)
               )
