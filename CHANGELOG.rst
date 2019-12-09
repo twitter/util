@@ -19,6 +19,11 @@ New Features
 * util-core: Introduce `Future#toCompletableFuture`, which derives a `CompletableFuture` from
   a `com.twitter.util.Future` to make integrating with Java APIs simpler. ``PHAB_ID=D408656``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Upgrade to jackson 2.9.10 and jackson-databind 2.9.10.1 ``PHAB_ID=D410846``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -36,9 +41,9 @@ Deprecations
 Bug Fixes
 ~~~~~~~~~
 
- * util-core: `Future#toJavaFuture` incorrectly threw the exception responsible for failing it,
-   instead of a `j.u.c.ExecutionException` wrapping the exception responsible for failing it.
-   ``PHAB_ID=D408656``
+* util-core: `Future#toJavaFuture` incorrectly threw the exception responsible for failing it,
+  instead of a `j.u.c.ExecutionException` wrapping the exception responsible for failing it.
+  ``PHAB_ID=D408656``
 
 19.11.0
 -------
