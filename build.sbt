@@ -15,7 +15,7 @@ val slf4jVersion = "1.7.21"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10.1"
 
-val guavaLib = "com.google.guava" % "guava" % "23.6.1-jre"
+val guavaLib = "com.google.guava" % "guava" % "19.0"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.0"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
