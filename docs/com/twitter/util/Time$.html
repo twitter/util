@@ -499,10 +499,6 @@
                         <a href="InterruptibleExecutorServiceFuturePool.html" title="A FuturePool backed by a java.util.concurrent.ExecutorService that supports cancellation.">InterruptibleExecutorServiceFuturePool</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="trait" href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java."></a>
-                        <a href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java.">JavaSingleton</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="class" href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer."></a>
                         <a href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer.">JavaTimer</a>
                       </li><li class="current-entities indented3">
@@ -1359,6 +1355,29 @@ to other code via the standard usage of <a href="Local.html" class="extype" name
 Specifically, code using <a href="Future.html" class="extype" name="com.twitter.util.Future">Futures</a>, <a href="FuturePool.html" class="extype" name="com.twitter.util.FuturePool">FuturePools</a>,
 and <a href="MockTimer.html" class="extype" name="com.twitter.util.MockTimer">MockTimers</a> will have their code see the manipulated
 values.</p></div></div>
+    </li><li name="com.twitter.util.Time#nowNanoPrecision" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="nowNanoPrecision:com.twitter.util.Time"></a><a id="nowNanoPrecision:Time"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/Time$.html#nowNanoPrecision:com.twitter.util.Time" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nowNanoPrecision</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> with, at best, nanosecond precision.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> with, at best, nanosecond precision.</p><p>Note that nanosecond precision is only available in JDK versions
+greater than JDK8. In JDK8 this API has the same precision as
+<a href="#now:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#now">Time#now</a> and <span class="extype" name="System#currentTimeMillis">System#currentTimeMillis</span>. In JDK9+ this will
+change and all timestamps taken from this API will have nanosecond
+resolution.</p><p>Note that returned values are <b>not</b> monotonic. This
+means it is not suitable for measuring durations where
+the clock cannot drift backwards. If monotonicity is desired
+prefer a monotonic <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a>.</p></div></div>
     </li><li name="com.twitter.util.Time#sleep" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sleep(duration:com.twitter.util.Duration):Unit"></a><a id="sleep(Duration):Unit"></a>
       <span class="permalink">

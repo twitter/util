@@ -499,10 +499,6 @@
                         <a href="InterruptibleExecutorServiceFuturePool.html" title="A FuturePool backed by a java.util.concurrent.ExecutorService that supports cancellation.">InterruptibleExecutorServiceFuturePool</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="trait" href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java."></a>
-                        <a href="JavaSingleton.html" title="A mixin to allow scala objects to be used from java.">JavaSingleton</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="class" href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer."></a>
                         <a href="JavaTimer.html" title="A Timer that is implemented via a java.util.Timer.">JavaTimer</a>
                       </li><li class="current-entities indented3">
@@ -2241,6 +2237,27 @@ one active interrupt handler.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.twitter.util.Future#toCompletableFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toCompletableFuture[B&gt;:A]:java.util.concurrent.CompletableFuture[B]"></a><a id="toCompletableFuture[B&gt;:A]:CompletableFuture[B]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/FutureTask.html#toCompletableFuture[B&gt;:A]:java.util.concurrent.CompletableFuture[B]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toCompletableFuture</span><span class="tparams">[<span name="B">B &gt;: <span class="extype" name="com.twitter.util.FutureTask.A">A</span></span>]</span><span class="result">: <span class="extype" name="java.util.concurrent.CompletableFuture">CompletableFuture</span>[<span class="extype" name="com.twitter.util.Future.toCompletableFuture.B">B</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Convert a Twitter Future to a Java native CompletableFuture.</p><div class="fullcomment"><div class="comment cmt"><p>Convert a Twitter Future to a Java native CompletableFuture. This should
+match the semantics of a Java Future as closely as possible to
+avoid issues with the way another API might use them. At the same time,
+its semantics should be similar to those of a Twitter Future, so it
+propagates cancellation. See:</p><p>https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.Future#toJavaFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toJavaFuture:java.util.concurrent.Future[_&lt;:A]"></a>
       <span class="permalink">
@@ -2258,7 +2275,9 @@ one active interrupt handler.
       
       <p class="shortcomment cmt">Convert a Twitter Future to a Java native Future.</p><div class="fullcomment"><div class="comment cmt"><p>Convert a Twitter Future to a Java native Future. This should
 match the semantics of a Java Future as closely as possible to
-avoid issues with the way another API might use them. See:</p><p>https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+avoid issues with the way another API might use them. At the same time,
+its semantics should be similar to those of a Twitter Future, so it
+propagates cancellation. See:</p><p>https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd></dl></div>
     </li><li name="com.twitter.util.Future#toOffer" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toOffer:com.twitter.concurrent.Offer[com.twitter.util.Try[A]]"></a><a id="toOffer:Offer[Try[A]]"></a>

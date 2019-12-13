@@ -227,6 +227,10 @@
                         <a href="Kilobytes$.html" title="">Kilobytes</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="LazyStatsReceiver.html" title="Wraps an underlying StatsReceiver to ensure that derived counters and stats will not start exporting metrics until incr or add is first called on them."></a>
+                        <a href="LazyStatsReceiver.html" title="Wraps an underlying StatsReceiver to ensure that derived counters and stats will not start exporting metrics until incr or add is first called on them.">LazyStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="object" href="Megabytes$.html" title=""></a>
                         <a href="Megabytes$.html" title="">Megabytes</a>
                       </li><li class="current-entities indented4">
@@ -500,6 +504,22 @@ instantiated in the underlying StatsReceiver.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#canEqual" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="canEqual(other:Any):Boolean"></a><a id="canEqual(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#canEqual(other:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">canEqual</span><span class="params">(<span name="other">other: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -572,10 +592,10 @@ instantiated in the underlying StatsReceiver.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(other:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#equals(other:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -584,10 +604,10 @@ instantiated in the underlying StatsReceiver.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="other">other: <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -645,7 +665,7 @@ instantiated in the underlying StatsReceiver.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#hashCode():Int" title="Permalink">
@@ -660,10 +680,7 @@ instantiated in the underlying StatsReceiver.
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
-                <span class="name">@native</span><span class="args">()</span>
-              
-        </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a> → AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.MetricBuilder#histogram" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="histogram(name:String*):com.twitter.finagle.stats.Stat"></a><a id="histogram(String*):Stat"></a>
       <span class="permalink">
@@ -894,7 +911,7 @@ instantiated in the underlying StatsReceiver.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#toString():String" title="Permalink">
@@ -906,10 +923,10 @@ instantiated in the underlying StatsReceiver.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a> → AnyRef → Any</dd></dl></div>
     </li><li name="com.twitter.finagle.stats.MetricBuilder#units" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="units:com.twitter.finagle.stats.MetricUnit"></a><a id="units:MetricUnit"></a>
       <span class="permalink">
@@ -1055,6 +1072,22 @@ instantiated in the underlying StatsReceiver.
       </span>
       <span class="symbol">
         <span class="name">withKeyIndicator</span><span class="params">(<span name="isKeyIndicator">isKeyIndicator: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a> = <span class="symbol">true</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a></span>
+      </span>
+      
+      
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#withName" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withName(name:Seq[String]):com.twitter.finagle.stats.MetricBuilder"></a><a id="withName(Seq[String]):MetricBuilder"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#withName(name:Seq[String]):com.twitter.finagle.stats.MetricBuilder" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withName</span><span class="params">(<span name="name">name: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a></span>
       </span>
       
       

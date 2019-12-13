@@ -859,22 +859,6 @@ a nested handler. Useful for when a handler may block.
       </span>
       
       
-    </li><li name="com.twitter.logging.TestLogging" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="TestLoggingextendsBeforeAndAfter"></a><a id="TestLogging:TestLogging"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/logging/index.html#TestLoggingextendsBeforeAndAfter" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a title="Specify logging during unit tests via system property, defaulting to FATAL only." href="TestLogging.html"><span class="name">TestLogging</span></a><span class="result"> extends <span class="extype" name="org.scalatest.BeforeAndAfter">BeforeAndAfter</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Specify logging during unit tests via system property, defaulting to FATAL only.</p>
     </li><li name="com.twitter.logging.ThrottledHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ThrottledHandlerextendsProxyHandler"></a><a id="ThrottledHandler:ThrottledHandler"></a>
       <span class="permalink">
@@ -894,6 +878,26 @@ a nested handler. Useful for when a handler may block.
 This means that using it to wrap any logger which you expect to produce easily parseable,
 well-structured logs (as opposed to just plain text logs) will break your format.
 Specifically, DO NOT wrap Thrift Scribing loggers with ThrottledHandler.</p></div></div>
+    </li><li name="com.twitter.logging.TestLogging" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="TestLoggingextendsBeforeAndAfter"></a><a id="TestLogging:TestLogging"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/logging/index.html#TestLoggingextendsBeforeAndAfter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Specify logging during unit tests via system property, defaulting to FATAL only." href="TestLogging.html"><span class="name deprecated" title="Deprecated: (Since version 2019-11-20) Prefer using slf4j for logging">TestLogging</span></a><span class="result"> extends <span class="extype" name="org.scalatest.BeforeAndAfter">BeforeAndAfter</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Specify logging during unit tests via system property, defaulting to FATAL only.</p><div class="fullcomment"><div class="comment cmt"><p>Specify logging during unit tests via system property, defaulting to FATAL only.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2019-11-20)</i> Prefer using slf4j for logging</p></dd></dl></div>
     </li></ol>
             </div>
 

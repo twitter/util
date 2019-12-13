@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Reader &#8212; Util 19.12.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '19.12.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Util 19.12.0 documentation" href="../index.html" />
+    <link rel="up" title="Util Cookbook" href="index.html" />
+    <link rel="next" title="Usage from Java" href="java.html" />
+    <link rel="prev" title="Input/Output" href="io.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_flask.css" type= "text/css" rel="stylesheet" />
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-39101739-4', 'twitter.github.io');
+    ga('send', 'pageview');
+
+  </script>
+
+  </head>
+  <body role="document">
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="java.html" title="Usage from Java"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="io.html" title="Input/Output"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="reader">
+<h1>Reader<a class="headerlink" href="#reader" title="Permalink to this headline">¶</a></h1>
+<p>A reader exposes a pull-based API to model a potentially infinite stream of elements. Similar to use an
+iterator to iterate through all elements from the stream, users are able to read one element at a time,
+all elements are read in the order as they are fed to the reader.</p>
+<div class="section" id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h2>
+<p>The most frequently used APIs are:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Reader</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">read</span><span class="o">()</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
+
+  <span class="k">def</span> <span class="n">discard</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span>
+
+  <span class="k">def</span> <span class="n">onClose</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">StreamTermination</span><span class="o">]</span>
+
+  <span class="k">final</span> <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+
+  <span class="k">final</span> <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+
+  <span class="k">def</span> <span class="n">flatten</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="k">implicit</span> <span class="n">ev</span><span class="k">:</span> <span class="kt">A</span> <span class="k">&lt;:</span><span class="kt">&lt;</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>You could find a complete list of APIs from our <a class="reference external" href="https://twitter.github.io/util/docs/com/twitter/io/Reader.html">Reader Scaladoc</a>.
+The APIs give you abilities to read from the reader, discard the reader after you are done reading or
+you don&#8217;t want others to read from it. You can use flatMap and map on a reader in a similar way you
+use them on <cite>Future</cite> and return a new reader after applying all transforming logic you need. Use
+<cite>onClose</cite> to check if the stream is terminated (read until the end of stream, discarded, or encountered
+an exception).</p>
+<div class="section" id="read">
+<h3>read()<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h3>
+<p>Read the next element of this stream. The returned <cite>Future</cite> will resolve into <cite>Some(e)</cite> when the
+element is available, or into <cite>None</cite> when the stream is fully-consumed. Reading from a discarded
+reader will always return <cite>ReaderDiscardedException</cite>, reading from a failed reader will always resolve
+in the failed Future.</p>
+<p>Multiple outstanding reads are not allowed on the same reader, please avoid calling <cite>read()</cite> again until
+the future that the previous read returned has been satisfied.</p>
+<p>Duplicate reads are guaranteed not to happen. When properly using the Reader, it&#8217;s impossible for a
+subsequent read to be satisfied before the first read, since the second read will not be issued until
+after the first read has been satisfied.</p>
+</div>
+<div class="section" id="discard">
+<h3>discard()<a class="headerlink" href="#discard" title="Permalink to this headline">¶</a></h3>
+<p>Always discard the reader when its output is no longer required to avoid resource leaks. Reading from a
+discarded reader will always resolve in <cite>ReaderDiscardedException</cite>.</p>
+<p>Discarding a fully-consumed reader or a failed reader won&#8217;t override its stream termination to <cite>Discarded</cite>.
+A fully-consumed reader remains at <cite>FullyRead</cite> and a failed reader remains at the failed future that
+terminates the stream.</p>
+</div>
+<div class="section" id="onclose">
+<h3>onClose<a class="headerlink" href="#onclose" title="Permalink to this headline">¶</a></h3>
+<p>A <cite>Future</cite> that resolves once this reader is fully-consumed (will resolves in <cite>FullyRead</cite>), discarded
+(will resolve in <cite>Discarded</cite>), or failed (will resolve in the failed future that terminates the stream).
+Once <cite>onClose</cite> is resolved in one stream termination, it won&#8217;t be overridden to another one.</p>
+<p>This is useful for any extra resource cleanup that you must do once the stream is no longer being used, like
+measuring the stream lifetime, counting the number of alive streams, counting the number of failed streams,
+calculating stream success rate, etc.</p>
+</div>
+<div class="section" id="map">
+<h3>map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h3>
+<p>Construct a new Reader by lazily applying <cite>f</cite> to every item read from this Reader, where <cite>f</cite> is the function
+that transforms data of type A to B. Note this operation only happens everytime a <cite>read()</cite> is called on the
+new Reader.</p>
+<p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader will discard
+the other Reader. When one Reader&#8217;s onClose resolves, the other Reader&#8217;s onClose will be resolved
+immediately with the same value.</p>
+</div>
+<div class="section" id="flatmap">
+<h3>flatMap<a class="headerlink" href="#flatmap" title="Permalink to this headline">¶</a></h3>
+<p>Construct a new Reader (aka flat reader in the rest of the context) by lazily applying <cite>f</cite> to every item
+read from self Reader (aka outer reader in the rest of the context), in the order as they are fed to the outer reader,
+where <cite>f</cite> is the function that transforms data of type A to B and constructs a Reader[B] (aka inner reader in the rest
+of the context). Note this operation only happens when we need to create a new inner reader(explained in the next section).</p>
+<p>When a <cite>read()</cite> operation is called on the flat reader, we will read from the latest constructed inner reader, and
+return the value. If the current inner reader is fully-consumed (reading from it returns <cite>None</cite>), instead of
+returning <cite>None</cite>, we will apply <cite>f</cite> to create the next inner reader and return the value read from the new inner reader.
+If all inner readers are fully-consumed, the flat reader will be fully-consumed. If the current inner reader is failed,
+reading from the flat reader will always resolve in the same exception as reading from the failed inner reader, and no new
+inner reader will be created. If the current inner reader is discarded, reading from the flat reader will always resolve in
+<cite>ReaderDiscardedException</cite> and no new inner readers will be created.</p>
+<p>All operations of the flat reader will be in sync with the outer reader. Discarding one Reader will discard the other Reader.
+When one Reader&#8217;s onClose resolves, the other Reader&#8217;s onClose will be resolved immediately with the same value.</p>
+<p>However, after creating a flat reader via <cite>flatMap</cite>, the flat reader should be the only channel to interact with the stream,
+please avoid manipulating the inner reader or the outer reader by reading from it, discarding it, or failing it. This will
+affect the bahivor of the flat reader.</p>
+</div>
+<div class="section" id="flatten">
+<h3>flatten<a class="headerlink" href="#flatten" title="Permalink to this headline">¶</a></h3>
+<p>Converts a <cite>Reader[Reader[B]]</cite> into a <cite>Reader[B]</cite>, this is a convenient abstraction to read from a
+stream (Reader, aka outer reader in the rest of the context) of Readers (aka inner reader in the rest of the context) as if
+it were a single Reader (aka flat reader in the rest of the context). The behavior to read from the flat reader
+is similar to use 2 iterators, with one outer iterator to traverse all inner readers from the stream, another
+inner iterator to traverse all elements in the inner reader, and move the outer iterator after the inner iterator
+finishes traversing an inner reader (the inner reader is fully-consumed).</p>
+<p>When a <cite>read()</cite> operation is called on the flat reader, we will read from the latest constructed inner reader, and
+return the value. If the current inner reader is fully-consumed (reading from it returns <cite>None</cite>), instead of
+returning <cite>None</cite>, we will read from the next inner reader and return the value read from the new inner reader.
+If all inner readers are fully-consumed, the flat reader will be fully-consumed. If the current inner reader is failed,
+reading from the flat reader will always resolve in the same exception as reading from the failed inner reader, and no new
+inner reader will be created. If the current inner reader is discarded, reading from the flat reader will always resolve in
+<cite>ReaderDiscardedException</cite> and no new inner readers will be created.</p>
+<p>All operations of the flat reader will be in sync with the outer reader. Discarding one Reader will discard
+the other Reader. When one Reader&#8217;s onClose resolves, the other Reader&#8217;s onClose will be resolved immediately
+with the same value.</p>
+<p>However, after creating a flat reader via <cite>flatten</cite>, the flat reader should be the only channel to interact with the stream,
+please avoid manipulating the inner readers or the outer reader by reading from it, discarding it, or failing it. This will
+affect the bahivor of the flat reader.</p>
+</div>
+</div>
+<div class="section" id="example-usages">
+<h2>Example Usages<a class="headerlink" href="#example-usages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-operations-read-discard-onclose">
+<h3>Basic operations: read, discard, onClose<a class="headerlink" href="#basic-operations-read-discard-onclose" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.io._</span>
+<span class="k">import</span> <span class="nn">com.twitter.util._</span>
+
+<span class="k">val</span> <span class="n">r1</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// Future(Some(1))</span>
+<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span> <span class="c1">// Future(None)</span>
+<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span> <span class="c1">// Future(StreamTermination.FullyRead)</span>
+<span class="n">r1</span><span class="o">.</span><span class="n">onClose</span> <span class="c1">// Future(None)</span>
+<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span>
+
+<span class="k">val</span> <span class="n">r2</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span>
+<span class="n">r2</span><span class="o">.</span><span class="n">discard</span><span class="o">()</span> <span class="c1">// Future(StreamTermination.Discarded)</span>
+<span class="n">r2</span><span class="o">.</span><span class="n">onClose</span> <span class="c1">// Future(ReaderDiscardedException)</span>
+<span class="n">r2</span><span class="o">.</span><span class="n">read</span><span class="o">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="construct-a-read-loop-to-consume-a-reader">
+<h3>Construct a read-loop to consume a reader<a class="headerlink" href="#construct-a-read-loop-to-consume-a-reader" title="Permalink to this headline">¶</a></h3>
+<p>Given the pull-based API, the consumer is responsible for driving the computation. A very typical
+code pattern to consume a reader is to use a read-loop:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">consume</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">r</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span><span class="o">]))(</span><span class="n">process</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="o">().</span><span class="n">flatMap</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">process</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">before</span><span class="o">(</span><span class="n">consume</span><span class="o">(</span><span class="n">r</span><span class="o">)(</span><span class="n">process</span><span class="o">))</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">.</span><span class="nc">Done</span> <span class="c1">// reached the end of the stream; no need to discard</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The pattern above leverages <cite>Future</cite> recursion to exert back-pressure by allowing only one
+outstanding read. Read must not be issued until the previous read finishes. This would always
+ensure a finer grained back-pressure in network systems allowing consumers to artificially slow down
+the producers and not rely solely on transport and IO buffering.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">One way to reason about the read-loop idiom is to view it as a subscription to a publisher (reader)
+in the Pub/Sub terminology. Perhaps the major difference between readers and traditional publishers,
+is readers only allow one subscriber (read-loop). It&#8217;s generally safer to assume the reader is fully
+consumed (stream is exhausted) once its read-loop is run.</p>
+</div>
+</div>
+<div class="section" id="error-handling">
+<h3>Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h3>
+<p>Given the read-loop above, its returned <cite>Future</cite> could be used to observe both successful and
+unsuccessful outcomes.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="n">consume</span><span class="o">(</span><span class="n">stream</span><span class="o">)(</span><span class="n">processor</span><span class="o">).</span><span class="n">respond</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
+  <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>If an exception is thrown during read, the reader&#8217;s onClose will be resolved with the same exception, so
+alternatively, you could handle a stream error like below:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">reader</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<span class="n">reader</span><span class="o">.</span><span class="n">onClose</span><span class="o">.</span><span class="n">respond</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
+  <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Once failed, a stream can not be restarted such that all future reads will resolve into a failure.
+There is no need to discard an already failed stream.</p>
+</div>
+</div>
+<div class="section" id="resource-safety">
+<h3>Resource Safety<a class="headerlink" href="#resource-safety" title="Permalink to this headline">¶</a></h3>
+<p>One of the important implications of readers, and streams in general, is that they are prone to resource
+leaks unless fully consumed，discarded, or failed. Specifically, readers backed with a resource, like a
+network connection, <strong>MUST</strong> be discarded unless already consumed (EOF observed), or failed to prevent
+connection leaks.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
+<p>
+  Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
+</p>
+
+<h3>Useful Links</h3>
+<ul>
+  <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
+  <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
+</ul>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Reader</a><ul>
+<li><a class="reference internal" href="#interface">Interface</a><ul>
+<li><a class="reference internal" href="#read">read()</a></li>
+<li><a class="reference internal" href="#discard">discard()</a></li>
+<li><a class="reference internal" href="#onclose">onClose</a></li>
+<li><a class="reference internal" href="#map">map</a></li>
+<li><a class="reference internal" href="#flatmap">flatMap</a></li>
+<li><a class="reference internal" href="#flatten">flatten</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-usages">Example Usages</a><ul>
+<li><a class="reference internal" href="#basic-operations-read-discard-onclose">Basic operations: read, discard, onClose</a></li>
+<li><a class="reference internal" href="#construct-a-read-loop-to-consume-a-reader">Construct a read-loop to consume a reader</a></li>
+<li><a class="reference internal" href="#error-handling">Error handling</a></li>
+<li><a class="reference internal" href="#resource-safety">Resource Safety</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Util Cookbook</a><ul>
+      <li>Previous: <a href="io.html" title="previous chapter">Input/Output</a></li>
+      <li>Next: <a href="java.html" title="next chapter">Usage from Java</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Search the contents of this site.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">&copy; Copyright 2019 Twitter, Inc.</div>
+  
+  </body>
+</html>

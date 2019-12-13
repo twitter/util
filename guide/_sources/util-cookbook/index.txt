@@ -14,9 +14,10 @@ This is a cookbook with recipes on how to accomplish many common tasks.
    basics
    futures
    io
+   reader
    java
 
 Contact
 -------
 
-For questions email the `finaglers@twitter.com <finaglers@twitter.com>`_ group.
+For questions email the `finaglers@googlegroups.com <finaglers@googlegroups.com>`_ group.
