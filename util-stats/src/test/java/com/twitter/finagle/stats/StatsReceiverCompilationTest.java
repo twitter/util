@@ -23,7 +23,7 @@ public final class StatsReceiverCompilationTest {
 
   @Test
   public void testStatMethods() {
-    InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
+    InMemoryStatsReceiver sr = new InMemoryStatsReceiver(0);
     Stat stat = sr.stat("hello", "world");
     Callable<Integer> callable = new Callable<Integer>() {
       public Integer call() {
@@ -46,7 +46,7 @@ public final class StatsReceiverCompilationTest {
 
   @Test
   public void testGaugeMethods() {
-    InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
+    InMemoryStatsReceiver sr = new InMemoryStatsReceiver(0);
     Callable<Float> callable = new Callable<Float>() {
       public Float call() {
         return 3.0f;
@@ -59,7 +59,7 @@ public final class StatsReceiverCompilationTest {
 
   @Test
   public void testCounterMethods() {
-    InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
+    InMemoryStatsReceiver sr = new InMemoryStatsReceiver(0);
     sr.isNull();
     Counter counter = sr.counter("hello", "world");
     counter.incr();
@@ -67,7 +67,7 @@ public final class StatsReceiverCompilationTest {
   }
 
   public void testScope() {
-    InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
+    InMemoryStatsReceiver sr = new InMemoryStatsReceiver(0);
     StatsReceiver sr2 = sr.scope();
     StatsReceiver sr3 = sr.scope("a");
     StatsReceiver sr4 = sr.scope("a", "s", "d");
