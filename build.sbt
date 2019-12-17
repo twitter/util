@@ -11,7 +11,7 @@ val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll(
   ExclusionRule("com.sun.jmx", "jmxri"),
   ExclusionRule("javax.jms", "jms")
 )
-val slf4jVersion = "1.7.21"
+val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10.1"
 
