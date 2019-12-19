@@ -50,8 +50,10 @@ object InMemoryStatsReceiver {
  *
  * @param maxStats the maximum number of stats, zero or negative value means unlimited (default is unlimited)
  **/
-class InMemoryStatsReceiver(maxStats: Int = 0) extends StatsReceiver with WithHistogramDetails {
+class InMemoryStatsReceiver(maxStats: Int) extends StatsReceiver with WithHistogramDetails {
   import InMemoryStatsReceiver._
+
+  def this() = this(0)
 
   def repr: InMemoryStatsReceiver = this
 
@@ -116,16 +118,7 @@ class InMemoryStatsReceiver(maxStats: Int = 0) extends StatsReceiver with WithHi
 
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
-
-        // Limit the maximum number of stats as 10000000
-        val length = oldValue.length
-        val tailValue = if (maxStats <= 0 || length < maxStats) {
-          oldValue
-        } else {
-          oldValue.drop(length - maxStats + 1)
-        }
-
-        stats(schema.metricBuilder.name) = tailValue :+ value
+        stats(schema.metricBuilder.name) = oldValue.takeRight(maxStats) :+ value
       }
       def apply(): Seq[Float] = stats.getOrElse(schema.metricBuilder.name, Seq.empty)
 
