@@ -118,7 +118,11 @@ class InMemoryStatsReceiver(maxStats: Int) extends StatsReceiver with WithHistog
 
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
-        stats(schema.metricBuilder.name) = oldValue.takeRight(maxStats) :+ value
+        if(maxStats > 0) {
+          stats(schema.metricBuilder.name) = oldValue.takeRight(maxStats) :+ value
+        } else {
+          stats(schema.metricBuilder.name) = oldValue :+ value
+        }
       }
       def apply(): Seq[Float] = stats.getOrElse(schema.metricBuilder.name, Seq.empty)
 
