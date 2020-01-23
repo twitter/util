@@ -2,7 +2,7 @@ package com.twitter.util
 
 import java.util.{List => JList}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable.Buffer
 import scala.language.higherKinds
 import scala.reflect.ClassTag

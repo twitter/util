@@ -3,7 +3,7 @@ package com.twitter.util.tunable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
 import scala.annotation.varargs
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 /**

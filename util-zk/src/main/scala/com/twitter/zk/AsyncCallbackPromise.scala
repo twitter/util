@@ -2,7 +2,7 @@ package com.twitter.zk
 
 import java.util.{List => JList}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper.data.Stat
 import org.apache.zookeeper.{AsyncCallback, KeeperException}

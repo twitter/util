@@ -1,6 +1,6 @@
 package com.twitter.zk
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.Set
 
 import org.apache.zookeeper._

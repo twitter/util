@@ -7,7 +7,7 @@ import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool}
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.{Function => JFunction}
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * `CumulativeGauge` provides a [[Gauge gauge]] that is composed of the (addition)

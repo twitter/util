@@ -11,7 +11,7 @@ import java.lang.{
 }
 import java.net.InetSocketAddress
 import java.util.{List => JList, Map => JMap, Set => JSet}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * A type class providing evidence for parsing type `T` as a flag value.

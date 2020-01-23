@@ -1,12 +1,7 @@
 package com.twitter.util
 
 import java.util.{List => JList, Map => JMap}
-import scala.collection.JavaConverters.{
-  asScalaBufferConverter,
-  mapAsJavaMapConverter,
-  mapAsScalaMapConverter,
-  seqAsJavaListConverter
-}
+import scala.jdk.CollectionConverters._
 
 /**
  * Twitter Future utility methods for ease of use from java

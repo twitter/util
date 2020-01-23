@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.Logger
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.util.control.NonFatal
 

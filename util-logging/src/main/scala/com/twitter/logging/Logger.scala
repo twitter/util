@@ -19,7 +19,7 @@ package com.twitter.logging
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{logging => javalog}
 import scala.annotation.varargs
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.Map
 
 class LoggingException(reason: String) extends Exception(reason)

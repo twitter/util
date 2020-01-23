@@ -2,7 +2,7 @@ package com.twitter.finagle.stats
 
 import java.io.PrintStream
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.{SortedMap, mutable}
 
 object InMemoryStatsReceiver {

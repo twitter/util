@@ -6,7 +6,7 @@ import java.util.ServiceConfigurationError
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.{Function => JFunction}
 import java.util.logging.{Level, Logger}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.io.Source
 import scala.reflect.ClassTag

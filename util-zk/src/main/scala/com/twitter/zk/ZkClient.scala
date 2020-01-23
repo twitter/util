@@ -1,6 +1,6 @@
 package com.twitter.zk
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper.ZooDefs.Ids.CREATOR_ALL_ACL
 import org.apache.zookeeper.data.ACL

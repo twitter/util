@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.{JsonDeserializer, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.twitter.util.{Return, Throw, Try}
 import java.net.URL
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object JsonTunableMapper {
 

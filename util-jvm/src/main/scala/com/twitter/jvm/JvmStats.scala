@@ -3,7 +3,7 @@ package com.twitter.jvm
 import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.StatsReceiver
 import java.lang.management.{ManagementFactory, BufferPoolMXBean}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 object JvmStats {

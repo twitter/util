@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import java.util.{logging => javalog}
 import java.util.function.{Function => JFunction}
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ThrottledHandler {
 

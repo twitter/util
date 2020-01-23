@@ -6,7 +6,7 @@ import com.twitter.util._
 import java.lang.management.ManagementFactory
 import java.util.concurrent.{ConcurrentHashMap, Executors, ScheduledExecutorService, TimeUnit}
 import java.util.logging.{Level, Logger}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
 /**

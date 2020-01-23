@@ -18,7 +18,7 @@ package com.twitter.util
 
 import java.io.{File, IOException}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 import scala.util.parsing.combinator._
 import scala.util.matching.Regex
