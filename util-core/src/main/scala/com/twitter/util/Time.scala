@@ -138,8 +138,7 @@ trait TimeLikeOps[This <: TimeLike[This]] {
  *
  * Overflows are also handled like doubles.
  */
-trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
-  protected val ops: TimeLikeOps[This]
+abstract class TimeLike[This <: TimeLike[This]](protected val ops: TimeLikeOps[This]) extends Ordered[This] { self: This =>
   import ops._
 
   /** The `TimeLike`'s value in nanoseconds. */
@@ -585,10 +584,8 @@ class TimeFormat(
  * @see [[Stopwatch]] for measuring elapsed time.
  * @see [[TimeFormat]] for converting to and from `String` representations.
  */
-sealed class Time private[util] (protected val nanos: Long) extends {
-  protected val ops: Time.type = Time
-} with TimeLike[Time] with Serializable {
-  import ops._
+sealed class Time private[util] (protected val nanos: Long) extends TimeLike[Time](Time) with Serializable {
+  import Time._
 
   def inNanoseconds: Long = nanos
 
