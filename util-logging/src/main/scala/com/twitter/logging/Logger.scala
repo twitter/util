@@ -83,7 +83,7 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
   final def apply(level: Level, message: String, items: Any*): Unit = log(level, message, items: _*)
 
   final def apply(level: Level, thrown: Throwable, message: String, items: Any*): Unit =
-    log(level, thrown, message, items)
+    log(level, thrown, message, items: _*)
 
   // convenience methods:
   @varargs
