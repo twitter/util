@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `Future.unapply` has been removed. Use `Future.poll` to retrieve Future's
+  state. ``PHAB_ID=D427429``
+
+
 20.1.0
 ------
 

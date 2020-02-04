@@ -162,8 +162,6 @@ object Future {
       case nlrc: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(nlrc))
     }
 
-  def unapply[A](f: Future[A]): Option[Try[A]] = f.poll
-
   // The thread-safety for `outer` is guaranteed by synchronizing on `this`.
   private[this] final class MonitoredPromise[A](private[this] var outer: Promise[A])
       extends Monitor

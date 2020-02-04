@@ -20,6 +20,9 @@ class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
 }
 
 class OfferTest extends WordSpec with MockitoSugar {
+
+  def await[A](f: Future[A]): A = Await.result(f, 2.seconds)
+
   import Tx.{Commit, Abort}
 
   "Offer.map" should {
@@ -39,9 +42,8 @@ class OfferTest extends WordSpec with MockitoSugar {
       val f = mapped.prepare() flatMap { tx =>
         tx.ack()
       }
-      f match {
-        case Future(Return(Commit("23"))) => assert(true)
-      }
+
+      assert(await(f) == Commit("23"))
     }
   }
 
@@ -79,9 +81,7 @@ class OfferTest extends WordSpec with MockitoSugar {
         val h = new TxReadyHelper
         import h._
 
-        offer.prepare() match {
-          case Future(Return(tx)) => assert(tx eq tx1)
-        }
+        assert(await(offer.prepare()) == tx1)
         verify(tx1, never()).ack()
         verify(tx1, never()).nack()
       }
@@ -109,9 +109,8 @@ class OfferTest extends WordSpec with MockitoSugar {
         assert(tx.isDefined == false)
         val tx0 = mock[Tx[Int]]
         pendingTxs(0).setValue(tx0)
-        tx match {
-          case Future(Return(tx)) => assert(tx eq tx0)
-        }
+
+        assert(await(tx) == tx0)
       }
 
       "nack losers" in {
@@ -158,12 +157,8 @@ class OfferTest extends WordSpec with MockitoSugar {
         val h = new AllTxsReadyHelper
         import h._
 
-        offer.prepare() match {
-          case Future(Return(tx)) =>
-            for (loser <- txs if loser ne tx)
-              verify(loser).nack()
-            assert(true)
-        }
+        val tx = await(offer.prepare())
+        for (loser <- txs if loser ne tx) verify(loser).nack()
       }
     }
 
@@ -186,9 +181,8 @@ class OfferTest extends WordSpec with MockitoSugar {
 
         assert(tx.ack() == (result))
         txp.setValue(tx)
-        offer.sync() match {
-          case Future(Return(123)) => assert(true)
-        }
+
+        assert(await(offer.sync()) == 123)
         verify(tx, times(2)).ack()
         verify(tx, never()).nack()
       }
@@ -231,9 +225,7 @@ class OfferTest extends WordSpec with MockitoSugar {
         assert(tx.ack() == (result))
         val offer = spy(new SimpleOffer(tx))
 
-        offer.sync() match {
-          case Future(Return(123)) => assert(true)
-        }
+        assert(await(offer.sync()) == 123)
         verify(tx, times(2)).ack()
         verify(tx, never()).nack()
         verify(offer).prepare()
