@@ -17,7 +17,7 @@ case class MonitorException(handlingExc: Throwable, monitorExc: Throwable)
 /**
  * A Monitor is a composable exception handler.  It is independent of
  * position, divorced from the notion of a call stack.  Monitors do
- * not recover values from a failed computations: It handles only true
+ * not recover values from failed computations: It handles only true
  * exceptions that may require cleanup.
  *
  * @see [[AbstractMonitor]] for an API friendly to creating instances from Java.
