@@ -3,8 +3,8 @@ package com.twitter.util.tunable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.BiFunction
 import scala.annotation.varargs
-import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 
 /**
  * A Map that can be used to access [[Tunable]]s using [[TunableMap.Key]]s.

@@ -12,7 +12,7 @@ import org.scalatest.concurrent.AsyncAssertions
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.mockito.MockitoSugar
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
 

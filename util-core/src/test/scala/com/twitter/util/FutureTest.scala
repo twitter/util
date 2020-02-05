@@ -11,7 +11,7 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.runtime.NonLocalReturnControl
 import scala.util.Random
 import scala.util.control.ControlThrowable

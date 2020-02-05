@@ -12,8 +12,8 @@ import javax.management.{
   NotificationListener,
   NotificationEmitter
 }
-import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 
 private[jvm] object Allocations {
   val Unknown: Long = -1L

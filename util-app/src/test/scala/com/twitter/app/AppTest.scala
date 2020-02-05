@@ -101,7 +101,7 @@ class AppTest extends FunSuite {
   }
 
   test("App: order of hooks") {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     val q = new ConcurrentLinkedQueue[Int]
     class Test1 extends App {

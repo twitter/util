@@ -7,7 +7,7 @@ import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Duration, Return, StorageUnit, Throw}
 import org.scalatest.FunSuite
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 // Used for veryifying custom deserialization
 case class Foo(number: Double)

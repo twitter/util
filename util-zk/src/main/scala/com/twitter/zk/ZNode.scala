@@ -1,7 +1,7 @@
 package com.twitter.zk
 
-import scala.collection.JavaConverters._
 import scala.collection.{Seq, Set}
+import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper.common.PathUtils
 import org.apache.zookeeper.data.{ACL, Stat}

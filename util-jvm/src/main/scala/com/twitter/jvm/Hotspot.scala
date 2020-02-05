@@ -13,7 +13,7 @@ import javax.management.{
   ObjectName,
   RuntimeMBeanException
 }
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.reflectiveCalls
 
 class Hotspot extends Jvm {

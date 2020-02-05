@@ -3,7 +3,7 @@ package com.twitter.util.security
 import javax.naming.ldap.{LdapName, Rdn}
 import javax.security.auth.x500.X500Principal
 import com.twitter.util.security.X500PrincipalInfo._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * Parses an [[javax.security.auth.x500.X500Principal X500Principal]] into

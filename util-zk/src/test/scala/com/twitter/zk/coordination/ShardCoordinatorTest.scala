@@ -1,6 +1,6 @@
 package com.twitter.zk.coordination
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.scalatest.WordSpec
