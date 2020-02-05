@@ -205,7 +205,9 @@ class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
     "log & trace a message with percent signs" in {
       traceLogger(Level.INFO)
       Logger.get("")(Level.INFO, "%i")
+      Logger.get("")(Level.INFO, new Exception(), "%j")
       mustLog("%i")
+      mustLog("%j")
     }
 
     "log a message, with timestamp" in {

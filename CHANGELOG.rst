@@ -13,6 +13,11 @@ Breaking API Changes
 * util-core: `Future.unapply` has been removed. Use `Future.poll` to retrieve Future's
   state. ``PHAB_ID=D427429``
 
+Bug Fixes
+~~~~~~~~~
+
+* util-logging: Add a missing `_*` that could result in exceptions when using the
+  `Logger.apply(Level, Throwable, String, Any*)` signature. ``PHAB_ID=D430122``
 
 20.1.0
 ------
