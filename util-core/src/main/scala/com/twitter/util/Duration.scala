@@ -304,7 +304,7 @@ private[util] object DurationBox {
  * that are truly infinite; for example the absence of a timeout.
  */
 sealed class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Serializable {
-  override def ops: TimeLikeOps[Duration] = Duration
+  override val ops: TimeLikeOps[Duration] = Duration
   import Duration._
 
   def inNanoseconds: Long = nanos
