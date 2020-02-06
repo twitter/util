@@ -4,7 +4,6 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 object Duration extends TimeLikeOps[Duration] {
-
   def fromNanoseconds(nanoseconds: Long): Duration =
     if (nanoseconds == 0L) Zero
     else new Duration(nanoseconds)
@@ -304,10 +303,11 @@ private[util] object DurationBox {
  * their arithmetic follows. This is useful for representing durations
  * that are truly infinite; for example the absence of a timeout.
  */
-sealed class Duration private[util] (protected val nanos: Long) extends {
-  protected val ops: Duration.type = Duration
-} with TimeLike[Duration] with Serializable {
-  import ops._
+sealed class Duration private[util] (protected val nanos: Long)
+    extends TimeLike[Duration]
+    with Serializable {
+  override def ops: TimeLikeOps[Duration] = Duration
+  import Duration._
 
   def inNanoseconds: Long = nanos
 

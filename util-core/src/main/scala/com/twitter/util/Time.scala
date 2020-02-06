@@ -139,8 +139,7 @@ trait TimeLikeOps[This <: TimeLike[This]] {
  * Overflows are also handled like doubles.
  */
 trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
-  protected val ops: TimeLikeOps[This]
-  import ops._
+  protected def ops: TimeLikeOps[This]
 
   /** The `TimeLike`'s value in nanoseconds. */
   def inNanoseconds: Long
@@ -182,14 +181,14 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
     def addNanos(a: Long, b: Long): This = {
       val c = a + b
       if (((a ^ c) & (b ^ c)) < 0)
-        if (b < 0) Bottom else Top
-      else fromNanoseconds(c)
+        if (b < 0) ops.Bottom else ops.Top
+      else ops.fromNanoseconds(c)
     }
 
     delta match {
-      case Duration.Top => Top
-      case Duration.Bottom => Bottom
-      case Duration.Undefined => Undefined
+      case Duration.Top => ops.Top
+      case Duration.Bottom => ops.Bottom
+      case Duration.Undefined => ops.Undefined
       case ns => addNanos(inNanoseconds, ns.inNanoseconds)
     }
   }
@@ -223,12 +222,13 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
    * results because of timezones.
    */
   def floor(increment: Duration): This = (this, increment) match {
-    case (num, ns) if num.isZero && ns.isZero => Undefined
-    case (num, ns) if num.isFinite && ns.isZero => if (num.inNanoseconds < 0) Bottom else Top
+    case (num, ns) if num.isZero && ns.isZero => ops.Undefined
+    case (num, ns) if num.isFinite && ns.isZero =>
+      if (num.inNanoseconds < 0) ops.Bottom else ops.Top
     case (num, denom) if num.isFinite && denom.isFinite =>
-      fromNanoseconds((num.inNanoseconds / denom.inNanoseconds) * denom.inNanoseconds)
+      ops.fromNanoseconds((num.inNanoseconds / denom.inNanoseconds) * denom.inNanoseconds)
     case (self, n) if n.isFinite => self
-    case (_, _) => Undefined
+    case (_, _) => ops.Undefined
   }
 
   def max(that: This): This =
@@ -238,15 +238,15 @@ trait TimeLike[This <: TimeLike[This]] extends Ordered[This] { self: This =>
     if ((this compare that) < 0) this else that
 
   def compare(that: This): Int =
-    if ((that eq Top) || (that eq Undefined)) -1
-    else if (that eq Bottom) 1
+    if ((that eq ops.Top) || (that eq ops.Undefined)) -1
+    else if (that eq ops.Bottom) 1
     else if (inNanoseconds < that.inNanoseconds) -1
     else if (inNanoseconds > that.inNanoseconds) 1
     else 0
 
   /** Equality within `maxDelta` */
   def moreOrLessEquals(other: This, maxDelta: Duration): Boolean =
-    (other ne Undefined) && ((this == other) || (this diff other).abs <= maxDelta)
+    (other ne ops.Undefined) && ((this == other) || (this diff other).abs <= maxDelta)
 }
 
 /**
@@ -585,10 +585,11 @@ class TimeFormat(
  * @see [[Stopwatch]] for measuring elapsed time.
  * @see [[TimeFormat]] for converting to and from `String` representations.
  */
-sealed class Time private[util] (protected val nanos: Long) extends {
-  protected val ops: Time.type = Time
-} with TimeLike[Time] with Serializable {
-  import ops._
+sealed class Time private[util] (protected val nanos: Long)
+    extends TimeLike[Time]
+    with Serializable {
+  protected def ops: Time.type = Time
+  import Time._
 
   def inNanoseconds: Long = nanos
 
