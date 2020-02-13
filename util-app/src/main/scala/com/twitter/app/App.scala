@@ -5,7 +5,6 @@ import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
-import java.util.logging.Logger
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
@@ -273,6 +272,19 @@ trait App extends Closable with CloseAwaitably {
   }
 
   /**
+   * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
+   * executed after all closeOnExit functions complete. The thread resumes when all exit
+   * hooks complete or `closeDeadline` expires.
+   */
+  protected final def onExitLast(f: => Unit): Unit = {
+    closeOnExitLast {
+      Closable.make { deadline => // close() ensures that this deadline is sane
+        FuturePool.unboundedPool(f).by(shutdownTimer, deadline)
+      }
+    }
+  }
+
+  /**
    * Invoke `f` after the user's main has exited.
    */
   protected final def postmain(f: => Unit): Unit = {
@@ -393,7 +405,6 @@ trait App extends Closable with CloseAwaitably {
 }
 
 object App {
-  private[this] val log = Logger.getLogger(getClass.getName)
   private[this] val ref = new AtomicReference[Option[App]](None)
 
   /**

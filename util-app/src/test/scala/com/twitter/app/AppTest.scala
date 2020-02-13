@@ -105,6 +105,7 @@ class AppTest extends FunSuite {
 
     val q = new ConcurrentLinkedQueue[Int]
     class Test1 extends App {
+      onExitLast(q.add(5))
       onExit(q.add(4))
       postmain(q.add(3))
       def main(): Unit = q.add(2)
@@ -112,7 +113,7 @@ class AppTest extends FunSuite {
       init(q.add(0))
     }
     new Test1().main(Array.empty)
-    assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4))
+    assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4, 5))
   }
 
   test("loadServiceBinds") {

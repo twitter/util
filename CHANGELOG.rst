@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-app: Add `c.t.util.app.App#onExitLast` to be able to provide better Java
+  ergonomics for designating a final exit function. ``PHAB_ID=D433874``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
