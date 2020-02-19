@@ -258,20 +258,20 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
     }
 
     "reject obvious human impostors" in {
-      intercept[NumberFormatException] {
-        Seq(
-          "",
-          "++1.second",
-          "1. second",
-          "1.milli",
-          "1.s",
-          "10.stardates",
-          "2.minutes 1.second",
-          "98 milliseconds",
-          "98 millisecons",
-          "99.minutes +"
-        ) foreach { s =>
-          Duration.parse(s)
+      Seq(
+        "",
+        "++1.second",
+        "1. second",
+        "1.milli",
+        "1.s",
+        "10.stardates",
+        "2.minutes 1.second",
+        "98 milliseconds",
+        "98 millisecons",
+        "99.minutes +"
+      ) foreach { s =>
+        assertThrows[NumberFormatException] {
+        Duration.parse(s)
         }
       }
     }
