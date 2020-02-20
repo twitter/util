@@ -223,7 +223,7 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
         Duration.Bottom,
         Duration.Top,
         Duration.Undefined
-      ) foreach { d =>
+      ).foreach { d =>
         assert(Duration.parse(d.toString) == d)
       }
     }
@@ -251,26 +251,26 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
         "Duration.Top" -> Duration.Top,
         "Duration.Undefined" -> Duration.Undefined,
         "duration.TOP" -> Duration.Top
-      ) foreach {
+      ).foreach {
         case (s, d) =>
           assert(Duration.parse(s) == d)
       }
     }
 
     "reject obvious human impostors" in {
-      intercept[NumberFormatException] {
-        Seq(
-          "",
-          "++1.second",
-          "1. second",
-          "1.milli",
-          "1.s",
-          "10.stardates",
-          "2.minutes 1.second",
-          "98 milliseconds",
-          "98 millisecons",
-          "99.minutes +"
-        ) foreach { s =>
+      Seq(
+        "",
+        "++1.second",
+        "1. second",
+        "1.milli",
+        "1.s",
+        "10.stardates",
+        "2.minutes 1.second",
+        "98 milliseconds",
+        "98 millisecons",
+        "99.minutes +"
+      ).foreach { s =>
+        assertThrows[NumberFormatException] {
           Duration.parse(s)
         }
       }
