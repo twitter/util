@@ -1010,4 +1010,28 @@ class BufTest
       assert(constructor == concatRight)
     }
   }
+
+  test("slowFromHexString handles empty string") {
+    val b = Buf.slowFromHexString("")
+    assert(b == Buf.ByteArray.Owned(new Array[Byte](0)))
+  }
+
+  test("slowFromHexString throws for (some) invalid strings") {
+    // we don't guarantee all invalid strings throw but we do cover some of the basic ones
+    intercept[IllegalArgumentException] {
+      Buf.slowFromHexString("123")
+    }
+
+    intercept[NumberFormatException] {
+      Buf.slowFromHexString("10ZZ")
+    }
+  }
+
+  test("slowHexString round trips") {
+    forAll(arbBuf.arbitrary) { buf =>
+      val asHex = Buf.slowHexString(buf)
+      val backToBuf = Buf.slowFromHexString(asHex)
+      assert(backToBuf == buf)
+    }
+  }
 }

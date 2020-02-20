@@ -1039,6 +1039,29 @@ object Buf {
   }
 
   /**
+   * Convert a hex string (eg one from  slowHexString above)
+   * to a Buf of the string contents interpreted as a string of hexadecimal numbers.
+   *
+   * If an invalid string is passed to this method, the return value is not defined. It may throw
+   * or it may return a bogus Buf value.
+   */
+  def slowFromHexString(hex: String): Buf = {
+    if (hex.length % 2 != 0) {
+      throw new IllegalArgumentException(s"Hex string is invalid: '$hex'")
+    }
+    val bytes = new Array[Byte](hex.length / 2)
+    var bytesIndex = 0
+    while (bytesIndex < bytes.length) {
+      val hexIndex = bytesIndex * 2
+      val b = Integer.parseInt(hex.substring(hexIndex, hexIndex + 2), 16)
+      bytes(bytesIndex) = b.toByte
+      bytesIndex = bytesIndex + 1
+    }
+
+    Buf.ByteArray.Owned(bytes)
+  }
+
+  /**
    * Create and deconstruct Utf-8 encoded buffers.
    *
    * @note Malformed and unmappable input is silently replaced
