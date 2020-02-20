@@ -20,7 +20,7 @@ junit_tests(
 
 scala_library(
     name = "estimator_app",
-    sources = globs("EstimatorApp.scala"),
+    sources = ["EstimatorApp.scala"],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "util/util-jvm/src/main/scala/com/twitter/jvm",
