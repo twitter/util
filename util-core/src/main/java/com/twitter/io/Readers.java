@@ -44,6 +44,14 @@ public final class Readers {
   }
 
   /**
+   * See [[com.twitter.io.Reader.concat(scala.collection.Seq)]]
+   */
+  public static <A> Reader<A> concat(List<Reader<A>> list) {
+    return Reader$.MODULE$.concat(JavaConverters.asScalaIteratorConverter(list.iterator())
+        .asScala().toSeq());
+  }
+
+  /**
    * See {@code com.twitter.io.Pipe.copy}.
    */
   public static Future<BoxedUnit> copy(Reader<Buf> r, Writer<Buf> w) {
@@ -65,7 +73,7 @@ public final class Readers {
   }
 
   /**
-   * See [[com.twitter.io.Reader$#fromSeq(scala.collection.Seq)]]
+   * See [[com.twitter.io.Reader.fromSeq(scala.collection.Seq)]]
    */
   public static <A> Reader<A> fromSeq(List<A> list) {
     return Reader$.MODULE$.fromSeq(JavaConverters.asScalaIteratorConverter(list.iterator())
@@ -73,7 +81,7 @@ public final class Readers {
   }
 
   /**
-   * See [[com.twitter.io.Reader$#fromSeq(scala.collection.Seq)]]
+   * See [[com.twitter.io.Reader.fromSeq(scala.collection.Seq)]]
    */
   public static <A> Reader<A> fromSeq(Stream<A> stream) {
     return Reader$.MODULE$.fromSeq(JavaConverters.asScalaIteratorConverter(stream.iterator())
@@ -81,7 +89,7 @@ public final class Readers {
   }
 
   /**
-   * See [[com.twitter.io.Reader#toAsyncStream]]
+   * See [[com.twitter.io.Reader.toAsyncStream]]
    */
   public static <A> AsyncStream<A> toAsyncStream(Reader<A> reader) {
     return Reader$.MODULE$.toAsyncStream(reader);

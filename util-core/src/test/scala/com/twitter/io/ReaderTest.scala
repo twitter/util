@@ -60,7 +60,25 @@ class ReaderTest
       case _ => to.close()
     }
 
-  test("Reader.concat") {
+  test("Reader.concat collection of readers") {
+    forAll { ss: List[String] =>
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val concatedReaders = Reader.concat(readers)
+      val values = Reader.readAllItems(concatedReaders)
+      assert(await(values) == ss)
+    }
+  }
+
+  test("Reader.concat from a collection won't force the stream") {
+    forAll { ss: List[String] =>
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val head = Reader.value("hmm")
+      Reader.concat(head +: readers)
+      assert(await(head.read()) == Some("hmm"))
+    }
+  }
+
+  test("Reader.concat from a stream of readers") {
     forAll { ss: List[String] =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val concatedReaders = Reader.concat(AsyncStream.fromSeq(readers))
@@ -69,7 +87,16 @@ class ReaderTest
     }
   }
 
-  test("Reader.concat - discard") {
+  test("Reader.concat from a stream of readers forces the stream") {
+    forAll { ss: List[String] =>
+      val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
+      val head = Reader.value("hmm")
+      Reader.concat(AsyncStream.fromSeq(head +: readers))
+      assert(await(head.read()) == None)
+    }
+  }
+
+  test("Reader.concat from a stream of readers - discard") {
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
@@ -81,7 +108,7 @@ class ReaderTest
     assert(p.isDefined)
   }
 
-  test("Reader.concat - read while reading") {
+  test("Reader.concat from a stream of readers - read while reading") {
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
@@ -92,7 +119,7 @@ class ReaderTest
     assertReadWhileReading(reader)
   }
 
-  test("Reader.concat - failed") {
+  test("Reader.concat from a stream of readers - failed") {
     val p = new Promise[Option[Buf]]
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = p
@@ -103,7 +130,7 @@ class ReaderTest
     assertFailed(reader, p)
   }
 
-  test("Reader.concat - lazy tail") {
+  test("Reader.concat from a stream of readers - lazy tail") {
     val head = new Reader[Buf] {
       def read(): Future[Option[Buf]] = Future.exception(new Exception)
 

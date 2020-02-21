@@ -334,6 +334,15 @@ object Reader {
   }
 
   /**
+   * Convenient abstraction to read from a collection of Readers as if
+   * it were a single Reader.
+   * @param readers A collection of Reader[A]
+   */
+  def concat[A](readers: Seq[Reader[A]]): Reader[A] = {
+    Reader.fromSeq(readers).flatten
+  }
+
+  /**
    * Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.
    * @param readers A Reader holds a stream of Reader[A]
    *

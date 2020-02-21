@@ -16,6 +16,9 @@ New Features
 * util-app: Add `c.t.util.app.App#onExitLast` to be able to provide better Java
   ergonomics for designating a final exit function. ``PHAB_ID=D433874``
 
+* util-core: Add `c.t.io.Reader.concat` to conveniently concatenate a collection
+  of Reader to a single Reader. ``PHAB_ID=D434448``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
