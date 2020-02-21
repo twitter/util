@@ -66,7 +66,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
   override def counter(name: String*): ReadableCounter =
-    counter(CounterSchema(new MetricBuilder(name = name, statsReceiver = this)))
+    counter(CounterSchema(this.metricBuilder().withName(name)))
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
@@ -95,7 +95,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     }
 
   override def stat(name: String*): ReadableStat =
-    stat(HistogramSchema(new MetricBuilder(name = name, statsReceiver = this)))
+    stat(HistogramSchema(this.metricBuilder().withName(name)))
 
   /**
    * Creates a [[ReadableStat]] of the given `name`.

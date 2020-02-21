@@ -99,8 +99,7 @@ trait StatsReceiver {
    */
   @varargs
   def counter(verbosity: Verbosity, name: String*): Counter =
-    counter(
-      CounterSchema(new MetricBuilder(verbosity = verbosity, name = name, statsReceiver = this)))
+    counter(CounterSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))
 
   /**
    * Get a [[Counter counter]] with the given schema.
@@ -118,8 +117,7 @@ trait StatsReceiver {
    */
   @varargs
   def stat(verbosity: Verbosity, name: String*): Stat =
-    stat(
-      HistogramSchema(new MetricBuilder(verbosity = verbosity, name = name, statsReceiver = this)))
+    stat(HistogramSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))
 
   /**
    * Get a [[Stat stat]] with the given schema.
@@ -181,8 +179,7 @@ trait StatsReceiver {
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
-    addGauge(
-      GaugeSchema(new MetricBuilder(name = name, verbosity = verbosity, statsReceiver = this)))(f)
+    addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))(f)
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.

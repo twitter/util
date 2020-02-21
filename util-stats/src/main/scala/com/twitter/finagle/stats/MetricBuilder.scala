@@ -57,7 +57,8 @@ class MetricBuilder(
     sourceClass: String = this.sourceClass,
     sourceLibrary: Option[String] = this.sourceLibrary,
     name: Seq[String] = this.name,
-    identifier: String = this.identifier
+    identifier: String = this.identifier,
+    percentiles: IndexedSeq[Double] = this.percentiles
   ): MetricBuilder = {
     new MetricBuilder(
       keyIndicator = keyIndicator,
@@ -69,7 +70,7 @@ class MetricBuilder(
       sourceLibrary = sourceLibrary,
       name = name,
       identifier = identifier,
-      percentiles = this.percentiles,
+      percentiles = percentiles,
       statsReceiver = this.statsReceiver
     )
   }
@@ -93,6 +94,8 @@ class MetricBuilder(
   def withRole(role: SourceRole): MetricBuilder = this.copy(role = role)
 
   def withName(name: Seq[String]): MetricBuilder = this.copy(name = name)
+
+  def withPercentiles(percentiles: IndexedSeq[Double]) = this.copy(percentiles = percentiles)
 
   /**
    * Generates a CounterSchema which can be used to create a counter in a StatsReceiver.
