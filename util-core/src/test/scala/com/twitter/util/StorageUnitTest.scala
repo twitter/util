@@ -17,9 +17,9 @@ class StorageUnitTest extends FunSuite {
     assert(1.petabytes.inPetabytes == 1)
     assert(1.petabytes.inTerabytes == 1024.0)
     assert(1.petabytes.inGigabytes == 1024.0 * 1024.0)
-    //assert((1.petabytes * 1024.0).inExabytes == 1)
-    //assert((1.petabytes * 1024.0).inPetabytes == 1024.0)
-    //assert((1.petabytes * 1024.0).inTerabytes == 1024.0 * 1024.0)
+    assert((1.petabytes * 1024.0).inExabytes == 1)
+    assert((1.petabytes * 1024.0).inPetabytes == 1024.0)
+    assert((1.petabytes * 1024.0).inTerabytes == 1024.0 * 1024.0)
   }
 
   test("StorageUnit: should confer an essential humanity") {
