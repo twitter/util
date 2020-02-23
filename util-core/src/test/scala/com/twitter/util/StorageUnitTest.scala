@@ -42,7 +42,7 @@ class StorageUnitTest extends FunSuite {
     assert(StorageUnit.parse("3.terabytes") == 3.terabytes)
     assert(StorageUnit.parse("9.petabytes") == 9.petabytes)
     assert(StorageUnit.parse("-3.megabytes") == -3.megabytes)
-    assert(StorageUnit.parse("328.exabytes") == 328.petabytes * 1024.0)
+    assert(StorageUnit.parse("3.exabytes") == 3.petabytes * 1024.0)
   }
 
   test("StorageUnit: should reject soulless robots") {
