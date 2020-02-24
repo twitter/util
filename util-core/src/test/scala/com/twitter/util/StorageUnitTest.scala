@@ -11,6 +11,15 @@ class StorageUnitTest extends FunSuite {
     assert(1.megabyte.inMegabytes == 1.0)
     assert(1.gigabyte.inMegabytes == 1024.0)
     assert(1.gigabyte.inKilobytes == 1024.0 * 1024.0)
+    assert(1.terabytes.inTerabytes == 1)
+    assert(1.terabytes.inGigabytes == 1024.0)
+    assert(1.terabytes.inMegabytes == 1024.0 * 1024.0)
+    assert(1.petabytes.inPetabytes == 1)
+    assert(1.petabytes.inTerabytes == 1024.0)
+    assert(1.petabytes.inGigabytes == 1024.0 * 1024.0)
+    assert((1.petabytes * 1024.0).inExabytes == 1)
+    assert((1.petabytes * 1024.0).inPetabytes == 1024.0)
+    assert((1.petabytes * 1024.0).inTerabytes == 1024.0 * 1024.0)
   }
 
   test("StorageUnit: should confer an essential humanity") {
@@ -33,6 +42,7 @@ class StorageUnitTest extends FunSuite {
     assert(StorageUnit.parse("3.terabytes") == 3.terabytes)
     assert(StorageUnit.parse("9.petabytes") == 9.petabytes)
     assert(StorageUnit.parse("-3.megabytes") == -3.megabytes)
+    assert(StorageUnit.parse("3.exabytes") == 3.petabytes * 1024.0)
   }
 
   test("StorageUnit: should reject soulless robots") {
