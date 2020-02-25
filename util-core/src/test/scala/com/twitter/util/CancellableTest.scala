@@ -4,6 +4,9 @@ import org.scalatest.WordSpec
 
 class CancellableTest extends WordSpec {
   "Cancellable" should {
+    "test variable isCancelled" in {
+      assert(!Cancellable.nil.isCancelled)
+    }
     "test method cancel" in {
       var cancelMethodCalled = false
       class CancellableMethodCancelTest extends Cancellable{
