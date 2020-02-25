@@ -7,14 +7,15 @@ class CancellableTest extends WordSpec {
     "cancel test" in {
       Boolean cancelMethodCalled = false
       Boolean linkToMethodCalled = false
-      val s = new Cancellable{
-        def cancel(): Unit = { 
+      class CancellableObjectTest extends Cancellable{
+        override def cancel(): Unit = { 
           cancelMethodCalled = true
         }
-        def linkTo(other: Cancellable): Unit = {
+        override def linkTo(other: Cancellable): Unit = {
           linkToMethodCalled = true
         }
       }
+      val s = new CancellableObjectTest()
       assert(!s.isCancelled)
       assert(!cancelMethodCalled)
       s.cancel()
