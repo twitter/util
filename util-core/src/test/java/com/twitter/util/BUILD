@@ -1,6 +1,6 @@
 java_library(
     name = "object_size_calculator",
-    sources = globs("ObjectSizeCalculator.java"),
+    sources = ["ObjectSizeCalculator.java"],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
