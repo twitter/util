@@ -3,7 +3,6 @@ sudo: required
 
 language: scala
 
-
 git:
   depth: 3
   quiet: true

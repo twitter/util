@@ -4,22 +4,30 @@ import org.scalatest.WordSpec
 
 class CancellableTest extends WordSpec {
   "Cancellable" should {
-    "cancel test" in {
-      Boolean cancelMethodCalled = false
-      Boolean linkToMethodCalled = false
-      class CancellableObjectTest extends Cancellable{
-        override def cancel(): Unit = { 
+    "test method cancel" in {
+      var cancelMethodCalled = false
+      class CancellableMethodCancelTest extends Cancellable{
+        def isCancelled = false
+        def cancel(): Unit = { 
           cancelMethodCalled = true
         }
-        override def linkTo(other: Cancellable): Unit = {
-          linkToMethodCalled = true
-        }
+        def linkTo(other: Cancellable): Unit = {}
       }
-      val s = new CancellableObjectTest()
-      assert(!s.isCancelled)
+      val s = new CancellableMethodCancelTest()
       assert(!cancelMethodCalled)
       s.cancel()
       assert(cancelMethodCalled)
+    }
+    "test method linkTo" in {
+      var linkToMethodCalled = false
+      class CancellableMethodLinkToTest extends Cancellable{
+        def isCancelled = false
+        def cancel(): Unit = {}
+        def linkTo(other: Cancellable): Unit = {
+          linkToMethodCalled = true
+        }
+      }
+      val s = new CancellableMethodLinkToTest()
       assert(!linkToMethodCalled)
       s.linkTo(s)
       assert(linkToMethodCalled)
@@ -34,6 +42,12 @@ class CancellableTest extends WordSpec {
       assert(count == 1)
       s.cancel()
       assert(count == 1)
+    }
+    "has not cancelled" in {
+      var count = 0
+      def increment: Unit = count += 1
+      val s = new CancellableSink(increment)
+      assert(!s.isCancelled)
     }
     "confirm cancelled" in {
       var count = 0
