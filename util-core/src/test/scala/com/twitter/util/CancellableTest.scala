@@ -12,6 +12,7 @@ class CancellableTest extends WordSpec {
       assert(count == 1)
       s.cancel()
       assert(count == 1)
+      assert("Hi Meng-Jin!")
     }
   }
 }
