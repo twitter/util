@@ -4,36 +4,16 @@ import org.scalatest.WordSpec
 
 class CancellableTest extends WordSpec {
   "Cancellable" should {
-    "test variable isCancelled" in {
+    "variable isCancelled in object" in {
       assert(!Cancellable.nil.isCancelled)
     }
-    "test method cancel" in {
-      var cancelMethodCalled = false
-      class CancellableMethodCancelTest extends Cancellable{
-        def isCancelled = false
-        def cancel(): Unit = { 
-          cancelMethodCalled = true
-        }
-        def linkTo(other: Cancellable): Unit = {}
-      }
-      val s = new CancellableMethodCancelTest()
-      assert(!cancelMethodCalled)
-      s.cancel()
-      assert(cancelMethodCalled)
+    "method cancel in object" in {
+      Cancellable.nil.cancel()
+      assert(!Cancellable.nil.isCancelled)
     }
-    "test method linkTo" in {
-      var linkToMethodCalled = false
-      class CancellableMethodLinkToTest extends Cancellable{
-        def isCancelled = false
-        def cancel(): Unit = {}
-        def linkTo(other: Cancellable): Unit = {
-          linkToMethodCalled = true
-        }
-      }
-      val s = new CancellableMethodLinkToTest()
-      assert(!linkToMethodCalled)
-      s.linkTo(s)
-      assert(linkToMethodCalled)
+    "method linkTo in object" in {
+      Cancellable.nil.linkTo(Cancellable.nil)
+      assert(!Cancellable.nil.isCancelled)
     }
   }
   "CancellableSink" should {
@@ -59,7 +39,7 @@ class CancellableTest extends WordSpec {
       s.cancel()
       assert(s.isCancelled)
     }
-    "linking not supported" in {
+    "not support linking" in {
       var count = 1
       def multiply: Unit = count *= 2
       val s1 = new CancellableSink(multiply)
