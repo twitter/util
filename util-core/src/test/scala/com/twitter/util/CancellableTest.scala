@@ -17,6 +17,14 @@ class CancellableTest extends WordSpec {
     }
   }
   "CancellableSink" should {
+    "cancel normal case" in {
+      var count = 2
+      def square: Unit = count *= count
+      val s = new CancellableSink(square)
+      assert(count == 2)
+      s.cancel()
+      assert(count == 4)
+    }
     "cancel once" in {
       var count = 0
       def increment: Unit = count += 1
