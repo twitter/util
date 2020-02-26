@@ -1,63 +1,70 @@
 package com.twitter.util
 
-import org.scalatest.WordSpec
+import org.scalatest.FunSuite
 
-class CancellableTest extends WordSpec {
-  "Cancellable" should {
-    "variable isCancelled in object" in {
-      assert(!Cancellable.nil.isCancelled)
+class CancellableTest extends FunSuite {
+
+  test("Cancellable.nil is always cancelled") {
+    assert(!Cancellable.nil.isCancelled)
+  }
+
+  test("Cancellable.nil cancel method") {
+    Cancellable.nil.cancel()
+    assert(!Cancellable.nil.isCancelled)
+  }
+
+  test("Cancellable.nil linkTo method") {
+    Cancellable.nil.linkTo(Cancellable.nil)
+    assert(!Cancellable.nil.isCancelled)
+  }
+  
+  test("CancellableSink cancel normal case") {
+    var count = 2
+    def square: Unit = count *= count
+    val s = new CancellableSink(square)
+    assert(count == 2)
+    s.cancel()
+    assert(count == 4)
+  }
+    
+  test("CancellableSink cancel once") {
+    var count = 0
+    def increment: Unit = count += 1
+    val s = new CancellableSink(increment)
+    s.cancel()
+    assert(count == 1)
+    s.cancel()
+    assert(count == 1)
+  }
+
+  test("CancellableSink has not cancelled") {
+    var count = 0
+    def increment: Unit = count += 1
+    val s = new CancellableSink(increment)
+    assert(!s.isCancelled)
+    assert(count == 0)
+  }
+    
+  test("CancellableSink confirm cancelled") {
+    var count = 0
+    def increment: Unit = count += 1
+    val s = new CancellableSink(increment)
+    s.cancel()
+    assert(s.isCancelled)
+    assert(count == 1)
+  }
+    
+  test("CancellableSink not support linking") {
+    var count = 1
+    def multiply: Unit = count *= 2
+    val s1 = new CancellableSink(multiply)
+    val s2 = new CancellableSink(multiply)
+    assertThrows[Exception] {
+      s1.linkTo(s2)
     }
-    "method cancel in object" in {
-      Cancellable.nil.cancel()
-      assert(!Cancellable.nil.isCancelled)
-    }
-    "method linkTo in object" in {
-      Cancellable.nil.linkTo(Cancellable.nil)
-      assert(!Cancellable.nil.isCancelled)
+    assertThrows[Exception] {
+      s2.linkTo(s1)
     }
   }
-  "CancellableSink" should {
-    "cancel normal case" in {
-      var count = 2
-      def square: Unit = count *= count
-      val s = new CancellableSink(square)
-      assert(count == 2)
-      s.cancel()
-      assert(count == 4)
-    }
-    "cancel once" in {
-      var count = 0
-      def increment: Unit = count += 1
-      val s = new CancellableSink(increment)
-      s.cancel()
-      assert(count == 1)
-      s.cancel()
-      assert(count == 1)
-    }
-    "has not cancelled" in {
-      var count = 0
-      def increment: Unit = count += 1
-      val s = new CancellableSink(increment)
-      assert(!s.isCancelled)
-    }
-    "confirm cancelled" in {
-      var count = 0
-      def increment: Unit = count += 1
-      val s = new CancellableSink(increment)
-      s.cancel()
-      assert(s.isCancelled)
-    }
-    "not support linking" in {
-      var count = 1
-      def multiply: Unit = count *= 2
-      val s1 = new CancellableSink(multiply)
-      val s2 = new CancellableSink(multiply)
-      assertThrows[Exception] {
-        s1.linkTo(s2)
-      }
-      assertThrows[Exception] {
-        s2.linkTo(s1)
-      }
-    }
-  }
+   
 }
