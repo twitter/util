@@ -1,5 +1,5 @@
 scala_library(
-    sources = rglobs("*.scala"),
+    sources = ["**/*.scala"],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
