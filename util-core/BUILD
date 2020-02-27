@@ -18,11 +18,11 @@ target(
 # com.twitter.concurrent and com.twitter.util
 scala_library(
     name = "util-core-util",
-    sources = globs(
-        "src/main/scala/com/twitter/util/*.scala",
-        "src/main/scala-2.12-/com/twitter/util/*.scala",
+    sources = [
         "concurrent-extra/src/main/scala/com/twitter/concurrent/*.scala",
-    ),
+        "src/main/scala-2.12-/com/twitter/util/*.scala",
+        "src/main/scala/com/twitter/util/*.scala",
+    ],
     compiler_option_sets = {"fatal_warnings"},
     provides = scala_artifact(
         org = "com.twitter",
