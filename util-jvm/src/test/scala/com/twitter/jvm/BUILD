@@ -1,10 +1,8 @@
 junit_tests(
-    sources = globs(
+    sources = [
+        "!EstimatorApp.scala",
         "*.scala",
-        exclude = [
-            globs("EstimatorApp.scala"),
-        ],
-    ),
+    ],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         "3rdparty/jvm/junit",
