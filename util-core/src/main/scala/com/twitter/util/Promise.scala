@@ -7,16 +7,6 @@ import scala.util.control.NonFatal
 
 object Promise {
 
-  // An experimental property that enables the interrupt handler
-  // to use the state at the time of callback creation.
-  @volatile private var UseLocalInInterruptible: Boolean =
-    System.getProperty("com.twitter.util.UseLocalInInterruptible", "false").toBoolean
-
-  // Switches to enabling the interrupt handler to use
-  // the state at the time of callback creation.
-  private[twitter] def useLocalInInterruptible(useLocal: Boolean): Unit =
-    UseLocalInInterruptible = useLocal
-
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
    *
@@ -579,15 +569,11 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case s: Interruptible[A] =>
       if (!cas(s, new Interrupted(s.waitq, intr))) raise(intr)
       else {
-        if (!UseLocalInInterruptible)
-          s.handler.applyOrElse(intr, Promise.AlwaysUnit)
-        else {
-          val current = Local.save()
-          if (current ne s.saved)
-            Local.restore(s.saved)
-          try s.handler.applyOrElse(intr, Promise.AlwaysUnit)
-          finally Local.restore(current)
-        }
+        val current = Local.save()
+        if (current ne s.saved)
+          Local.restore(s.saved)
+        try s.handler.applyOrElse(intr, Promise.AlwaysUnit)
+        finally Local.restore(current)
       }
 
     case s: Transforming[A] =>

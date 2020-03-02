@@ -7,6 +7,19 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: The system property `com.twitter.util.UseLocalInInterruptible` no longer
+  can be used to modulate which Local state is present when a Promise is interrupted.
+  ``PHAB_ID=D442444``
+
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Promises now exclusively use the state local to setting the interrupt
+  handler when raising on a Promise. ``PHAB_ID=D442444``
+
 20.2.1
 ------
 
