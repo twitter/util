@@ -765,6 +765,26 @@ and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.h
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.io.Buf#slowFromHexString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="slowFromHexString(hex:String):com.twitter.io.Buf"></a><a id="slowFromHexString(String):Buf"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Buf$.html#slowFromHexString(hex:String):com.twitter.io.Buf" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">slowFromHexString</span><span class="params">(<span name="hex">hex: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Convert a hex string (eg one from  slowHexString above)
+to a Buf of the string contents interpreted as a string of hexadecimal numbers.</p><div class="fullcomment"><div class="comment cmt"><p>Convert a hex string (eg one from  slowHexString above)
+to a Buf of the string contents interpreted as a string of hexadecimal numbers.</p><p>If an invalid string is passed to this method, the return value is not defined. It may throw
+or it may return a bogus Buf value.
+</p></div></div>
     </li><li name="com.twitter.io.Buf#slowHexString" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="slowHexString(buf:com.twitter.io.Buf):String"></a><a id="slowHexString(Buf):String"></a>
       <span class="permalink">

@@ -923,6 +923,25 @@ and flag parsing.
 executed after all postmains complete. The thread resumes when all exit
 hooks complete or <code>closeDeadline</code> expires.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#onExitLast" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="onExitLast(f:=&gt;Unit):Unit"></a><a id="onExitLast(⇒Unit):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#onExitLast(f:=&gt;Unit):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">onExitLast</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and are
+executed after all closeOnExit functions complete. The thread resumes when all exit
+hooks complete or <code>closeDeadline</code> expires.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
     </li><li name="com.twitter.app.App#parseArgs" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parseArgs(args:Array[String]):Unit"></a><a id="parseArgs(Array[String]):Unit"></a>
       <span class="permalink">

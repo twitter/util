@@ -2082,22 +2082,6 @@ will not be processed.</p><p>usage:</p><pre><span class="cmt">// will return a F
 Future.traverseSequentially(<span class="std">Seq</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)) { i <span class="kw">=&gt;</span>
   Future.value(i + <span class="num">1</span>)
 }</pre></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[B]]</code> containing the results of <code>f</code> being applied to every item in <code>as</code></p></dd></dl></div>
-    </li><li name="com.twitter.util.Future#unapply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="unapply[A](f:com.twitter.util.Future[A]):Option[com.twitter.util.Try[A]]"></a><a id="unapply[A](Future[A]):Option[Try[A]]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/Future$.html#unapply[A](f:com.twitter.util.Future[A]):Option[com.twitter.util.Try[A]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unapply</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="f">f: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<span class="extype" name="com.twitter.util.Future.unapply.A">A</span>]</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<a href="Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<span class="extype" name="com.twitter.util.Future.unapply.A">A</span>]]</span>
-      </span>
-      
-      
     </li><li name="com.twitter.util.Future#value" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="value[A](a:A):com.twitter.util.Future[A]"></a><a id="value[A](A):Future[A]"></a>
       <span class="permalink">
