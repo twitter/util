@@ -1,5 +1,5 @@
 junit_tests(
-    sources = globs("*.scala"),
+    sources = ["*.scala"],
     # fatal_warnings runs into an issue with scalatest/Future.isDone:
     #
     # [warn] ...: possible missing interpolator: detected interpolated identifier `$conforms`

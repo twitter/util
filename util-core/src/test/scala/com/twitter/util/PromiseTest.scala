@@ -220,8 +220,6 @@ class PromiseTest extends FunSuite {
   }
 
   test("interrupts use local state at the time of callback creation") {
-    Promise.useLocalInInterruptible(true)
-
     val local = new Local[String]
     implicit val timer: Timer = new JavaTimer(true)
 
@@ -244,33 +242,6 @@ class PromiseTest extends FunSuite {
     thread.start()
 
     assert("main thread" == Await.result(f, 3.seconds))
-  }
-
-  test("interrupts use raisers state") {
-    Promise.useLocalInInterruptible(false)
-
-    val local = new Local[String]
-    implicit val timer: Timer = new JavaTimer(true)
-
-    local.set(Some("main thread"))
-    val p = new Promise[String]
-
-    p.setInterruptHandler({
-      case _ =>
-        val localVal = local().getOrElse("<empty>")
-        p.updateIfEmpty(Return(localVal))
-    })
-    val f = Future.sleep(1.second).before(p)
-
-    val thread = new Thread(new Runnable {
-      def run(): Unit = {
-        local.set(Some("worker thread"))
-        p.raise(new Exception)
-      }
-    })
-    thread.start()
-
-    assert("worker thread" == Await.result(f, 3.seconds))
   }
 
   test("interrupt then map uses local state at the time of callback creation") {
@@ -302,8 +273,6 @@ class PromiseTest extends FunSuite {
   }
 
   test("locals in Interruptible after detatch") {
-    Promise.useLocalInInterruptible(true)
-
     val local = new Local[String]
     implicit val timer: Timer = new JavaTimer(true)
 

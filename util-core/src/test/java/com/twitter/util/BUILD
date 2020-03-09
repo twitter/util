@@ -8,10 +8,10 @@ java_library(
 )
 
 junit_tests(
-    sources = globs(
+    sources = [
+        "!ObjectSizeCalculator.java",
         "*.java",
-        exclude = [globs("ObjectSizeCalculator.java")],
-    ),
+    ],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         ":object_size_calculator",

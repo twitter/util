@@ -1,7 +1,7 @@
 import scoverage.ScoverageKeys
 
 // All Twitter library releases are date versioned as YY.MM.patch
-val releaseVersion = "20.3.0-SNAPSHOT"
+val releaseVersion = "20.3.0"
 
 val zkVersion = "3.5.0-alpha"
 val zkClientVersion = "0.0.81"
@@ -15,7 +15,7 @@ val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10.1"
 
-val guavaLib = "com.google.guava" % "guava" % "19.0"
+val guavaLib = "com.google.guava" % "guava" % "23.6.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.0"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
@@ -77,7 +77,7 @@ def jdk11GcJavaOptions: Seq[String] = {
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0")
+  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.1")
 )
 
 val baseSettings = Seq(
@@ -143,6 +143,7 @@ val baseSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
   publishMavenStyle := true,
+  publishConfiguration := publishConfiguration.value.withOverwrite(true),
   autoAPIMappings := true,
   apiURL := Some(url("https://twitter.github.io/util/docs/")),
   pomExtra :=

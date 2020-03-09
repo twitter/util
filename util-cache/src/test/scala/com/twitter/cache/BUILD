@@ -1,13 +1,9 @@
 junit_tests(
-    sources = globs(
+    sources = [
+        "!AbstractFutureCacheTest.scala",
+        "!AbstractLoadingFutureCacheTest.scala",
         "*.scala",
-        exclude = [
-            globs(
-                "AbstractFutureCacheTest.scala",
-                "AbstractLoadingFutureCacheTest.scala",
-            ),
-        ],
-    ),
+    ],
     compiler_option_sets = {"fatal_warnings"},
     dependencies = [
         ":abstract_tests",
