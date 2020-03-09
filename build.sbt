@@ -15,7 +15,7 @@ val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.9.10"
 val jacksonDatabindVersion = "2.9.10.1"
 
-val guavaLib = "com.google.guava" % "guava" % "23.6.1-jre"
+val guavaLib = "com.google.guava" % "guava" % "25.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.0"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
@@ -480,7 +480,7 @@ lazy val utilThrift = Project(
     "org.apache.thrift"          % "libthrift"        % "0.10.0",
     slf4jApi % "provided",
     "com.fasterxml.jackson.core" % "jackson-core"     % jacksonVersion,
-    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion 
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
   )
 ).dependsOn(utilCodec)
 
