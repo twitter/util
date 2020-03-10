@@ -108,7 +108,7 @@ class MonitorTest extends FunSuite with MockitoSugar {
     verify(m1).handle(MonitorException(exc, rte))
   }
 
-  test("onitor#andThen should fail if both monitors throw") {
+  test("Monitor#andThen should fail if both monitors throw") {
     val h = new MonitorAndThenHelper
     import h._
 
