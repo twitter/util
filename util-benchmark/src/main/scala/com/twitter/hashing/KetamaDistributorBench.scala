@@ -19,10 +19,11 @@ class KetamaDistributorBench extends StdBenchAnnotations {
   val hosts: scala.collection.immutable.IndexedSeq[String] = 0.until(numHosts).map { i =>
     "abcd-zzz-" + i + "-ab2.qwer.twitter.com"
   }
-  val nodes: scala.collection.immutable.IndexedSeq[KetamaNode[String]] = hosts map { h =>
-    KetamaNode[String](h + ":12021", 1, h)
+  val nodes: scala.collection.immutable.IndexedSeq[HashNode[String]] = hosts map { h =>
+    HashNode[String](h + ":12021", 1, h)
   }
 
   @Benchmark
-  def ketama(): KetamaDistributor[String] = new KetamaDistributor(nodes, numReps, false)
+  def ketama(): ConsistentHashingDistributor[String] =
+    new ConsistentHashingDistributor(nodes, numReps, false)
 }

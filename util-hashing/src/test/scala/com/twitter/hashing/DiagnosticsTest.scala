@@ -10,7 +10,7 @@ class DiagnosticsTest extends WordSpec {
       val nodes = hosts.map { s =>
         val Array(host, port, weight) = s.split(":")
         val identifier = host + ":" + port
-        KetamaNode(identifier, weight.toInt, identifier)
+        HashNode(identifier, weight.toInt, identifier)
       }
 
       val hashFunctions = List(

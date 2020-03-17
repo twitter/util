@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+* util-hashing: Rename
+   `c.t.hashing.KetamaNode` => `HashNode`,
+   `c.t.hashing.KetamaDistributor` => `ConsistentHashingDistributor`.
+  ``PHAB_ID=D449929``
+
 20.3.0
 ------
 

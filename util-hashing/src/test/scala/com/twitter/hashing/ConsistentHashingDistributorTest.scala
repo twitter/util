@@ -8,23 +8,23 @@ import java.io.{BufferedReader, InputStreamReader}
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
 
-class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
+class ConsistentHashingDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
   "KetamaDistributor" should {
     val nodes = Seq(
-      KetamaNode("10.0.1.1", 600, 1),
-      KetamaNode("10.0.1.2", 300, 2),
-      KetamaNode("10.0.1.3", 200, 3),
-      KetamaNode("10.0.1.4", 350, 4),
-      KetamaNode("10.0.1.5", 1000, 5),
-      KetamaNode("10.0.1.6", 800, 6),
-      KetamaNode("10.0.1.7", 950, 7),
-      KetamaNode("10.0.1.8", 100, 8)
+      HashNode("10.0.1.1", 600, 1),
+      HashNode("10.0.1.2", 300, 2),
+      HashNode("10.0.1.3", 200, 3),
+      HashNode("10.0.1.4", 350, 4),
+      HashNode("10.0.1.5", 1000, 5),
+      HashNode("10.0.1.6", 800, 6),
+      HashNode("10.0.1.7", 950, 7),
+      HashNode("10.0.1.8", 100, 8)
     )
 
     // 160 is the hard coded value for libmemcached, which was this input data is from
-    val ketamaDistributor = new KetamaDistributor(nodes, 160)
+    val ketamaDistributor = new ConsistentHashingDistributor(nodes, 160)
     val ketamaDistributorInoldLibMemcachedVersionComplianceMode =
-      new KetamaDistributor(nodes, 160, true)
+      new ConsistentHashingDistributor(nodes, 160, true)
 
     "pick the correct node with ketama hash function" in {
       // Test from Smile's KetamaNodeLocatorSpec.scala
@@ -77,7 +77,7 @@ class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks
     }
 
     "hashInt" in {
-      val ketama = new KetamaDistributor[Unit](Seq.empty, 0, false)
+      val ketama = new ConsistentHashingDistributor[Unit](Seq.empty, 0, false)
       forAll(Gen.chooseNum(0, Int.MaxValue)) { i =>
         val md = MessageDigest.getInstance("MD5")
         ketama.hashInt(i, md)
@@ -87,7 +87,7 @@ class KetamaDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks
     }
 
     "byteArrayToLE" in {
-      val ketama = new KetamaDistributor[Unit](Seq.empty, 0, false)
+      val ketama = new ConsistentHashingDistributor[Unit](Seq.empty, 0, false)
       forAll { s: String =>
         val ba = MessageDigest.getInstance("MD5").digest(s.getBytes("UTF-8"))
         val bb = ByteBuffer.wrap(ba).order(ByteOrder.LITTLE_ENDIAN)

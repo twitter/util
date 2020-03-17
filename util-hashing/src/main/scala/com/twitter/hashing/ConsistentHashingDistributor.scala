@@ -2,7 +2,7 @@ package com.twitter.hashing
 
 import java.security.MessageDigest
 
-case class KetamaNode[A](identifier: String, weight: Int, handle: A)
+case class HashNode[A](identifier: String, weight: Int, handle: A)
 
 /**
  * @note Certain versions of libmemcached return subtly different results for points on
@@ -10,8 +10,8 @@ case class KetamaNode[A](identifier: String, weight: Int, handle: A)
  * clients who depend on those versions of libmemcached, we have to reproduce their result.
  * If the `oldLibMemcachedVersionComplianceMode` is `true` the behavior will be reproduced.
  */
-class KetamaDistributor[A](
-  ketamaNodes: Seq[KetamaNode[A]],
+class ConsistentHashingDistributor[A](
+  hashNodes: Seq[HashNode[A]],
   numReps: Int,
   oldLibMemcachedVersionComplianceMode: Boolean = false)
     extends Distributor[A] {
@@ -53,15 +53,15 @@ class KetamaDistributor[A](
     md.update(('0' + j).toByte)
   }
 
-  private[this] val continuum: java.util.TreeMap[Long, KetamaNode[A]] = {
+  private[this] val continuum: java.util.TreeMap[Long, HashNode[A]] = {
     val md5 = MessageDigest.getInstance("MD5")
-    val underlying = new java.util.TreeMap[Long, KetamaNode[A]]()
+    val underlying = new java.util.TreeMap[Long, HashNode[A]]()
     val dash: Byte = '-'.toByte
 
-    val nodeCount = ketamaNodes.size
-    val totalWeight = ketamaNodes.foldLeft(0) { _ + _.weight }
+    val nodeCount = hashNodes.size
+    val totalWeight = hashNodes.foldLeft(0) { _ + _.weight }
 
-    val it = ketamaNodes.iterator
+    val it = hashNodes.iterator
     while (it.hasNext) {
       val node = it.next()
 
@@ -101,14 +101,14 @@ class KetamaDistributor[A](
     underlying
   }
 
-  def nodes: Seq[A] = ketamaNodes.map(_.handle)
-  def nodeCount: Int = ketamaNodes.size
+  def nodes: Seq[A] = hashNodes.map(_.handle)
+  def nodeCount: Int = hashNodes.size
 
   // hashes are 32-bit because they are 32-bit on the libmemcached and
   // we need to maintain compatibility with libmemcached
   private[this] def truncateHash(hash: Long): Long = hash & 0xffffffffL
 
-  private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, KetamaNode[A]] = {
+  private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, HashNode[A]] = {
     val truncatedHash = truncateHash(hash)
     val entry = continuum.ceilingEntry(truncatedHash)
     if (entry == null) continuum.firstEntry else entry
