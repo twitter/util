@@ -13,6 +13,7 @@ import javax.management.{
   ObjectName,
   RuntimeMBeanException
 }
+import javax.naming.OperationNotSupportedException
 import scala.jdk.CollectionConverters._
 import scala.language.reflectiveCalls
 
@@ -56,10 +57,18 @@ class Hotspot extends Jvm {
   private[this] def long(c: Counter) = c.getValue().asInstanceOf[Long]
 
   private[this] def counters(pat: String) = {
-    val cs = jvm.getInternalCounters(pat).asScala
-    cs.map { c =>
-      c.getName() -> c
-    }.toMap
+    try {
+      val cs = jvm.getInternalCounters(pat).asScala
+      cs.map { c =>
+        c.getName() -> c
+      }.toMap
+    } catch {
+      case e: OperationNotSupportedException =>
+        log.log(Level.WARNING, s"failed to get internal JVM counters as these are not available on your JVM.")
+        Map[String, Counter]()
+      case e: Throwable =>
+        throw e
+    }
   }
 
   private[this] def counter(name: String): Option[Counter] =
