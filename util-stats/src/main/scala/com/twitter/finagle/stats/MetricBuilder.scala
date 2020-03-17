@@ -22,23 +22,21 @@ case object Server extends SourceRole
  * @param units the unit associated with the metrics value (milliseconds, megabytes, requests, etc)
  * @param role whether the service is playing the part of client or server regarding this metric
  * @param verbosity see StatsReceiver for details
- * @param sourceClass the class pass of the module which generated this metric (ie, com.twitter...)
- * @param sourceLibrary the name of the library which generated this metric (ie, finagle)
+ * @param sourceClass the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)
  * @param name the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
- * @param identifier the service name used by obs stack for this service
+ * @param processPath a universal coordinate for the resource
  * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
  * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
  */
 class MetricBuilder(
   val keyIndicator: Boolean = false,
-  val description: String = "",
+  val description: String = "No description provided",
   val units: MetricUnit = Unspecified,
   val role: SourceRole = NoRoleSpecified,
   val verbosity: Verbosity = Verbosity.Default,
-  val sourceClass: String = "",
-  val sourceLibrary: Option[String] = None,
+  val sourceClass: Option[String] = None,
   val name: Seq[String] = Seq(),
-  val identifier: String = "",
+  val processPath: Option[String] = None,
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double] = IndexedSeq(),
   val statsReceiver: StatsReceiver) {
@@ -54,10 +52,9 @@ class MetricBuilder(
     units: MetricUnit = this.units,
     role: SourceRole = this.role,
     verbosity: Verbosity = this.verbosity,
-    sourceClass: String = this.sourceClass,
-    sourceLibrary: Option[String] = this.sourceLibrary,
+    sourceClass: Option[String] = this.sourceClass,
     name: Seq[String] = this.name,
-    identifier: String = this.identifier,
+    processPath: Option[String] = this.processPath,
     percentiles: IndexedSeq[Double] = this.percentiles
   ): MetricBuilder = {
     new MetricBuilder(
@@ -67,9 +64,8 @@ class MetricBuilder(
       role = role,
       verbosity = verbosity,
       sourceClass = sourceClass,
-      sourceLibrary = sourceLibrary,
       name = name,
-      identifier = identifier,
+      processPath = processPath,
       percentiles = percentiles,
       statsReceiver = this.statsReceiver
     )
@@ -82,12 +78,11 @@ class MetricBuilder(
 
   def withVerbosity(verbosity: Verbosity): MetricBuilder = this.copy(verbosity = verbosity)
 
-  def withSourceClass(sourceClass: String): MetricBuilder = this.copy(sourceClass = sourceClass)
+  def withSourceClass(sourceClass: Option[String]): MetricBuilder =
+    this.copy(sourceClass = sourceClass)
 
-  def withSourceLibrary(sourceLibrary: Option[String]): MetricBuilder =
-    this.copy(sourceLibrary = sourceLibrary)
-
-  def withIdentifier(identifier: String): MetricBuilder = this.copy(identifier = identifier)
+  def withIdentifier(processPath: Option[String]): MetricBuilder =
+    this.copy(processPath = processPath)
 
   def withUnits(units: MetricUnit): MetricBuilder = this.copy(units = units)
 
@@ -156,28 +151,19 @@ class MetricBuilder(
         role == that.role &&
         verbosity == that.verbosity &&
         sourceClass == that.sourceClass &&
-        sourceLibrary == that.sourceLibrary &&
         name == that.name &&
-        identifier == that.identifier &&
+        processPath == that.processPath &&
         percentiles == that.percentiles
     case _ => false
   }
 
   override def hashCode(): Int = {
-    val state = Seq[AnyRef](
-      description,
-      units,
-      role,
-      verbosity,
-      sourceClass,
-      sourceLibrary,
-      name,
-      identifier,
-      percentiles)
+    val state =
+      Seq[AnyRef](description, units, role, verbosity, sourceClass, name, processPath, percentiles)
     val hashCodes = keyIndicator.hashCode() +: state.map(_.hashCode())
     hashCodes.foldLeft(0)((a, b) => 31 * a + b)
   }
 
   override def toString =
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $sourceLibrary, $name, $identifier, $percentiles, $statsReceiver)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $name, $processPath, $percentiles, $statsReceiver)"
 }

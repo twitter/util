@@ -19,4 +19,6 @@ case object Milliseconds extends MetricUnit
 case object Microseconds extends MetricUnit
 case object Requests extends MetricUnit
 case object Percentage extends MetricUnit
-case class CustomUnit(name: String) extends MetricUnit
+case class CustomUnit(name: String) extends MetricUnit {
+  override val toString: String = s"CustomUnit($name)"
+}
