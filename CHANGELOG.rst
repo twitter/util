@@ -7,6 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-core: When looking to add idempotent close behavior, users should mix in `CloseOnce` to
+  classes which already extend (or implement) `Closable`, as mixing in `ClosableOnce` leads to
+  compiler errors. `ClosableOnce.of` can still be used to create a `ClosableOnce` proxy of an
+  already instantiated `Closable`. Classes which do not extend `Closable` can still
+  mix in `ClosableOnce`. ``PHAB_ID=D455819``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 * util-hashing: Rename

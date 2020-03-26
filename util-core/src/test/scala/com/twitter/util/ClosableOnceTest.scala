@@ -18,7 +18,9 @@ class ClosableOnceTest extends FunSuite {
     }
 
     val closableOnce = ClosableOnce.of(underlying)
+    assert(closableOnce.isClosed == false)
     closableOnce.close()
+    assert(closableOnce.isClosed == true)
     closableOnce.close()
     assert(closedCalls == 1)
   }
@@ -33,8 +35,11 @@ class ClosableOnceTest extends FunSuite {
       }
     }
 
+    assert(closableOnce.isClosed == false)
+
     assert(ready(closableOnce.close()).poll.get.throwable == ex)
     assert(closedCalls == 1)
+    assert(closableOnce.isClosed == true)
 
     assert(ready(closableOnce.close()).poll.get.throwable == ex)
     assert(closedCalls == 1)
