@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 class EstimatorTest extends FunSuite {
   test("LoadAverage") {
     // This makes LoadAverage.a = 1/2 for easy testing.
-    val interval = -1D / math.log(0.5)
+    val interval = -1d / math.log(0.5)
     val e = new LoadAverage(interval)
     assert(e.estimate.isNaN)
 

@@ -32,12 +32,10 @@ class PercentOpsTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("assorted percentages") {
-    forAll(arbitrary[Int]) { i =>
-      assert(new RichPercent(i).percent == i / 100.0)
-    }
+    forAll(arbitrary[Int]) { i => assert(new RichPercent(i).percent == i / 100.0) }
 
     // We're not as accurate when we get into high double-digit exponents, but that's acceptable.
-    forAll(Gen.choose(-10000D, 10000D)) { d =>
+    forAll(Gen.choose(-10000d, 10000d)) { d =>
       assert(doubleEq(new RichPercent(d).percent, d / 100.0))
     }
   }

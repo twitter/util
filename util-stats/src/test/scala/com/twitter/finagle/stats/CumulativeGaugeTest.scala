@@ -74,9 +74,7 @@ class CumulativeGaugeTest extends FunSuite with Eventually with IntegrationPatie
   test("a CumulativeGauge should sum values across all registered gauges") {
     val gauge = new TestGauge()
 
-    val underlying = 0.until(100).map { _ =>
-      gauge.addGauge { 10.0f }
-    }
+    val underlying = 0.until(100).map { _ => gauge.addGauge { 10.0f } }
     assert(gauge.getValue == (10.0f * 100))
   }
 

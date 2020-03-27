@@ -18,9 +18,7 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
         Seq(s)
 
       case Seq(hd, tl @ _*) =>
-        Seq(Seq(hd)) ++ (tails(tl) map { t =>
-          Seq(hd) ++ t
-        })
+        Seq(Seq(hd)) ++ (tails(tl) map { t => Seq(hd) ++ t })
     }
   }
 

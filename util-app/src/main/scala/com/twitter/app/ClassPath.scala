@@ -149,10 +149,11 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
     buf: Builder[CpInfo, Seq[CpInfo]],
     seenUris: mutable.Set[URI]
   ): Unit = {
-    val jarFile = try new JarFile(file)
-    catch {
-      case _: IOException => return // not a Jar file
-    }
+    val jarFile =
+      try new JarFile(file)
+      catch {
+        case _: IOException => return // not a Jar file
+      }
 
     try {
       for (uri <- jarClasspath(file, jarFile.getManifest)) {

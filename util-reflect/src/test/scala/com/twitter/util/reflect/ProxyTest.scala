@@ -40,9 +40,7 @@ class ProxyTest extends WordSpec {
     "generate a factory for an interface" in {
       var called = 0
 
-      val f1 = new ProxyFactory[TestInterface]({ m =>
-        called += 1; m()
-      })
+      val f1 = new ProxyFactory[TestInterface]({ m => called += 1; m() })
       val obj = new TestImpl
 
       val proxied = f1(obj)
@@ -56,9 +54,7 @@ class ProxyTest extends WordSpec {
     "generate a factory for a class with a default constructor" in {
       var called = 0
 
-      val f2 = new ProxyFactory[TestClass]({ m =>
-        called += 1; m()
-      })
+      val f2 = new ProxyFactory[TestClass]({ m => called += 1; m() })
       val obj = new TestClass
 
       val proxied = f2(obj)
@@ -164,12 +160,8 @@ class ProxyTest extends WordSpec {
       results.sortWith((a, b) => a > b).slice(2, 5).sum / 3
     }
 
-    val reflectConstructor = { () =>
-      new ReferenceProxyFactory[TestInterface](_())
-    }
-    val cglibConstructor = { () =>
-      new ProxyFactory[TestInterface](_())
-    }
+    val reflectConstructor = { () => new ReferenceProxyFactory[TestInterface](_()) }
+    val cglibConstructor = { () => new ProxyFactory[TestInterface](_()) }
     /*
     "maintains proxy creation speed" in {
       val repTimes = 40000

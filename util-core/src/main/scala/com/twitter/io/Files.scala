@@ -42,9 +42,7 @@ object Files {
     } else if (file.isFile) {
       file.delete()
     } else {
-      file.listFiles.foreach { f =>
-        delete(f)
-      }
+      file.listFiles.foreach { f => delete(f) }
       file.delete()
     }
   }

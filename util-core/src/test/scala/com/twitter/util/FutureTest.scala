@@ -94,12 +94,8 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
             promise
           }
           iteration
-            .onSuccess { _ =>
-              complete = true
-            }
-            .onFailure { _ =>
-              failure = true
-            }
+            .onSuccess { _ => complete = true }
+            .onFailure { _ => failure = true }
           assert(!complete)
           assert(!failure)
         }
@@ -176,12 +172,8 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
           }
 
           iteration
-            .onSuccess { _ =>
-              complete = true
-            }
-            .onFailure { _ =>
-              failure = true
-            }
+            .onSuccess { _ => complete = true }
+            .onFailure { _ => failure = true }
           assert(!complete)
           assert(!failure)
         }
@@ -905,12 +897,8 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
         }
       }
 
-      testJavaFuture("toJavaFuture", { f: Future[Int] =>
-        f.toJavaFuture
-      })
-      testJavaFuture("toCompletableFuture", { f: Future[Int] =>
-        f.toCompletableFuture
-      })
+      testJavaFuture("toJavaFuture", { f: Future[Int] => f.toJavaFuture })
+      testJavaFuture("toCompletableFuture", { f: Future[Int] => f.toCompletableFuture })
 
       "monitored" should {
         trait MonitoredHelper {
@@ -1002,9 +990,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
 
       "map" which {
         "when it's all chill" in {
-          val f = Future(1).map { x =>
-            x + 1
-          }
+          val f = Future(1).map { x => x + 1 }
           assert(await(f) == 2)
         }
 
@@ -1058,9 +1044,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
           def ret(): String = {
             val f = const.value(1).transform {
               case Return(_) =>
-                val fn = { () =>
-                  return "OK"
-                }
+                val fn = { () => return "OK" }
                 fn()
                 Future.value(ret())
               case Throw(_) => const.value(0)
@@ -1101,9 +1085,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
 
           val actual = intercept[FatalException] {
             Monitor.using(m) {
-              const.value(1).transform { _ =>
-                throw exc
-              }
+              const.value(1).transform { _ => throw exc }
             }
           }
 
@@ -1240,17 +1222,12 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
 
       testSequence(
         "flatMap",
-        (a, next) =>
-          a.flatMap { _ =>
-            next()
-        }
+        (a, next) => a.flatMap { _ => next() }
       )
       testSequence("before", (a, next) => a.before { next() })
 
       "flatMap (values)" should {
-        val f = Future(1).flatMap { x =>
-          Future(x + 1)
-        }
+        val f = Future(1).flatMap { x => Future(x + 1) }
 
         "apply" in {
           assert(await(f) == 2)
@@ -1370,9 +1347,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
       "foreach" in {
         var wasCalledWith: Option[Int] = None
         val f = Future(1)
-        f.foreach { i =>
-          wasCalledWith = Some(i)
-        }
+        f.foreach { i => wasCalledWith = Some(i) }
         assert(wasCalledWith.contains(1))
       }
 
@@ -1390,9 +1365,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
         "when the result has not yet arrived it buffers computations" in {
           var wasCalledWith: Option[Int] = None
           val f = new Promise[Int]
-          f.foreach { i =>
-            wasCalledWith = Some(i)
-          }
+          f.foreach { i => wasCalledWith = Some(i) }
           assert(wasCalledWith.isEmpty)
           f() = Return(1)
           assert(wasCalledWith.contains(1))
@@ -1481,9 +1454,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
         val promise = new Promise[Option[Int]]
 
         local() = 123
-        val done = promise.map { otherValue =>
-          (otherValue, local())
-        }
+        val done = promise.map { otherValue => (otherValue, local()) }
 
         val t = new Thread {
           override def run(): Unit = {
@@ -1925,9 +1896,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
         val i = Random.nextInt(ps.length)
         val e = new Exception("sad panda")
         val t = if (fail) Throw(e) else Return(i)
-        f.respond { _ =>
-          ()
-        }
+        f.respond { _ => () }
         assert(ps.map(_.waitqLength).sum == n)
         ps(i).update(t)
         assert(ps.map(_.waitqLength).sum == 0)
@@ -1987,9 +1956,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
         val i = Random.nextInt(ps.length)
         val e = new Exception("sad panda")
         val t = if (fail) Throw(e) else Return(i)
-        f.respond { _ =>
-          ()
-        }
+        f.respond { _ => () }
         assert(ps.map(_.waitqLength).sum == n)
         ps(i).update(t)
         assert(ps.map(_.waitqLength).sum == 0)
@@ -2054,9 +2021,7 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
     "terminate when 'next' throws" in {
       val exc = new Exception
       def next(): Future[Int] = throw exc
-      val done = Future.each(next()) { _ =>
-        throw exc
-      }
+      val done = Future.each(next()) { _ => throw exc }
 
       assert(done.poll.contains(Throw(Future.NextThrewException(exc))))
     }

@@ -30,9 +30,7 @@ class ZNodeTest extends WordSpec with MockitoSugar {
       val h = new ZNodeSpecHelper
       import h._
 
-      val zs = (0 to 1) map { _ =>
-        ZNode(zk, "/some/path")
-      }
+      val zs = (0 to 1) map { _ => ZNode(zk, "/some/path") }
       val table = Map(zs(0) -> true)
       assert(table.keys.toList.contains(zs(0)))
       assert(table.keys.toList.contains(zs(1)))

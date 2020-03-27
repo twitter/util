@@ -8,9 +8,7 @@ private[util] class HealthyQueue[A](
   isHealthy: A => Boolean)
     extends mutable.Queue[Future[A]] {
 
-  0.until(numItems) foreach { _ =>
-    this += makeItem()
-  }
+  0.until(numItems) foreach { _ => this += makeItem() }
 
   override def +=(elem: Future[A]): HealthyQueue.this.type = synchronized {
     super.+=(elem)

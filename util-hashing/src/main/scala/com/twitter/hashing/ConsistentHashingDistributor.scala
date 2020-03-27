@@ -84,10 +84,10 @@ class ConsistentHashingDistributor[A](
 
         val buffer = md5.digest()
 
-        underlying.put(byteArrayToLE(buffer, 0).toLong & 0xffffffffL, node)
-        underlying.put(byteArrayToLE(buffer, 4).toLong & 0xffffffffL, node)
-        underlying.put(byteArrayToLE(buffer, 8).toLong & 0xffffffffL, node)
-        underlying.put(byteArrayToLE(buffer, 12).toLong & 0xffffffffL, node)
+        underlying.put(byteArrayToLE(buffer, 0).toLong & 0xFFFFFFFFL, node)
+        underlying.put(byteArrayToLE(buffer, 4).toLong & 0xFFFFFFFFL, node)
+        underlying.put(byteArrayToLE(buffer, 8).toLong & 0xFFFFFFFFL, node)
+        underlying.put(byteArrayToLE(buffer, 12).toLong & 0xFFFFFFFFL, node)
 
         i += 1
       }
@@ -106,7 +106,7 @@ class ConsistentHashingDistributor[A](
 
   // hashes are 32-bit because they are 32-bit on the libmemcached and
   // we need to maintain compatibility with libmemcached
-  private[this] def truncateHash(hash: Long): Long = hash & 0xffffffffL
+  private[this] def truncateHash(hash: Long): Long = hash & 0xFFFFFFFFL
 
   private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, HashNode[A]] = {
     val truncatedHash = truncateHash(hash)

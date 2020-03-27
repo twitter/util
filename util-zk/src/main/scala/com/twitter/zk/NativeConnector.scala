@@ -50,18 +50,14 @@ case class NativeConnector(
     serialized {
       connection.getOrElse {
         val c = mkConnection
-        c.sessionEvents foreach { event =>
-          sessionBroker.send(event()).sync()
-        }
+        c.sessionEvents foreach { event => sessionBroker.send(event()).sync() }
         connection = Some(c)
         c
       }.apply
     }.flatten
       .rescue {
         case e: NativeConnector.ConnectTimeoutException =>
-          release() flatMap { _ =>
-            Future.exception(e)
-          }
+          release() flatMap { _ => Future.exception(e) }
       }
 
   /**

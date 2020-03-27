@@ -4918,13 +4918,12 @@ object Local {
    */
   def closed[R](fn: () => R): () => R = {
     val closure = Local.save()
-    () =>
-      {
-        val save = Local.save()
-        Local.restore(closure)
-        try fn()
-        finally Local.restore(save)
-      }
+    () => {
+      val save = Local.save()
+      Local.restore(closure)
+      try fn()
+      finally Local.restore(save)
+    }
   }
 }
 

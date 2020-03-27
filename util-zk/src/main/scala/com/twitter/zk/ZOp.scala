@@ -23,11 +23,7 @@ trait ZOp[T <: ZNode.Exists] {
     def setWatch(): Unit = {
       watch() onSuccess {
         case ZNode.Watch(result, update) =>
-          broker ! result onSuccess { _ =>
-            update onSuccess { _ =>
-              setWatch()
-            }
-          }
+          broker ! result onSuccess { _ => update onSuccess { _ => setWatch() } }
       }
     }
     setWatch()

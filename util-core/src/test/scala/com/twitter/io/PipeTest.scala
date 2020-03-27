@@ -290,9 +290,7 @@ class PipeTest extends FunSuite with Matchers with ScalaCheckDrivenPropertyCheck
   def closeNotSatisfiedUntillAllReadsDone = {
     val rw = new Pipe[Buf]
     val rf = rw.read()
-    val cf = rf.flatMap { _ =>
-      rw.close()
-    }
+    val cf = rf.flatMap { _ => rw.close() }
     assert(!rf.isDefined)
     assert(!cf.isDone)
 

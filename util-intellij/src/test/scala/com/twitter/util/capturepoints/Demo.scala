@@ -25,16 +25,12 @@ class Demo extends FunSuite {
   }
 
   def someBusinessLogic(future: Future[Int]): Future[Int] = {
-    val result: Future[Int] = future.map { i =>
-      i + 1
-    }
+    val result: Future[Int] = future.map { i => i + 1 }
     moreBusinessLogic(result)
   }
 
   def moreBusinessLogic(future: Future[Int]): Future[Int] = {
-    val result: Future[Int] = future.map { i =>
-      i * 2
-    }
+    val result: Future[Int] = future.map { i => i * 2 }
     lordBusinessLogic(result)
   }
 

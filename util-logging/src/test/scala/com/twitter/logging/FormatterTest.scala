@@ -157,21 +157,18 @@ class FormatterTest extends WordSpec {
       }
 
       def scrub(in: String) = {
-        in.regexSub("""FormatterTest.scala:\d+""".r) { m =>
-            "FormatterTest.scala:NNN"
-          }
-          .regexSub("""FormatterTest\$[\w\\$]+""".r) { m =>
-            "FormatterTest$$"
-          }
+        in.regexSub("""FormatterTest.scala:\d+""".r) { m => "FormatterTest.scala:NNN" }
+          .regexSub("""FormatterTest\$[\w\\$]+""".r) { m => "FormatterTest$$" }
       }
 
       "simple" in {
-        val exception = try {
-          ExceptionLooper.cycle(10)
-          null
-        } catch {
-          case t: Throwable => t
-        }
+        val exception =
+          try {
+            ExceptionLooper.cycle(10)
+            null
+          } catch {
+            case t: Throwable => t
+          }
         assert(
           Formatter.formatStackTrace(exception, 5).map { scrub(_) } == List(
             "    at com.twitter.logging.FormatterTest$$.cycle(FormatterTest.scala:NNN)",
@@ -185,12 +182,13 @@ class FormatterTest extends WordSpec {
       }
 
       "nested" in {
-        val exception = try {
-          ExceptionLooper.cycle2(2)
-          null
-        } catch {
-          case t: Throwable => t
-        }
+        val exception =
+          try {
+            ExceptionLooper.cycle2(2)
+            null
+          } catch {
+            case t: Throwable => t
+          }
         assert(
           Formatter.formatStackTrace(exception, 1).map { scrub(_) } == List(
             "    at com.twitter.logging.FormatterTest$$.cycle2(FormatterTest.scala:NNN)",

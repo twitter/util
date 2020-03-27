@@ -105,15 +105,11 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
     }
 
     "fromNow" in {
-      Time.withCurrentTimeFrozen { _ =>
-        assert(10.seconds.fromNow == (Time.now + 10.seconds))
-      }
+      Time.withCurrentTimeFrozen { _ => assert(10.seconds.fromNow == (Time.now + 10.seconds)) }
     }
 
     "ago" in {
-      Time.withCurrentTimeFrozen { _ =>
-        assert(10.seconds.ago == (Time.now - 10.seconds))
-      }
+      Time.withCurrentTimeFrozen { _ => assert(10.seconds.ago == (Time.now - 10.seconds)) }
     }
 
     "compare" in {
@@ -223,9 +219,7 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
         Duration.Bottom,
         Duration.Top,
         Duration.Undefined
-      ).foreach { d =>
-        assert(Duration.parse(d.toString) == d)
-      }
+      ).foreach { d => assert(Duration.parse(d.toString) == d) }
     }
 
     "parse" in {

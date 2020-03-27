@@ -131,9 +131,7 @@ object NetUtil {
     isIpInBlock(inetAddressToInt(inetAddress), ipBlock)
 
   def isIpInBlocks(ip: Int, ipBlocks: Iterable[(Int, Int)]): Boolean = {
-    ipBlocks exists { ipBlock =>
-      isIpInBlock(ip, ipBlock)
-    }
+    ipBlocks exists { ipBlock => isIpInBlock(ip, ipBlock) }
   }
 
   def isIpInBlocks(ip: String, ipBlocks: Iterable[(Int, Int)]): Boolean = {

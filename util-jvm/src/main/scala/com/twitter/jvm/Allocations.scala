@@ -45,9 +45,7 @@ private[jvm] class Allocations(statsReceiver: StatsReceiver) {
 
   private[jvm] def start(): Unit = {
     edenPool
-      .flatMap { bean =>
-        Option(bean.getUsage)
-      }
+      .flatMap { bean => Option(bean.getUsage) }
       .foreach { _ =>
         ManagementFactory.getGarbageCollectorMXBeans.asScala.foreach {
           case bean: NotificationEmitter =>

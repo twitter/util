@@ -7,9 +7,7 @@ class U64OpsTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   import com.twitter.conversions.U64Ops._
 
   test("toU64HextString") {
-    forAll { l: Long =>
-      assert(l.toU64HexString == "%016x".format(l))
-    }
+    forAll { l: Long => assert(l.toU64HexString == "%016x".format(l)) }
   }
 
   test("toU64Long") {

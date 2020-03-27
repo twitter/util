@@ -163,9 +163,7 @@ object TunableMap {
     private[tunable] def replace(newMap: TunableMap): Unit = {
 
       // clear keys no longer present
-      (entries.map(_.key).toSet -- newMap.entries.map(_.key).toSet).foreach { key =>
-        clear(key)
-      }
+      (entries.map(_.key).toSet -- newMap.entries.map(_.key).toSet).foreach { key => clear(key) }
 
       // add/update new tunable values
       ++=(newMap)

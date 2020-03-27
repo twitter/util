@@ -366,9 +366,7 @@ class MockTimer extends Timer {
       throw new IllegalStateException("timer is stopped already")
 
     val now = Time.now
-    val (toRun, toQueue) = tasks.partition { task =>
-      task.when <= now
-    }
+    val (toRun, toQueue) = tasks.partition { task => task.when <= now }
     tasks = toQueue
     toRun.filterNot(_.isCancelled).foreach(_.runner())
   }

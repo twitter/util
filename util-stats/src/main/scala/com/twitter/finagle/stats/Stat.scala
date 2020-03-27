@@ -46,9 +46,7 @@ object Stat {
   def timeFuture[A](stat: Stat, unit: TimeUnit)(f: => Future[A]): Future[A] = {
     val start = Stopwatch.timeNanos()
     try {
-      f.respond { _ =>
-        stat.add(unit.convert(Stopwatch.timeNanos() - start, TimeUnit.NANOSECONDS))
-      }
+      f.respond { _ => stat.add(unit.convert(Stopwatch.timeNanos() - start, TimeUnit.NANOSECONDS)) }
     } catch {
       case NonFatal(e) =>
         stat.add(unit.convert(Stopwatch.timeNanos() - start, TimeUnit.NANOSECONDS))

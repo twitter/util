@@ -45,9 +45,7 @@ class ConsistentHashingDistributorTest extends WordSpec with ScalaCheckDrivenPro
       assert(expected.size == 99)
 
       // Test that ketamaClient.clientOf(key) == expected IP
-      val handleToIp = nodes.map { n =>
-        n.handle -> n.identifier
-      }.toMap
+      val handleToIp = nodes.map { n => n.handle -> n.identifier }.toMap
       for (testcase <- expected) {
         val hash = KeyHasher.KETAMA.hashKey(testcase(0).getBytes)
 

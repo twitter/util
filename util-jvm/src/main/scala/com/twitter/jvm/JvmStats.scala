@@ -77,9 +77,7 @@ object JvmStats {
     val currentMem = memStats.scope("current")
     val postGCStats = memStats.scope("postGC")
     memPool.foreach { pool =>
-      val name = pool.getName.regexSub("""[^\w]""".r) { m =>
-        "_"
-      }
+      val name = pool.getName.regexSub("""[^\w]""".r) { m => "_" }
       if (pool.getCollectionUsage != null) {
         def usage = pool.getCollectionUsage // this is a snapshot, we can't reuse the value
         gauges.add(postGCStats.addGauge(name, "used") { usage.getUsed })
@@ -126,9 +124,7 @@ object JvmStats {
     val gcPool = ManagementFactory.getGarbageCollectorMXBeans.asScala
     val gcStats = stats.scope("gc")
     gcPool.foreach { gc =>
-      val name = gc.getName.regexSub("""[^\w]""".r) { m =>
-        "_"
-      }
+      val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
       gauges.add(gcStats.addGauge(name, "cycles") { gc.getCollectionCount })
       gauges.add(gcStats.addGauge(name, "msec") { gc.getCollectionTime })
     }

@@ -24,9 +24,7 @@ class CumulativeGaugeBenchmark extends StdBenchAnnotations {
   def setup(): Unit = {
     cg = new CGauge()
     gauges.clear()
-    0.until(num).foreach { _ =>
-      gauges.add(cg.addGauge(1))
-    }
+    0.until(num).foreach { _ => gauges.add(cg.addGauge(1)) }
   }
 
   @Benchmark

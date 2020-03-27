@@ -91,9 +91,7 @@ class BufReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       val r = BufReader.framed(BufReader(Buf(buffersWithLength)), new BufReaderTest.U32BEFramer())
 
       // read all of the frames
-      buffers.foreach { buf =>
-        assert(await(r.read()).contains(buf))
-      }
+      buffers.foreach { buf => assert(await(r.read()).contains(buf)) }
 
       // make sure the reader signals EOF
       assert(await(r.read()).isEmpty)

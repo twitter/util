@@ -110,9 +110,7 @@ final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
   import JsonTunableMapper._
 
   private[this] object DeserializationModule extends SimpleModule {
-    deserializers.foreach { jd =>
-      addDeserializer(jd.handledType().asInstanceOf[Class[Any]], jd)
-    }
+    deserializers.foreach { jd => addDeserializer(jd.handledType().asInstanceOf[Class[Any]], jd) }
   }
 
   private[this] val mapper: ObjectMapper =

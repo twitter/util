@@ -104,8 +104,9 @@ object Diffable {
       } else if (left.length > right.length) {
         diff(left.take(right.length), right)
       } else {
-        val insert = for (((x, y), i) <- left.zip(right).zipWithIndex if x != y)
-          yield (i -> y)
+        val insert =
+          for (((x, y), i) <- left.zip(right).zipWithIndex if x != y)
+            yield (i -> y)
         SeqDiff(left.length, insert.toMap)
       }
 

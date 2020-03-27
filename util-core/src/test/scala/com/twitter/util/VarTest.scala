@@ -32,9 +32,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     assert(Var.sample(s) == "8923")
 
     var buf = mutable.Buffer[String]()
-    s.changes.register(Witness({ (v: String) =>
-      buf += v; ()
-    }))
+    s.changes.register(Witness({ (v: String) => buf += v; () }))
     assert(buf == Seq("8923"))
     v() = 111
     assert(buf == Seq("8923", "111"))
@@ -43,23 +41,13 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   test("depth ordering") {
     val v0 = U(3)
     val v1 = U(2)
-    val v2 = v1 flatMap { i =>
-      v1
-    }
-    val v3 = v2 flatMap { i =>
-      v1
-    }
-    val v4 = v3 flatMap { i =>
-      v0
-    }
+    val v2 = v1 flatMap { i => v1 }
+    val v3 = v2 flatMap { i => v1 }
+    val v4 = v3 flatMap { i => v0 }
 
     var result = 1
-    v4.changes.register(Witness({ (i: Int) =>
-      result = result + 2
-    })) // result = 3
-    v0.changes.register(Witness({ (i: Int) =>
-      result = result * 2
-    })) // result = 6
+    v4.changes.register(Witness({ (i: Int) => result = result + 2 })) // result = 3
+    v0.changes.register(Witness({ (i: Int) => result = result * 2 })) // result = 6
     assert(result == 6)
 
     result = 1 // reset the value, but this time the ordering will go v0, v4 because of depth
@@ -73,15 +61,9 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     val v1 = Var(2)
     var result = 0
 
-    val o1 = v1.changes.register(Witness({ (i: Int) =>
-      result = result + i
-    })) // result = 2
-    val o2 = v1.changes.register(Witness({ (i: Int) =>
-      result = result * i * i
-    })) // result = 2 * 2 * 2 = 8
-    val o3 = v1.changes.register(Witness({ (i: Int) =>
-      result = result + result + i
-    })) // result = 8 + 8 + 2 = 18
+    val o1 = v1.changes.register(Witness({ (i: Int) => result = result + i })) // result = 2
+    val o2 = v1.changes.register(Witness({ (i: Int) => result = result * i * i })) // result = 2 * 2 * 2 = 8
+    val o3 = v1.changes.register(Witness({ (i: Int) => result = result + result + i })) // result = 8 + 8 + 2 = 18
 
     assert(result == 18) // ensure those three things happened in sequence
 
@@ -200,9 +182,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     assert(vv == 111)
     assert(closed == Time.Zero)
 
-    val o1 = v.changes.register(Witness({ (v: Int) =>
-      ()
-    }))
+    val o1 = v.changes.register(Witness({ (v: Int) => () }))
 
     val t = Time.now
     val f = o.close(t)
@@ -222,9 +202,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("Var.collect[Seq]") {
-    def ranged(n: Int) = Seq.tabulate(n) { i =>
-      Var(i)
-    }
+    def ranged(n: Int) = Seq.tabulate(n) { i => Var(i) }
 
     for (i <- 1 to 10) {
       val vars = ranged(i)
@@ -243,9 +221,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   test("Var.collect[Set]") {
     val vars = Seq(Var(1), Var(2), Var(3))
 
-    val coll = Var.collect(vars.map { v =>
-      v: Var[Int]
-    }.toSet)
+    val coll = Var.collect(vars.map { v => v: Var[Int] }.toSet)
     val ref = new AtomicReference[Set[Int]]
     coll.changes.register(Witness(ref))
     assert(ref.get == Set(1, 2, 3))
@@ -278,13 +254,11 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
     intercept[java.lang.StackOverflowError] {
       val v = Var.collect(vars)
-      v.observe { x =>
-        }
+      v.observe { x => }
     }
 
     val v = Var.collectIndependent(vars)
-    v.observe { x =>
-      }
+    v.observe { x => }
   }
 
   /**
@@ -294,9 +268,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     val contents = List(1, 2, 3, 4)
     val v1 = Var.value(contents)
     assert(Var.sample(v1) eq contents)
-    v1.changes.register(Witness({ (l: List[Int]) =>
-      assert(contents eq l); ()
-    }))
+    v1.changes.register(Witness({ (l: List[Int]) => assert(contents eq l); () }))
   }
 
   /**
@@ -310,12 +282,8 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       Var.value(i * 2)
     }
 
-    val c1 = f.changes.register(Witness({ (i: Int) =>
-      assert(i == 22); ()
-    }))
-    val c2 = f.changes.register(Witness({ (i: Int) =>
-      assert(i == 22); ()
-    }))
+    val c1 = f.changes.register(Witness({ (i: Int) => assert(i == 22); () }))
+    val c2 = f.changes.register(Witness({ (i: Int) => assert(i == 22); () }))
 
     c1.close()
     c2.close()
@@ -324,9 +292,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     v() = 22 // now it's safe to re-observe
 
     var observed = 3
-    f.changes.register(Witness({ (i: Int) =>
-      observed = i
-    }))
+    f.changes.register(Witness({ (i: Int) => observed = i }))
 
     assert(Var.sample(f) == 44)
     assert(Var.sample(v) == 22)
@@ -345,12 +311,8 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
    */
   test("Var not executing until observed") {
     val x = Var(0)
-    val invertX = x map { i =>
-      1 / i
-    }
-    val result = x flatMap { i =>
-      if (i == 0) Var(0) else invertX
-    }
+    val invertX = x map { i => 1 / i }
+    val result = x flatMap { i => if (i == 0) Var(0) else invertX }
 
     x() = 42
     x() = 0 // this should not throw an exception because there are no observers
@@ -379,13 +341,9 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     test("Don't propagate up-to-date " + typ + "-valued Var observations") {
       val v = Var(123)
       val w = newVar(333)
-      val x = v flatMap { _ =>
-        w
-      }
+      val x = v flatMap { _ => w }
       var buf = mutable.Buffer[Int]()
-      x.changes.register(Witness({ (v: Int) =>
-        buf += v; ()
-      }))
+      x.changes.register(Witness({ (v: Int) => buf += v; () }))
 
       assert(buf == Seq(333))
       v() = 333
@@ -402,9 +360,7 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       }
 
       var buf = mutable.Buffer[Int]()
-      x.changes.register(Witness({ (v: Int) =>
-        buf += v; ()
-      }))
+      x.changes.register(Witness({ (v: Int) => buf += v; () }))
 
       assert(buf == Seq(333))
       v() = 333

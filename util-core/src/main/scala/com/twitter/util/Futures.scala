@@ -33,9 +33,8 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * underlying futures complete. It fails immediately if any of them
    * do.
    */
-  def join[A, B](a: Future[A], b: Future[B]): Future[(A, B)] = Future.join(Seq(a, b)).map { _ =>
-    (Await.result(a), Await.result(b))
-  }
+  def join[A, B](a: Future[A], b: Future[B]): Future[(A, B)] =
+    Future.join(Seq(a, b)).map { _ => (Await.result(a), Await.result(b)) }
 
   /**
    * Join 3 futures. The returned future is complete when all
@@ -43,9 +42,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * do.
    */
   def join[A, B, C](a: Future[A], b: Future[B], c: Future[C]): Future[(A, B, C)] =
-    Future.join(Seq(a, b, c)).map { _ =>
-      (Await.result(a), Await.result(b), Await.result(c))
-    }
+    Future.join(Seq(a, b, c)).map { _ => (Await.result(a), Await.result(b), Await.result(c)) }
 
   /**
    * Join 4 futures. The returned future is complete when all

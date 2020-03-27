@@ -55,7 +55,8 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       data: Array[Byte] = "".getBytes,
       acls: Seq[ACL] = zkClient.acl,
       mode: CreateMode = zkClient.mode
-    )(wait: => Future[String]
+    )(
+      wait: => Future[String]
     ): Unit = {
       when(
         zk.create(
@@ -147,8 +148,10 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def watchChildren(
       path: String
-    )(children: => Future[ZNode.Children]
-    )(update: => Future[WatchedEvent]
+    )(
+      children: => Future[ZNode.Children]
+    )(
+      update: => Future[WatchedEvent]
     ): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
@@ -183,8 +186,10 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def watchData(
       path: String
-    )(result: => Future[ZNode.Data]
-    )(update: => Future[WatchedEvent]
+    )(
+      result: => Future[ZNode.Data]
+    )(
+      update: => Future[WatchedEvent]
     ): Unit = {
       val w = ArgumentCaptor.forClass(classOf[Watcher])
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.DataCallback])
@@ -258,9 +263,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
               i += 1
               Future.exception(connectionLoss)
             }
-            .onSuccess { _ =>
-              fail("Unexpected success")
-            }
+            .onSuccess { _ => fail("Unexpected success") }
             .handle {
               case e: KeeperException.ConnectionLossException =>
                 assert(e == connectionLoss)
@@ -278,9 +281,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
               i += 1
               Future.Done
             }
-            .onSuccess { _ =>
-              assert(i == 1)
-            }
+            .onSuccess { _ => assert(i == 1) }
         )
       }
 
@@ -294,9 +295,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
               i += 1
               throw rex
             }
-            .onSuccess { _ =>
-              fail("Unexpected success")
-            }
+            .onSuccess { _ => fail("Unexpected success") }
             .handle {
               case e: RuntimeException =>
                 assert(e == rex)
@@ -313,9 +312,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
               i += 1
               Future.exception(connectionLoss)
             }
-            .onSuccess { _ =>
-              fail("Shouldn't have succeeded")
-            }
+            .onSuccess { _ => fail("Shouldn't have succeeded") }
             .handle {
               case e: KeeperException.ConnectionLossException =>
                 assert(i == 1)
@@ -544,16 +541,10 @@ class ZkClientTest extends WordSpec with MockitoSugar {
         class MonitorHelper extends ExistHelper {
           val deleted = NodeEvent.Deleted(znode.path)
           def expectZNodes(n: Int): Unit = {
-            val results = 0 until n map { _ =>
-              ZNode.Exists(znode, new Stat)
-            }
-            results foreach { r =>
-              watch(znode.path)(Future(r.stat))(Future(deleted))
-            }
+            val results = 0 until n map { _ => ZNode.Exists(znode, new Stat) }
+            results foreach { r => watch(znode.path)(Future(r.stat))(Future(deleted)) }
             val update = znode.exists.monitor()
-            results foreach { result =>
-              assert(update.syncWait().get() == result)
-            }
+            results foreach { result => assert(update.syncWait().get() == result) }
           }
         }
 
@@ -748,9 +739,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
           "In every generation there is a chosen one.",
           "She alone will stand against the vampires the demons and the forces of darkness.",
           "She is the slayer."
-        ) map { text =>
-          ZNode.Data(znode, new Stat, text.getBytes)
-        }
+        ) map { text => ZNode.Data(znode, new Stat, text.getBytes) }
         results foreach { result =>
           watchData(znode.path)(Future(result)) {
             Future(NodeEvent.ChildrenChanged(znode.path))
@@ -781,14 +770,8 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       val treeRoot = ZNode.Children(zkClient("/arboreal"), new Stat, 'a' to 'e' map { _.toString })
 
       val treeChildren = treeRoot +: ('a' to 'e')
-        .map { c =>
-          ZNode.Children(treeRoot(c.toString), new Stat, 'a' to c map { _.toString })
-        }
-        .flatMap { z =>
-          z +: z.children.map { c =>
-            ZNode.Children(c, new Stat, Nil)
-          }
-        }
+        .map { c => ZNode.Children(treeRoot(c.toString), new Stat, 'a' to c map { _.toString }) }
+        .flatMap { z => z +: z.children.map { c => ZNode.Children(c, new Stat, Nil) } }
 
       // Lay out node updates for the tree: Add a 'z' node to all nodes named 'a'
       val updateTree = treeChildren.collect {
@@ -800,9 +783,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }.flatten
 
       // Initially, we should get a ZNode.TreeUpdate for each node in the tree with only added nodes
-      val expectedByPath = treeChildren.map { z =>
-        z.path -> ZNode.TreeUpdate(z, z.children.toSet)
-      }.toMap
+      val expectedByPath = treeChildren.map { z => z.path -> ZNode.TreeUpdate(z, z.children.toSet) }.toMap
 
       val updatesByPath = updateTree.map { z =>
         val prior: Set[ZNode] = expectedByPath.get(z.path).map { _.added }.getOrElse(Set.empty)
@@ -813,9 +794,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
         // Create promises for each node in the tree -- satisfying a promise will fire a
         // ChildrenChanged event for its associated node.
         val updatePromises = treeChildren.map { _.path -> new Promise[WatchedEvent] }.toMap
-        treeChildren foreach { z =>
-          watchChildren(z.path)(Future(z))(updatePromises(z.path))
-        }
+        treeChildren foreach { z => watchChildren(z.path)(Future(z))(updatePromises(z.path)) }
 
         val offer = treeRoot.monitorTree()
         treeChildren foreach { _ =>
@@ -844,9 +823,7 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }
 
       "ok" in okUpdates { NodeEvent.ChildrenChanged(_) }
-      "be resilient to disconnect" in okUpdates { _ =>
-        StateEvent.Disconnected()
-      }
+      "be resilient to disconnect" in okUpdates { _ => StateEvent.Disconnected() }
 
       "stop on session expiration" in {
         treeChildren foreach { z =>

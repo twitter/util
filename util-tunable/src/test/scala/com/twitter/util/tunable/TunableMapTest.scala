@@ -336,9 +336,7 @@ class MutableTest extends FunSuite {
     map1.put("key2", 5)
 
     assert(combined.entries.size == 1)
-    assert(combined.entries.exists { entry =>
-      entry.key.id == "key2" && entry.value == 5
-    })
+    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 })
   }
 
   test("orElse: entries returns entries from both maps") {
@@ -353,12 +351,8 @@ class MutableTest extends FunSuite {
     map2.put("key2", 5)
 
     assert(combined.entries.size == 2)
-    assert(combined.entries.exists { entry =>
-      entry.key.id == "key1" && entry.value == "hello1"
-    })
-    assert(combined.entries.exists { entry =>
-      entry.key.id == "key2" && entry.value == 5
-    })
+    assert(combined.entries.exists { entry => entry.key.id == "key1" && entry.value == "hello1" })
+    assert(combined.entries.exists { entry => entry.key.id == "key2" && entry.value == 5 })
   }
 
   test("orElse on two NullTunableMaps produces NullTunableMap") {

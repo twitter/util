@@ -995,7 +995,7 @@ object Buf {
   // Adapted from util-hashing.
   private[this] val UintMax: Long = 0xFFFFFFFFL
   private[this] val Fnv1a32Prime: Int = 16777619
-  private[this] val Fnv1a32Init: Long = 0x811c9dc5L
+  private[this] val Fnv1a32Init: Long = 0x811C9DC5L
   private[this] def finishHash(hash: Long): Int = (hash & UintMax).toInt
   private[this] def hashBuf(buf: Buf, init: Long = Fnv1a32Init): Long = buf match {
     case b if b.isEmpty => init

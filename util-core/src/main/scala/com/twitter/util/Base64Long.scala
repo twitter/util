@@ -113,9 +113,7 @@ object Base64Long {
       new PartialFunction[Char, Int] {
         private[this] val maxChar = chars.max
         private[this] val reverse = Array.fill[Byte](maxChar.toInt + 1)(-1)
-        0.until(AlphabetSize).foreach { i =>
-          reverse(forward(i)) = i.toByte
-        }
+        0.until(AlphabetSize).foreach { i => reverse(forward(i)) = i.toByte }
         def isDefinedAt(c: Char): Boolean = (c <= maxChar) && (reverse(c) != -1)
         def apply(c: Char): Int = reverse(c)
       }

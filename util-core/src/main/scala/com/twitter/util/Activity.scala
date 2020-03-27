@@ -87,10 +87,11 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
   def flatMap[U](f: T => Activity[U]): Activity[U] =
     Activity(run flatMap {
       case Ok(v) =>
-        val a = try f(v)
-        catch {
-          case NonFatal(exc) => Activity.exception(exc)
-        }
+        val a =
+          try f(v)
+          catch {
+            case NonFatal(exc) => Activity.exception(exc)
+          }
 
         a.run
       case Pending => Var.value(Activity.Pending)
@@ -103,10 +104,11 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
    */
   def transform[U](f: Activity.State[T] => Activity[U]): Activity[U] =
     Activity(run flatMap { act =>
-      val a = try f(act)
-      catch {
-        case NonFatal(exc) => Activity.exception(exc)
-      }
+      val a =
+        try f(act)
+        catch {
+          case NonFatal(exc) => Activity.exception(exc)
+        }
       a.run
     })
 

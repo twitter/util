@@ -32,18 +32,16 @@ class FileHandlerTest extends WordSpec with TempFolder {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }
 
-  def writer(filename: String):OutputStreamWriter = {
+  def writer(filename: String): OutputStreamWriter = {
     new OutputStreamWriter(new FileOutputStream(new File(folderName, filename)), "UTF-8")
   }
 
-  private[this] val matcher = (name: String) => new BiPredicate[Path, BasicFileAttributes] {
-    override def test(
-      path: Path,
-      attributes: BasicFileAttributes
-    ): Boolean = {
-      path.toFile.getName.contains(name)
+  private[this] val matcher = (name: String) =>
+    new BiPredicate[Path, BasicFileAttributes] {
+      override def test(path: Path, attributes: BasicFileAttributes): Boolean = {
+        path.toFile.getName.contains(name)
+      }
     }
-  }
 
   // Looks for files that contain `name` in the given `dirToSearch`.
   // This method is used in place of setting the `user.dir`
@@ -240,9 +238,7 @@ class FileHandlerTest extends WordSpec with TempFolder {
         }
 
         // the target, 1 rotated file, and the short file should all remain
-        (1 to 5).foreach { _ =>
-          flush()
-        }
+        (1 to 5).foreach { _ => flush() }
         val fileSet = new File(folderName).list().toSet
         assert(fileSet.contains(name))
         assert(fileSet.contains(namePrefix))

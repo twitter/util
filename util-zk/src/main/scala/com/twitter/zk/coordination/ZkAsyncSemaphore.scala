@@ -74,9 +74,7 @@ class ZkAsyncSemaphore(
       val mySequenceNumber = sequenceNumberOf(permitNode.path)
 
       permitNodes() flatMap { permits =>
-        val sequenceNumbers = permits map { child =>
-          sequenceNumberOf(child.path)
-        }
+        val sequenceNumbers = permits map { child => sequenceNumberOf(child.path) }
         getConsensusNumPermits(permits) flatMap { consensusNumPermits =>
           if (consensusNumPermits != numPermits) {
             throw ZkAsyncSemaphore.PermitMismatchException(
@@ -124,9 +122,7 @@ class ZkAsyncSemaphore(
         zk onSessionEvent {
           case StateEvent.Expired => rejectWaitQueue()
           case StateEvent.Connected => {
-            permitNodes() map { nodes =>
-              checkWaiters(nodes)
-            }
+            permitNodes() map { nodes => checkWaiters(nodes) }
             monitorSemaphore(semaphoreNode)
           }
         }
@@ -179,11 +175,7 @@ class ZkAsyncSemaphore(
    */
   private[this] def monitorSemaphore(node: ZNode) = {
     val monitor = node.getChildren.monitor()
-    monitor foreach { tryChildren =>
-      tryChildren map { zop =>
-        checkWaiters(zop.children.toSeq)
-      }
-    }
+    monitor foreach { tryChildren => tryChildren map { zop => checkWaiters(zop.children.toSeq) } }
   }
 
   /**
@@ -205,9 +197,7 @@ class ZkAsyncSemaphore(
     val permits = nodes filter { child =>
       child.path.startsWith(permitNodePathPrefix)
     } sortBy (child => sequenceNumberOf(child.path))
-    val ids = permits map { child =>
-      sequenceNumberOf(child.path)
-    }
+    val ids = permits map { child => sequenceNumberOf(child.path) }
     val waitqIterator = waitq.iterator()
     while (waitqIterator.hasNext) {
       val (promise, permitNode) = waitqIterator.next()
@@ -257,9 +247,7 @@ class ZkAsyncSemaphore(
     Future.collect(permits map numPermitsOf) map { purportedNumPermits =>
       val groupedByNumPermits = purportedNumPermits filter { i =>
         0 < i
-      } groupBy { i =>
-        i
-      }
+      } groupBy { i => i }
       val permitsToBelievers = groupedByNumPermits map {
         case (permits, believers) => (permits, believers.size)
       }

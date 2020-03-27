@@ -47,7 +47,7 @@ object Stopwatch extends Stopwatch {
     Time.localGetTime() match {
       case Some(local) => local().inNanoseconds
       case None => systemNanos()
-  }
+    }
 
   /**
    * A function that returns a Long that can be used for measuring elapsed time
@@ -71,7 +71,7 @@ object Stopwatch extends Stopwatch {
     Time.localGetTime() match {
       case Some(local) => local().inMicroseconds
       case None => systemMicros()
-  }
+    }
 
   /**
    * A function that returns a Long that can be used for measuring elapsed time
@@ -95,17 +95,15 @@ object Stopwatch extends Stopwatch {
     Time.localGetTime() match {
       case Some(local) => local().inMilliseconds
       case None => systemMillis()
-  }
+    }
 
   def start(): Elapsed = Time.localGetTime() match {
     case Some(local) =>
       val startAt: Time = local()
-      () =>
-        local() - startAt
+      () => local() - startAt
     case None =>
       val startAt: Long = systemNanos()
-      () =>
-        Duration.fromNanoseconds(systemNanos() - startAt)
+      () => Duration.fromNanoseconds(systemNanos() - startAt)
   }
 
   /**

@@ -33,9 +33,7 @@ class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertio
       }
 
       def acquire(sem: ZkAsyncSemaphore) = {
-        sem.acquire() onSuccess { permit =>
-          permits add permit
-        }
+        sem.acquire() onSuccess { permit => permits add permit }
       }
 
       "provide a shared 2-permit semaphore and" should {

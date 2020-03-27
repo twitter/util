@@ -33,10 +33,11 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     def genLongStream(len: Int): AsyncStream[Int] =
       if (len == 0) {
         AsyncStream.of(1)
-      } else AsyncStream.of(1).flatMap { i =>
-        count = count + 1
-        i +:: genLongStream(len - 1)
-      }
+      } else
+        AsyncStream.of(1).flatMap { i =>
+          count = count + 1
+          i +:: genLongStream(len - 1)
+        }
 
     // a long stream created via flatMap does not stack overflow
     val s = genLongStream(1000000) ++ genLongStream(3)
@@ -167,14 +168,10 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       s.uncons
       assert(!p.isDefined)
 
-      s.foldRight(Future.Done) { (_, _) =>
-        Future.Done
-      }
+      s.foldRight(Future.Done) { (_, _) => Future.Done }
       assert(!p.isDefined)
 
-      s.scanLeft(Future.Done) { (_, _) =>
-        Future.Done
-      }
+      s.scanLeft(Future.Done) { (_, _) => Future.Done }
       assert(!p.isDefined)
 
       s ++ s
@@ -209,12 +206,7 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       new Ctx(s => s.withFilter(_ => true))
       new Ctx(s => s.take(2))
       new Ctx(s => s.takeWhile(_ => true))
-      new Ctx(
-        s =>
-          s.scanLeft(Future.Done) { (_, _) =>
-            Future.Done
-        }
-      )
+      new Ctx(s => s.scanLeft(Future.Done) { (_, _) => Future.Done })
       new Ctx(s => s ++ s)
     }
 
@@ -256,9 +248,7 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     }
 
     test(s"$impl: ++") {
-      forAll { (a: List[Int], b: List[Int]) =>
-        assert(toSeq(fromSeq(a) ++ fromSeq(b)) == a ++ b)
-      }
+      forAll { (a: List[Int], b: List[Int]) => assert(toSeq(fromSeq(a) ++ fromSeq(b)) == a ++ b) }
     }
 
     test(s"$impl: foldRight") {
@@ -308,15 +298,11 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
     test(s"$impl: flatten") {
       val small = Gen.resize(10, Arbitrary.arbitrary[List[List[Int]]])
-      forAll(small) { s =>
-        assert(toSeq(fromSeq(s.map(fromSeq)).flatten) == s.flatten)
-      }
+      forAll(small) { s => assert(toSeq(fromSeq(s.map(fromSeq)).flatten) == s.flatten) }
     }
 
     test(s"$impl: head") {
-      forAll { (a: List[Int]) =>
-        assert(await(fromSeq(a).head) == a.headOption)
-      }
+      forAll { (a: List[Int]) => assert(await(fromSeq(a).head) == a.headOption) }
     }
 
     test(s"$impl: isEmpty") {
@@ -373,9 +359,7 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     }
 
     test(s"$impl: toSeq") {
-      forAll { (as: List[Int]) =>
-        assert(await(fromSeq(as).toSeq()) == as)
-      }
+      forAll { (as: List[Int]) => assert(await(fromSeq(as).toSeq()) == as) }
     }
 
     test(s"$impl: identity") {
@@ -647,15 +631,11 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     }
 
     test(s"$impl: sum") {
-      forAll { xs: List[Int] =>
-        assert(xs.sum == await(fromSeq(xs).sum))
-      }
+      forAll { xs: List[Int] => assert(xs.sum == await(fromSeq(xs).sum)) }
     }
 
     test(s"$impl: size") {
-      forAll { xs: List[Int] =>
-        assert(xs.size == await(fromSeq(xs).size))
-      }
+      forAll { xs: List[Int] => assert(xs.size == await(fromSeq(xs).size)) }
     }
 
     test(s"$impl: force") {
@@ -763,9 +743,7 @@ class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
           case Left(a) => tailRecM(a)(f)
         }
 
-      val stream = tailRecM(0) { i =>
-        AsyncStream.of(if (i < n) Left(i + 1) else Right(i))
-      }
+      val stream = tailRecM(0) { i => AsyncStream.of(if (i < n) Left(i + 1) else Right(i)) }
 
       assert(Await.result(stream.toSeq) == Seq(n))
     }

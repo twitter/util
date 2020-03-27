@@ -49,9 +49,9 @@ class StatsReceiverTest extends FunSuite {
     assert(s1.values == Seq.empty)
     assert(s2.values == Seq.empty)
 
-    broadcastStat.add(1F)
-    assert(s1.values == Seq(1F))
-    assert(s2.values == Seq(1F))
+    broadcastStat.add(1f)
+    assert(s1.values == Seq(1f))
+    assert(s2.values == Seq(1f))
   }
 
   test("StatsReceiver time") {
@@ -141,9 +141,7 @@ class StatsReceiverTest extends FunSuite {
 
     assert(
       "DenylistStatsReceiver(NullStatsReceiver)" ==
-        new DenylistStatsReceiver(NullStatsReceiver, { _ =>
-          false
-        }).toString
+        new DenylistStatsReceiver(NullStatsReceiver, { _ => false }).toString
     )
 
     val inMem = new InMemoryStatsReceiver()

@@ -50,10 +50,9 @@ object Closable {
   /** Stop CollectClosables thread. */
   def stopCollectClosablesThread(): Unit = {
     if (collectorThreadEnabled.compareAndSet(true, false))
-      Try(collectorThread.interrupt).onFailure(
-        fatal =>
-          logger
-            .log(Level.SEVERE, "Current thread cannot interrupt CollectClosables thread", fatal))()
+      Try(collectorThread.interrupt).onFailure(fatal =>
+        logger
+          .log(Level.SEVERE, "Current thread cannot interrupt CollectClosables thread", fatal))()
   }
 
   /** Provide Java access to the [[com.twitter.util.Closable]] mixin. */
@@ -84,9 +83,7 @@ object Closable {
    */
   @varargs def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
-      val fs = closables.map { closable =>
-        safeClose(closable, deadline)
-      }
+      val fs = closables.map { closable => safeClose(closable, deadline) }
       val iter = fs.iterator
       @tailrec
       def checkNext(): Future[Unit] = {

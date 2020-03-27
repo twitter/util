@@ -86,9 +86,7 @@ trait Event[+T] { self =>
    */
   def collect[U](f: PartialFunction[T, U]): Event[U] = new Event[U] {
     def register(s: Witness[U]): Closable =
-      self.respond { t =>
-        f.runWith(s.notify)(t)
-      }
+      self.respond { t => f.runWith(s.notify)(t) }
   }
 
   /**
@@ -153,9 +151,7 @@ trait Event[+T] { self =>
   def mergeMap[U](f: T => Event[U]): Event[U] = new Event[U] {
     def register(s: Witness[U]): Closable = {
       @volatile var inners = Nil: List[Closable]
-      val outer = self.respond { el =>
-        inners.synchronized { inners ::= f(el).register(s) }
-      }
+      val outer = self.respond { el => inners.synchronized { inners ::= f(el).register(s) } }
 
       Closable.make { deadline =>
         outer.close(deadline) before {
@@ -170,12 +166,8 @@ trait Event[+T] { self =>
    */
   def select[U](other: Event[U]): Event[Either[T, U]] = new Event[Either[T, U]] {
     def register(s: Witness[Either[T, U]]): Closable = Closable.all(
-      self.register(s.comap { t =>
-        Left(t)
-      }),
-      other.register(s.comap { u =>
-        Right(u)
-      })
+      self.register(s.comap { t => Left(t) }),
+      other.register(s.comap { u => Right(u) })
     )
   }
 
@@ -323,7 +315,8 @@ trait Event[+T] { self =>
    * builder. A value containing the current version of the collection
    * is notified for each incoming event.
    */
-  def build[U >: T, That <: Seq[U]](implicit factory: Factory[U, That]): Event[That] = buildAny(factory)
+  def build[U >: T, That <: Seq[U]](implicit factory: Factory[U, That]): Event[That] =
+    buildAny(factory)
 
   /**
    * A Future which is satisfied by the first value observed.
@@ -391,9 +384,7 @@ trait Event[+T] { self =>
    * Builds a new Event by keeping only the Events where
    * the previous and current values are not `==` to each other.
    */
-  def dedup: Event[T] = dedupWith { (a, b) =>
-    a == b
-  }
+  def dedup: Event[T] = dedupWith { (a, b) => a == b }
 }
 
 /**

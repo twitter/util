@@ -178,9 +178,7 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
   }
 
   test("Cloasable.make catches NonFatals and translates to failed Futures") {
-    val throwing = Closable.make { _ =>
-      throw new Exception("lolz")
-    }
+    val throwing = Closable.make { _ => throw new Exception("lolz") }
 
     var failed = 0
     val f = throwing.close().respond {

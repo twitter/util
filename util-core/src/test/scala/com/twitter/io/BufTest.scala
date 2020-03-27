@@ -670,9 +670,7 @@ class BufTest
       def slice(i: Int, j: Int): Buf = throw new Exception("not implemented")
       def length: Int = 12
       def write(output: Array[Byte], off: Int): Unit =
-        (off until off + length) foreach { i =>
-          output(i) = 'a'.toByte
-        }
+        (off until off + length) foreach { i => output(i) = 'a'.toByte }
       def write(output: ByteBuffer): Unit = ???
 
       def get(index: Int): Byte = ???
@@ -999,12 +997,8 @@ class BufTest
     } yield Buf(Seq.fill(n)(buf))
 
     forAll(Gen.listOf(bufGen)) { bufs: List[Buf] =>
-      val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) =>
-        l.concat(r)
-      }
-      val concatRight = bufs.foldRight(Buf.Empty) { (l, r) =>
-        l.concat(r)
-      }
+      val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) => l.concat(r) }
+      val concatRight = bufs.foldRight(Buf.Empty) { (l, r) => l.concat(r) }
       val constructor = Buf(bufs)
       assert(constructor == concatLeft)
       assert(constructor == concatRight)

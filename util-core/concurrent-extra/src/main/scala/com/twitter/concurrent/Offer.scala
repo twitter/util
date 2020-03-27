@@ -93,9 +93,7 @@ trait Offer[+T] { self =>
   /**
    * Like {{map}}, but to a constant (call-by-name).
    */
-  def const[U](f: => U): Offer[U] = map { _ =>
-    f
-  }
+  def const[U](f: => U): Offer[U] = map { _ => f }
 
   /**
    * Java-friendly analog of `const()`.
@@ -121,9 +119,7 @@ trait Offer[+T] { self =>
       val ourTx = self.prepare()
       if (ourTx.isDefined) ourTx
       else {
-        ourTx.foreach { tx =>
-          tx.nack()
-        }
+        ourTx.foreach { tx => tx.nack() }
         ourTx.raise(LostSynchronization)
         other.prepare()
       }

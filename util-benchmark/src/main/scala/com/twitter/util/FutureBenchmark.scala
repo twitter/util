@@ -216,12 +216,8 @@ class FutureBenchmark extends StdBenchAnnotations {
     var sum = 0
     var i = 0
 
-    val fmap = { i: Int =>
-      Future.value(i + 1)
-    }
-    val respond = { _: Try[Int] =>
-      sum += 1
-    }
+    val fmap = { i: Int => Future.value(i + 1) }
+    val respond = { _: Try[Int] => sum += 1 }
 
     while (i < state.depth) {
       next = i % 2 match {
@@ -260,18 +256,10 @@ class FutureBenchmark extends StdBenchAnnotations {
 object FutureBenchmark {
   final val N = 10
 
-  private val RespondFn: Try[Unit] => Unit = { _ =>
-    ()
-  }
-  private val FlatMapFn: Unit => Future[Unit] = { _: Unit =>
-    Future.Unit
-  }
-  private val MapFn: Unit => Unit = { _: Unit =>
-    ()
-  }
-  private val TransformFn: Try[Unit] => Future[Unit] = { _: Try[Unit] =>
-    Future.Done
-  }
+  private val RespondFn: Try[Unit] => Unit = { _ => () }
+  private val FlatMapFn: Unit => Future[Unit] = { _: Unit => Future.Unit }
+  private val MapFn: Unit => Unit = { _: Unit => () }
+  private val TransformFn: Try[Unit] => Future[Unit] = { _: Try[Unit] => Future.Done }
 
   @State(Scope.Benchmark)
   class ByState {
@@ -297,9 +285,7 @@ object FutureBenchmark {
 
     @Setup
     def prepare(): Unit = {
-      futures = (0 until size).map { i =>
-        Future.value(i)
-      }.toList
+      futures = (0 until size).map { i => Future.value(i) }.toList
     }
   }
 

@@ -28,9 +28,7 @@ private[logging] object Formatter {
   private[logging] def formatStackTrace(t: Throwable, limit: Int): List[String] = {
     var out = new mutable.ListBuffer[String]
     if (limit > 0) {
-      out ++= t.getStackTrace.map { elem =>
-        "    at %s".format(elem.toString)
-      }
+      out ++= t.getStackTrace.map { elem => "    at %s".format(elem.toString) }
       if (out.length > limit) {
         out.trimEnd(out.length - limit)
         out += "    (...more...)"

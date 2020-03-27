@@ -23,7 +23,8 @@ object Try {
   val Void: Try[Void] = Try(null: Void)
 
   def apply[R](r: => R): Try[R] = {
-    try { Return(r) } catch {
+    try { Return(r) }
+    catch {
       case NonFatal(e) => Throw(e)
     }
   }
@@ -57,9 +58,7 @@ object Try {
     if (ts.isEmpty) Return(Seq.empty[A])
     else
       Try {
-        ts map { t =>
-          t()
-        }
+        ts map { t => t() }
       }
   }
 
@@ -207,9 +206,7 @@ sealed abstract class Try[+R] {
    * chained `this` as in `respond`.
    */
   def ensure(f: => Unit): Try[R] =
-    respond { _ =>
-      f
-    }
+    respond { _ => f }
 
   /**
    * Returns None if this is a Throw or a Some containing the value if this is a Return

@@ -21,9 +21,7 @@ class WaitQueueTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     } yield genWaitQueueOf(size)
 
   test("size") {
-    forAll(Gen.choose(0, 100)) { size =>
-      assert(genWaitQueueOf(size).size == size)
-    }
+    forAll(Gen.choose(0, 100)) { size => assert(genWaitQueueOf(size).size == size) }
   }
 
   test("contains") {

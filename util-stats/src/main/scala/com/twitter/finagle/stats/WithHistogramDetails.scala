@@ -22,8 +22,7 @@ private[stats] class AggregateWithHistogramDetails(underlying: Seq[WithHistogram
    */
   def histogramDetails: Map[String, HistogramDetail] =
     underlying.foldLeft[Map[String, HistogramDetail]](Map.empty[String, HistogramDetail]) {
-      (acc, cur) =>
-        cur.histogramDetails ++ acc
+      (acc, cur) => cur.histogramDetails ++ acc
     }
 }
 

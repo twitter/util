@@ -83,9 +83,7 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
       val stream = mkAsyncStream(size)
 
       // Consume
-      stream.foldLeftF(false) { (_, buf) =>
-        sink(buf)
-      }
+      stream.foldLeftF(false) { (_, buf) => sink(buf) }
     })
 
   private[this] def feedBroker(n: Int): Future[Unit] =
@@ -131,11 +129,7 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
   private[this] def consumeSpool[A](spool: Spool[A], b: Boolean): Future[Boolean] =
     if (spool.isEmpty) Future.value(b)
     else
-      sink(spool.head).flatMap { newB =>
-        spool.tail.flatMap { tail =>
-          consumeSpool(tail, newB)
-        }
-      }
+      sink(spool.head).flatMap { newB => spool.tail.flatMap { tail => consumeSpool(tail, newB) } }
 
   @Benchmark
   def spool: Boolean =
@@ -144,8 +138,6 @@ class ConduitSpscBenchmark extends StdBenchAnnotations {
       val f = mkSpool(size)
 
       // Consume
-      f.flatMap { s =>
-        consumeSpool(s, false)
-      }
+      f.flatMap { s => consumeSpool(s, false) }
     })
 }

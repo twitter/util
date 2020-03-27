@@ -52,9 +52,7 @@ class CloseAwaitablyTest extends FunSuite {
 
   test("close awaitably with error") {
     val message = "FORCED EXCEPTION"
-    val closeFn: () => Future[Unit] = { () =>
-      throw new Exception(message)
-    }
+    val closeFn: () => Future[Unit] = { () => throw new Exception(message) }
 
     val testClosable = new TestClosable(closeFn)
     val f = testClosable.close(Time.now)
@@ -68,9 +66,7 @@ class CloseAwaitablyTest extends FunSuite {
 
   test("close awaitably with fatal error, fatal error blows up close()") {
     val message = "FORCED INTERRUPTED EXCEPTION"
-    val closeFn: () => Future[Unit] = { () =>
-      throw new InterruptedException(message)
-    }
+    val closeFn: () => Future[Unit] = { () => throw new InterruptedException(message) }
 
     val testClosable = new TestClosable(closeFn)
     val e = intercept[InterruptedException] {

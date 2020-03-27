@@ -2,11 +2,7 @@ package com.twitter.util
 
 import com.twitter.concurrent.{Offer, Tx}
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-import java.util.concurrent.{
-  CancellationException,
-  CompletableFuture,
-  Future => JavaFuture
-}
+import java.util.concurrent.{CancellationException, CompletableFuture, Future => JavaFuture}
 import java.util.function.BiConsumer
 import java.util.{List => JList}
 import scala.collection.compat.immutable.ArraySeq
@@ -318,9 +314,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * do.
    */
   def join[A, B, C](a: Future[A], b: Future[B], c: Future[C]): Future[(A, B, C)] =
-    join(Seq(a, b, c)).map { _ =>
-      (Await.result(a), Await.result(b), Await.result(c))
-    }
+    join(Seq(a, b, c)).map { _ => (Await.result(a), Await.result(b), Await.result(c)) }
 
   /**
    * Join 4 futures. The returned future is complete when all
@@ -1140,9 +1134,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     if (fs.isEmpty) emptyMap
     else {
       val (keys, values) = fs.toSeq.unzip
-      Future.collect(values).map { seq =>
-        keys.iterator.zip(seq.iterator).toMap: Map[A, B]
-      }
+      Future.collect(values).map { seq => keys.iterator.zip(seq.iterator).toMap: Map[A, B] }
     }
 
   /**
@@ -1329,9 +1321,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
   def whileDo[A](p: => Boolean)(f: => Future[A]): Future[Unit] = {
     def loop(): Future[Unit] = {
       if (p) {
-        f.flatMap { _ =>
-          loop()
-        }
+        f.flatMap { _ => loop() }
       } else Future.Unit
     }
 
@@ -1415,7 +1405,8 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
     sizeThreshold: Int,
     timeThreshold: Duration = Duration.Top,
     sizePercentile: => Float = 1.0f
-  )(f: AnySeq[In] => Future[Seq[Out]]
+  )(
+    f: AnySeq[In] => Future[Seq[Out]]
   )(
     implicit timer: Timer
   ): Batcher[In, Out] = {
@@ -1527,9 +1518,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * @see [[respond]] if you need the result of the computation for
    *     usage in the side-effect.
    */
-  def ensure(f: => Unit): Future[A] = respond { _ =>
-    f
-  }
+  def ensure(f: => Unit): Future[A] = respond { _ => f }
 
   /**
    * Is the result of the Future available yet?
@@ -2044,12 +2033,8 @@ abstract class Future[+A] extends Awaitable[A] { self =>
     val p = Promise.interrupts[U](other, this)
     val a = Promise.attached(other)
     val b = Promise.attached(this)
-    a.respond { t =>
-      if (p.updateIfEmpty(t)) b.detach()
-    }
-    b.respond { t =>
-      if (p.updateIfEmpty(t)) a.detach()
-    }
+    a.respond { t => if (p.updateIfEmpty(t)) b.detach() }
+    b.respond { t => if (p.updateIfEmpty(t)) a.detach() }
     p
   }
 
@@ -2139,9 +2124,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
         s"Cannot call proxyTo on an already satisfied Promise: ${Await.result(other.liftToTry)}"
       )
     }
-    respond { res =>
-      other.update(res)
-    }
+    respond { res => other.update(res) }
   }
 
   /**
@@ -2270,9 +2253,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    */
   def willEqual[B](that: Future[B]): Future[Boolean] = {
     this.transform { thisResult =>
-      that.transform { thatResult =>
-        Future.value(thisResult == thatResult)
-      }
+      that.transform { thatResult => Future.value(thisResult == thatResult) }
     }
   }
 

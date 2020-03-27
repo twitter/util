@@ -259,7 +259,9 @@ class FlagsTest extends FunSuite {
     intercept[IllegalStateException] {
       testFlags
         .getAll()
-        .foreach(flag => if (flag.name == "something.id") flag.apply()) // this should fail, since all added flags should now fail fast.
+        .foreach(flag =>
+          if (flag.name == "something.id")
+            flag.apply()) // this should fail, since all added flags should now fail fast.
     }
 
     // now parse and apply

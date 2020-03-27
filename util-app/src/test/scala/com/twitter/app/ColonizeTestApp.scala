@@ -50,7 +50,7 @@ object SolarSystemPlanets {
 
   type Kilogram = Double
   type Meter = Double
-  private val G = 6.67300E-11 // universal gravitational constant (m3 kg-1 s-2)
+  private val G = 6.67300e-11 // universal gravitational constant (m3 kg-1 s-2)
 }
 
 class ColonizeTestApp extends App {

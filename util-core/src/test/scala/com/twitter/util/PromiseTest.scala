@@ -195,18 +195,14 @@ class PromiseTest extends FunSuite {
   test("ready") {
     // this verifies that we don't break the behavior regarding how
     // the `Scheduler.flush()` is a necessary in `Promise.ready`
-    Future.Done.map { _ =>
-      Await.result(Future.Done.map(Predef.identity), 5.seconds)
-    }
+    Future.Done.map { _ => Await.result(Future.Done.map(Predef.identity), 5.seconds) }
   }
 
   test("maps use local state at the time of callback creation") {
     val local = new Local[String]
     local.set(Some("main thread"))
     val p = new Promise[String]()
-    val f = p.map { _ =>
-      local().getOrElse("<unknown>")
-    }
+    val f = p.map { _ => local().getOrElse("<unknown>") }
 
     val thread = new Thread(new Runnable {
       def run(): Unit = {

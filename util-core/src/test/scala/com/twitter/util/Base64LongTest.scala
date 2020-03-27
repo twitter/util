@@ -77,9 +77,7 @@ class Base64LongTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("toBase64 uses the expected number of digits") {
-    BoundaryValues.foreach { n: Long =>
-      assert(toBase64(n).length == expectedLength(n))
-    }
+    BoundaryValues.foreach { n: Long => assert(toBase64(n).length == expectedLength(n)) }
     forAll((n: Long) => assert(toBase64(n).length == expectedLength(n)))
 
     val b = new StringBuilder
@@ -91,9 +89,7 @@ class Base64LongTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("fromBase64 is the inverse of toBase64") {
-    BoundaryValues.foreach { l =>
-      assert(l == fromBase64(toBase64(l)))
-    }
+    BoundaryValues.foreach { l => assert(l == fromBase64(toBase64(l))) }
 
     val b = new StringBuilder
     forAllLongs { (a, n) =>

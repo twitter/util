@@ -5,9 +5,7 @@ import com.twitter.util.{Future, Throw}
 private[cache] class EvictingCache[K, V](underlying: FutureCache[K, V])
     extends FutureCacheProxy[K, V](underlying) {
   private[this] def evictOnFailure(k: K, f: Future[V]): Future[V] = {
-    f.onFailure { _ =>
-      evict(k, f)
-    }
+    f.onFailure { _ => evict(k, f) }
     f // we return the original future to make evict(k, f) easier to work with.
   }
 

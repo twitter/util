@@ -2,12 +2,13 @@ package com.twitter.util
 
 import scala.collection.mutable
 
-private[util] class HealthyQueue[A](makeItem: () => Future[A], numItems: Int, isHealthy: A => Boolean)
+private[util] class HealthyQueue[A](
+  makeItem: () => Future[A],
+  numItems: Int,
+  isHealthy: A => Boolean)
     extends scala.collection.mutable.Queue[Future[A]] {
 
-  0.until(numItems) foreach { _ =>
-    this += makeItem()
-  }
+  0.until(numItems) foreach { _ => this += makeItem() }
 
   override def addOne(elem: Future[A]): HealthyQueue.this.type = synchronized {
     super.addOne(elem)
@@ -18,10 +19,10 @@ private[util] class HealthyQueue[A](makeItem: () => Future[A], numItems: Int, is
   }
 
   override def enqueue(elem: Future[A]) = synchronized {
-      super.enqueue(elem)
+    super.enqueue(elem)
   }
   override def enqueue(elem1: Future[A], elem2: Future[A], elems: Future[A]*) = synchronized {
-    super.enqueue(elem1, elem2, elems :_*)
+    super.enqueue(elem1, elem2, elems: _*)
   }
 
   override def dequeue(): Future[A] = synchronized {

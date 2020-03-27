@@ -275,9 +275,7 @@ class FileHandler(
       if (examineRollTime) {
         // Only allow a single thread at a time to do a roll
         synchronized {
-          nextRollTime foreach { time =>
-            if (Time.now.inMilliseconds > time) roll()
-          }
+          nextRollTime foreach { time => if (Time.now.inMilliseconds > time) roll() }
         }
       }
 

@@ -153,13 +153,14 @@ class ExecutorServiceFuturePool protected[this] (
     // This is safe: the only thing that can call task.run() is
     // executor, the only thing that can raise an interrupt is the
     // receiver of this value, which will then be fully initialized.
-    val javaFuture = try executor.submit(task)
-    catch {
-      case e: RejectedExecutionException =>
-        runOk.set(false)
-        p.setException(e)
-        null
-    }
+    val javaFuture =
+      try executor.submit(task)
+      catch {
+        case e: RejectedExecutionException =>
+          runOk.set(false)
+          p.setException(e)
+          null
+      }
 
     p.setInterruptHandler {
       case cause =>

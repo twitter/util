@@ -92,8 +92,7 @@ private[util] class BatchExecutor[In, Out](
         flushBatch()
       else {
         scheduleFlushIfNecessary()
-        () =>
-          ()
+        () => ()
       }
     }
 

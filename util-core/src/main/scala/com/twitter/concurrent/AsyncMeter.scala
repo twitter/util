@@ -138,11 +138,7 @@ object AsyncMeter {
       val seqWithoutLast: Seq[Future[Unit]] = (0 until num).map(_ => meter.await(meter.burstSize))
       val seq = if (last == 0) seqWithoutLast else seqWithoutLast :+ meter.await(last)
       val result = Future.join(seq)
-      result.onFailure { exc =>
-        seq.foreach { f: Future[Unit] =>
-          f.raise(exc)
-        }
-      }
+      result.onFailure { exc => seq.foreach { f: Future[Unit] => f.raise(exc) } }
       result
     } else meter.await(permits)
   }

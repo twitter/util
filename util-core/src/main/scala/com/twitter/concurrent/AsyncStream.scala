@@ -78,9 +78,7 @@ sealed abstract class AsyncStream[+A] {
    * Note: forces the stream. For infinite streams, the future never resolves.
    */
   def foreach(f: A => Unit): Future[Unit] =
-    foldLeft(()) { (_, a) =>
-      f(a)
-    }
+    foldLeft(()) { (_, a) => f(a) }
 
   /**
    * Execute the specified effect as each element of the resulting
@@ -96,9 +94,7 @@ sealed abstract class AsyncStream[+A] {
    * whether the entire stream is consumed.
    */
   def withEffect(f: A => Unit): AsyncStream[A] =
-    map { a =>
-      f(a); a
-    }
+    map { a => f(a); a }
 
   /**
    * Maps each element of the stream to a Future action, resolving them from
@@ -108,9 +104,7 @@ sealed abstract class AsyncStream[+A] {
    * Note: forces the stream. For infinite streams, the future never resolves.
    */
   def foreachF(f: A => Future[Unit]): Future[Unit] =
-    foldLeftF(()) { (_, a) =>
-      f(a)
-    }
+    foldLeftF(()) { (_, a) => f(a) }
 
   /**
    * Map over this stream with the given concurrency. The items will likely be
@@ -151,9 +145,7 @@ sealed abstract class AsyncStream[+A] {
     this match {
       case Empty => empty
       case FromFuture(fa) =>
-        Embed(fa.map { a =>
-          if (p(a)) this else empty
-        })
+        Embed(fa.map { a => if (p(a)) this else empty })
       case Cons(fa, more) =>
         Embed(fa.map { a =>
           if (p(a)) Cons(fa, () => more().takeWhile(p))
@@ -175,9 +167,7 @@ sealed abstract class AsyncStream[+A] {
     this match {
       case Empty => empty
       case FromFuture(fa) =>
-        Embed(fa.map { a =>
-          if (p(a)) empty else this
-        })
+        Embed(fa.map { a => if (p(a)) empty else this })
       case Cons(fa, more) =>
         Embed(fa.map { a =>
           if (p(a)) more().dropWhile(p)
@@ -253,9 +243,7 @@ sealed abstract class AsyncStream[+A] {
     this match {
       case Empty => empty
       case FromFuture(fa) =>
-        Embed(fa.map { a =>
-          if (p(a)) this else empty
-        })
+        Embed(fa.map { a => if (p(a)) this else empty })
       case Cons(fa, more) =>
         Embed(fa.map { a =>
           if (p(a)) Cons(fa, () => more().filter(p))
@@ -506,7 +494,8 @@ sealed abstract class AsyncStream[+A] {
 
     def fillBuffer(
       sizeRemaining: Int
-    )(s: => AsyncStream[A]
+    )(
+      s: => AsyncStream[A]
     ): Future[(Seq[A], () => AsyncStream[A])] =
       if (sizeRemaining < 1) Future.value((buffer.result, () => s))
       else
@@ -587,8 +576,7 @@ sealed abstract class AsyncStream[+A] {
    * stream to occur, but do not need to do anything with the resulting
    * values.
    */
-  def force: Future[Unit] = foreach { _ =>
-  }
+  def force: Future[Unit] = foreach { _ => }
 }
 
 object AsyncStream {
@@ -606,7 +594,7 @@ object AsyncStream {
       new Cons(fa, next)
 
     def unapply[A](as: Cons[A]): Option[(Future[A], () => AsyncStream[A])] =
-    // note: pattern match returns the memoized value
+      // note: pattern match returns the memoized value
       Some((as.fa, () => as.more()))
   }
 

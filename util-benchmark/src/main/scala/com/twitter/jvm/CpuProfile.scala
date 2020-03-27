@@ -60,9 +60,9 @@ object CpuProfileBenchmark {
     @Setup(Level.Iteration)
     def setUp(): Unit = {
       val stack = new Stack(new Random(rngSeed), stackMeanSize, stackStddev)
-      threads = for (_ <- 0 until nthreads)
-        yield
-          new Thread {
+      threads =
+        for (_ <- 0 until nthreads)
+          yield new Thread {
             override def run(): Unit = {
               try stack()
               catch {
@@ -71,19 +71,13 @@ object CpuProfileBenchmark {
             }
           }
 
-      threads foreach { t =>
-        t.start()
-      }
+      threads foreach { t => t.start() }
     }
 
     @TearDown(Level.Iteration)
     def tearDown(): Unit = {
-      threads foreach { t =>
-        t.interrupt()
-      }
-      threads foreach { t =>
-        t.join()
-      }
+      threads foreach { t => t.interrupt() }
+      threads foreach { t => t.join() }
       threads = Seq()
     }
     var threads = Seq[Thread]()

@@ -131,8 +131,7 @@ trait Jvm {
         buffer = (gc :: buffer).takeWhile(_.timestamp > floor)
     }
 
-    since: Time =>
-      buffer.takeWhile(_.timestamp > since)
+    since: Time => buffer.takeWhile(_.timestamp > since)
   }
 
   def forceGc(): Unit

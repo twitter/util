@@ -140,12 +140,8 @@ class AppTest extends FunSuite {
     val a = new App { def main(): Unit = () }
     val p = new Promise[Unit]
     var n1, n2 = 0
-    val c1 = Closable.make { _ =>
-      n1 += 1; p
-    }
-    val c2 = Closable.make { _ =>
-      n2 += 1; Future.Done
-    }
+    val c1 = Closable.make { _ => n1 += 1; p }
+    val c2 = Closable.make { _ => n2 += 1; Future.Done }
     a.closeOnExitLast(c2)
     a.closeOnExit(c1)
     val f = a.close()
@@ -169,12 +165,8 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2 = 0
-      val c1 = Closable.make { _ =>
-        n1 += 1; Future.never
-      }
-      val c2 = Closable.make { _ =>
-        n2 += 1; Future.never
-      }
+      val c1 = Closable.make { _ => n1 += 1; Future.never }
+      val c2 = Closable.make { _ => n2 += 1; Future.never }
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)
@@ -204,18 +196,10 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2, n3, n4 = 0
-      val c1 = Closable.make { _ =>
-        n1 += 1; Future.never
-      } // Exit
-      val c2 = Closable.make { _ =>
-        n2 += 1; Future.Done
-      } // ExitLast
-      val c3 = Closable.make { _ =>
-        n3 += 1; Future.Done
-      } // Late Exit
-      val c4 = Closable.make { _ =>
-        n4 += 1; Future.Done
-      } // Late ExitLast
+      val c1 = Closable.make { _ => n1 += 1; Future.never } // Exit
+      val c2 = Closable.make { _ => n2 += 1; Future.Done } // ExitLast
+      val c3 = Closable.make { _ => n3 += 1; Future.Done } // Late Exit
+      val c4 = Closable.make { _ => n4 += 1; Future.Done } // Late ExitLast
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)
@@ -256,18 +240,10 @@ class AppTest extends FunSuite {
 
     Time.withCurrentTimeFrozen { ctl =>
       var n1, n2, n3, n4 = 0
-      val c1 = Closable.make { _ =>
-        n1 += 1; Future.never
-      } // Exit
-      val c2 = Closable.make { _ =>
-        n2 += 1; Future.never
-      } // ExitLast
-      val c3 = Closable.make { _ =>
-        n3 += 1; Future.never
-      } // Late Exit
-      val c4 = Closable.make { _ =>
-        n4 += 1; Future.never
-      } // Late ExitLast
+      val c1 = Closable.make { _ => n1 += 1; Future.never } // Exit
+      val c2 = Closable.make { _ => n2 += 1; Future.never } // ExitLast
+      val c3 = Closable.make { _ => n3 += 1; Future.never } // Late Exit
+      val c4 = Closable.make { _ => n4 += 1; Future.never } // Late ExitLast
       a.closeOnExitLast(c2)
       a.closeOnExit(c1)
       val f = a.close(Time.now + 1.second)
@@ -339,13 +315,9 @@ class AppTest extends FunSuite {
           throw new Exception("FORCED ON EXIT")
         }
 
-        closeOnExit(Closable.make { _ =>
-          throw new Exception("FORCED CLOSE ON EXIT")
-        })
+        closeOnExit(Closable.make { _ => throw new Exception("FORCED CLOSE ON EXIT") })
 
-        closeOnExitLast(Closable.make { _ =>
-          throw new Exception("FORCED CLOSE ON EXIT LAST")
-        })
+        closeOnExitLast(Closable.make { _ => throw new Exception("FORCED CLOSE ON EXIT LAST") })
       }
     }
 
@@ -360,9 +332,7 @@ class AppTest extends FunSuite {
     // first fatal (InterruptedException) kills the app during close
     val app = new ErrorOnExitApp {
       def main(): Unit = {
-        closeOnExit(Closable.make { _ =>
-          throw new InterruptedException("FORCED CLOSE ON EXIT")
-        })
+        closeOnExit(Closable.make { _ => throw new InterruptedException("FORCED CLOSE ON EXIT") })
       }
     }
 
@@ -378,9 +348,7 @@ class AppTest extends FunSuite {
           throw new Exception("FORCED ON EXIT")
         }
 
-        closeOnExit(Closable.make { _ =>
-          throw new Exception("FORCED CLOSE ON EXIT")
-        })
+        closeOnExit(Closable.make { _ => throw new Exception("FORCED CLOSE ON EXIT") })
 
         closeOnExitLast(Closable.make { _ =>
           throw new InterruptedException("FORCED CLOSE ON EXIT LAST")

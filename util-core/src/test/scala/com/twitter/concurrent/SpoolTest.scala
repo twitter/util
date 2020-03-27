@@ -61,16 +61,12 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
     }
 
     "fold left" in {
-      val fold = s.foldLeft(0) { (x, y) =>
-        x + y
-      }
+      val fold = s.foldLeft(0) { (x, y) => x + y }
       assert(await(fold) == 0)
     }
 
     "reduce left" in {
-      val fold = s.reduceLeft { (x, y) =>
-        x + y
-      }
+      val fold = s.reduceLeft { (x, y) => x + y }
       intercept[UnsupportedOperationException] {
         await(fold)
       }
@@ -146,16 +142,12 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
     }
 
     "fold left" in {
-      val fold = s.foldLeft(0) { (x, y) =>
-        x + y
-      }
+      val fold = s.foldLeft(0) { (x, y) => x + y }
       assert(await(fold) == 3)
     }
 
     "reduce left" in {
-      val fold = s.reduceLeft { (x, y) =>
-        x + y
-      }
+      val fold = s.reduceLeft { (x, y) => x + y }
       assert(await(fold) == 3)
     }
 
@@ -184,9 +176,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
       val seq = await(spool.toSeq)
 
       val flatSpool =
-        spool.flatMap { inner =>
-          Future.value(inner.toSpool)
-        }
+        spool.flatMap { inner => Future.value(inner.toSpool) }
 
       assert(await(flatSpool.flatMap(_.toSeq)) == seq.flatten)
     }
@@ -225,9 +215,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
 
     "return with exception on error in callback" in {
       val xs = new ArrayBuffer[Option[Int]]
-      val f = s foreach { _ =>
-        throw new Exception("sad panda")
-      }
+      val f = s foreach { _ => throw new Exception("sad panda") }
       intercept[Exception] {
         await(f)
       }
@@ -235,9 +223,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
 
     "return with exception on EOFException in callback" in {
       val xs = new ArrayBuffer[Option[Int]]
-      val f = s foreach { _ =>
-        throw new EOFException("sad panda")
-      }
+      val f = s foreach { _ => throw new EOFException("sad panda") }
       intercept[EOFException] {
         await(f)
       }
@@ -294,9 +280,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
       import h._
 
       val xs = new ArrayBuffer[Option[Int]]
-      val f = s foreach { _ =>
-        throw new Exception("sad panda")
-      }
+      val f = s foreach { _ => throw new Exception("sad panda") }
       p() = Return(2 *:: p1)
       intercept[Exception] {
         await(f)
@@ -308,9 +292,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
       import h._
 
       val xs = new ArrayBuffer[Option[Int]]
-      val f = s foreach { _ =>
-        throw new EOFException("sad panda")
-      }
+      val f = s foreach { _ => throw new EOFException("sad panda") }
       p() = Return(2 *:: p1)
       intercept[EOFException] {
         await(f)
@@ -371,9 +353,7 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
       val h = new SimpleDelayedSpoolHelper
       import h._
 
-      val f = s.foldLeft(0) { (x, y) =>
-        x + y
-      }
+      val f = s.foldLeft(0) { (x, y) => x + y }
 
       assert(f.isDefined == false)
       p() = Return(2 *:: p1)
@@ -420,23 +400,15 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
     }
 
     "map lazily" in {
-      applyLazily { spool =>
-        Future.value(spool.map(_ + 1))
-      }
+      applyLazily { spool => Future.value(spool.map(_ + 1)) }
     }
 
     "mapFuture lazily" in {
-      applyLazily { spool =>
-        spool.mapFuture(Future.value(_))
-      }
+      applyLazily { spool => spool.mapFuture(Future.value(_)) }
     }
 
     "flatMap lazily" in {
-      applyLazily { spool =>
-        spool.flatMap { item =>
-          Future.value((item to (item + 5)).toSpool)
-        }
-      }
+      applyLazily { spool => spool.flatMap { item => Future.value((item to (item + 5)).toSpool) } }
     }
 
     "takeWhile lazily" in {
@@ -456,16 +428,12 @@ class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
     }
 
     "zip lazily" in {
-      applyLazily { spool =>
-        Future.value(spool.zip(spool).map { case (a, b) => a + b })
-      }
+      applyLazily { spool => Future.value(spool.zip(spool).map { case (a, b) => a + b }) }
     }
 
     "act eagerly when forced" in {
       val (spool, tailReached) =
-        applyLazily { spool =>
-          Future.value(spool.map(_ + 1))
-        }
+        applyLazily { spool => Future.value(spool.map(_ + 1)) }
       Await.ready { spool.map(_.force) }
       assert(tailReached.isDefined)
     }

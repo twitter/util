@@ -25,9 +25,7 @@ import java.util.{logging => javalog}
 abstract class Handler(val formatter: Formatter, val level: Option[Level]) extends javalog.Handler {
   setFormatter(formatter)
 
-  level.foreach { x =>
-    setLevel(x)
-  }
+  level.foreach { x => setLevel(x) }
 
   override def toString: String = {
     "<%s level=%s formatter=%s>".format(getClass.getName, getLevel, formatter.toString)

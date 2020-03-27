@@ -48,12 +48,8 @@ case class LoggerFactory(
   def apply(): Logger = {
     val logger = Logger.get(node)
     logger.clearHandlers()
-    level.foreach { x =>
-      logger.setLevel(x)
-    }
-    handlers.foreach { h =>
-      logger.addHandler(h())
-    }
+    level.foreach { x => logger.setLevel(x) }
+    handlers.foreach { h => logger.addHandler(h()) }
     logger.setUseParentHandlers(useParents)
     logger
   }

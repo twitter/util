@@ -18,9 +18,7 @@ class HashableTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   )
 
   def testConsistency[T](algo: Hashable[Array[Byte], T]): Unit = {
-    forAll { input: Array[Byte] =>
-      assert(algo(input) == algo(input))
-    }
+    forAll { input: Array[Byte] => assert(algo(input) == algo(input)) }
   }
 
   algorithms foreach { algo =>

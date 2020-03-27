@@ -16,9 +16,8 @@ class KetamaDistributorBench extends StdBenchAnnotations {
   val numReps = 640
   val numHosts = 310
 
-  val hosts: scala.collection.immutable.IndexedSeq[String] = 0.until(numHosts).map { i =>
-    "abcd-zzz-" + i + "-ab2.qwer.twitter.com"
-  }
+  val hosts: scala.collection.immutable.IndexedSeq[String] =
+    0.until(numHosts).map { i => "abcd-zzz-" + i + "-ab2.qwer.twitter.com" }
   val nodes: scala.collection.immutable.IndexedSeq[HashNode[String]] = hosts map { h =>
     HashNode[String](h + ":12021", 1, h)
   }

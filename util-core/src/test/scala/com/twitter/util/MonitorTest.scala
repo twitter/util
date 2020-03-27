@@ -16,9 +16,7 @@ class MonitorTest extends FunSuite with MockitoSugar {
 
   class MonitorOrElseHelper {
     val m0, m1, m2 = spy(new MockMonitor())
-    Seq(m0, m1, m2).foreach { m =>
-      when(m.handle(any[Throwable])).thenReturn(true)
-    }
+    Seq(m0, m1, m2).foreach { m => when(m.handle(any[Throwable])).thenReturn(true) }
     val exc = new Exception
     val m = m0.orElse(m1).orElse(m2)
   }
@@ -45,13 +43,9 @@ class MonitorTest extends FunSuite with MockitoSugar {
     val h = new MonitorOrElseHelper
     import h._
 
-    Seq(m0, m1, m2) foreach { m =>
-      when(m.handle(any[Throwable])).thenReturn(false)
-    }
+    Seq(m0, m1, m2) foreach { m => when(m.handle(any[Throwable])).thenReturn(false) }
     assert(!m.handle(exc))
-    Seq(m0, m1, m2) foreach { m =>
-      verify(m).handle(exc)
-    }
+    Seq(m0, m1, m2) foreach { m => verify(m).handle(exc) }
   }
 
   test("Monitor#orElse should wrap Monitor exceptions and pass them on") {

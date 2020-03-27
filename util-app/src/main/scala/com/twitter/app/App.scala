@@ -251,9 +251,7 @@ trait App extends Closable with CloseAwaitably {
       // `close()` already called, we need to close this here, but only
       // after `close()` completes and `closing` is satisfied
       closing
-        .transform { _ =>
-          closable.close(closeDeadline)
-        }
+        .transform { _ => closable.close(closeDeadline) }
         .by(shutdownTimer, closeDeadline)
     }
   }
@@ -320,9 +318,7 @@ trait App extends Closable with CloseAwaitably {
       s"${errors.size} errors occurred on exit"
     }
     val exc = new CloseException(message)
-    errors.foreach { error =>
-      exc.addSuppressed(error)
-    }
+    errors.foreach { error => exc.addSuppressed(error) }
     exc
   }
 
@@ -362,9 +358,7 @@ trait App extends Closable with CloseAwaitably {
   final def nonExitingMain(args: Array[String]): Unit = {
     App.register(this)
 
-    loadServiceBindings.foreach { binding =>
-      LoadService.bind(binding)
-    }
+    loadServiceBindings.foreach { binding => LoadService.bind(binding) }
 
     for (f <- inits) f()
 
