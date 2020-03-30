@@ -134,9 +134,12 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
     case _ => whenNotPresent(verbosity)
   }
 
+  /** The executor that will be used for expiring gauges */
+  def executor: Executor = ForkJoinPool.commonPool()
+
   private[this] def whenNotPresent(verbosity: Verbosity) =
     new JFunction[Seq[String], CumulativeGauge] {
-      def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge {
+      def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge(executor) {
         self.registerGauge(verbosity, key, getValue)
 
         // The number of registers starts at `0` because every new gauge will cause a

@@ -69,7 +69,7 @@ object FuturePool {
     override def toString: String = "FuturePool.immediatePool"
   }
 
-  private lazy val defaultExecutor = Executors.newCachedThreadPool(
+  private[twitter] lazy val defaultExecutor = Executors.newCachedThreadPool(
     new NamedPoolThreadFactory("UnboundedFuturePool", makeDaemons = true)
   )
 
