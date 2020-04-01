@@ -4,7 +4,7 @@ junit_tests(
         "!AbstractLoadingFutureCacheTest.scala",
         "*.scala",
     ],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         ":abstract_tests",
         "3rdparty/jvm/com/github/ben-manes/caffeine",
@@ -23,7 +23,7 @@ scala_library(
         "AbstractFutureCacheTest.scala",
         "AbstractLoadingFutureCacheTest.scala",
     ],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatest",

@@ -3,7 +3,7 @@ junit_tests(
         "!EstimatorApp.scala",
         "*.scala",
     ],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",
@@ -19,7 +19,7 @@ junit_tests(
 scala_library(
     name = "estimator_app",
     sources = ["EstimatorApp.scala"],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "util/util-jvm/src/main/scala/com/twitter/jvm",
     ],

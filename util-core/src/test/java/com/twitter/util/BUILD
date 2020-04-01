@@ -1,7 +1,7 @@
 java_library(
     name = "object_size_calculator",
     sources = ["ObjectSizeCalculator.java"],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
     ],
@@ -12,7 +12,7 @@ junit_tests(
         "!ObjectSizeCalculator.java",
         "*.java",
     ],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         ":object_size_calculator",
         "3rdparty/jvm/junit",

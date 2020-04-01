@@ -23,7 +23,7 @@ scala_library(
         "src/main/scala-2.12-/com/twitter/util/*.scala",
         "src/main/scala/com/twitter/util/*.scala",
     ],
-    compiler_option_sets = {"fatal_warnings"},
+    compiler_option_sets = ["fatal_warnings"],
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-core-util",
