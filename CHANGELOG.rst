@@ -25,6 +25,14 @@ Breaking API Changes
    `c.t.hashing.KetamaDistributor` => `ConsistentHashingDistributor`.
   ``PHAB_ID=D449929``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-stats: Provide CachedRegex, a function that filters a
+  Map[String, Number] => Map[String, Number] and caches which keys to filter on
+  based on a regex.  Useful for filtering down metrics in the style that Finagle
+  typically recommends ``PHAB_ID=D459391``.
+
 20.3.0
 ------
 
