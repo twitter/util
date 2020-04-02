@@ -7,7 +7,7 @@ junit_tests(
         "3rdparty/jvm/org/scalatest",
         "util/util-app/src/main/scala",
         "util/util-app/src/test/resources",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-registry/src/main/scala/com/twitter/util/registry",
     ],
 )

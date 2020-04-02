@@ -7,7 +7,7 @@ junit_tests(
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",
         "util/util-core/src/main/scala/com/twitter/conversions",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-zk/src/main/scala/com/twitter/zk",
         "util/util-zk/src/main/scala/com/twitter/zk/coordination",
     ],

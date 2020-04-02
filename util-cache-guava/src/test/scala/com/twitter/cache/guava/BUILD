@@ -9,6 +9,6 @@ junit_tests(
         "util/util-cache-guava/src/main/scala/com/twitter/cache/guava",
         "util/util-cache/src/main/scala/com/twitter/cache",
         "util/util-cache/src/test/scala/com/twitter/cache:abstract_tests",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

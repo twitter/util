@@ -4,7 +4,7 @@ junit_tests(
     strict_deps = True,
     dependencies = [
         "3rdparty/jvm/org/scalatest",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-intellij/src/main/resources",
     ],
 )

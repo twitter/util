@@ -9,12 +9,12 @@ scala_library(
     dependencies = [
         "util/util-app/src/main/java/com/twitter/app",
         "util/util-core/src/main/scala/com/twitter/conversions",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-registry/src/main/scala/com/twitter/util/registry",
     ],
     exports = [
         "util/util-app/src/main/java/com/twitter/app",
         "util/util-core/src/main/scala/com/twitter/conversions",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

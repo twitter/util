@@ -8,6 +8,6 @@ scala_library(
     dependencies = [
         "3rdparty/jvm/com/google/guava",
         "util/util-cache/src/main/scala/com/twitter/cache",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

@@ -4,7 +4,7 @@ junit_tests(
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatest",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-reflect/src/main/scala/com/twitter/util/reflect",
     ],
 )

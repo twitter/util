@@ -8,6 +8,6 @@ scala_library(
     ),
     dependencies = [
         "util/util-core/src/main/scala/com/twitter/concurrent",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

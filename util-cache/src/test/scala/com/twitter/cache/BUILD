@@ -13,7 +13,7 @@ junit_tests(
         "3rdparty/jvm/org/scalatest",
         "util/util-cache/src/main/scala/com/twitter/cache",
         "util/util-cache/src/main/scala/com/twitter/cache/caffeine",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )
 
@@ -29,6 +29,6 @@ scala_library(
         "3rdparty/jvm/org/scalatest",
         "util/util-cache/src/main/scala/com/twitter/cache",
         "util/util-core/src/main/scala/com/twitter/conversions",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

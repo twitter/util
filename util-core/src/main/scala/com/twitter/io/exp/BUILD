@@ -7,6 +7,6 @@ scala_library(
     ),
     dependencies = [
         "util/util-core/src/main/scala/com/twitter/io",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )

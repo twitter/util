@@ -8,13 +8,13 @@ scala_library(
     dependencies = [
         "3rdparty/jvm/org/apache/zookeeper:zookeeper-client",
         "util/util-core/src/main/scala/com/twitter/concurrent",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-zk/src/main/scala/com/twitter/zk",
     ],
     exports = [
         "3rdparty/jvm/org/apache/zookeeper:zookeeper-client",
         "util/util-core/src/main/scala/com/twitter/concurrent",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
         "util/util-zk/src/main/scala/com/twitter/zk",
     ],
 )

@@ -7,7 +7,7 @@ scala_library(
     ),
     dependencies = [
         "3rdparty/jvm/cglib",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
     exports = [
         "3rdparty/jvm/cglib",

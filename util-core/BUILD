@@ -1,7 +1,7 @@
 target(
     dependencies = [
+        ":scala",
         "util/util-core/src/main/java",
-        "util/util-core/src/main/scala",
     ],
 )
 
@@ -39,5 +39,30 @@ scala_library(
         "3rdparty/jvm/org/scala-lang/modules:scala-collection-compat",
         "3rdparty/jvm/org/scala-lang/modules:scala-parser-combinators",
         "util/util-function/src/main/java",
+    ],
+)
+
+scala_library(
+    # This target exists only to act as an aggregator jar.
+    name = "scala",
+    sources = ["PantsWorkaroundCore.scala"],
+    provides = scala_artifact(
+        org = "com.twitter",
+        name = "util-core",
+        repo = artifactory,
+    ),
+    dependencies = [
+        ":util-core-util",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
+        "util/util-core/src/main/scala/com/twitter/conversions",
+        "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-core/src/main/scala/com/twitter/io/exp",
+    ],
+    exports = [
+        ":util-core-util",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
+        "util/util-core/src/main/scala/com/twitter/conversions",
+        "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-core/src/main/scala/com/twitter/io/exp",
     ],
 )

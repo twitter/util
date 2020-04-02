@@ -5,7 +5,7 @@ scala_library(
         "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/org/openjdk/jmh:jmh-core",
         "3rdparty/jvm/org/scala-lang:scala-library",
-        "util/util-core/src/main/scala",
+        "util/util-core:scala",
         "util/util-hashing/src/main/scala",
         "util/util-stats/src/main/scala",
     ],

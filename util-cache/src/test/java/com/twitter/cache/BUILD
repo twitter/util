@@ -6,6 +6,6 @@ junit_tests(
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scala-lang:scala-library",
         "util/util-cache/src/main/scala/com/twitter/cache",
-        "util/util-core/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )
