@@ -15,9 +15,10 @@ junit_tests(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         ":object_size_calculator",
+        "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scala-lang:scala-library",
-        "util/util-core/src/main/java/com/twitter/util",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/java/com/twitter/util",
     ],
 )
