@@ -518,6 +518,10 @@
                         <a class="trait" href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable."></a>
                         <a href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable.">CloseAwaitably</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable."></a>
+                        <a href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable.">CloseOnce</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Codec$.html" title=""></a>
                         <a class="trait" href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S"></a>
                         <a href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S">Codec</a>
@@ -1322,9 +1326,9 @@ that the provider of the computation may choose to ignore.
       <p class="shortcomment cmt">Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><div class="fullcomment"><div class="comment cmt"><p>Closable is a mixin trait to describe a closable <code><code>resource</code></code>.</p><p>Note: There is a Java-friendly API for this trait: <a href="AbstractClosable.html" class="extype" name="com.twitter.util.AbstractClosable">com.twitter.util.AbstractClosable</a>.
 </p></div></div>
     </li><li name="com.twitter.util.ClosableOnce" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ClosableOnceextendsClosable"></a><a id="ClosableOnce:ClosableOnce"></a>
+      <a id="ClosableOnceextendsClosablewithCloseOnce"></a><a id="ClosableOnce:ClosableOnce"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/index.html#ClosableOnceextendsClosable" title="Permalink">
+      <a href="../../../com/twitter/util/index.html#ClosableOnceextendsClosablewithCloseOnce" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1333,13 +1337,14 @@ that the provider of the computation may choose to ignore.
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="A mixin trait to describe resources that are an idempotent Closable." href="ClosableOnce.html"><span class="name">ClosableOnce</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></span>
+        <a title="A mixin trait to describe resources that are an idempotent Closable." href="ClosableOnce.html"><span class="name">ClosableOnce</span></a><span class="result"> extends <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> with <a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></span>
       </span>
       
       <p class="shortcomment cmt">A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><p>The first call to <code>close(Time)</code> triggers closing the resource with the
 provided deadline while subsequent calls will yield the same <code>Future</code>
 as the first invocation irrespective of the deadline provided.
-</p></div></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> if you are mixing in or extending an existing <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>
+     to prevent any &quot;inherits from conflicting members&quot; compile-time issues.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Closables" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ClosablesextendsObject"></a><a id="Closables:Closables"></a>
       <span class="permalink">
@@ -1379,6 +1384,26 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
   }
 }</pre><p>Note: There is a Java-friendly API for this trait: <code>com.twitter.util.AbstractCloseAwaitably</code>.
 </p></div></div>
+    </li><li name="com.twitter.util.CloseOnce" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="CloseOnceextendsAnyRef"></a><a id="CloseOnce:CloseOnce"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#CloseOnceextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="A mixin trait to describe resources that are an idempotent Closable." href="CloseOnce.html"><span class="name">CloseOnce</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><p>The first call to <code>close(Time)</code> triggers closing the resource with the
+provided deadline while subsequent calls will yield the same <code>Future</code>
+as the first invocation irrespective of the deadline provided.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> if you are not mixing in or extending an existing <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></p></span><span class="cmt"><p><span class="extype" name="ClosableOnce.of(closable:">Closable)</span> for creating a proxy to a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>
+      that has already been instantiated.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Codec" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Codec[T,S]extendsEncoder[T,S]withDecoder[T,S]"></a><a id="Codec[T,S]:Codec[T,S]"></a>
       <span class="permalink">

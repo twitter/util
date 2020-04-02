@@ -342,6 +342,10 @@
                         <a class="trait" href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable."></a>
                         <a href="CloseAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.Closable.">CloseAwaitably</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable."></a>
+                        <a href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable.">CloseOnce</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Codec$.html" title=""></a>
                         <a class="trait" href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S"></a>
                         <a href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S">Codec</a>
@@ -766,7 +770,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a>, <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -792,7 +796,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.util.AbstractClosableOnce"><span>AbstractClosableOnce</span></li><li class="in" name="com.twitter.util.ClosableOnce"><span>ClosableOnce</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.util.AbstractClosableOnce"><span>AbstractClosableOnce</span></li><li class="in" name="com.twitter.util.ClosableOnce"><span>ClosableOnce</span></li><li class="in" name="com.twitter.util.CloseOnce"><span>CloseOnce</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -835,7 +839,7 @@
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="com.twitter.util.ClosableOnce#closeOnce" visbl="prt" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+              <ol><li name="com.twitter.util.CloseOnce#closeOnce" visbl="prt" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="closeOnce(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="closeOnce(Time):Future[Unit]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/AbstractClosableOnce.html#closeOnce(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" title="Permalink">
@@ -853,7 +857,7 @@
       <p class="shortcomment cmt">Close the resource with the given deadline exactly once.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given deadline exactly once. This deadline is
 advisory, giving the callee some leeway, for example to drain clients or
 finish up other tasks.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>if this method throws a synchronous exception, that exception will
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>if this method throws a synchronous exception, that exception will
       be wrapped in a failed future.</p></span></dd></dl></div>
     </li></ol>
             </div>
@@ -949,7 +953,7 @@ finish up other tasks.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.ClosableOnce#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.CloseOnce#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="close(Time):Future[Unit]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/util/AbstractClosableOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" title="Permalink">
@@ -964,10 +968,7 @@ finish up other tasks.
         <span class="name">close</span><span class="params">(<span name="deadline">deadline: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Close the resource with the given deadline.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given deadline. This deadline is advisory,
-giving the callee some leeway, for example to drain clients or finish
-up other tasks.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> → <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd></dl></div>
     </li><li name="com.twitter.util.Closable#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]"></a><a id="close(Duration):Future[Unit]"></a>
       <span class="permalink">
@@ -1097,6 +1098,23 @@ the resource has been fully relinquished.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.CloseOnce#isClosed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isClosed:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/AbstractClosableOnce.html#isClosed:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isClosed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Signals whether or not this <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> has been closed.</p><div class="fullcomment"><div class="comment cmt"><p>Signals whether or not this <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> has been closed.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>return true if <a href="CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a> has been initiated, false otherwise</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -1279,6 +1297,8 @@ the resource has been fully relinquished.
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.util.ClosableOnce">
               <h3>Inherited from <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a></h3>
+            </div><div class="parent" name="com.twitter.util.CloseOnce">
+              <h3>Inherited from <a href="CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></h3>
             </div><div class="parent" name="com.twitter.util.Closable">
               <h3>Inherited from <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="scala.AnyRef">
