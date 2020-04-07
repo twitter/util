@@ -203,6 +203,7 @@ lazy val util = Project(
     utilLogging,
     utilReflect,
     utilRegistry,
+    utilRouting,
     utilSecurity,
     utilSlf4jApi,
     utilSlf4jJulBridge,
@@ -446,6 +447,15 @@ lazy val utilStats = Project(
       }
     }
   ).dependsOn(utilCore, utilLint)
+
+lazy val utilRouting = Project(
+  id = "util-routing",
+  base = file("util-routing")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-routing"
+  ).dependsOn(utilCore, utilLogging)
 
 lazy val utilTest = Project(
   id = "util-test",
