@@ -60,10 +60,20 @@ class Flag[T: Flaggable] private[app] (
   import com.twitter.app.Flag._
   import java.util.logging._
 
-  private[app] def this(name: String, help: String, default: => T, failFastUntilParsed: Boolean) =
+  private[twitter] def this(
+    name: String,
+    help: String,
+    default: => T,
+    failFastUntilParsed: Boolean
+  ) =
     this(name, help, Left(() => default), failFastUntilParsed)
 
-  private[app] def this(name: String, help: String, usage: String, failFastUntilParsed: Boolean) =
+  private[twitter] def this(
+    name: String,
+    help: String,
+    usage: String,
+    failFastUntilParsed: Boolean
+  ) =
     this(name, help, Right(usage), failFastUntilParsed)
 
   private[twitter] def this(name: String, help: String, default: => T) =
