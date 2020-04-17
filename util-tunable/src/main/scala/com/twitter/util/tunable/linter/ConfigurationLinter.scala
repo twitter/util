@@ -3,7 +3,8 @@ package com.twitter.util.tunable.linter
 import com.twitter.app.App
 import com.twitter.util.{Throw, Return}
 import com.twitter.util.tunable.JsonTunableMapper
-import java.net.URL
+
+import java.nio.file.Paths
 
 object ConfigurationLinter extends App {
 
@@ -15,8 +16,7 @@ object ConfigurationLinter extends App {
 
     args.foreach { path =>
       println(s"File: $path\n")
-
-      val url = new URL("file://" + path)
+      val url = Paths.get(path).toUri().toURL()
 
       JsonTunableMapper().parse(url) match {
         case Return(map) =>

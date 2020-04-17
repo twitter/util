@@ -7,6 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-tunable: ConfigurationLinter accepts a relative path. ``PHAB_ID=D468528``
+
 20.4.0
 ------
 
