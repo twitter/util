@@ -75,13 +75,16 @@ def jdk11GcJavaOptions: Seq[String] = {
   )
 }
 
+val scala211 = "2.11.12"
+val scala212 = "2.12.11"
+val scala213 = "2.13.1"
+
 val defaultProjectSettings = Seq(
-  scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.1")
+  scalaVersion := scala212,
+  crossScalaVersions := Seq(scala212, scala213, scala211)
 )
 
 val baseSettings = Seq(
-  version := releaseVersion,
   organization := "com.twitter",
   // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
   unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")),
@@ -146,29 +149,19 @@ val baseSettings = Seq(
           <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
       </licenses>
-      <scm>
-        <url>git@github.com:twitter/util.git</url>
-        <connection>scm:git:git@github.com:twitter/util.git</connection>
-      </scm>
       <developers>
         <developer>
           <id>twitter</id>
           <name>Twitter Inc.</name>
           <url>https://www.twitter.com/</url>
         </developer>
-      </developers>,
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  }
+      </developers>
 )
 
 val sharedSettings = defaultProjectSettings ++ baseSettings
 
 lazy val noPublishSettings = Seq(
+  skip in publish := true,
   publish := {},
   publishLocal := {},
   publishArtifact := false,
@@ -360,7 +353,7 @@ lazy val utilIntellij = Project(
     baseSettings
   ).settings(
     name := "util-intellij",
-    scalaVersion := "2.11.12"
+    scalaVersion := scala211
   ).dependsOn(utilCore % "test")
 
 lazy val utilJvm = Project(
