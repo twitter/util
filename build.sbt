@@ -12,8 +12,7 @@ val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll (
   ExclusionRule("javax.jms", "jms")
 )
 val slf4jVersion = "1.7.30"
-val jacksonVersion = "2.9.10"
-val jacksonDatabindVersion = "2.9.10.1"
+val jacksonVersion = "2.11.0"
 
 val guavaLib = "com.google.guava" % "guava" % "25.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.0"
@@ -481,7 +480,7 @@ lazy val utilThrift = Project(
       "org.apache.thrift" % "libthrift" % "0.10.0",
       slf4jApi % "provided",
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion
     )
   ).dependsOn(utilCodec)
 
@@ -494,7 +493,7 @@ lazy val utilTunable = Project(
     name := "util-tunable",
     libraryDependencies ++= Seq(
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")
     )
   ).dependsOn(utilApp, utilCore)

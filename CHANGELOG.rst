@@ -14,6 +14,11 @@ New Features
 ~~~~~~~~~~~~
 * util-tunable: ConfigurationLinter accepts a relative path. ``PHAB_ID=D468528``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Bump jackson version to 2.11.0. ``PHAB_ID=D457496``
+
 20.4.0
 ------
 
