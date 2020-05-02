@@ -13,8 +13,6 @@ jobs:
         java: [openjdk@1.8]
         # scala: [2.11.12, 2.12.8, 2.13.1]
         scala: [2.12.8]
-      env:
-        JAVA_OPTS: "-Dsbt.log.noformat=true"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
