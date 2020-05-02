@@ -7,6 +7,8 @@ on:
 jobs:
   test-with-coverage: # generate coverage report for 2.12.8 on jdk1.8
     runs-on: ubuntu-latest
+    env:
+      JAVA_OPTS: "-Dsbt.log.noformat=true"
     strategy:
       fail-fast: false
       matrix:
@@ -20,32 +22,32 @@ jobs:
       - uses: olafurpg/setup-scala@v7
         with:
           java-version: ${{ matrix.java }}
+      - name: unset/sbt-opts # default $SBT_OPTS is irrelevant to sbt launcher
+        shell: bash
+        run: |
+          unset SBT_OPTS
       - name: test
         if: ${{ matrix.java != 'openjdk@1.8' }}
         shell: bash
-        env:
-          JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} clean test
       - name: test/with-coverage
         if: ${{ matrix.java == 'openjdk@1.8' }}
         shell: bash
-        env:
-          JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} clean coverage test coverageReport
-      - name: coverage-report/generate
+      - name: test/coverage-report/generate
         if: ${{ matrix.java == 'openjdk@1.8' }}
         shell: bash
-        env:
-          JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} coverageAggregate
-      - name: coverage-report/upload
+      - name: test/coverage-report/upload
         if: ${{ success() && matrix.java == 'openjdk@1.8' }}
         uses: codecov/codecov-action@v1
   test:
     runs-on: ubuntu-latest
+    env:
+      JAVA_OPTS: "-Dsbt.log.noformat=true"
     strategy:
       fail-fast: false
       matrix:
@@ -82,7 +84,5 @@ jobs:
           unset SBT_OPTS
       - name: test
         shell: bash
-        env:
-          JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} clean test
