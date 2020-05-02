@@ -2,17 +2,15 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ ccoco/WorkflowBuild ]
+    branches: [ develop ]
 
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        # java: [openjdk@1.8, openjdk@1.11]
-        java: [openjdk@1.8]
-        # scala: [2.11.12, 2.12.8, 2.13.1]
-        scala: [2.12.8]
+        java: [openjdk@1.8, openjdk@1.11]
+        scala: [2.11.12, 2.12.8, 2.13.1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,17 +37,21 @@ jobs:
         with:
           path: ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: unset SBT_OPTS # default $SBT_OPTS is irrelevant to sbt launcher
+        shell: bash
+        run: |
+          unset SBT_OPTS
       - name: test with coverage
         shell: bash
         env:
           JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
-          sbt ++${{ matrix.scala }} clean coverage test coverageReport
+          ./sbt ++${{ matrix.scala }} clean coverage test coverageReport
       - name: generate aggregate coverage report
         shell: bash
         env:
           JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
-          sbt ++${{ matrix.scala }} coverageAggregate
+          ./sbt ++${{ matrix.scala }} coverageAggregate
       - name: upload coverage to codecov.io  
         uses: codecov/codecov-action@v1
