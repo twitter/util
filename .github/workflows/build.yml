@@ -1,4 +1,4 @@
-name: build
+name: sbt-build
 
 on:
   push:
