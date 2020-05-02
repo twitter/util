@@ -5,6 +5,23 @@ on:
     branches: [ ccoco/WorkflowBuild ]
 
 jobs:
+  test-with-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [openjdk@1.8, openjdk@1.11]
+        scala: [2.12.8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: olafurpg/setup-scala@v7
+        with:
+          java-version: ${{ matrix.java }}
+      - run: |
+          echo ${{ matrix.java }} ${{ matrix.scala }}
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -20,24 +37,24 @@ jobs:
       - uses: olafurpg/setup-scala@v7
         with:
           java-version: ${{ matrix.java }}
-      - name: cache-maven
+      - name: cache/maven
         uses: actions/cache@v1
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: cache-ivy2
+      - name: cache/ivy2
         uses: actions/cache@v1
         with:
           path: ~/.ivy2/cache
-          key: ${{ runner.os }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
-      - name: Cache SBT
+          key: ${{ runner.os }}-${{ matrix.java }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
+      - name: cache/sbt
         uses: actions/cache@v1
         with:
           path: ~/.sbt
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-      - name: unset-sbt-opts # default $SBT_OPTS is irrelevant to sbt launcher
+          key: ${{ runner.os }}-${{ matrix.java }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: unset/sbt-opts # default $SBT_OPTS is irrelevant to sbt launcher
         shell: bash
         run: |
           unset SBT_OPTS
@@ -48,20 +65,20 @@ jobs:
           JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} clean test
-      - name: test-with-coverage
+      - name: test/with-coverage
         if: ${{ matrix.scala == '2.12.8' }}
         shell: bash
         env:
           JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} clean coverage test coverageReport
-      - name: generate-coverage-report
+      - name: coverage-report/generate
         if: ${{ matrix.scala == '2.12.8' }}
         shell: bash
         env:
           JAVA_OPTS: "-Dsbt.log.noformat=true"
         run: |
           ./sbt ++${{ matrix.scala }} coverageAggregate
-      - name: Upload Coverage To Codecov.io
+      - name: coverage-report/upload
         if: ${{ success() &&  matrix.scala == '2.12.8' && matrix.java == 'openjdk@1.8' }}
         uses: codecov/codecov-action@v1
