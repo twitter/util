@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         java: [openjdk@1.8, openjdk@1.11]
-        scala: [2.12.8]
+        scala: 2.12.8
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
