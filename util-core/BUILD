@@ -56,13 +56,11 @@ scala_library(
         "util/util-core/src/main/scala/com/twitter/concurrent",
         "util/util-core/src/main/scala/com/twitter/conversions",
         "util/util-core/src/main/scala/com/twitter/io",
-        "util/util-core/src/main/scala/com/twitter/io/exp",
     ],
     exports = [
         ":util-core-util",
         "util/util-core/src/main/scala/com/twitter/concurrent",
         "util/util-core/src/main/scala/com/twitter/conversions",
         "util/util-core/src/main/scala/com/twitter/io",
-        "util/util-core/src/main/scala/com/twitter/io/exp",
     ],
 )

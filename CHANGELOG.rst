@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: Change the namespace of `ActivitySource` and its derivatives to
+  `com.twitter.io` as its no longer considered experimental since the code has
+  changed minimally in the past 5 years. ``PHAB_ID=D478498``
+
 20.4.1
 ------
 
@@ -160,7 +167,7 @@ Breaking API Changes
 
 * util-stats: abstract methods of StatsReceiver now take Schemas. The old APIs
   are now final and cannot be overriden. For custom implementations, define
-  schema based methods (eg, counter(verbosity, name) is now 
+  schema based methods (eg, counter(verbosity, name) is now
   counter(CounterSchema)). NB: users can continue to call the old interface;
   only implementors must migrate.``PHAB_ID=D385068``
 
