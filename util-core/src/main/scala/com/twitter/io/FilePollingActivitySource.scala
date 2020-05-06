@@ -23,11 +23,7 @@ class FilePollingActivitySource private[io] (
 
         if (file.exists()) {
           pool {
-            val reader = new InputStreamReader(
-              new FileInputStream(file),
-              InputStreamReader.DefaultMaxBufferSize,
-              pool
-            )
+            val reader = InputStreamReader(new FileInputStream(file), pool)
             BufReader.readAll(reader) respond {
               case Return(buf) =>
                 value() = Activity.Ok(buf)

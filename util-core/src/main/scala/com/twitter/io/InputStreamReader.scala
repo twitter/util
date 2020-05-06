@@ -97,4 +97,12 @@ object InputStreamReader {
   def apply(inputStream: InputStream, chunkSize: Int = DefaultMaxBufferSize): InputStreamReader =
     new InputStreamReader(inputStream, chunkSize)
 
+  /**
+   * Create an [[InputStreamReader]] from the given `InputStream`
+   * using the provided [[FuturePool]] for executing all I/O. The resulting
+   * [[InputStreamReader]] emits chunks of at most `DefaultMaxBufferSize`.
+   */
+  def apply(inputStream: InputStream, pool: FuturePool): InputStreamReader =
+    new InputStreamReader(inputStream, chunkSize = DefaultMaxBufferSize, pool)
+
 }

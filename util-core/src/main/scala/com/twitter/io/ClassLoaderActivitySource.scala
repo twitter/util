@@ -24,8 +24,7 @@ class ClassLoaderActivitySource private[io] (classLoader: ClassLoader, pool: Fut
           classLoader.getResourceAsStream(name) match {
             case null => p.setValue(Activity.Failed(ActivitySource.NotFound))
             case stream =>
-              val reader =
-                new InputStreamReader(stream, InputStreamReader.DefaultMaxBufferSize, pool)
+              val reader = InputStreamReader(stream, pool)
               BufReader.readAll(reader) respond {
                 case Return(buf) =>
                   p.setValue(Activity.Ok(buf))
