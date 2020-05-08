@@ -8,11 +8,30 @@ import org.scalatest.FunSuite
 class AsyncMeterTest extends FunSuite {
   import AsyncMeter._
 
+  // Workaround methods for dealing with Scala compiler warnings:
+  //
+  // assert(f.isDone) cannot be called directly because it results in a Scala compiler
+  // warning: 'possible missing interpolator: detected interpolated identifier `$conforms`'
+  //
+  // This is due to the implicit evidence required for `Future.isDone` which checks to see
+  // whether the Future that is attempting to have `isDone` called on it conforms to the type
+  // of `Future[Unit]`. This is done using `Predef.$conforms`
+  // https://www.scala-lang.org/api/2.12.2/scala/Predef$.html#$conforms[A]:A%3C:%3CA
+  //
+  // Passing that directly to `assert` causes problems because the `$conforms` is also seen as
+  // an interpolated string. We get around it by evaluating first and passing the result to
+  // `assert`.
+  private[this] def isDone(f: Future[Unit]): Boolean =
+    f.isDone
+
+  private[this] def assertIsDone(f: Future[Unit]): Unit =
+    assert(isDone(f))
+
   test("AsyncMeter shouldn't wait at all when there aren't any waiters.") {
     val timer = new MockTimer
     val meter = newMeter(1, 1.second, 100)(timer)
     val result = meter.await(1)
-    assert(result.isDone)
+    assertIsDone(result)
   }
 
   test("AsyncMeter should allow more than one waiter and allow them on the schedule.") {
@@ -21,12 +40,12 @@ class AsyncMeterTest extends FunSuite {
       val meter = newMeter(1, 1.second, 100)(timer)
       val ready = meter.await(1)
       val waiter = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
       assert(!waiter.isDefined)
 
       ctl.advance(1.second)
       timer.tick()
-      assert(waiter.isDone)
+      assertIsDone(waiter)
     }
   }
 
@@ -35,7 +54,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(1, 1.second, 100)(timer)
       val ready = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val waiter = meter.await(1)
       assert(!waiter.isDefined)
@@ -45,7 +64,7 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(1.second)
       timer.tick()
-      assert(waiter.isDone)
+      assertIsDone(waiter)
     }
   }
 
@@ -54,7 +73,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(1, 1.second, 1)(timer)
       val ready = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val waiter = meter.await(1)
       val rejected = meter.await(1)
@@ -77,7 +96,7 @@ class AsyncMeterTest extends FunSuite {
       var nr = 0
       val ready = meter.await(1)
       val waiter = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
       assert(!waiter.isDefined)
       val e = new Exception("boom!")
 
@@ -95,7 +114,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(2, 1.second, 100)(timer)
       val ready = meter.await(2)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val first = meter.await(1)
       val second = meter.await(1)
@@ -104,8 +123,8 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(1.second)
       timer.tick()
-      assert(first.isDone)
-      assert(second.isDone)
+      assertIsDone(first)
+      assertIsDone(second)
     }
   }
 
@@ -114,7 +133,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(1, 500.microseconds, 100)(timer)
       val ready = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val first = meter.await(1)
       val second = meter.await(1)
@@ -123,8 +142,8 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(1.millisecond)
       timer.tick()
-      assert(first.isDone)
-      assert(second.isDone)
+      assertIsDone(first)
+      assertIsDone(second)
     }
   }
 
@@ -133,7 +152,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(2, 500.microseconds, 100)(timer)
       val ready = meter.await(2)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val first = meter.await(1)
       val second = meter.await(2)
@@ -144,9 +163,9 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(1.millisecond)
       timer.tick()
-      assert(first.isDone)
-      assert(second.isDone)
-      assert(third.isDone)
+      assertIsDone(first)
+      assertIsDone(second)
+      assertIsDone(third)
     }
   }
 
@@ -172,7 +191,7 @@ class AsyncMeterTest extends FunSuite {
     Time.withCurrentTimeFrozen { ctl =>
       val meter = newMeter(2, 1.second, 100)(timer)
       val ready = meter.await(2)
-      assert(ready.isDone)
+      assertIsDone(ready)
 
       val waiter = meter.await(2)
       assert(!waiter.isDefined)
@@ -183,7 +202,7 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(500.milliseconds)
       timer.tick()
-      assert(waiter.isDone)
+      assertIsDone(waiter)
     }
   }
 
@@ -203,7 +222,7 @@ class AsyncMeterTest extends FunSuite {
     val ready = meter.await(3)
     val first = meter.await(4)
     val second = meter.await(4)
-    assert(ready.isDone)
+    assertIsDone(ready)
     assert(!first.isDefined)
     assert(!second.isDefined)
   }
@@ -216,16 +235,16 @@ class AsyncMeterTest extends FunSuite {
       val first = meter.await(1)
       val second = meter.await(1)
       val third = meter.await(1)
-      assert(ready.isDone)
+      assertIsDone(ready)
       ctl.advance(1.millisecond)
       timer.tick()
-      assert(first.isDone)
+      assertIsDone(first)
       assert(!second.isDefined)
       assert(!third.isDefined)
       ctl.advance(1.millisecond)
       timer.tick()
-      assert(second.isDone)
-      assert(third.isDone)
+      assertIsDone(second)
+      assertIsDone(third)
     }
   }
 
@@ -237,7 +256,7 @@ class AsyncMeterTest extends FunSuite {
       assert(!greedy.isDefined)
       ctl.advance(1.second)
       timer.tick()
-      assert(greedy.isDone)
+      assertIsDone(greedy)
     }
   }
 
@@ -254,7 +273,7 @@ class AsyncMeterTest extends FunSuite {
       }
       ctl.advance(1.second)
       timer.tick()
-      assert(first.isDone)
+      assertIsDone(first)
     }
   }
 
@@ -277,7 +296,7 @@ class AsyncMeterTest extends FunSuite {
 
       ctl.advance(1.second)
       timer.tick()
-      assert(first.isDone)
+      assertIsDone(first)
     }
   }
 

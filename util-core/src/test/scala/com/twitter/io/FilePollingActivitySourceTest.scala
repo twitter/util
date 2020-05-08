@@ -1,7 +1,7 @@
 package com.twitter.io
 
 import com.twitter.util.{Activity, FuturePool, MockTimer, Time}
-import java.io.{File, ByteArrayInputStream}
+import java.io.File
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import scala.util.Random
 

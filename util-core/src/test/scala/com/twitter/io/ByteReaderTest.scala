@@ -21,9 +21,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   test("readString underflow") {
     val br = readerWith()
-    intercept[UnderflowException] {
-      br.readString(1, StandardCharsets.UTF_8)
-    }
+    intercept[UnderflowException] { br.readString(1, StandardCharsets.UTF_8) }
   }
 
   test("readString")(forAll { (str1: String, str2: String) =>
@@ -38,7 +36,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
   test("readByte")(forAll { byte: Byte =>
     val br = readerWith(byte)
     assert(br.readByte() == byte)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readShortBE")(forAll { s: Short =>
@@ -49,7 +47,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     // note, we need to cast here toShort so that the
     // MSB is interpreted as the sign bit.
     assert(br.readShortBE() == s)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readShortLE")(forAll { s: Short =>
@@ -61,7 +59,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     // note, we need to cast here toShort so that the
     // MSB is interpreted as the sign bit.
     assert(br.readShortLE() == s)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readUnsignedMediumBE")(forAll { m: Int =>
@@ -71,7 +69,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((m) & 0xff).toByte
     )
     assert(br.readUnsignedMediumBE() == maskMedium(m))
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readUnsignedMediumLE")(forAll { m: Int =>
@@ -81,7 +79,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((m >> 16) & 0xff).toByte
     )
     assert(br.readUnsignedMediumLE() == maskMedium(m))
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readIntBE")(forAll { i: Int =>
@@ -92,7 +90,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((i) & 0xff).toByte
     )
     assert(br.readIntBE() == i)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readIntLE")(forAll { i: Int =>
@@ -103,7 +101,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((i >> 24) & 0xff).toByte
     )
     assert(br.readIntLE() == i)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readLongBE")(forAll { l: Long =>
@@ -118,7 +116,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((l) & 0xff).toByte
     )
     assert(br.readLongBE() == l)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readLongLE")(forAll { l: Long =>
@@ -133,7 +131,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((l >> 56) & 0xff).toByte
     )
     assert(br.readLongLE() == l)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readUnsignedByte")(forAll { b: Byte =>
@@ -191,7 +189,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((bi) & 0xff).toByte
     )
     assert(br.readUnsignedLongBE() == bi)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   test("readUnsignedLongLE")(forAll(uInt64s) { bi1: BigInt =>
@@ -207,7 +205,7 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
       ((bi >> 56) & 0xff).toByte
     )
     assert(br.readUnsignedLongLE() == bi)
-    val exc = intercept[UnderflowException] { br.readByte() }
+    intercept[UnderflowException] { br.readByte() }
   })
 
   // .equals is required to handle NaN

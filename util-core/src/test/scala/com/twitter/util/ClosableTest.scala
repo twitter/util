@@ -6,6 +6,29 @@ import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import scala.language.reflectiveCalls
 
 class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
+
+  // Workaround methods for dealing with Scala compiler warnings:
+  //
+  // assert(f.isDone) cannot be called directly because it results in a Scala compiler
+  // warning: 'possible missing interpolator: detected interpolated identifier `$conforms`'
+  //
+  // This is due to the implicit evidence required for `Future.isDone` which checks to see
+  // whether the Future that is attempting to have `isDone` called on it conforms to the type
+  // of `Future[Unit]`. This is done using `Predef.$conforms`
+  // https://www.scala-lang.org/api/2.12.2/scala/Predef$.html#$conforms[A]:A%3C:%3CA
+  //
+  // Passing that directly to `assert` causes problems because the `$conforms` is also seen as
+  // an interpolated string. We get around it by evaluating first and passing the result to
+  // `assert`.
+  private[this] def isDone(f: Future[Unit]): Boolean =
+    f.isDone
+
+  private[this] def assertIsDone(f: Future[Unit]): Unit =
+    assert(isDone(f))
+
+  private[this] def assertIsNotDone(f: Future[Unit]): Unit =
+    assert(!isDone(f))
+
   test("Closable.close(Duration)") {
     Time.withCurrentTimeFrozen { _ =>
       var time: Option[Time] = None
@@ -46,11 +69,11 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
     assert(n1 == 1)
     assert(n2 == 1)
 
-    assert(!f.isDone)
+    assertIsNotDone(f)
     p1.setDone()
-    assert(!f.isDone)
+    assertIsNotDone(f)
     p2.setDone()
-    assert(f.isDone)
+    assertIsDone(f)
   }
 
   test("Closable.all with exceptions") {
@@ -94,17 +117,17 @@ class ClosableTest extends FunSuite with Eventually with IntegrationPatience {
     val f = c.close()
     assert(n1 == 1)
     assert(n2 == 0)
-    assert(!f.isDone)
+    assertIsNotDone(f)
 
     p1.setDone()
     assert(n1 == 1)
     assert(n2 == 1)
-    assert(!f.isDone)
+    assertIsNotDone(f)
 
     p2.setDone()
     assert(n1 == 1)
     assert(n2 == 1)
-    assert(f.isDone)
+    assertIsDone(f)
   }
 
   test("Closable.sequence is resilient to failed closes") {

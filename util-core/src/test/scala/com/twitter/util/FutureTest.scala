@@ -829,7 +829,11 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
                   val actual = intercept[Exception] { await(f) }
                   assert(actual == exn, explain(left, right, leftFirst))
                 case (Nvr, Ret(_)) | (Ret(_), Nvr) | (Nvr, Nvr) => assert(!f.isDefined)
-                case (Ret(a), Ret(b)) => assert(await(f) == (a, b), explain(left, right, leftFirst))
+                case (Ret(a), Ret(b)) =>
+                  val expected: (Int, Int) = (a, b)
+                  val result = await(f)
+                  val isEqual = result == expected
+                  assert(isEqual, explain(left, right, leftFirst))
               }
             }
           }

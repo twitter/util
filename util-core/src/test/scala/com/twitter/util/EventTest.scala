@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import java.util.concurrent.{CountDownLatch, Executors}
 import org.scalatest.FunSuite
 import scala.collection.mutable
-import scala.collection.compat._
 
 class EventTest extends FunSuite {
 

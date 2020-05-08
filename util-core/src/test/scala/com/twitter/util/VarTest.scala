@@ -5,9 +5,28 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable
-import scala.collection.compat._
 
 class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+
+  // Workaround methods for dealing with Scala compiler warnings:
+  //
+  // assert(f.isDone) cannot be called directly because it results in a Scala compiler
+  // warning: 'possible missing interpolator: detected interpolated identifier `$conforms`'
+  //
+  // This is due to the implicit evidence required for `Future.isDone` which checks to see
+  // whether the Future that is attempting to have `isDone` called on it conforms to the type
+  // of `Future[Unit]`. This is done using `Predef.$conforms`
+  // https://www.scala-lang.org/api/2.12.2/scala/Predef$.html#$conforms[A]:A%3C:%3CA
+  //
+  // Passing that directly to `assert` causes problems because the `$conforms` is also seen as
+  // an interpolated string. We get around it by evaluating first and passing the result to
+  // `assert`.
+  private[this] def isDone(f: Future[Unit]): Boolean =
+    f.isDone
+
+  private[this] def assertIsDone(f: Future[Unit]): Unit =
+    assert(isDone(f))
+
   private case class U[T](init: T) extends UpdatableVar[T](init) {
     import Var.Observer
 
@@ -188,13 +207,13 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     val f = o.close(t)
     assert(called == 1)
     assert(closed == Time.Zero)
-    assert(f.isDone)
+    assertIsDone(f)
 
     // Closing the Var.async process is asynchronous with closing
     // the Var itself.
     val f1 = o1.close(t)
     assert(closed == t)
-    assert(f1.isDone)
+    assertIsDone(f1)
   }
 
   test("Var.collect: empty") {

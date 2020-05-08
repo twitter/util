@@ -254,7 +254,7 @@ class BufTest
 
   test("Buf.process from and until returns -1 when fully processed") {
     def assertAllProcessed(expected: Array[Byte], buf: Buf, from: Int, until: Int): Unit = {
-      var seen = new mutable.ListBuffer[Byte]()
+      val seen = new mutable.ListBuffer[Byte]()
       val processor = new Buf.Processor {
         def apply(byte: Byte): Boolean = {
           seen += byte
@@ -266,7 +266,6 @@ class BufTest
     }
     val arr = Array.range(0, 9).map(_.toByte)
 
-    val byteArrayOffset = 3
     val byteArray = Buf.ByteArray.Owned(arr, 3, 8)
     assertAllProcessed(Array[Byte](5, 6, 7), byteArray, 2, 5)
 
@@ -458,7 +457,7 @@ class BufTest
     val b1 = Buf.ByteArray.Owned(a1)
     val b2 = Buf.ByteArray.Owned(a2)
     val b3 = Buf.ByteArray.Owned(a3)
-    val b4 = Buf.ByteArray.Owned(a4)
+    val _ = Buf.ByteArray.Owned(a4)
     val comp2 = b1.concat(b2)
     val comp3 = comp2.concat(b3)
 

@@ -2,7 +2,6 @@ package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
 import org.scalatest.FunSuite
-import scala.collection.compat._
 
 class ActivityTest extends FunSuite {
   test("Activity#flatMap") {

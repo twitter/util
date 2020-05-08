@@ -27,7 +27,6 @@ object ActivitySourceTest {
 
   def bufToString(buf: Buf): String = buf match {
     case Buf.Utf8(s) => s
-    case _ => ""
   }
 
 }

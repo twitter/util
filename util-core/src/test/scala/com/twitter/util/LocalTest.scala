@@ -167,7 +167,7 @@ class LocalTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   test("Context should have the same behavior with Map") {
     val context = Local.Context.empty
-    val map = Map.empty[Local.Key, Option[Int]]
+    val map = Map.empty[Local.Key, Int]
 
     forAll(arbitrary[Int], arbitrary[Local.Key]) { (value, key) =>
       if (value % 2 == 0) {
