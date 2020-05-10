@@ -490,7 +490,9 @@ trait ArgumentCapture {
       .zip(arg7)
       .zip(arg8)
       .zip(arg9)
-      .map({ case (((((((((a, b), c), d), e), f), g), h), i), j) => (a, b, c, d, e, f, g, h, i, j) })
+      .map({
+        case (((((((((a, b), c), d), e), f), g), h), i), j) => (a, b, c, d, e, f, g, h, i, j)
+      })
       .toSeq
   }
 
@@ -1548,8 +1550,8 @@ trait ArgumentCapture {
       .zip(arg17)
       .map({
         case (
-            ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
-            r
+              ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
+              r
             ) =>
           (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r)
       })
@@ -1726,8 +1728,10 @@ trait ArgumentCapture {
       .zip(arg18)
       .map({
         case (
-            (((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q), r),
-            s
+              (
+                ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
+                r),
+              s
             ) =>
           (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s)
       })
@@ -1912,14 +1916,14 @@ trait ArgumentCapture {
       .zip(arg19)
       .map({
         case (
-            (
               (
-                ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
-                r
+                (
+                  ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
+                  r
+                ),
+                s
               ),
-              s
-            ),
-            t
+              t
             ) =>
           (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t)
       })
@@ -2112,17 +2116,19 @@ trait ArgumentCapture {
       .zip(arg20)
       .map({
         case (
-            (
               (
                 (
-                  ((((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p), q),
-                  r
+                  (
+                    (
+                      (((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p),
+                      q),
+                    r
+                  ),
+                  s
                 ),
-                s
+                t
               ),
-              t
-            ),
-            u
+              u
             ) =>
           (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u)
       })
@@ -2323,23 +2329,25 @@ trait ArgumentCapture {
       .zip(arg21)
       .map({
         case (
-            (
               (
                 (
                   (
                     (
-                      (((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o), p),
-                      q
+                      (
+                        (
+                          ((((((((((((((a, b), c), d), e), f), g), h), i), j), k), l), m), n), o),
+                          p),
+                        q
+                      ),
+                      r
                     ),
-                    r
+                    s
                   ),
-                  s
+                  t
                 ),
-                t
+                u
               ),
-              u
-            ),
-            v
+              v
             ) =>
           (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v)
       })

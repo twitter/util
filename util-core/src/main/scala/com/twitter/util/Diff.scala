@@ -98,9 +98,11 @@ object Diffable {
     def diff[T](left: Seq[T], right: Seq[T]): SeqDiff[T] =
       if (left.length < right.length) {
         val SeqDiff(_, insert) = diff(left, right.take(left.length))
-        SeqDiff(right.length, insert ++ ((left.length until right.length) map { i =>
-          (i -> right(i))
-        }))
+        SeqDiff(
+          right.length,
+          insert ++ ((left.length until right.length) map { i =>
+            (i -> right(i))
+          }))
       } else if (left.length > right.length) {
         diff(left.take(right.length), right)
       } else {

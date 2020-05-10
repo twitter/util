@@ -165,12 +165,12 @@ class ByteReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   test("readUnsignedIntBE")(forAll { i: Int =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntBE() = i }
-    assert(br.readUnsignedIntBE() == (i & 0xFFFFFFFFL))
+    assert(br.readUnsignedIntBE() == (i & 0xffffffffL))
   })
 
   test("readUnsignedIntLE")(forAll { i: Int =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntLE() = i }
-    assert(br.readUnsignedIntLE() == (i & 0xFFFFFFFFL))
+    assert(br.readUnsignedIntLE() == (i & 0xffffffffL))
   })
 
   val uInt64s: Gen[BigInt] = Gen

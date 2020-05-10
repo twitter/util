@@ -246,7 +246,8 @@ class JsonTunableMapperTest extends FunSuite {
     assert(map(TunableMap.Key[Duration]("timeoutId4"))() == Some(Duration.Undefined))
   }
 
-  test("tunableMapForResources throws an Illegal argument exception when there are multiple paths") {
+  test(
+    "tunableMapForResources throws an Illegal argument exception when there are multiple paths") {
     val rsc = getClass.getClassLoader
       .getResources("com/twitter/tunables/IdForValidJson/instances.json")
       .asScala

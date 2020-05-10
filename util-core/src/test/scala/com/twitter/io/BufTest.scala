@@ -696,7 +696,8 @@ class BufTest
   }
 
   AllCharsets foreach { charset =>
-    test("Buf.StringCoder: %s charset can encode and decode an English phrase".format(charset.name)) {
+    test(
+      "Buf.StringCoder: %s charset can encode and decode an English phrase".format(charset.name)) {
       val coder = new Buf.StringCoder(charset) {}
       val phrase = "Hello, world!"
       val encoded = coder(phrase)

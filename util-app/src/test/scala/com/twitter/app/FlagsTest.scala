@@ -254,7 +254,12 @@ class FlagsTest extends FunSuite {
       new Flag[Int]("something.id", "bar", Left(() => 3), failFastUntilParsed = false)
     assert(somethingIdFlag() == 3) // this logs a message in SEVERE and we get the default value
 
-    val testFlags = new Flags("failFastTest", includeGlobal = false, failFastUntilParsed = true) // added flags will inherit this value
+    val testFlags =
+      new Flags(
+        "failFastTest",
+        includeGlobal = false,
+        failFastUntilParsed = true
+      ) // added flags will inherit this value
     testFlags.add(somethingIdFlag)
     intercept[IllegalStateException] {
       testFlags

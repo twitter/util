@@ -91,10 +91,12 @@ object Tx {
         state match {
           case Idle =>
             val p = new Promise[Result[U]]
-            state = Ackd(this, {
-              case true => p.setValue(Commit(msg))
-              case false => p.setValue(Abort)
-            })
+            state = Ackd(
+              this,
+              {
+                case true => p.setValue(Commit(msg))
+                case false => p.setValue(Abort)
+              })
             p
 
           case Ackd(who, confirm) if who ne this =>

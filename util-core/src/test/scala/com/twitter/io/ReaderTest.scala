@@ -242,7 +242,8 @@ class ReaderTest
     assert(exception.getMessage == exceptionMsg)
   }
 
-  test("Reader.flatten - re-register `curReaderClosep` to listen to the next reader in the stream") {
+  test(
+    "Reader.flatten - re-register `curReaderClosep` to listen to the next reader in the stream") {
     val exceptionMsg = "boom"
 
     val r1 = Reader.value(1)

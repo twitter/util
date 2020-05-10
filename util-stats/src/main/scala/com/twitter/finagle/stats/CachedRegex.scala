@@ -41,13 +41,15 @@ private[stats] class CachedRegex(regex: Regex)
 
   def apply(samples: collection.Map[String, Number]): collection.Map[String, Number] = {
     // don't really want this to be executed in parallel
-    regexMatchCache.forEachKey(Long.MaxValue, new Consumer[String] {
-      def accept(key: String): Unit = {
-        if (!samples.contains(key)) {
-          regexMatchCache.remove(key)
+    regexMatchCache.forEachKey(
+      Long.MaxValue,
+      new Consumer[String] {
+        def accept(key: String): Unit = {
+          if (!samples.contains(key)) {
+            regexMatchCache.remove(key)
+          }
         }
-      }
-    })
+      })
     samples.filterKeys(filterFn).toMap
   }
 }

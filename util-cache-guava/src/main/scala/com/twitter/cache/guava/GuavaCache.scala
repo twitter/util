@@ -18,9 +18,11 @@ import java.util.concurrent.Callable
  */
 class GuavaCache[K, V](cache: GCache[K, Future[V]]) extends ConcurrentMapCache[K, V](cache.asMap) {
   override def getOrElseUpdate(k: K)(v: => Future[V]): Future[V] =
-    cache.get(k, new Callable[Future[V]] {
-      def call(): Future[V] = v
-    })
+    cache.get(
+      k,
+      new Callable[Future[V]] {
+        def call(): Future[V] = v
+      })
 }
 
 /**

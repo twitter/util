@@ -78,7 +78,12 @@ class ZkClientTest extends WordSpec with MockitoSugar {
     }
 
     def delete(path: String, version: Int)(wait: => Future[Unit]): Unit = {
-      when(zk.delete(meq(path), meq(version), any[AsyncCallback.VoidCallback], meq(null))) thenAnswer answer[
+      when(
+        zk.delete(
+          meq(path),
+          meq(version),
+          any[AsyncCallback.VoidCallback],
+          meq(null))) thenAnswer answer[
         AsyncCallback.VoidCallback
       ](2) { cbValue =>
         wait onSuccess { _ =>
@@ -128,7 +133,12 @@ class ZkClientTest extends WordSpec with MockitoSugar {
 
     def getChildren(path: String)(children: => Future[ZNode.Children]): Unit = {
       val cb = ArgumentCaptor.forClass(classOf[AsyncCallback.Children2Callback])
-      when(zk.getChildren(meq(path), meq(false), any[AsyncCallback.Children2Callback], meq(null))) thenAnswer answer[
+      when(
+        zk.getChildren(
+          meq(path),
+          meq(false),
+          any[AsyncCallback.Children2Callback],
+          meq(null))) thenAnswer answer[
         AsyncCallback.Children2Callback
       ](2) { cbValue =>
         children onSuccess { znode =>
@@ -172,7 +182,12 @@ class ZkClientTest extends WordSpec with MockitoSugar {
     }
 
     def getData(path: String)(result: => Future[ZNode.Data]): Unit = {
-      when(zk.getData(meq(path), meq(false), any[AsyncCallback.DataCallback], meq(null))) thenAnswer answer[
+      when(
+        zk.getData(
+          meq(path),
+          meq(false),
+          any[AsyncCallback.DataCallback],
+          meq(null))) thenAnswer answer[
         AsyncCallback.DataCallback
       ](2) { cbValue =>
         result onSuccess { z =>
@@ -783,7 +798,9 @@ class ZkClientTest extends WordSpec with MockitoSugar {
       }.flatten
 
       // Initially, we should get a ZNode.TreeUpdate for each node in the tree with only added nodes
-      val expectedByPath = treeChildren.map { z => z.path -> ZNode.TreeUpdate(z, z.children.toSet) }.toMap
+      val expectedByPath = treeChildren.map { z =>
+        z.path -> ZNode.TreeUpdate(z, z.children.toSet)
+      }.toMap
 
       val updatesByPath = updateTree.map { z =>
         val prior: Set[ZNode] = expectedByPath.get(z.path).map { _.added }.getOrElse(Set.empty)
@@ -885,12 +902,14 @@ class ZkClientTest extends WordSpec with MockitoSugar {
         sync(znode.path) {
           Future.exception(new KeeperException.SystemErrorException)
         }
-        Await.ready(znode.sync() map { _ =>
-          fail("Unexpected success")
-        } handle {
-          case e: KeeperException.SystemErrorException =>
-            assert(e.getPath == znode.path)
-        }, 1.second)
+        Await.ready(
+          znode.sync() map { _ =>
+            fail("Unexpected success")
+          } handle {
+            case e: KeeperException.SystemErrorException =>
+              assert(e.getPath == znode.path)
+          },
+          1.second)
       }
     }
   }

@@ -15,9 +15,11 @@ private[cache] class EvictingCache[K, V](underlying: FutureCache[K, V])
   }
 
   override def getOrElseUpdate(k: K)(v: => Future[V]): Future[V] =
-    evictOnFailure(k, underlying.getOrElseUpdate(k) {
-      v
-    })
+    evictOnFailure(
+      k,
+      underlying.getOrElseUpdate(k) {
+        v
+      })
 }
 
 private[cache] class LazilyEvictingCache[K, V](underlying: FutureCache[K, V])

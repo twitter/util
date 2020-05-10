@@ -39,7 +39,7 @@ object Hashable extends LowPriorityHashable {
   // Some standard hashing:
   def hashCode[T]: Hashable[T, Int] = new Hashable[T, Int] { def apply(t: T) = t.hashCode }
 
-  private[this] val MaxUnsignedInt: Long = 0xFFFFFFFFL
+  private[this] val MaxUnsignedInt: Long = 0xffffffffL
 
   /**
    * FNV fast hashing algorithm in 32 bits.
@@ -50,7 +50,7 @@ object Hashable extends LowPriorityHashable {
       val PRIME: Int = 16777619
       var i = 0
       val len = key.length
-      var rv: Long = 0x811C9DC5L
+      var rv: Long = 0x811c9dc5L
       while (i < len) {
         rv = (rv * PRIME) ^ (key(i) & 0xff)
         i += 1
@@ -70,7 +70,7 @@ object Hashable extends LowPriorityHashable {
       val PRIME: Int = 16777619
       var i = 0
       val len = key.length
-      var rv: Long = 0x811C9DC5L
+      var rv: Long = 0x811c9dc5L
       while (i < len) {
         rv = (rv ^ (key(i) & 0xff)) * PRIME
         i += 1
@@ -90,7 +90,7 @@ object Hashable extends LowPriorityHashable {
       val PRIME: Long = 1099511628211L
       var i = 0
       val len = key.length
-      var rv: Long = 0xCBF29CE484222325L
+      var rv: Long = 0xcbf29ce484222325L
       while (i < len) {
         rv = (rv * PRIME) ^ (key(i) & 0xff)
         i += 1
@@ -110,7 +110,7 @@ object Hashable extends LowPriorityHashable {
       val PRIME: Long = 1099511628211L
       var i = 0
       val len = key.length
-      var rv: Long = 0xCBF29CE484222325L
+      var rv: Long = 0xcbf29ce484222325L
       while (i < len) {
         rv = (rv ^ (key(i) & 0xff)) * PRIME
         i += 1
@@ -159,7 +159,7 @@ object Hashable extends LowPriorityHashable {
         var j = 0
         while (j < 8) {
           if ((rv & 1) != 0) {
-            rv = (rv >> 1) ^ 0xEDB88320L
+            rv = (rv >> 1) ^ 0xedb88320L
           } else {
             rv >>= 1
           }

@@ -425,9 +425,9 @@ private class ByteReaderImpl(buf: Buf) extends ByteReader {
     ret
   }
 
-  def readUnsignedIntBE(): Long = readIntBE() & 0xFFFFFFFFL
+  def readUnsignedIntBE(): Long = readIntBE() & 0xffffffffL
 
-  def readUnsignedIntLE(): Long = readIntLE() & 0xFFFFFFFFL
+  def readUnsignedIntLE(): Long = readIntLE() & 0xffffffffL
 
   // - Long -
   def readLongBE(): Long = {

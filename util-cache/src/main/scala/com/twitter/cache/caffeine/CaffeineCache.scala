@@ -19,9 +19,11 @@ import java.util.function.Function
 class CaffeineCache[K, V](cache: Cache[K, Future[V]])
     extends ConcurrentMapCache[K, V](cache.asMap) {
   override def getOrElseUpdate(k: K)(v: => Future[V]): Future[V] =
-    cache.get(k, new Function[K, Future[V]] {
-      def apply(k: K): Future[V] = v
-    })
+    cache.get(
+      k,
+      new Function[K, Future[V]] {
+        def apply(k: K): Future[V] = v
+      })
 }
 
 /**

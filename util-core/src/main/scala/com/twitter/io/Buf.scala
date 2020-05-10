@@ -140,7 +140,9 @@ abstract class Buf { outer =>
               )
             case Buf.Composite(right: IndexedThree, rightLength) =>
               Buf.Composite(
-                (new VectorBuilder[Buf] += left.a += left.b += left.c += right.a += right.b += right.c)
+                (new VectorBuilder[
+                  Buf
+                ] += left.a += left.b += left.c += right.a += right.b += right.c)
                   .result(),
                 leftLength + rightLength
               )
@@ -993,9 +995,9 @@ object Buf {
   def hash(buf: Buf): Int = finishHash(hashBuf(buf))
 
   // Adapted from util-hashing.
-  private[this] val UintMax: Long = 0xFFFFFFFFL
+  private[this] val UintMax: Long = 0xffffffffL
   private[this] val Fnv1a32Prime: Int = 16777619
-  private[this] val Fnv1a32Init: Long = 0x811C9DC5L
+  private[this] val Fnv1a32Init: Long = 0x811c9dc5L
   private[this] def finishHash(hash: Long): Int = (hash & UintMax).toInt
   private[this] def hashBuf(buf: Buf, init: Long = Fnv1a32Init): Long = buf match {
     case b if b.isEmpty => init

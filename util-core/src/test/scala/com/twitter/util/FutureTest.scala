@@ -1718,12 +1718,16 @@ class FutureTest extends WordSpec with MockitoSugar with ScalaCheckDrivenPropert
     }
   }
 
-  test("ConstFuture", new MkConst {
-    def apply[A](r: Try[A]): Future[A] = Future.const(r)
-  })
-  test("Promise", new MkConst {
-    def apply[A](r: Try[A]): Future[A] = new Promise(r)
-  })
+  test(
+    "ConstFuture",
+    new MkConst {
+      def apply[A](r: Try[A]): Future[A] = Future.const(r)
+    })
+  test(
+    "Promise",
+    new MkConst {
+      def apply[A](r: Try[A]): Future[A] = new Promise(r)
+    })
 
   "Future.apply" should {
     "fail on NLRC" in {

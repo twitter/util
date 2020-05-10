@@ -36,10 +36,12 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     override def observe(d: Int, obs: Observer[T]) = {
       accessCount += 1
       observerCount += 1
-      Closable.all(super.observe(d, obs), Closable.make { deadline =>
-        observerCount -= 1
-        Future.Done
-      })
+      Closable.all(
+        super.observe(d, obs),
+        Closable.make { deadline =>
+          observerCount -= 1
+          Future.Done
+        })
     }
   }
 
@@ -81,8 +83,14 @@ class VarTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
     var result = 0
 
     val o1 = v1.changes.register(Witness({ (i: Int) => result = result + i })) // result = 2
-    val o2 = v1.changes.register(Witness({ (i: Int) => result = result * i * i })) // result = 2 * 2 * 2 = 8
-    val o3 = v1.changes.register(Witness({ (i: Int) => result = result + result + i })) // result = 8 + 8 + 2 = 18
+    val o2 =
+      v1.changes.register(Witness({ (i: Int) =>
+        result = result * i * i
+      })) // result = 2 * 2 * 2 = 8
+    val o3 =
+      v1.changes.register(Witness({ (i: Int) =>
+        result = result + result + i
+      })) // result = 8 + 8 + 2 = 18
 
     assert(result == 18) // ensure those three things happened in sequence
 

@@ -36,7 +36,7 @@ class BufInputStream(val buf: Buf) extends InputStream {
     else {
       val b = buf.get(index)
       index += 1
-      b & 0xFF
+      b & 0xff
     }
   }
 

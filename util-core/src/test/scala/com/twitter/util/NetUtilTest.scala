@@ -51,9 +51,9 @@ class NetUtilTest extends WordSpec {
 
     "ipToInt" in {
       assert(NetUtil.ipToInt("0.0.0.0") == 0)
-      assert(NetUtil.ipToInt("255.255.255.255") == 0xFFFFFFFF)
-      assert(NetUtil.ipToInt("255.255.255.0") == 0xFFFFFF00)
-      assert(NetUtil.ipToInt("255.0.255.0") == 0xFF00FF00)
+      assert(NetUtil.ipToInt("255.255.255.255") == 0xffffffff)
+      assert(NetUtil.ipToInt("255.255.255.0") == 0xffffff00)
+      assert(NetUtil.ipToInt("255.0.255.0") == 0xff00ff00)
       assert(NetUtil.ipToInt("61.197.253.56") == 0x3dc5fd38)
       intercept[IllegalArgumentException] {
         NetUtil.ipToInt("256.0.255.0")
@@ -62,9 +62,9 @@ class NetUtilTest extends WordSpec {
 
     "inetAddressToInt" in {
       assert(NetUtil.inetAddressToInt(InetAddress.getByName("0.0.0.0")) == 0)
-      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.255")) == 0xFFFFFFFF)
-      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.0")) == 0xFFFFFF00)
-      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.0.255.0")) == 0xFF00FF00)
+      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.255")) == 0xffffffff)
+      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.255.255.0")) == 0xffffff00)
+      assert(NetUtil.inetAddressToInt(InetAddress.getByName("255.0.255.0")) == 0xff00ff00)
       assert(NetUtil.inetAddressToInt(InetAddress.getByName("61.197.253.56")) == 0x3dc5fd38)
       intercept[IllegalArgumentException] {
         NetUtil.inetAddressToInt(InetAddress.getByName("::1"))
@@ -72,13 +72,13 @@ class NetUtilTest extends WordSpec {
     }
 
     "cidrToIpBlock" in {
-      assert(NetUtil.cidrToIpBlock("127") == ((0x7F000000, 0xFF000000)))
-      assert(NetUtil.cidrToIpBlock("127.0.0") == ((0x7F000000, 0xFFFFFF00)))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1") == ((0x7F000001, 0xFFFFFFFF)))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/1") == ((0x7F000001, 0x80000000)))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/4") == ((0x7F000001, 0xF0000000)))
-      assert(NetUtil.cidrToIpBlock("127.0.0.1/32") == ((0x7F000001, 0xFFFFFFFF)))
-      assert(NetUtil.cidrToIpBlock("127/24") == ((0x7F000000, 0xFFFFFF00)))
+      assert(NetUtil.cidrToIpBlock("127") == ((0x7f000000, 0xff000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0") == ((0x7f000000, 0xffffff00)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1") == ((0x7f000001, 0xffffffff)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/1") == ((0x7f000001, 0x80000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/4") == ((0x7f000001, 0xf0000000)))
+      assert(NetUtil.cidrToIpBlock("127.0.0.1/32") == ((0x7f000001, 0xffffffff)))
+      assert(NetUtil.cidrToIpBlock("127/24") == ((0x7f000000, 0xffffff00)))
     }
 
     "isInetAddressInBlock" in {
