@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.twitter.util
+package com.twitter.util.security
 
 import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.Checkers

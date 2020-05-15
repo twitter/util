@@ -7,8 +7,17 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-security: Moved Credentials from util-core
+   `c.t.util.Credentials` => `c.t.util.security.Credentials`.
+  ``PHAB_ID=D477984``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+* util-core: Move Credentials to util-security
+   `c.t.util.Credentials` => `c.t.util.security.Credentials`.
+  ``PHAB_ID=D477984``
 
 * util-core: Change the namespace of `ActivitySource` and its derivatives to
   `com.twitter.io` as its no longer considered experimental since the code has

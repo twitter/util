@@ -427,7 +427,10 @@ lazy val utilSecurity = Project(
 ).settings(
     sharedSettings
   ).settings(
-    name := "util-security"
+    name := "util-security",
+    libraryDependencies ++= Seq(
+      scalacheckLib
+    )
   ).dependsOn(utilCore, utilLogging)
 
 lazy val utilStats = Project(
