@@ -230,6 +230,10 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
     </li><li class="current-entities indented4">
+                        <a class="object" href="Credentials$.html" title="Simple helper to read authentication credentials from a text file."></a>
+                        <a class="class" href="Credentials.html" title="Java interface to Credentials."></a>
+                        <a href="Credentials.html" title="Java interface to Credentials.">Credentials</a>
+                      </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="InvalidPemFormatException.html" title="Signals that the PEM file failed to parse properly due to a missing boundary header or footer."></a>
                         <a href="InvalidPemFormatException.html" title="Signals that the PEM file failed to parse properly due to a missing boundary header or footer.">InvalidPemFormatException</a>
@@ -372,7 +376,23 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.twitter.util.security.InvalidPemFormatException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.twitter.util.security.Credentials" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CredentialsextendsAnyRef"></a><a id="Credentials:Credentials"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/security/index.html#CredentialsextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="Java interface to Credentials." href="Credentials.html"><span class="name">Credentials</span></a><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Java interface to Credentials.</p>
+    </li><li name="com.twitter.util.security.InvalidPemFormatException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="InvalidPemFormatExceptionextendsIOException"></a><a id="InvalidPemFormatException:InvalidPemFormatException"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/security/index.html#InvalidPemFormatExceptionextendsIOException" title="Permalink">
@@ -569,7 +589,25 @@ a collection of X.509 certificates.</p>
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="com.twitter.util.security.NullPrincipal" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+                <li name="com.twitter.util.security.Credentials" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Credentials"></a><a id="Credentials:Credentials"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/security/index.html#Credentials" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Simple helper to read authentication credentials from a text file." href="Credentials$.html"><span class="name">Credentials</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Simple helper to read authentication credentials from a text file.</p><div class="fullcomment"><div class="comment cmt"><p>Simple helper to read authentication credentials from a text file.</p><p>The file's format is assumed to be trivialized yaml, containing lines of the form <code><code>key: value</code></code>.
+Keys can be any word character or '-' and values can be any character except new lines.
+</p></div></div>
+    </li><li name="com.twitter.util.security.NullPrincipal" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="NullPrincipal"></a><a id="NullPrincipal:NullPrincipal"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/security/index.html#NullPrincipal" title="Permalink">
