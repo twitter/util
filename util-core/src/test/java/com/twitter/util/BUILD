@@ -4,6 +4,7 @@ java_library(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
+        "3rdparty/jvm/com/google/errorprone:error_prone_annotations"
     ],
 )
 
