@@ -2,6 +2,7 @@ package com.twitter.finagle.stats
 
 import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
+import java.util.function.Supplier
 import scala.annotation.varargs
 
 /**
@@ -29,6 +30,7 @@ object StatsReceiver {
 /**
  * [[StatsReceiver]] utility methods for ease of use from java.
  */
+@deprecated("Use StatsReceiver addGauge and provideGauge methods directly", "2020-06-10")
 object StatsReceivers {
 
   /**
@@ -64,8 +66,6 @@ object StatsReceivers {
  *
  * Metrics created w/o an explicitly specified [[Verbosity]] level, will use [[Verbosity.Default]].
  * Use [[VerbosityAdjustingStatsReceiver]] to adjust this behaviour.
- *
- * @see [[StatsReceivers]] for a Java-friendly API.
  */
 trait StatsReceiver {
 
@@ -134,6 +134,9 @@ trait StatsReceiver {
    *
    * @see [[StatsReceiver.addGauge]] if you can properly control the lifecycle
    *     of the returned [[Gauge gauge]].
+   *
+   * @see [[StatsReceiver.provideGauge(java.util.function.Supplier, String*)]] for a Java-friendly
+   *      version.
    */
   def provideGauge(name: String*)(f: => Float): Unit = {
     val gauge = addGauge(name: _*)(f)
@@ -141,6 +144,13 @@ trait StatsReceiver {
       StatsReceiver.immortalGauges ::= gauge
     }
   }
+
+  /**
+   * Just like [[provideGauge()]] but optimized for better Java experience.
+   */
+  @varargs
+  def provideGauge(f: Supplier[Float], name: String*): Unit =
+    provideGauge(name: _*)(f.get())
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.
@@ -156,6 +166,9 @@ trait StatsReceiver {
    *
    * @see [[StatsReceiver.provideGauge]] when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
+   *
+   * @see [[StatsReceiver.addGauge(java.util.function.Supplier,String*)]] for a Java-friendly
+   *      version.
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
@@ -176,10 +189,26 @@ trait StatsReceiver {
    * @see [[StatsReceiver.provideGauge]] when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    *
+   * @see [[StatsReceiver.addGauge(java.util.function.Supplier,Verbosity,String*)]] for a
+   *      Java-friendly version.
+   *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
     addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))(f)
+
+  /**
+   * Just like [[addGauge(String*,=>Float)]] but optimized for better Java experience.
+   */
+  @varargs
+  def addGauge(f: Supplier[Float], name: String*): Gauge = addGauge(f, Verbosity.Default, name: _*)
+
+  /**
+   * Just like [[addGauge(Verbosity,String*,=>Float)]] but optimized for better Java experience.
+   */
+  @varargs
+  def addGauge(f: Supplier[Float], verbosity: Verbosity, name: String*): Gauge =
+    addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))(f.get())
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.

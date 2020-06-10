@@ -47,14 +47,11 @@ public final class StatsReceiverCompilationTest {
   @Test
   public void testGaugeMethods() {
     InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
-    Callable<Float> callable = new Callable<Float>() {
-      public Float call() {
-        return 3.0f;
-      }
-    };
-    Gauge gauge = StatsReceivers.addGauge(sr, callable, "hello", "world");
-    StatsReceivers.provideGauge(sr, callable, "hello", "world");
-    gauge.remove();
+    Gauge a = sr.addGauge(() -> 3.0f, "hello", "world");
+    Gauge b = sr.addGauge(() -> 4.0f, Verbosity.Debug(), "foo", "bar");
+    sr.provideGauge(() -> 3.0f, "hello", "world");
+    a.remove();
+    b.remove();
   }
 
   @Test

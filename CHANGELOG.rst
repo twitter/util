@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-stats: Add two new Java-friendly methods to `StatsReceiver` (`addGauge` and `provideGauge`)
+  that take java.util.function.Supplier as well as list vararg argument last to enable better
+  developers' experience. ``PHAB_ID=D497885``
+
 20.5.0
 ------
 
