@@ -42,9 +42,6 @@ class WeNeverClose extends App {
 
   closeOnExit(unClosable)
 
-  // and we're never ready
-  override def isReady(implicit permit: Awaitable.CanAwait): Boolean = false
-
   def main(): Unit = {}
 }
 

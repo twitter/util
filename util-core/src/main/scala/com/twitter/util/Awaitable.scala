@@ -222,6 +222,35 @@ private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
     onClose.isReady
 }
 
+// See https://stackoverflow.com/questions/26643045/java-interoperability-woes-with-scala-generics-and-boxing
+private[util] trait CloseOnceAwaitably0[U <: Unit] extends Awaitable[U] { self: CloseOnce =>
+
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
+    closeFuture.ready(timeout)
+    this
+  }
+
+  def result(timeout: Duration)(implicit permit: Awaitable.CanAwait): U =
+    closeFuture.result(timeout).asInstanceOf[U]
+
+  def isReady(implicit permit: Awaitable.CanAwait): Boolean =
+    closeFuture.isReady
+}
+
+/**
+ * A mixin to make an [[com.twitter.util.Awaitable]] out
+ * of a [[com.twitter.util.ClosableOnce]].
+ *
+ * {{{
+ * class MyClosable extends ClosableOnce with CloseOnceAwaitably {
+ *   def closeOnce(deadline: Time) = {
+ *     // close the resource
+ *   }
+ * }
+ * }}}
+ */
+trait CloseOnceAwaitably extends CloseOnceAwaitably0[Unit] { self: CloseOnce => }
+
 /**
  * A mixin to make an [[com.twitter.util.Awaitable]] out
  * of a [[com.twitter.util.Closable]].

@@ -35,7 +35,7 @@ import scala.util.control.NonFatal
  * Note that a missing `main` is OK: mixins may provide behavior that
  * does not require defining a custom `main` method.
  */
-trait App extends Closable with CloseAwaitably {
+trait App extends ClosableOnce with CloseOnceAwaitably {
 
   /** The name of the application, based on the classname */
   val name: String = getClass.getName.stripSuffix("$")
@@ -213,22 +213,15 @@ trait App extends Closable with CloseAwaitably {
   @volatile private[this] var closeDeadline = Time.Top
 
   /**
-   * This is satisfied when all members of `exits` and `lastExits` have closed.
-   *
-   * @note Access needs to be mediated via the intrinsic lock.
-   */
-  private[this] var closing: Future[Unit] = Future.never
-
-  /**
    * Close `closable` when shutdown is requested. Closables are closed in parallel.
    */
   final def closeOnExit(closable: Closable): Unit = synchronized {
-    if (closing == Future.never) {
+    if (isClosed) {
+      // `close()` has already been called, we close eagerly
+      closable.close(closeDeadline)
+    } else {
       // `close()` not yet called, safe to add it
       exits.add(closable)
-    } else {
-      // `close()` already called, we need to close this here, immediately.
-      closable.close(closeDeadline)
     }
   }
 
@@ -244,15 +237,15 @@ trait App extends Closable with CloseAwaitably {
    *       In all cases, the close deadline is enforced.
    */
   final def closeOnExitLast(closable: Closable): Unit = synchronized {
-    if (closing == Future.never) {
-      // `close()` not yet called, safe to add it
-      lastExits.add(closable)
-    } else {
+    if (isClosed) {
       // `close()` already called, we need to close this here, but only
       // after `close()` completes and `closing` is satisfied
-      closing
+      close(closeDeadline)
         .transform { _ => closable.close(closeDeadline) }
         .by(shutdownTimer, closeDeadline)
+    } else {
+      // `close()` not yet called, safe to add it
+      lastExits.add(closable)
     }
   }
 
@@ -289,26 +282,19 @@ trait App extends Closable with CloseAwaitably {
     postmains.add(() => f)
   }
 
-  /**
-   * Notify the application that it may stop running.
-   * Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
-   */
-  final def close(deadline: Time): Future[Unit] = synchronized {
-    closing = closeAwaitably {
-      closeDeadline = deadline.max(Time.now + MinGrace)
-      Future
-        .collectToTry(exits.asScala.toSeq.map(_.close(closeDeadline)))
-        .by(shutdownTimer, closeDeadline)
-        .transform {
-          case Return(results) =>
-            closeLastExits(results, closeDeadline)
-          case Throw(t) =>
-            // this would be triggered by a timeout on the collectToTry of exits,
-            // still try to close last exits
-            closeLastExits(Seq(Throw(t)), closeDeadline)
-        }
-    }
-    closing
+  override protected def closeOnce(deadline: Time): Future[Unit] = synchronized {
+    closeDeadline = deadline.max(Time.now + MinGrace)
+    Future
+      .collectToTry(exits.asScala.toSeq.map(_.close(closeDeadline)))
+      .by(shutdownTimer, closeDeadline)
+      .transform {
+        case Return(results) =>
+          closeLastExits(results, closeDeadline)
+        case Throw(t) =>
+          // this would be triggered by a timeout on the collectToTry of exits,
+          // still try to close last exits
+          closeLastExits(Seq(Throw(t)), closeDeadline)
+      }
   }
 
   private[this] def newCloseException(errors: Seq[Throwable]): CloseException = {
@@ -379,16 +365,17 @@ trait App extends Closable with CloseAwaitably {
 
     for (f <- postmains.asScala) f()
 
-    // We discard this future but we `Await.result` on `this` which is a
-    // `CloseAwaitable`, and this means the thread waits for the future to
-    // complete.
-    close(defaultCloseGracePeriod)
+    // We get a reference to the `close()` Future in order to Await upon it, to ensure the thread
+    // waits for `close()` to complete.
+    // Note that the Future returned here is the same as `promise` exposed via ClosableOnce,
+    // which is the same result that would be returned by an `Await.result` on `this`.
+    val closeFuture = close(defaultCloseGracePeriod)
 
     // The deadline to 'close' is advisory; we enforce it here.
-    if (!suppressGracefulShutdownErrors) Await.result(this, closeDeadline - Time.now)
+    if (!suppressGracefulShutdownErrors) Await.result(closeFuture, closeDeadline - Time.now)
     else {
       try { // even if we suppress shutdown errors, we give the resources time to close
-        Await.ready(this, closeDeadline - Time.now)
+        Await.ready(closeFuture, closeDeadline - Time.now)
       } catch {
         case e: TimeoutException =>
           throw e // we want TimeoutExceptions to propagate

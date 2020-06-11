@@ -34,9 +34,19 @@ trait CloseOnce { self: Closable =>
    * finish up other tasks.
    *
    * @note if this method throws a synchronous exception, that exception will
-   *       be wrapped in a failed future.
+   *       be wrapped in a failed future. If a fatal error is thrown synchronously,
+   *       the error will be wrapped in a failed Future AND thrown directly.
    */
   protected def closeOnce(deadline: Time): Future[Unit]
+
+  /**
+   * The [[Future]] satisfied upon completion of [[close()]].
+   *
+   * @note we do not expose direct access to the underlying [[closePromise Promise]], because
+   *       the [[Promise]] state is mutable - we only want mutation to occur within this
+   *       [[CloseOnce]] trait.
+   */
+  protected final def closeFuture: Future[Unit] = closePromise
 
   /**
    * Signals whether or not this [[Closable]] has been closed.
@@ -48,13 +58,15 @@ trait CloseOnce { self: Closable =>
   override final def close(deadline: Time): Future[Unit] = {
     // only call `closeOnce()` and assign `closePromise` if this is the first `close()` invocation
     if (firstCloseInvoked()) {
-      val closeF =
-        try {
-          closeOnce(deadline)
-        } catch {
-          case NonFatal(ex) => Future.exception(ex)
-        }
-      closePromise.become(closeF)
+      try {
+        closePromise.become(closeOnce(deadline))
+      } catch {
+        case NonFatal(ex) =>
+          closePromise.setException(ex)
+        case t: Throwable =>
+          closePromise.setException(t)
+          throw t
+      }
     }
 
     closePromise
