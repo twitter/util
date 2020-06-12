@@ -1,6 +1,8 @@
 package com.twitter.app
 
 import org.scalatest.FunSuite
+import com.twitter.util.{Duration, Time}
+import java.time.LocalTime
 
 class FlaggableTest extends FunSuite {
 
@@ -14,6 +16,16 @@ class FlaggableTest extends FunSuite {
 
   test("Flaggable: parse strings") {
     assert(Flaggable.ofString.parse("blah") == "blah")
+  }
+
+  test("Flaggagle: parse dates and times") {
+    val t = Time.fromSeconds(123)
+    assert(Flaggable.ofTime.parse(t.toString) == t)
+
+    assert(Flaggable.ofDuration.parse("1.second") == Duration.fromSeconds(1))
+
+    val tt = LocalTime.ofSecondOfDay(123)
+    assert(Flaggable.ofJavaLocalTime.parse(tt.toString) == tt)
   }
 
   test("Flaggable: parse/show inet addresses") {

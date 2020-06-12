@@ -10,6 +10,7 @@ import java.lang.{
   Long => JLong
 }
 import java.net.InetSocketAddress
+import java.time.LocalTime
 import java.util.{List => JList, Map => JMap, Set => JSet}
 import scala.jdk.CollectionConverters._
 
@@ -119,6 +120,8 @@ object Flaggable {
 
   private val defaultTimeFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
   implicit val ofTime: Flaggable[Time] = mandatory(defaultTimeFormat.parse(_))
+
+  implicit val ofJavaLocalTime: Flaggable[LocalTime] = mandatory(LocalTime.parse)
 
   implicit val ofInetSocketAddress: Flaggable[InetSocketAddress] =
     new Flaggable[InetSocketAddress] {
