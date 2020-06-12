@@ -9,12 +9,14 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
-
 * util-stats: Add two new Java-friendly methods to `StatsReceiver` (`addGauge` and `provideGauge`)
   that take java.util.function.Supplier as well as list vararg argument last to enable better
   developers' experience. ``PHAB_ID=D497885``
 
 * util-app: Add a `Flaggable` instance for `java.time.LocalTime`. ``PHAB_ID=D499606``
+
+* util-app: Add two new methods to retrieve flag's unparsed value (as string): `Flag.getUnparsed`
+  and `Flag.getWithDefaultUnparsed`. ``PHAB_ID=D499628``
 
 20.5.0
 ------

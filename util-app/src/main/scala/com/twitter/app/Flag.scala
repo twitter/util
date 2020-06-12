@@ -233,12 +233,30 @@ class Flag[T: Flaggable] private[app] (
   def get: Option[T] = getValue
 
   /**
+   * Get the *unparsed* (as string) value if it has been set.
+   *
+   * @note if no user-defined value has been set, `None` will be returned even when a default value
+   *       is supplied.
+   *
+   * @see [[Flag.getWithDefaultUnparsed]]
+   */
+  def getUnparsed: Option[String] = getValue.map(flaggable.show)
+
+  /**
    * Get the value if it has been set or if there is a default value supplied.
    *
    * @see [[Flag.get]] and [[Flag.isDefined]] if you are interested in
    *      determining if there is a supplied value.
    */
   def getWithDefault: Option[T] = valueOrDefault
+
+  /**
+   * Get the *unparsed* (as string) value if it has been set or if there is a default value supplied.
+   *
+   * @see [[Flag.get]] and [[Flag.isDefined]] if you are interested in
+   *      determining if there is a supplied value.
+   */
+  def getWithDefaultUnparsed: Option[String] = valueOrDefault.map(flaggable.show)
 
   /** String representation of this flag's default value */
   def defaultString(): String = {

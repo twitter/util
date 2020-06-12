@@ -175,6 +175,15 @@ class FlagTest extends FunSuite {
     assert(noDefaultAndSupplied.get.contains(3))
   }
 
+  test("Flag.getUnparsed") {
+    val ctx = new GetCtx()
+    import ctx._
+
+    assert(withDefault.getUnparsed.isEmpty)
+    assert(noDefault.getUnparsed.isEmpty)
+    assert(noDefaultAndSupplied.getUnparsed.contains("3"))
+  }
+
   test("Flag.getWithDefault") {
     val ctx = new GetCtx()
     import ctx._
@@ -182,6 +191,15 @@ class FlagTest extends FunSuite {
     assert(withDefault.getWithDefault.contains(1))
     assert(noDefault.getWithDefault.isEmpty)
     assert(noDefaultAndSupplied.getWithDefault.contains(3))
+  }
+
+  test("Flag.getWithDefaultUnparsed") {
+    val ctx = new GetCtx()
+    import ctx._
+
+    assert(withDefault.getWithDefaultUnparsed.contains("1"))
+    assert(noDefault.getWithDefaultUnparsed.isEmpty)
+    assert(noDefaultAndSupplied.getWithDefaultUnparsed.contains("3"))
   }
 
   test("Flag.usage - new flag value") {
