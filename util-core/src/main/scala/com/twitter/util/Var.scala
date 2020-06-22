@@ -95,28 +95,52 @@ trait Var[+T] { self =>
    * unobserved Var returned by flatMap will not invoke `f`
    */
   def flatMap[U](f: T => Var[U]): Var[U] = new Var[U] {
-    def observe(depth: Int, obs: Observer[U]) = {
-      val inner = new AtomicReference(Closable.nop)
-      val outer = self.observe(
-        depth,
-        Observer(t => {
-          // TODO: Right now we rely on synchronous propagation; and
-          // thus also synchronous closes. We should instead perform
-          // asynchronous propagation so that it is is safe &
-          // predictable to have asynchronously closing Vars, for
-          // example. Currently the only source of potentially
-          // asynchronous closing is Var.async; here we have modified
-          // the external process to close asynchronously with the Var
-          // itself. Thus we know the code path here is synchronous:
-          // we control all Var implementations, and also all Closable
-          // combinators have been modified to evaluate their respective
-          // Futures eagerly.
-          val done = inner.getAndSet(f(t).observe(depth + 1, obs)).close()
-          assert(done.isDone)
-        })
-      )
+    private class ObserverManager(depth: Int, obs: Observer[U]) extends Closable with (T => Unit) {
+      private[this] var closable: Closable = Closable.nop
+      private[this] var closed: Boolean = false
 
-      Closable.sequence(outer, Closable.ref(inner))
+      def apply(t: T): Unit = {
+        // We have to synchronize and make sure we're not already closed or else
+        // we may generate a new observation that has raced with the a `close`
+        // call and lost, therefore making an orphan and a resource leak.
+        val toClose = this.synchronized {
+          if (closed) Closable.nop
+          else {
+            val old = closable
+            closable = f(t).observe(depth + 1, obs)
+            old
+          }
+        }
+        // TODO: Right now we rely on synchronous propagation; and
+        // thus also synchronous closes. We should instead perform
+        // asynchronous propagation so that it is is safe &
+        // predictable to have asynchronously closing Vars, for
+        // example. Currently the only source of potentially
+        // asynchronous closing is Var.async; here we have modified
+        // the external process to close asynchronously with the Var
+        // itself. Thus we know the code path here is synchronous:
+        // we control all Var implementations, and also all Closable
+        // combinators have been modified to evaluate their respective
+        // Futures eagerly.
+        val done = toClose.close()
+        assert(done.isDone)
+      }
+
+      def close(deadline: Time): Future[Unit] = {
+        val toClose = this.synchronized {
+          closed = true
+          val old = closable
+          closable = Closable.nop
+          old
+        }
+        toClose.close(deadline)
+      }
+    }
+
+    def observe(depth: Int, obs: Observer[U]): Closable = {
+      val manager = new ObserverManager(depth, obs)
+      val outer = self.observe(depth, Observer(manager))
+      Closable.sequence(outer, manager)
     }
   }
 
@@ -515,7 +539,7 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
     obs.publish(this, value, version)
 
     new Closable {
-      def close(deadline: Time) = {
+      def close(deadline: Time): Future[Unit] = {
         party.active = false
         cas(_ - party)
         Future.Done
