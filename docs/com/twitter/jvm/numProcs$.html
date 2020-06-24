@@ -545,6 +545,24 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
       <code>public static Flag&lt;?&gt; globalFlagInstance()</code> which
       returns the singleton instance of the flag.
       See <a href="../app/JavaGlobalFlag.html" class="extype" name="com.twitter.app.JavaGlobalFlag">JavaGlobalFlag</a> for more details.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#getUnparsed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getUnparsed:Option[String]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/jvm/numProcs$.html#getUnparsed:Option[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getUnparsed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get the *unparsed* (as string) value if it has been set.</p><div class="fullcomment"><div class="comment cmt"><p>Get the *unparsed* (as string) value if it has been set.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>Note</dt><dd><span class="cmt"><p>if no user-defined value has been set, <code>None</code> will be returned even when a default value
+      is supplied.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#getWithDefaultUnparsed:Option[String]" class="extmbr" name="com.twitter.app.Flag#getWithDefaultUnparsed">Flag.getWithDefaultUnparsed</a></p></span></dd></dl></div>
     </li><li name="com.twitter.jvm.numProcs#getValue" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getValue:Option[Double]"></a>
       <span class="permalink">
@@ -577,6 +595,24 @@ returned even when a default value is supplied.</p></span></dd><dt>See also</dt>
       </span>
       
       <p class="shortcomment cmt">Get the value if it has been set or if there is a default value supplied.</p><div class="fullcomment"><div class="comment cmt"><p>Get the value if it has been set or if there is a default value supplied.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">Flag.get</a> and <a href="../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">Flag.isDefined</a> if you are interested in
+     determining if there is a supplied value.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.Flag#getWithDefaultUnparsed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getWithDefaultUnparsed:Option[String]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/jvm/numProcs$.html#getWithDefaultUnparsed:Option[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getWithDefaultUnparsed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get the *unparsed* (as string) value if it has been set or if there is a default value supplied.</p><div class="fullcomment"><div class="comment cmt"><p>Get the *unparsed* (as string) value if it has been set or if there is a default value supplied.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../app/Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../app/Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">Flag.get</a> and <a href="../app/Flag.html#isDefined:Boolean" class="extmbr" name="com.twitter.app.Flag#isDefined">Flag.isDefined</a> if you are interested in
      determining if there is a supplied value.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">

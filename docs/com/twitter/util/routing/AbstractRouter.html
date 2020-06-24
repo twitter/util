@@ -457,6 +457,25 @@ up other tasks.
       <p class="shortcomment cmt">Close the resource.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource. The returned Future is completed when
 the resource has been fully relinquished.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
+    </li><li name="com.twitter.util.CloseOnce#closeFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="closeFuture:com.twitter.util.Future[Unit]"></a><a id="closeFuture:Future[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/routing/AbstractRouter.html#closeFuture:com.twitter.util.Future[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeFuture</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <span class="extype" name="closePromise">Promise</span>, because
+      the <a href="../Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> state is mutable - we only want mutation to occur within this
+      <a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> trait.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.routing.Router#closeOnce" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="closeOnce(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="closeOnce(Time):Future[Unit]"></a>
       <span class="permalink">

@@ -362,6 +362,10 @@
                         <a class="trait" href="" title="A mixin trait to describe resources that are an idempotent Closable."></a>
                         <a href="" title="A mixin trait to describe resources that are an idempotent Closable.">CloseOnce</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="CloseOnceAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.ClosableOnce."></a>
+                        <a href="CloseOnceAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.ClosableOnce.">CloseOnceAwaitably</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Codec$.html" title=""></a>
                         <a class="trait" href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S"></a>
                         <a href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S">Codec</a>
@@ -790,7 +794,7 @@ as the first invocation irrespective of the deadline provided.
             <span class="toggle">
               Known Subclasses
             </span>
-            <div class="subClasses hiddenContent"><a href="AbstractClosableOnce.html" class="extype" name="com.twitter.util.AbstractClosableOnce">AbstractClosableOnce</a>, <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="routing/AbstractRouter.html" class="extype" name="com.twitter.util.routing.AbstractRouter">AbstractRouter</a>, <a href="routing/Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a></div>
+            <div class="subClasses hiddenContent"><a href="../app/App.html" class="extype" name="com.twitter.app.App">App</a>, <a href="AbstractClosableOnce.html" class="extype" name="com.twitter.util.AbstractClosableOnce">AbstractClosableOnce</a>, <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="routing/AbstractRouter.html" class="extype" name="com.twitter.util.routing.AbstractRouter">AbstractRouter</a>, <a href="routing/Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>, <a href="tunable/linter/ConfigurationLinter$.html" class="extype" name="com.twitter.util.tunable.linter.ConfigurationLinter">ConfigurationLinter</a></div>
           </div></div>
         
 
@@ -859,7 +863,8 @@ as the first invocation irrespective of the deadline provided.
 advisory, giving the callee some leeway, for example to drain clients or
 finish up other tasks.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Note</dt><dd><span class="cmt"><p>if this method throws a synchronous exception, that exception will
-      be wrapped in a failed future.</p></span></dd></dl></div>
+      be wrapped in a failed future. If a fatal error is thrown synchronously,
+      the error will be wrapped in a failed Future AND thrown directly.</p></span></dd></dl></div>
     </li></ol>
             </div>
 
@@ -970,6 +975,25 @@ finish up other tasks.
       </span>
       
       
+    </li><li name="com.twitter.util.CloseOnce#closeFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="closeFuture:com.twitter.util.Future[Unit]"></a><a id="closeFuture:Future[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/CloseOnce.html#closeFuture:com.twitter.util.Future[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeFuture</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">The <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <span class="extype" name="closePromise">Promise</span>, because
+      the <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> state is mutable - we only want mutation to occur within this
+      <a href="" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> trait.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

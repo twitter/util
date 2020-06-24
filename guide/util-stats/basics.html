@@ -1,17 +1,26 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Basics &#8212; Util 20.5.0 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Basics &#8212; Util 20.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '20.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +40,8 @@
 
   </script>
 
-  </head><body>
+  </head>
+  <body>
   
   
 
@@ -63,7 +73,7 @@
 <h2>Gauges<a class="headerlink" href="#gauges" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Gauge.scala">Gauges</a> measure discrete values at the time they are sampled. These are useful for measuring queue
 depths and pool sizes.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">import</span> <span class="nn">java.util.ArrayBlockingQueue</span>
 
 <span class="k">val</span> <span class="n">aQueue</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ArrayBlockingQueue</span><span class="o">[</span><span class="kt">Job</span><span class="o">]()</span>
@@ -73,20 +83,20 @@ depths and pool sizes.</p>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// java</span>
-<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Gauge</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.ArrayBlockingQueue</span><span class="p">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
+<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Gauge</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayBlockingQueue</span><span class="o">;</span>
 
 <span class="n">ArrayBlockingQueue</span><span class="o">&lt;</span><span class="n">Job</span><span class="o">&gt;</span> <span class="n">aQueue</span> <span class="o">=</span>
-  <span class="k">new</span> <span class="n">ArrayBlockingQueue</span><span class="o">&lt;</span><span class="n">Job</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="k">new</span> <span class="n">ArrayBlockingQueue</span><span class="o">&lt;</span><span class="n">Job</span><span class="o">&gt;();</span>
 
-<span class="n">Gauge</span> <span class="n">queueSize</span> <span class="o">=</span> <span class="n">StatsReceivers</span><span class="p">.</span><span class="na">addGauge</span><span class="p">(</span>
-  <span class="n">statsReceiver</span><span class="p">,</span>
-  <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Float</span> <span class="nf">call</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">aQueue</span><span class="p">.</span><span class="na">size</span><span class="p">();</span> <span class="p">}</span>
-  <span class="p">},</span>
+<span class="n">Gauge</span> <span class="n">queueSize</span> <span class="o">=</span> <span class="n">StatsReceivers</span><span class="o">.</span><span class="na">addGauge</span><span class="o">(</span>
+  <span class="n">statsReceiver</span><span class="o">,</span>
+  <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Float</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">aQueue</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="o">}</span>
+  <span class="o">},</span>
   <span class="s">&quot;queue_size&quot;</span>
-<span class="p">);</span>
+<span class="o">);</span>
 </pre></div>
 </div>
 </div>
@@ -94,19 +104,19 @@ depths and pool sizes.</p>
 <h2>Counters<a class="headerlink" href="#counters" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Counter.scala">Counters</a> are used to, well, count how often something happens. Common examples include the number
 of requests dispatched and failure counts.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">val</span> <span class="n">numRequests</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;num_requests&quot;</span><span class="o">)</span>
 
 <span class="n">numRequests</span><span class="o">.</span><span class="n">incr</span><span class="o">()</span>
 </pre></div>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// java</span>
-<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Counter</span><span class="p">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
+<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Counter</span><span class="o">;</span>
 
 <span class="n">Counter</span> <span class="n">numRequests</span> <span class="o">=</span>
-  <span class="n">statsReceiver</span><span class="p">.</span><span class="na">counter</span><span class="p">(</span><span class="n">statsReceiver</span><span class="p">,</span> <span class="s">&quot;num_requests&quot;</span><span class="p">);</span>
+  <span class="n">statsReceiver</span><span class="o">.</span><span class="na">counter</span><span class="o">(</span><span class="n">statsReceiver</span><span class="o">,</span> <span class="s">&quot;num_requests&quot;</span><span class="o">);</span>
 
-<span class="n">numRequests</span><span class="p">.</span><span class="na">incr</span><span class="p">();</span>
+<span class="n">numRequests</span><span class="o">.</span><span class="na">incr</span><span class="o">();</span>
 </pre></div>
 </div>
 </div>
@@ -115,7 +125,7 @@ of requests dispatched and failure counts.</p>
 <p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala">Stats</a> provide a distribution of values that are seen, including percentiles, averages and maximums.
 Stats are quite useful for measuring the n-th percentiles for latency of requests or capturing the
 distribution of work batches.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">import</span> <span class="nn">com.twitter.finagle.stats.Stat</span>
 <span class="k">import</span> <span class="nn">java.util.concurrent.TimeUnit</span>
 
@@ -126,20 +136,20 @@ distribution of work batches.</p>
 <span class="o">}</span>
 </pre></div>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// java</span>
-<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Stat</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.JStat</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="p">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
+<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.Stat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.finagle.stats.JStat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 
-<span class="n">Stat</span> <span class="n">latency</span> <span class="o">=</span> <span class="n">statsReceiver</span><span class="p">.</span><span class="na">stat</span><span class="p">(</span><span class="n">statsReceiver</span><span class="p">,</span> <span class="s">&quot;latency_ms&quot;</span><span class="p">);</span>
+<span class="n">Stat</span> <span class="n">latency</span> <span class="o">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="na">stat</span><span class="o">(</span><span class="n">statsReceiver</span><span class="o">,</span> <span class="s">&quot;latency_ms&quot;</span><span class="o">);</span>
 
-<span class="n">JStat</span><span class="p">.</span><span class="na">time</span><span class="p">(</span>
-  <span class="n">latency</span><span class="p">,</span>
-  <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="p">()</span> <span class="p">{</span> <span class="n">twiddleBits</span><span class="p">();</span> <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="n">TimeUnit</span><span class="p">.</span><span class="na">MILLISECONDS</span>
-<span class="p">);</span>
+<span class="n">JStat</span><span class="o">.</span><span class="na">time</span><span class="o">(</span>
+  <span class="n">latency</span><span class="o">,</span>
+  <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span> <span class="n">twiddleBits</span><span class="o">();</span> <span class="o">}</span>
+  <span class="o">},</span>
+  <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span>
+<span class="o">);</span>
 </pre></div>
 </div>
 </div>
@@ -151,20 +161,20 @@ implementation. Doing this, however, helps to separate debug metrics (only helpf
 troubleshooting) from their operationally-required counterparts (provide visibility into a healthy
 process) thus potentially reducing the observability cost.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Unless an explicit <code class="docutils literal notranslate"><span class="pre">Verbosity</span></code> is passed, <code class="docutils literal notranslate"><span class="pre">Verbosity.Default</span></code> is used.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">Unless an explicit <code class="docutils literal"><span class="pre">Verbosity</span></code> is passed, <code class="docutils literal"><span class="pre">Verbosity.Default</span></code> is used.</p>
 </div>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// scala</span>
 <span class="k">import</span> <span class="nn">com.twitter.finagle.stats.Verbosity</span>
 
 <span class="k">val</span> <span class="n">someDebugEvent</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="nc">Verbosity</span><span class="o">.</span><span class="nc">Debug</span><span class="o">,</span> <span class="s">&quot;some_debug_event&quot;</span><span class="o">)</span>
 </pre></div>
 </div>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// java</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.Counter</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.Verbosity</span><span class="p">;</span>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// java</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Counter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Verbosity</span><span class="o">;</span>
 
-<span class="n">Counter</span> <span class="n">someDebugEvent</span> <span class="o">=</span> <span class="n">statsReceiver</span><span class="p">.</span><span class="na">counter</span><span class="p">(</span><span class="n">Verbosity</span><span class="p">.</span><span class="na">Debug</span><span class="p">(),</span> <span class="s">&quot;some_debug_event&quot;</span><span class="p">)</span>
+<span class="n">Counter</span> <span class="n">someDebugEvent</span> <span class="o">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="na">counter</span><span class="o">(</span><span class="n">Verbosity</span><span class="o">.</span><span class="na">Debug</span><span class="o">(),</span> <span class="s">&quot;some_debug_event&quot;</span><span class="o">)</span>
 </pre></div>
 </div>
 </div>
@@ -185,7 +195,7 @@ process) thus potentially reducing the observability cost.</p>
   <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
   <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
-  <h3><a href="../index.html">Table of Contents</a></h3>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Basics</a><ul>
 <li><a class="reference internal" href="#gauges">Gauges</a></li>

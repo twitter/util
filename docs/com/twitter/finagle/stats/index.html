@@ -910,7 +910,7 @@ troubleshooting) from their <a href="Verbosity$.html#Default:com.twitter.finagle
 a corresponding degree of visibility into a healthy process) thus potentially reducing the
 observability cost.</p><p>Metrics created w/o an explicitly specified <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> level, will use <a href="Verbosity$.html#Default:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Default">Verbosity.Default</a>.
 Use <a href="VerbosityAdjustingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.VerbosityAdjustingStatsReceiver">VerbosityAdjustingStatsReceiver</a> to adjust this behaviour.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceivers$.html" class="extype" name="com.twitter.finagle.stats.StatsReceivers">StatsReceivers</a> for a Java-friendly API.</p></span></dd></dl></div>
+</p></div></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StatsReceiverProxyextendsStatsReceiverwithDelegatingStatsReceiver"></a><a id="StatsReceiverProxy:StatsReceiverProxy"></a>
       <span class="permalink">
@@ -1368,22 +1368,6 @@ errors separately so success rate can from valid non cancelled requests.
       </span>
       
       
-    </li><li name="com.twitter.finagle.stats.StatsReceivers" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="StatsReceivers"></a><a id="StatsReceivers:StatsReceivers"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/index.html#StatsReceivers" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="StatsReceiver utility methods for ease of use from java." href="StatsReceivers$.html"><span class="name">StatsReceivers</span></a>
-      </span>
-      
-      <p class="shortcomment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p>
     </li><li name="com.twitter.finagle.stats.Unspecified" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Unspecified"></a><a id="Unspecified:Unspecified"></a>
       <span class="permalink">
@@ -1422,7 +1406,30 @@ errors separately so success rate can from valid non cancelled requests.
 
         
 
-        
+        <div class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.finagle.stats.StatsReceivers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StatsReceivers"></a><a id="StatsReceivers:StatsReceivers"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/index.html#StatsReceivers" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="StatsReceiver utility methods for ease of use from java." href="StatsReceivers$.html"><span class="name deprecated" title="Deprecated: (Since version 2020-06-10) Use StatsReceiver addGauge and provideGauge methods directly">StatsReceivers</span></a>
+      </span>
+      
+      <p class="shortcomment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p><div class="fullcomment"><div class="comment cmt"><p><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-06-10)</i> Use StatsReceiver addGauge and provideGauge methods directly</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

@@ -1,17 +1,26 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>FAQ &#8212; Util 20.5.0 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FAQ &#8212; Util 20.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '20.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +40,8 @@
 
   </script>
 
-  </head><body>
+  </head>
+  <body>
   
   
 
@@ -74,7 +84,7 @@ To ease the transition, the package namespace was left as is.</p>
 was created for Java developers and Ostrich was created for Scala developers.
 Code initially was written directly to the implementations and there were
 (and still are) some subtle differences in their behavior.
-<code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code> was written in order to bridge the gap between the
+<code class="docutils literal"><span class="pre">StatsReceiver</span></code> was written in order to bridge the gap between the
 two implementations. <cite>finagle-stats</cite> was written quite a bit later in order to
 improve upon both of these implementations in terms of
 allocation efficiency and histogram precision.</p>
@@ -93,35 +103,35 @@ and <a class="reference external" href="https://search.maven.org/#search%7Cga%7C
 <p>The <cite>finagle-stats</cite> library is designed to replace the other two libraries
 formerly supported by Twitter: Ostrich and Commons Stats. The comparison table below
 illustrates the advantages of <cite>finagle-stats</cite> over the older libraries.</p>
-<table class="docutils align-default">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 42%" />
-<col style="width: 21%" />
-<col style="width: 14%" />
-<col style="width: 24%" />
+<col width="42%" />
+<col width="21%" />
+<col width="14%" />
+<col width="24%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>Commons Stats</p></th>
-<th class="head"><p>Ostrich</p></th>
-<th class="head"><p>finagle-stats</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">Commons Stats</th>
+<th class="head">Ostrich</th>
+<th class="head">finagle-stats</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>Allocations per <cite>Stat.add</cite></p></td>
-<td><p>16 bytes</p></td>
-<td><p>0 bytes</p></td>
-<td><p>0 bytes</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>Allocations per <cite>Stat.add</cite></td>
+<td>16 bytes</td>
+<td>0 bytes</td>
+<td>0 bytes</td>
 </tr>
-<tr class="row-odd"><td><p>Highest histogram resolution</p></td>
-<td><p>p99</p></td>
-<td><p>p9999</p></td>
-<td><p>p9999</p></td>
+<tr class="row-odd"><td>Highest histogram resolution</td>
+<td>p99</td>
+<td>p9999</td>
+<td>p9999</td>
 </tr>
-<tr class="row-even"><td><p>Sampling error</p></td>
-<td><p>N/A</p></td>
-<td><p>±5%</p></td>
-<td><p>±0.5%</p></td>
+<tr class="row-even"><td>Sampling error</td>
+<td>N/A</td>
+<td>±5%</td>
+<td>±0.5%</td>
 </tr>
 </tbody>
 </table>
@@ -147,7 +157,7 @@ admin page.</p>
   <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
   <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
-  <h3><a href="../index.html">Table of Contents</a></h3>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">FAQ</a><ul>
 <li><a class="reference internal" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package">Why are util-stats in the com.twitter.finagle.stats package?</a></li>

@@ -1,17 +1,26 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <title>Twitter Futures Capture Points &#8212; Util 20.5.0 documentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Twitter Futures Capture Points &#8212; Util 20.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '20.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +40,8 @@
 
   </script>
 
-  </head><body>
+  </head>
+  <body>
   
   
 
@@ -81,14 +91,14 @@ as of October 2017, the capture points work with only Scala 2.11.11.</p>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>The capture points are defined in
-<code class="docutils literal notranslate"><span class="pre">util/util-intellij/src/main/resources/TwitterFuturesCapturePoints.xml</span></code>.
+<code class="docutils literal"><span class="pre">util/util-intellij/src/main/resources/TwitterFuturesCapturePoints.xml</span></code>.
 To import them into IntelliJ,</p>
 <ol class="arabic simple">
-<li><p>Open IntelliJ. In the menu bar, click IntelliJ IDEA &gt; Preferences.</p></li>
-<li><p>Navigate to Build, Execution, Deployment &gt; Debugger &gt; Async
-Stacktraces.</p></li>
-<li><p>Click the Import icon on the bottom bar. Find the XML file and click
-OK.</p></li>
+<li>Open IntelliJ. In the menu bar, click IntelliJ IDEA &gt; Preferences.</li>
+<li>Navigate to Build, Execution, Deployment &gt; Debugger &gt; Async
+Stacktraces.</li>
+<li>Click the Import icon on the bottom bar. Find the XML file and click
+OK.</li>
 </ol>
 </div>
 <div class="section" id="use">
@@ -100,26 +110,26 @@ you wish to clean up the stack trace, click the funnel icon in the top
 right, “Hide Frames from Libraries”.</p>
 <p>We will illustrate how to use the capture points to assist with
 debugging with a small example. The example is located in
-<code class="docutils literal notranslate"><span class="pre">util/util-intellij/src/test/scala/com/twitter/util/capturepoints/Demo.scala</span></code>.</p>
-<p>A brief explanation of this test: the test passes a <code class="docutils literal notranslate"><span class="pre">Promise[Int]</span></code>
-through three methods and then sets the <code class="docutils literal notranslate"><span class="pre">Promise</span></code>’s value in a
-<code class="docutils literal notranslate"><span class="pre">futurePool</span></code>. The calls are asynchronous, but the logical flow of the
+<code class="docutils literal"><span class="pre">util/util-intellij/src/test/scala/com/twitter/util/capturepoints/Demo.scala</span></code>.</p>
+<p>A brief explanation of this test: the test passes a <code class="docutils literal"><span class="pre">Promise[Int]</span></code>
+through three methods and then sets the <code class="docutils literal"><span class="pre">Promise</span></code>’s value in a
+<code class="docutils literal"><span class="pre">futurePool</span></code>. The calls are asynchronous, but the logical flow of the
 test is as follows:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> block calls <code class="docutils literal notranslate"><span class="pre">someBusinessLogic</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">someBusinessLogic</span></code> calls <code class="docutils literal notranslate"><span class="pre">moreBusinessLogic</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">moreBusinessLogic</span></code> calls <code class="docutils literal notranslate"><span class="pre">lordBusinessLogic</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lordBusinessLogic</span></code> waits for the <code class="docutils literal notranslate"><span class="pre">Promise</span></code>’s value to be set</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">Promise</span></code>’s value is set in the test block (this could happen
-at any time; it is not necessarily step number 5)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lordBusinessLogic</span></code> returns</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>’s <code class="docutils literal notranslate"><span class="pre">result</span></code> variable is <code class="docutils literal notranslate"><span class="pre">4</span></code>, and the test passes</p></li>
+<li><code class="docutils literal"><span class="pre">test</span></code> block calls <code class="docutils literal"><span class="pre">someBusinessLogic</span></code></li>
+<li><code class="docutils literal"><span class="pre">someBusinessLogic</span></code> calls <code class="docutils literal"><span class="pre">moreBusinessLogic</span></code></li>
+<li><code class="docutils literal"><span class="pre">moreBusinessLogic</span></code> calls <code class="docutils literal"><span class="pre">lordBusinessLogic</span></code></li>
+<li><code class="docutils literal"><span class="pre">lordBusinessLogic</span></code> waits for the <code class="docutils literal"><span class="pre">Promise</span></code>’s value to be set</li>
+<li>The <code class="docutils literal"><span class="pre">Promise</span></code>’s value is set in the test block (this could happen
+at any time; it is not necessarily step number 5)</li>
+<li><code class="docutils literal"><span class="pre">lordBusinessLogic</span></code> returns</li>
+<li><code class="docutils literal"><span class="pre">test</span></code>’s <code class="docutils literal"><span class="pre">result</span></code> variable is <code class="docutils literal"><span class="pre">4</span></code>, and the test passes</li>
 </ol>
 <p>Suppose we wish to inspect the stack trace from inside
-<code class="docutils literal notranslate"><span class="pre">lordBusinessLogic</span></code>. If we set a breakpoint at line 47 and then debug
+<code class="docutils literal"><span class="pre">lordBusinessLogic</span></code>. If we set a breakpoint at line 47 and then debug
 the test with pants in IntelliJ with the capture points disabled, we see
 the following stack trace:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span>apply$mcVI$sp:47, Demo$$anonfun$lordBusinessLogic$1
+<div class="highlight-scala"><div class="highlight"><pre><span></span>apply$mcVI$sp:47, Demo$$anonfun$lordBusinessLogic$1
 apply:1820, Future$$anonfun$onSuccess$1
 apply:205, Promise$Monitored
 run:532, Promise$$anon$7
@@ -139,7 +149,7 @@ run:140, ExecutorServiceFuturePool$$anon$4
 <p>The library calls in the stack trace do not help us understand our code.
 If we enable the capture points and again debug the test, we see the
 following stack trace:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span>apply$mcVI$sp:47, Demo$$anonfun$lordBusinessLogic$1
+<div class="highlight-scala"><div class="highlight"><pre><span></span>apply$mcVI$sp:47, Demo$$anonfun$lordBusinessLogic$1
 apply:1820, Future$$anonfun$onSuccess$1
 onSuccess:1819, Future
 lordBusinessLogic:42, Demo
@@ -149,9 +159,9 @@ apply:17, Demo$$anonfun$3
 </pre></div>
 </div>
 <p>This is much cleaner and it includes only calls to functions we wrote.
-It lets us clearly see that the test block called <code class="docutils literal notranslate"><span class="pre">someBusinessLogic</span></code>,
-that <code class="docutils literal notranslate"><span class="pre">someBusinessLogic</span></code> called <code class="docutils literal notranslate"><span class="pre">moreBusinessLogic</span></code>, and that
-<code class="docutils literal notranslate"><span class="pre">moreBusinessLogic</span></code> called <code class="docutils literal notranslate"><span class="pre">lordBusinessLogic</span></code>.</p>
+It lets us clearly see that the test block called <code class="docutils literal"><span class="pre">someBusinessLogic</span></code>,
+that <code class="docutils literal"><span class="pre">someBusinessLogic</span></code> called <code class="docutils literal"><span class="pre">moreBusinessLogic</span></code>, and that
+<code class="docutils literal"><span class="pre">moreBusinessLogic</span></code> called <code class="docutils literal"><span class="pre">lordBusinessLogic</span></code>.</p>
 </div>
 </div>
 
@@ -170,7 +180,7 @@ that <code class="docutils literal notranslate"><span class="pre">someBusinessLo
   <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
   <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
-  <h3><a href="../index.html">Table of Contents</a></h3>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Twitter Futures Capture Points</a><ul>
 <li><a class="reference internal" href="#setup">Setup</a></li>

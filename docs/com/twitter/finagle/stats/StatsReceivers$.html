@@ -356,13 +356,16 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">StatsReceivers</span>
+        <span class="name deprecated" title="Deprecated: (Since version 2020-06-10) Use StatsReceiver addGauge and provideGauge methods directly">StatsReceivers</span>
       </span>
       </h4>
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.
-</p></div><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-06-10)</i> Use StatsReceiver addGauge and provideGauge methods directly</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -482,7 +485,7 @@
         <span class="name">addGauge</span><span class="params">(<span name="statsReceiver">statsReceiver: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="callable">callable: <span class="extype" name="java.util.concurrent.Callable">Callable</span>[<span class="extype" name="java.lang.Float">Float</span>]</span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
       </span>
       
-      <p class="shortcomment cmt">Java compatible version of <a href="StatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Java compatible version of <a href="StatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a>.
+      <p class="shortcomment cmt">Java compatible version of <a href="StatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Java compatible version of <a href="StatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a>.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@varargs</span><span class="args">()</span>
               
@@ -704,7 +707,7 @@
         <span class="name">provideGauge</span><span class="params">(<span name="statsReceiver">statsReceiver: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="callable">callable: <span class="extype" name="java.util.concurrent.Callable">Callable</span>[<span class="extype" name="java.lang.Float">Float</span>]</span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Java compatible version of <a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Java compatible version of <a href="StatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a>.
+      <p class="shortcomment cmt">Java compatible version of <a href="StatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Java compatible version of <a href="StatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a>.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@varargs</span><span class="args">()</span>
               

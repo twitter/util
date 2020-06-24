@@ -538,6 +538,10 @@
                         <a class="trait" href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable."></a>
                         <a href="CloseOnce.html" title="A mixin trait to describe resources that are an idempotent Closable.">CloseOnce</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="trait" href="CloseOnceAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.ClosableOnce."></a>
+                        <a href="CloseOnceAwaitably.html" title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.ClosableOnce.">CloseOnceAwaitably</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Codec$.html" title=""></a>
                         <a class="trait" href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S"></a>
                         <a href="Codec.html" title="A base trait for all Codecs that translate a type T into a serialized form S">Codec</a>
@@ -1416,6 +1420,28 @@ provided deadline while subsequent calls will yield the same <code>Future</code>
 as the first invocation irrespective of the deadline provided.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> if you are not mixing in or extending an existing <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></p></span><span class="cmt"><p><span class="extype" name="ClosableOnce.of(closable:">Closable)</span> for creating a proxy to a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>
       that has already been instantiated.</p></span></dd></dl></div>
+    </li><li name="com.twitter.util.CloseOnceAwaitably" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="CloseOnceAwaitablyextendsCloseOnceAwaitably0[Unit]"></a><a id="CloseOnceAwaitably:CloseOnceAwaitably"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/index.html#CloseOnceAwaitablyextendsCloseOnceAwaitably0[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="A mixin to make an com.twitter.util.Awaitable out of a com.twitter.util.ClosableOnce." href="CloseOnceAwaitably.html"><span class="name">CloseOnceAwaitably</span></a><span class="result"> extends <span class="extype" name="com.twitter.util.CloseOnceAwaitably0">CloseOnceAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">A mixin to make an <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">com.twitter.util.Awaitable</a> out
+of a <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">com.twitter.util.ClosableOnce</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A mixin to make an <a href="Awaitable.html" class="extype" name="com.twitter.util.Awaitable">com.twitter.util.Awaitable</a> out
+of a <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">com.twitter.util.ClosableOnce</a>.</p><pre><span class="kw">class</span> MyClosable <span class="kw">extends</span> ClosableOnce <span class="kw">with</span> CloseOnceAwaitably {
+  <span class="kw">def</span> closeOnce(deadline: Time) = {
+    <span class="cmt">// close the resource</span>
+  }
+}</pre></div></div>
     </li><li name="com.twitter.util.Codec" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Codec[T,S]extendsEncoder[T,S]withDecoder[T,S]"></a><a id="Codec[T,S]:Codec[T,S]"></a>
       <span class="permalink">

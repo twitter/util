@@ -185,7 +185,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>, <a href="../../CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a>, <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>, <a href="../../CloseOnceAwaitably.html" class="extype" name="com.twitter.util.CloseOnceAwaitably">CloseOnceAwaitably</a>, <span class="extype" name="com.twitter.util.CloseOnceAwaitably0">CloseOnceAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a>, <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -211,7 +211,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.util.tunable.linter.ConfigurationLinter"><span>ConfigurationLinter</span></li><li class="in" name="com.twitter.app.App"><span>App</span></li><li class="in" name="com.twitter.util.CloseAwaitably"><span>CloseAwaitably</span></li><li class="in" name="com.twitter.util.CloseAwaitably0"><span>CloseAwaitably0</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.util.tunable.linter.ConfigurationLinter"><span>ConfigurationLinter</span></li><li class="in" name="com.twitter.app.App"><span>App</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably"><span>CloseOnceAwaitably</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably0"><span>CloseOnceAwaitably0</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.ClosableOnce"><span>ClosableOnce</span></li><li class="in" name="com.twitter.util.CloseOnce"><span>CloseOnce</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -374,7 +374,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.app.App#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.CloseOnce#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="close(Time):Future[Unit]"></a>
       <span class="permalink">
       <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" title="Permalink">
@@ -389,9 +389,7 @@
         <span class="name">close</span><span class="params">(<span name="deadline">deadline: <a href="../../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Notify the application that it may stop running.</p><div class="fullcomment"><div class="comment cmt"><p>Notify the application that it may stop running.
-Returns a Future that is satisfied when the App has been torn down or errors at the deadline.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a> → <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd></dl></div>
     </li><li name="com.twitter.util.Closable#close" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="close(after:com.twitter.util.Duration):com.twitter.util.Future[Unit]"></a><a id="close(Duration):Future[Unit]"></a>
       <span class="permalink">
@@ -429,25 +427,25 @@ up other tasks.
       <p class="shortcomment cmt">Close the resource.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource. The returned Future is completed when
 the resource has been fully relinquished.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#closeAwaitably" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="closeAwaitably(f:=&gt;com.twitter.util.Future[U]):com.twitter.util.Future[U]"></a><a id="closeAwaitably(⇒Future[Unit]):Future[Unit]"></a>
+    </li><li name="com.twitter.util.CloseOnce#closeFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="closeFuture:com.twitter.util.Future[Unit]"></a><a id="closeFuture:Future[Unit]"></a>
       <span class="permalink">
-      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#closeAwaitably(f:=&gt;com.twitter.util.Future[U]):com.twitter.util.Future[U]" title="Permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#closeFuture:com.twitter.util.Future[Unit]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">closeAwaitably</span><span class="params">(<span name="f">f: ⇒ <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+        <span class="name">closeFuture</span><span class="result">: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">closeAwaitably is intended to be used as a wrapper for
-<code>close</code>.</p><div class="fullcomment"><div class="comment cmt"><p>closeAwaitably is intended to be used as a wrapper for
-<code>close</code>. The underlying <code>f</code> will be called at most once.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>CloseAwaitably0</dd></dl></div>
+      <p class="shortcomment cmt">The <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <span class="extype" name="closePromise">Promise</span>, because
+      the <a href="../../Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> state is mutable - we only want mutation to occur within this
+      <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> trait.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#closeOnExit" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="closeOnExit(closable:com.twitter.util.Closable):Unit"></a><a id="closeOnExit(Closable):Unit"></a>
       <span class="permalink">
@@ -488,6 +486,27 @@ via <code>closeOnExit</code>.
       for encoding that a monitoring resource should outlive a monitored
       resource.
       In all cases, the close deadline is enforced.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.App#closeOnce" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="closeOnce(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]"></a><a id="closeOnce(Time):Future[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#closeOnce(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">closeOnce</span><span class="params">(<span name="deadline">deadline: <a href="../../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Close the resource with the given deadline exactly once.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given deadline exactly once. This deadline is
+advisory, giving the callee some leeway, for example to drain clients or
+finish up other tasks.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a> → <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>if this method throws a synchronous exception, that exception will
+      be wrapped in a failed future. If a fatal error is thrown synchronously,
+      the error will be wrapped in a failed Future AND thrown directly.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#defaultCloseGracePeriod" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="defaultCloseGracePeriod:com.twitter.util.Duration"></a><a id="defaultCloseGracePeriod:Duration"></a>
       <span class="permalink">
@@ -706,6 +725,23 @@ breaking existing users, it was introduced using <code>false</code>.
       
       <p class="shortcomment cmt">Invoke <code>f</code> before anything else (including flag parsing).</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> before anything else (including flag parsing).
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+    </li><li name="com.twitter.util.CloseOnce#isClosed" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isClosed:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#isClosed:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isClosed</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Signals whether or not this <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> has been closed.</p><div class="fullcomment"><div class="comment cmt"><p>Signals whether or not this <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a> has been closed.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>return true if <a href="../../CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a> has been initiated, false otherwise</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -722,7 +758,7 @@ breaking existing users, it was introduced using <code>false</code>.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#isReady" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.CloseOnceAwaitably0#isReady" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean"></a><a id="isReady(CanAwait):Boolean"></a>
       <span class="permalink">
       <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#isReady(implicitpermit:com.twitter.util.Awaitable.CanAwait):Boolean" title="Permalink">
@@ -741,7 +777,7 @@ breaking existing users, it was introduced using <code>false</code>.
 <a href="../../Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
 </p><div class="fullcomment"><div class="comment cmt"><p>Is this Awaitable ready? In other words: would calling
 <a href="../../Awaitable.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):Awaitable.this.type" class="extmbr" name="com.twitter.util.Awaitable#ready">Awaitable.ready</a> block?
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseOnceAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
     </li><li name="com.twitter.app.App#loadServiceBindings" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]"></a><a id="loadServiceBindings:Seq[Binding[_]]"></a>
       <span class="permalink">
@@ -995,10 +1031,10 @@ implementation parses the given String[] as <a href="../../../app/Flag.html" cla
       
       <p class="shortcomment cmt">Invoke <code>f</code> right before the user's main is invoked.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> right before the user's main is invoked.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#ready" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):CloseAwaitably0.this.type"></a><a id="ready(Duration)(CanAwait):ConfigurationLinter.this.type"></a>
+    </li><li name="com.twitter.util.CloseOnceAwaitably0#ready" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):com.twitter.util.&lt;refinement&gt;.type"></a><a id="ready(Duration)(CanAwait):ConfigurationLinter.this.type"></a>
       <span class="permalink">
-      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):CloseAwaitably0.this.type" title="Permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#ready(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):com.twitter.util.&lt;refinement&gt;.type" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1013,8 +1049,8 @@ implementation parses the given String[] as <a href="../../../app/Flag.html" cla
       <p class="shortcomment cmt">Support for <code>Await.ready</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.ready</code>. The use of the implicit permit is an
 access control mechanism: only <code>Await.ready</code> may call this
 method.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
-    </li><li name="com.twitter.util.CloseAwaitably0#result" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseOnceAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+    </li><li name="com.twitter.util.CloseOnceAwaitably0#result" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):U"></a><a id="result(Duration)(CanAwait):Unit"></a>
       <span class="permalink">
       <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#result(timeout:com.twitter.util.Duration)(implicitpermit:com.twitter.util.Awaitable.CanAwait):U" title="Permalink">
@@ -1032,7 +1068,7 @@ method.
       <p class="shortcomment cmt">Support for <code>Await.result</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Support for <code>Await.result</code>. The use of the implicit permit is an
 access control mechanism: only <code>Await.result</code> may call this
 method.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseOnceAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
     </li><li name="com.twitter.app.App#shutdownTimer" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="shutdownTimer:com.twitter.util.Timer"></a><a id="shutdownTimer:Timer"></a>
       <span class="permalink">
@@ -1182,12 +1218,16 @@ should not be a determinant of the process exit code.
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.app.App">
               <h3>Inherited from <a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></h3>
-            </div><div class="parent" name="com.twitter.util.CloseAwaitably">
-              <h3>Inherited from <a href="../../CloseAwaitably.html" class="extype" name="com.twitter.util.CloseAwaitably">CloseAwaitably</a></h3>
-            </div><div class="parent" name="com.twitter.util.CloseAwaitably0">
-              <h3>Inherited from <span class="extype" name="com.twitter.util.CloseAwaitably0">CloseAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</h3>
+            </div><div class="parent" name="com.twitter.util.CloseOnceAwaitably">
+              <h3>Inherited from <a href="../../CloseOnceAwaitably.html" class="extype" name="com.twitter.util.CloseOnceAwaitably">CloseOnceAwaitably</a></h3>
+            </div><div class="parent" name="com.twitter.util.CloseOnceAwaitably0">
+              <h3>Inherited from <span class="extype" name="com.twitter.util.CloseOnceAwaitably0">CloseOnceAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</h3>
             </div><div class="parent" name="com.twitter.util.Awaitable">
               <h3>Inherited from <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</h3>
+            </div><div class="parent" name="com.twitter.util.ClosableOnce">
+              <h3>Inherited from <a href="../../ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a></h3>
+            </div><div class="parent" name="com.twitter.util.CloseOnce">
+              <h3>Inherited from <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></h3>
             </div><div class="parent" name="com.twitter.util.Closable">
               <h3>Inherited from <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></h3>
             </div><div class="parent" name="scala.AnyRef">
