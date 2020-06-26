@@ -76,7 +76,7 @@ def jdk11GcJavaOptions: Seq[String] = {
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.1")
+  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.3")
 )
 
 val baseSettings = Seq(
@@ -115,6 +115,10 @@ val baseSettings = Seq(
     "-Xlint:-missing-interpolator",
     "-Yrangepos"
   ),
+  scalacOptions ++= {
+    if (scalaBinaryVersion.value == "2.13") List("-Xasync")
+    else Nil
+  },
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),

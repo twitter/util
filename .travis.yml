@@ -26,7 +26,7 @@ before_cache:
 scala:
   - 2.11.12
   - 2.12.8
-  - 2.13.1
+  - 2.13.3
 
 jdk:
   - openjdk8
