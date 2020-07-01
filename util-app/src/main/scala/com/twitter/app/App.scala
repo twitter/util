@@ -1,5 +1,6 @@
 package com.twitter.app
 
+import com.twitter.app.lifecycle.Event._
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.lang.reflect.InvocationTargetException
@@ -35,7 +36,7 @@ import scala.util.control.NonFatal
  * Note that a missing `main` is OK: mixins may provide behavior that
  * does not require defining a custom `main` method.
  */
-trait App extends ClosableOnce with CloseOnceAwaitably {
+trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
 
   /** The name of the application, based on the classname */
   val name: String = getClass.getName.stripSuffix("$")
@@ -289,11 +290,15 @@ trait App extends ClosableOnce with CloseOnceAwaitably {
       .by(shutdownTimer, closeDeadline)
       .transform {
         case Return(results) =>
-          closeLastExits(results, closeDeadline)
+          observeFuture(CloseExitLast) {
+            closeLastExits(results, closeDeadline)
+          }
         case Throw(t) =>
           // this would be triggered by a timeout on the collectToTry of exits,
           // still try to close last exits
-          closeLastExits(Seq(Throw(t)), closeDeadline)
+          observeFuture(CloseExitLast) {
+            closeLastExits(Seq(Throw(t)), closeDeadline)
+          }
       }
   }
 
@@ -342,44 +347,58 @@ trait App extends ClosableOnce with CloseOnceAwaitably {
   }
 
   final def nonExitingMain(args: Array[String]): Unit = {
-    App.register(this)
+    observe(Register) {
+      App.register(this)
+    }
+    observe(LoadBindings) {
+      loadServiceBindings.foreach { binding => LoadService.bind(binding) }
+    }
+    observe(Init) {
+      for (f <- inits) f()
+    }
+    observe(ParseArgs) {
+      parseArgs(args)
+    }
+    observe(PreMain) {
+      for (f <- premains) f()
+    }
+    observe(Main) {
+      // Get a main() if it's defined. It's possible to define traits that only use pre/post mains.
+      val mainMethod =
+        try Some(getClass.getMethod("main"))
+        catch {
+          case _: NoSuchMethodException => None
+        }
 
-    loadServiceBindings.foreach { binding => LoadService.bind(binding) }
-
-    for (f <- inits) f()
-
-    parseArgs(args)
-
-    for (f <- premains) f()
-
-    // Get a main() if it's defined. It's possible to define traits that only use pre/post mains.
-    val mainMethod =
-      try Some(getClass.getMethod("main"))
-      catch { case _: NoSuchMethodException => None }
-
-    // Invoke main() if it exists.
-    mainMethod.foreach { method =>
-      try method.invoke(this)
-      catch { case e: InvocationTargetException => throw e.getCause }
+      // Invoke main() if it exists.
+      mainMethod.foreach { method =>
+        try method.invoke(this)
+        catch {
+          case e: InvocationTargetException => throw e.getCause
+        }
+      }
+    }
+    observe(PostMain) {
+      for (f <- postmains.asScala) f()
     }
 
-    for (f <- postmains.asScala) f()
+    observe(Close) {
+      // We get a reference to the `close()` Future in order to Await upon it, to ensure the thread
+      // waits for `close()` to complete.
+      // Note that the Future returned here is the same as `promise` exposed via ClosableOnce,
+      // which is the same result that would be returned by an `Await.result` on `this`.
+      val closeFuture = close(defaultCloseGracePeriod)
 
-    // We get a reference to the `close()` Future in order to Await upon it, to ensure the thread
-    // waits for `close()` to complete.
-    // Note that the Future returned here is the same as `promise` exposed via ClosableOnce,
-    // which is the same result that would be returned by an `Await.result` on `this`.
-    val closeFuture = close(defaultCloseGracePeriod)
-
-    // The deadline to 'close' is advisory; we enforce it here.
-    if (!suppressGracefulShutdownErrors) Await.result(closeFuture, closeDeadline - Time.now)
-    else {
-      try { // even if we suppress shutdown errors, we give the resources time to close
-        Await.ready(closeFuture, closeDeadline - Time.now)
-      } catch {
-        case e: TimeoutException =>
-          throw e // we want TimeoutExceptions to propagate
-        case NonFatal(_) => ()
+      // The deadline to 'close' is advisory; we enforce it here.
+      if (!suppressGracefulShutdownErrors) Await.result(closeFuture, closeDeadline - Time.now)
+      else {
+        try { // even if we suppress shutdown errors, we give the resources time to close
+          Await.ready(closeFuture, closeDeadline - Time.now)
+        } catch {
+          case e: TimeoutException =>
+            throw e // we want TimeoutExceptions to propagate
+          case NonFatal(_) => ()
+        }
       }
     }
   }

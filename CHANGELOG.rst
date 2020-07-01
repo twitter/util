@@ -7,6 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-app: Add ability to observe App lifecycle events. ``PHAB_ID=D508145``
+
 20.6.0
 ------
 

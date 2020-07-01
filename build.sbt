@@ -185,6 +185,7 @@ lazy val util = Project(
       )
   ).aggregate(
     utilApp,
+    utilAppLifecycle,
     utilBenchmark,
     utilCache,
     utilCacheGuava,
@@ -218,7 +219,16 @@ lazy val utilApp = Project(
     sharedSettings
   ).settings(
     name := "util-app"
-  ).dependsOn(utilCore, utilRegistry)
+  ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
+
+lazy val utilAppLifecycle = Project(
+  id = "util-app-lifecycle",
+  base = file("util-app-lifecycle")
+).settings(
+  sharedSettings
+).settings(
+  name := "util-app-lifecycle"
+).dependsOn(utilCore)
 
 lazy val utilBenchmark = Project(
   id = "util-benchmark",

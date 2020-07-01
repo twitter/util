@@ -1,10 +1,13 @@
 package com.twitter.app
 
+import com.twitter.app.lifecycle.Event._
+import com.twitter.app.lifecycle.{Event, Observer}
 import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.util.concurrent.ConcurrentLinkedQueue
 import org.scalatest.FunSuite
+import scala.jdk.CollectionConverters._
 import scala.language.reflectiveCalls
 
 class TestApp(f: () => Unit) extends App {
@@ -98,8 +101,6 @@ class AppTest extends FunSuite {
   }
 
   test("App: order of hooks") {
-    import scala.jdk.CollectionConverters._
-
     val q = new ConcurrentLinkedQueue[Int]
     class Test1 extends App {
       onExitLast(q.add(5))
@@ -111,6 +112,48 @@ class AppTest extends FunSuite {
     }
     new Test1().main(Array.empty)
     assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4, 5))
+  }
+
+  test("App: order of hooks via observer") {
+    val enterQueue = new ConcurrentLinkedQueue[Event]
+    val completeQueue = new ConcurrentLinkedQueue[Event]
+    val observer = new Observer {
+      override def onEntry(event: Event): Unit = enterQueue.add(event)
+      def onSuccess(event: Event): Unit = completeQueue.add(event)
+      def onFailure(event: Event, throwable: Throwable): Unit =
+        completeQueue.add(event)
+    }
+
+    class ObservedApp extends App
+    val test = new ObservedApp
+    test.withObserver(observer)
+    test.main(Array.empty)
+
+    assert(
+      enterQueue.asScala.toSeq == Seq(
+        Register,
+        LoadBindings,
+        Init,
+        ParseArgs,
+        PreMain,
+        Main,
+        PostMain,
+        Close,
+        CloseExitLast
+      ))
+
+    assert(
+      completeQueue.asScala.toSeq == Seq(
+        Register,
+        LoadBindings,
+        Init,
+        ParseArgs,
+        PreMain,
+        Main,
+        PostMain,
+        CloseExitLast, // CloseExitLast COMPLETES within the Close phase
+        Close
+      ))
   }
 
   test("loadServiceBinds") {
