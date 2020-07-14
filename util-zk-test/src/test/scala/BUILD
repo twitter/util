@@ -1,5 +1,11 @@
-target(
+junit_tests(
+    sources = ["**/*.scala"],
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
-        "util/util-zk-test/src/test/scala/com/twitter/zk",
+        "3rdparty/jvm/junit",
+        "3rdparty/jvm/org/apache/zookeeper:zookeeper-server",
+        "3rdparty/jvm/org/scalatest",
+        "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-zk-test/src/main/scala/com/twitter/zk",
     ],
 )

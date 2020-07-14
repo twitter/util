@@ -1,5 +1,8 @@
-target(
+junit_tests(
+    sources = ["**/*.java"],
+    compiler_option_sets = ["fatal_warnings"],
     dependencies = [
-        "util/util-jvm/src/test/java/com/twitter/jvm",
+        "3rdparty/jvm/junit",
+        "util/util-jvm/src/main/scala/com/twitter/jvm",
     ],
 )
