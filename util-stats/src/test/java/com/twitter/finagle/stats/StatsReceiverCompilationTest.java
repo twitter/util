@@ -63,6 +63,7 @@ public final class StatsReceiverCompilationTest {
     counter.incr(100);
   }
 
+  @Test
   public void testScope() {
     InMemoryStatsReceiver sr = new InMemoryStatsReceiver();
     StatsReceiver sr2 = sr.scope();
