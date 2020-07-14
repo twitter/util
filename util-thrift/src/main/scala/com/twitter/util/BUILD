@@ -9,9 +9,11 @@ scala_library(
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
         "3rdparty/jvm/org/apache/thrift:libthrift",
         "util/util-codec/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
     exports = [
         "3rdparty/jvm/org/apache/thrift:libthrift",
         "util/util-codec/src/main/scala/com/twitter/util",
+        "util/util-core:util-core-util",
     ],
 )
