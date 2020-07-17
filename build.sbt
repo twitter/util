@@ -17,7 +17,7 @@ val jacksonVersion = "2.11.0"
 val guavaLib = "com.google.guava" % "guava" % "25.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.5"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
-val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
+val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 
 def travisTestJavaOptions: Seq[String] = {
@@ -89,7 +89,9 @@ val baseSettings = Seq(
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
     "org.mockito" % "mockito-all" % "1.10.19" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+    "org.scalatest" %% "scalatest" % "3.1.1" % "test",
+    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test",
+    "org.scalatestplus" %% "mockito_1-10" % "3.1.0.0" % "test"
   ),
   fork in Test := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
@@ -293,7 +295,8 @@ lazy val utilCore = Project(
       caffeineLib % "test",
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     ),
     resourceGenerators in Compile += Def.task {
       val projectName = name.value
@@ -356,7 +359,10 @@ lazy val utilHashing = Project(
     sharedSettings
   ).settings(
     name := "util-hashing",
-    libraryDependencies += scalacheckLib
+    libraryDependencies ++= Seq(
+      scalacheckLib,
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
+    )
   ).dependsOn(utilCore % "test")
 
 lazy val utilIntellij = Project(
@@ -436,7 +442,8 @@ lazy val utilSecurity = Project(
   ).settings(
     name := "util-security",
     libraryDependencies ++= Seq(
-      scalacheckLib
+      scalacheckLib,
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilCore, utilLogging)
 
@@ -447,7 +454,12 @@ lazy val utilStats = Project(
     sharedSettings
   ).settings(
     name := "util-stats",
-    libraryDependencies ++= Seq(caffeineLib, jsr305Lib, scalacheckLib) ++ {
+    libraryDependencies ++= Seq(
+      caffeineLib,
+      jsr305Lib,
+      scalacheckLib,
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
+    ) ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, major)) if major >= 13 =>
           Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0" % "test")
@@ -474,8 +486,10 @@ lazy val utilTest = Project(
   ).settings(
     name := "util-test",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.0",
-      "org.mockito" % "mockito-all" % "1.10.19"
+      "org.mockito" % "mockito-all" % "1.10.19",
+      "org.scalatest" %% "scalatest" % "3.1.1",
+      "org.scalatestplus" %% "junit-4-12" % "3.1.2.0",
+      "org.scalatestplus" %% "mockito_1-10" % "3.1.1.0"
     )
   ).dependsOn(utilCore, utilLogging)
 

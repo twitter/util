@@ -5,6 +5,8 @@ junit_tests(
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",
+        "3rdparty/jvm/org/scalatestplus:junit",
+        "3rdparty/jvm/org/scalatestplus:mockito-1-10",
         "util/util-app/src/main/scala",
         "util/util-app/src/test/resources",
         "util/util-core:util-core-util",

@@ -5,6 +5,7 @@ junit_tests(
     dependencies = [
         "3rdparty/jvm/org/scala-lang/modules:scala-xml",
         "3rdparty/jvm/org/scalatest",
+        "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-core:util-core-util",
         "util/util-intellij/src/main/resources",
     ],

@@ -6,6 +6,7 @@ junit_tests(
         "3rdparty/jvm/com/google/guava",
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatest",
+        "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-cache-guava/src/main/scala/com/twitter/cache/guava",
         "util/util-cache/src/main/scala/com/twitter/cache",
         "util/util-cache/src/test/scala/com/twitter/cache:abstract_tests",

@@ -8,13 +8,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import org.apache.zookeeper.KeeperException.NoNodeException
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 import org.scalatest.WordSpec
-import org.scalatest.concurrent.AsyncAssertions
+import org.scalatest.concurrent.Waiters
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.mockito.MockitoSugar
 import scala.jdk.CollectionConverters._
 
-class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with AsyncAssertions {
+class ZkAsyncSemaphoreTest extends WordSpec with MockitoSugar with Waiters {
 
   "ZkAsyncSemaphore" should {
 

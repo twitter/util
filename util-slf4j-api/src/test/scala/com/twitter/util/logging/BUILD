@@ -7,6 +7,8 @@ junit_tests(
     dependencies = [
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",
+        "3rdparty/jvm/org/scalatestplus:junit",
+        "3rdparty/jvm/org/scalatestplus:mockito-1-10",
         "3rdparty/jvm/org/slf4j:slf4j-api",
         "3rdparty/jvm/org/slf4j:slf4j-simple",
         "util/util-core/src/main/scala/com/twitter/io",

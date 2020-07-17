@@ -6,8 +6,10 @@ junit_tests(
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalacheck",
         "3rdparty/jvm/org/scalatest",
-        "util/util-core/src/main/scala/com/twitter/conversions",
+        "3rdparty/jvm/org/scalatestplus:junit",
+        "3rdparty/jvm/org/scalatestplus:scalacheck",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/conversions",
         "util/util-stats/src/main/scala/com/twitter/finagle/stats",
     ],
 )

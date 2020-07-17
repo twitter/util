@@ -4,6 +4,7 @@ junit_tests(
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scala-lang:scala-library",
+        "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-app/src/main/java/com/twitter/app",
         "util/util-app/src/main/scala",
         "util/util-core:util-core-util",

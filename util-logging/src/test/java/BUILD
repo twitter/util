@@ -3,6 +3,7 @@ junit_tests(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/junit",
+        "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-logging/src/main/scala/com/twitter/logging",
     ],
 )
