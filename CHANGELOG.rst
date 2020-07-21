@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+* util-app: Treat empty strings as empty collections in `Flag[Seq[_]]`, `Flag[Set[_]]`,
+  `Flag[java.util.List[_]]`, and `Flag[java.util.Set[_]]`. They were treated as collections
+  with single element, empty string, before. ``PHAB_ID=D516724``
+
 20.7.0
 ------
 

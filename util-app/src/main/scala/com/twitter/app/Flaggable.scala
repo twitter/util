@@ -169,14 +169,18 @@ object Flaggable {
   private[app] class SetFlaggable[T: Flaggable] extends Flaggable[Set[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
-    override def parse(v: String): Set[T] = v.split(",").iterator.map(flag.parse(_)).toSet
+    override def parse(v: String): Set[T] =
+      if (v.isEmpty) Set.empty[T]
+      else v.split(",").iterator.map(flag.parse(_)).toSet
     override def show(set: Set[T]): String = set.map(flag.show).mkString(",")
   }
 
   private[app] class SeqFlaggable[T: Flaggable] extends Flaggable[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)
-    def parse(v: String): Seq[T] = v.split(",").toSeq.map(flag.parse)
+    def parse(v: String): Seq[T] =
+      if (v.isEmpty) Seq.empty[T]
+      else v.split(",").toSeq.map(flag.parse)
     override def show(seq: Seq[T]): String = seq.map(flag.show).mkString(",")
   }
 

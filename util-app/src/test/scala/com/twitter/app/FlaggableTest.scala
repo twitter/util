@@ -47,6 +47,12 @@ class FlaggableTest extends FunSuite {
 
   test("Flaggable: parse seqs") {
     assert(Flaggable.ofSeq[Int].parse("1,2,3,4") == Seq(1, 2, 3, 4))
+    assert(Flaggable.ofSeq[Int].parse("") == Seq.empty[Int])
+  }
+
+  test("Flaggable: parse sets") {
+    assert(Flaggable.ofSet[Int].parse("1,2,3,4") == Set(1, 2, 3, 4))
+    assert(Flaggable.ofSet[Int].parse("") == Set.empty[Int])
   }
 
   test("Flaggable: parse maps") {
