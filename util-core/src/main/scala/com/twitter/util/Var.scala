@@ -183,7 +183,7 @@ object Var {
    * A Var observer. Observers are owned by exactly one producer,
    * enforced by a leasing mechanism.
    */
-  private[util] class Observer[-T](observe: T => Unit) {
+  final class Observer[-T](observe: T => Unit) {
     private[this] var thisOwner: AnyRef = null
     private[this] var thisVersion = Long.MinValue
 
@@ -214,7 +214,7 @@ object Var {
     }
   }
 
-  private[util] object Observer {
+  object Observer {
     def apply[T](k: T => Unit): Observer[T] = new Observer(k)
   }
 

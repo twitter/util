@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-core: c.t.u.Var.Observer is now public. This allows scala users to extend the Var trait
+  as has been the case for Java users. ``PHAB_ID=D520237``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * util-app: Treat empty strings as empty collections in `Flag[Seq[_]]`, `Flag[Set[_]]`,
