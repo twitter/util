@@ -185,7 +185,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>, <a href="../../CloseOnceAwaitably.html" class="extype" name="com.twitter.util.CloseOnceAwaitably">CloseOnceAwaitably</a>, <span class="extype" name="com.twitter.util.CloseOnceAwaitably0">CloseOnceAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a>, <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a>, <span class="extype" name="com.twitter.app.Lifecycle">Lifecycle</span>, <a href="../../CloseOnceAwaitably.html" class="extype" name="com.twitter.util.CloseOnceAwaitably">CloseOnceAwaitably</a>, <span class="extype" name="com.twitter.util.CloseOnceAwaitably0">CloseOnceAwaitably0</span>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>], <a href="../../ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a>, <a href="../../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a>, <a href="../../Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>, <a href="../../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.8/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -211,7 +211,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.util.tunable.linter.ConfigurationLinter"><span>ConfigurationLinter</span></li><li class="in" name="com.twitter.app.App"><span>App</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably"><span>CloseOnceAwaitably</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably0"><span>CloseOnceAwaitably0</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.ClosableOnce"><span>ClosableOnce</span></li><li class="in" name="com.twitter.util.CloseOnce"><span>CloseOnce</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.util.tunable.linter.ConfigurationLinter"><span>ConfigurationLinter</span></li><li class="in" name="com.twitter.app.App"><span>App</span></li><li class="in" name="com.twitter.app.Lifecycle"><span>Lifecycle</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably"><span>CloseOnceAwaitably</span></li><li class="in" name="com.twitter.util.CloseOnceAwaitably0"><span>CloseOnceAwaitably0</span></li><li class="in" name="com.twitter.util.Awaitable"><span>Awaitable</span></li><li class="in" name="com.twitter.util.ClosableOnce"><span>ClosableOnce</span></li><li class="in" name="com.twitter.util.CloseOnce"><span>CloseOnce</span></li><li class="in" name="com.twitter.util.Closable"><span>Closable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -940,6 +940,42 @@ and flag parsing.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.app.Lifecycle#observe" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="observe(event:com.twitter.app.lifecycle.Event)(f:=&gt;Unit):Unit"></a><a id="observe(app.lifecycle.Event)(⇒Unit):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#observe(event:com.twitter.app.lifecycle.Event)(f:=&gt;Unit):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">observe</span><span class="params">(<span name="event">event: <span class="extype" name="com.twitter.app.lifecycle.Event">app.lifecycle.Event</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Lifecycle</dd></dl></div>
+    </li><li name="com.twitter.app.Lifecycle#observeFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="observeFuture(event:com.twitter.app.lifecycle.Event)(f:com.twitter.util.Future[Unit]):com.twitter.util.Future[Unit]"></a><a id="observeFuture(app.lifecycle.Event)(Future[Unit]):Future[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#observeFuture(event:com.twitter.app.lifecycle.Event)(f:com.twitter.util.Future[Unit]):com.twitter.util.Future[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">observeFuture</span><span class="params">(<span name="event">event: <span class="extype" name="com.twitter.app.lifecycle.Event">app.lifecycle.Event</span></span>)</span><span class="params">(<span name="f">f: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="http://www.scala-lang.org/api/2.12.8/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Notifies <span class="extype" name="Observer">observers</span> of <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a> <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <span class="extype" name="Observer">observers</span> of <a href="../../Future.html" class="extype" name="com.twitter.util.Future">Future</a> <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Lifecycle</dd></dl></div>
     </li><li name="com.twitter.app.App#onExit" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onExit(f:=&gt;Unit):Unit"></a><a id="onExit(⇒Unit):Unit"></a>
       <span class="permalink">
@@ -1218,6 +1254,8 @@ should not be a determinant of the process exit code.
         <div id="inheritedMembers">
         <div class="parent" name="com.twitter.app.App">
               <h3>Inherited from <a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></h3>
+            </div><div class="parent" name="com.twitter.app.Lifecycle">
+              <h3>Inherited from <span class="extype" name="com.twitter.app.Lifecycle">Lifecycle</span></h3>
             </div><div class="parent" name="com.twitter.util.CloseOnceAwaitably">
               <h3>Inherited from <a href="../../CloseOnceAwaitably.html" class="extype" name="com.twitter.util.CloseOnceAwaitably">CloseOnceAwaitably</a></h3>
             </div><div class="parent" name="com.twitter.util.CloseOnceAwaitably0">
