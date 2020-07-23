@@ -24,10 +24,10 @@ public API breaks and changes in runtime behavior.
 
 ## Contributing
 
-The `master` branch of this repository contains the latest stable release of
+The `release` branch of this repository contains the latest stable release of
 Util, and weekly snapshots are published to the `develop` branch. In general
 pull requests should be submitted against `develop`. See
-[CONTRIBUTING.md](https://github.com/twitter/util/blob/master/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/twitter/util/blob/release/CONTRIBUTING.md)
 for more details about how to contribute.
 
 # Using in your project
