@@ -16,6 +16,7 @@ junit_tests(
         "util/util-cache/src/main/scala/com/twitter/cache",
         "util/util-cache/src/main/scala/com/twitter/cache/caffeine",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/conversions",
     ],
 )
 

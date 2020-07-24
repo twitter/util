@@ -9,4 +9,5 @@ scala_library(
         "util/util-core:util-core-util",
         "util/util-logging/src/main/scala",
     ],
+    exports = ["util/util-logging/src/main/scala"],
 )

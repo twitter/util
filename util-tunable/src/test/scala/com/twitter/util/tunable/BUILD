@@ -10,6 +10,7 @@ junit_tests(
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/conversions",
         "util/util-tunable/src/main/scala/com/twitter/util/tunable",
         "util/util-tunable/src/test/resources",
     ],

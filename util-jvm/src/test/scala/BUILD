@@ -2,6 +2,7 @@ COMMON_DEPS = [
     "3rdparty/jvm/junit",
     "3rdparty/jvm/org/mockito:mockito-all",
     "3rdparty/jvm/org/scalatest",
+    "3rdparty/jvm/org/scalatestplus:mockito-1-10",
     "util/util-app/src/main/scala",
     "util/util-core:util-core-util",
     "util/util-jvm/src/main/scala/com/twitter/jvm",
