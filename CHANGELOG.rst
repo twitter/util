@@ -9,6 +9,8 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
+* util-stats: Store MetricSchemas in InMemoryStatsReceiver to enable further testing. ``PHAB_ID=D518195``
+
 * util-core: c.t.u.Var.Observer is now public. This allows scala users to extend the Var trait
   as has been the case for Java users. ``PHAB_ID=D520237``
 

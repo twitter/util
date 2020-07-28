@@ -313,4 +313,46 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
     }
   }
   // scalafix:on StoreGaugesAsMemberVariables
+
+  test("creating metrics stores their metadata and clear()ing should remove that metadata") {
+    val stats = new InMemoryStatsReceiver()
+    stats.addGauge("coolGauge") { 3 }
+    assert(stats.schemas(Seq("coolGauge")).isInstanceOf[MetricSchema])
+    stats.counter("sweetCounter")
+    assert(stats.schemas(Seq("sweetCounter")).isInstanceOf[MetricSchema])
+    stats.stat("radHisto")
+    assert(stats.schemas(Seq("radHisto")).isInstanceOf[MetricSchema])
+
+    stats.clear()
+    assert(stats.schemas.isEmpty)
+  }
+
+  test("printSchemas should print schemas") {
+    val stats = new InMemoryStatsReceiver()
+    stats.addGauge("coolGauge") { 3 }
+    stats.counter("sweetCounter")
+    stats.stat("radHisto")
+
+    val baos = new ByteArrayOutputStream()
+    val ps = new PrintStream(baos, true, "utf-8")
+    try {
+      stats.printSchemas(ps)
+      val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
+      println(content)
+      val parts = content.split('\n')
+
+      assert(parts.length == 3)
+      assert(
+        parts(
+          0) == "coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(coolGauge), None, Vector(), InMemoryStatsReceiver))")
+      assert(
+        parts(
+          1) == "radHisto HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(radHisto), None, Vector(), InMemoryStatsReceiver))")
+      assert(
+        parts(
+          2) == "sweetCounter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(sweetCounter), None, Vector(), InMemoryStatsReceiver))")
+    } finally {
+      ps.close()
+    }
+  }
 }

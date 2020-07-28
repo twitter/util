@@ -65,6 +65,9 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val gauges: mutable.Map[Seq[String], () => Float] =
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
+  val schemas: mutable.Map[Seq[String], MetricSchema] =
+    new ConcurrentHashMap[Seq[String], MetricSchema]().asScala
+
   override def counter(name: String*): ReadableCounter =
     counter(CounterSchema(this.metricBuilder().withName(name)))
 
@@ -80,6 +83,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       counters.synchronized {
         if (!counters.contains(schema.metricBuilder.name)) {
           counters(schema.metricBuilder.name) = 0
+          schemas(schema.metricBuilder.name) = schema
         }
       }
 
@@ -109,6 +113,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       stats.synchronized {
         if (!stats.contains(schema.metricBuilder.name)) {
           stats(schema.metricBuilder.name) = Nil
+          schemas(schema.metricBuilder.name) = schema
         }
       }
 
@@ -131,10 +136,12 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     new Gauge {
 
       gauges += schema.metricBuilder.name -> (() => f)
+      schemas += schema.metricBuilder.name -> schema
       verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
 
       def remove(): Unit = {
         gauges -= schema.metricBuilder.name
+        schemas -= schema.metricBuilder.name
       }
 
       override def toString: String = {
@@ -190,13 +197,25 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   }
 
   /**
-   * Clears all registered counters, gauges and stats.
+   * Dumps this in-memory stats receiver's MetricMetadata to the given [[PrintStream]].
+   * @param p the [[PrintStream]] to which to write in-memory metadata.
+   */
+  def printSchemas(p: PrintStream): Unit = {
+    val sortedSchemas = schemas.mapKeys(_.mkString("/")).toSortedMap
+    for ((k, schema) <- sortedSchemas) {
+      p.println(s"$k $schema")
+    }
+  }
+
+  /**
+   * Clears all registered counters, gauges, stats, and their metadata.
    * @note this is not atomic. If new metrics are added while this method is executing, those metrics may remain.
    */
   def clear(): Unit = {
     counters.clear()
     stats.clear()
     gauges.clear()
+    schemas.clear()
   }
 
   private[this] def toHistogramDetail(addedValues: Seq[Float]): HistogramDetail = {
