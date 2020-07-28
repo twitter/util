@@ -1,15 +1,20 @@
 package com.twitter.logging;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import scala.Function0;
 
 // Just make sure this compiles
-public class LoggerFactoryTest extends TestCase {
+public class LoggerFactoryTest {
 
+  @Test
   public void testBuilder() {
     LoggerFactoryBuilder builder = LoggerFactory.newBuilder();
   }
 
+  @Test
   public void testFactory() {
     LoggerFactoryBuilder builder = LoggerFactory.newBuilder();
 
@@ -24,6 +29,7 @@ public class LoggerFactoryTest extends TestCase {
     LoggerFactory factory = intermediate.build();
   }
 
+  @Test
   public void testAddHandler() {
     LoggerFactoryBuilder builder = LoggerFactory.newBuilder();
 

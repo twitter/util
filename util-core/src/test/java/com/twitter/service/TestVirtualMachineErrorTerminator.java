@@ -1,11 +1,14 @@
 package com.twitter.service;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author Attila Szegedi
  */
-public class TestVirtualMachineErrorTerminator extends TestCase
+public class TestVirtualMachineErrorTerminator
 {
     private static boolean exitInvoked;
     private static final Object lock = new Object();
