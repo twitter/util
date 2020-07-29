@@ -14,6 +14,8 @@ New Features
 * util-core: c.t.u.Var.Observer is now public. This allows scala users to extend the Var trait
   as has been the case for Java users. ``PHAB_ID=D520237``
 
+* util-core: Added two new methods to c.t.u.Duration and c.t.u.Time: `.fromHours` and `.fromDays`. ``PHAB_ID=D522734``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * util-app: Treat empty strings as empty collections in `Flag[Seq[_]]`, `Flag[Set[_]]`,

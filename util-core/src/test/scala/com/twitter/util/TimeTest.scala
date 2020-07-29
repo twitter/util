@@ -667,6 +667,28 @@ with IntegrationPatience {
       assert(Time.fromMinutes(Int.MinValue) == Time.Bottom)
     }
 
+    "fromHours" in {
+      assert(Time.fromHours(1).inNanoseconds == Time.fromMinutes(60).inNanoseconds)
+
+      assert(Time.fromHours(0).inNanoseconds == 0L)
+      assert(Time.fromHours(-1).inNanoseconds == -3600L * 1000000000L)
+
+      assert(Time.fromHours(Int.MaxValue).inNanoseconds == Long.MaxValue)
+      assert(Time.fromHours(Int.MaxValue) == Time.Top)
+      assert(Time.fromHours(Int.MinValue) == Time.Bottom)
+    }
+
+    "fromDays" in {
+      assert(Time.fromDays(1).inNanoseconds == Time.fromHours(24).inNanoseconds)
+
+      assert(Time.fromDays(0).inNanoseconds == 0L)
+      assert(Time.fromDays(-1).inNanoseconds == -3600L * 24L * 1000000000L)
+
+      assert(Time.fromDays(Int.MaxValue).inNanoseconds == Long.MaxValue)
+      assert(Time.fromDays(Int.MaxValue) == Time.Top)
+      assert(Time.fromDays(Int.MinValue) == Time.Bottom)
+    }
+
     "until" in {
       val t0 = Time.now
       val t1 = t0 + 10.seconds

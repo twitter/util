@@ -15,6 +15,8 @@ object Duration extends TimeLikeOps[Duration] {
   override def fromMinutes(minutes: Int): Duration = super.fromMinutes(minutes)
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
   override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
+  override def fromHours(hours: Int): Duration = super.fromHours(hours)
+  override def fromDays(days: Int): Duration = super.fromDays(days)
 
   val NanosPerMicrosecond: Long = 1000L
   val NanosPerMillisecond: Long = NanosPerMicrosecond * 1000L

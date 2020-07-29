@@ -99,6 +99,10 @@ trait TimeLikeOps[This <: TimeLike[This]] {
 
   def fromMinutes(minutes: Int): This = fromMilliseconds(60L * 1000L * minutes)
 
+  def fromHours(hours: Int): This = fromMilliseconds(60L * 60L * 1000L * hours)
+
+  def fromDays(days: Int): This = fromMilliseconds(24L * 3600L * 1000L * days)
+
   /**
    * Make a new `This` from the given number of seconds.
    * Because this method takes a Double, it can represent values less than a second.
