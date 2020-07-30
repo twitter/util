@@ -24,10 +24,12 @@ public class TestVirtualMachineErrorTerminator
         });
     }
 
-    protected void tearDown() {
+    @After
+    public void tearDown() {
       VirtualMachineErrorTerminator.reset();
     }
 
+    @Test
     public void testNotTerminatingWhenNew() {
         assertNotTerminating();
     }
@@ -41,16 +43,19 @@ public class TestVirtualMachineErrorTerminator
         }
     }
 
+    @Test
     public void testNotTerminatingOnNull() {
         VirtualMachineErrorTerminator.terminateVMIfMust(null);
         assertNotTerminating();
     }
 
+    @Test
     public void testNotTerminatingOnOtherException() {
         VirtualMachineErrorTerminator.terminateVMIfMust(new Exception());
         assertNotTerminating();
     }
 
+    @Test
     public void testTerminatingOnNestedVirtualMachineError() throws Exception {
         Exception e = new Exception();
         OutOfMemoryError oome = new OutOfMemoryError();
@@ -59,11 +64,13 @@ public class TestVirtualMachineErrorTerminator
         assertTerminated();
     }
 
+    @Test
     public void testTerminatingOnVirtualMachineError() throws Exception {
         VirtualMachineErrorTerminator.terminateVMIfMust(new OutOfMemoryError());
         assertTerminated();
     }
 
+    @Test
     public void testTerminateDoesntAcceptNull() throws Exception {
         try {
             VirtualMachineErrorTerminator.terminateVM(null);
@@ -73,6 +80,7 @@ public class TestVirtualMachineErrorTerminator
         }
     }
 
+    @Test
     public void testSecondTerminateIneffective() throws Exception {
         OutOfMemoryError oome1 = new OutOfMemoryError();
         OutOfMemoryError oome2 = new OutOfMemoryError();
