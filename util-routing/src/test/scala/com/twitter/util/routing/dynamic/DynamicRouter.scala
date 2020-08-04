@@ -1,14 +1,13 @@
 package com.twitter.util.routing.dynamic
 
-import com.twitter.util.routing.{Router, RouterBuilder}
+import com.twitter.util.routing.{Generator, Router, RouterBuilder}
 
 private[routing] object DynamicRouter {
-  def newBuilder(): DynamicTestRouterBuilder = new DynamicTestRouterBuilder()
-
-  class DynamicTestRouterBuilder extends RouterBuilder[Request, DynamicRoute, DynamicRouter] {
-    override protected def newRouter(routes: Iterable[DynamicRoute]): DynamicRouter =
-      new DynamicRouter(routes.toSeq)
-  }
+  def newBuilder(): RouterBuilder[Request, DynamicRoute, DynamicRouter] =
+    RouterBuilder.newBuilder(new Generator[Request, DynamicRoute, DynamicRouter] {
+      override def apply(label: String, routes: Iterable[DynamicRoute]): DynamicRouter =
+        new DynamicRouter(routes.toSeq)
+    })
 }
 
 // example to show how a router might be built using dynamic inputs

@@ -1,12 +1,8 @@
 package com.twitter.util.routing
 
-import com.twitter.logging.Logger
+import com.twitter.util.logging.Logging
 import com.twitter.util.{Closable, ClosableOnce, Future, Time}
 import scala.util.control.NonFatal
-
-object Router {
-  val Log = Logger.get(Router.getClass)
-}
 
 /**
  * A generic interface for routing an input to an optional matching route.
@@ -32,11 +28,7 @@ object Router {
  *
  * @note A [[Router]] should be considered immutable unless explicitly noted.
  */
-trait Router[Input, Route] extends (Input => Option[Route]) with ClosableOnce {
-  import Router.Log
-
-  /** The [[Logger]] to use for this [[Router]]. Can be overridden to customize. */
-  protected def logger: Logger = Log
+trait Router[Input, +Route] extends (Input => Option[Route]) with ClosableOnce with Logging {
 
   /**
    * A label used for identifying this Router (i.e. for distinguishing between [[Router]] instances
@@ -96,9 +88,9 @@ trait Router[Input, Route] extends (Input => Option[Route]) with ClosableOnce {
     case closable: Closable =>
       closable.close(deadline).rescue {
         case NonFatal(e) =>
-          logger.warning(
-            e,
-            s"Error encountered when attempting to close route '$route' in router '$label'")
+          logger.warn(
+            s"Error encountered when attempting to close route '$route' in router '$label'",
+            e)
           Future.Done
       }
     case _ =>

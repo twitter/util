@@ -1,6 +1,5 @@
 package com.twitter.util.routing
 
-import com.twitter.logging.Logger
 import com.twitter.util.Try
 import java.lang.{Iterable => JIterable}
 import java.util.Optional
@@ -18,11 +17,6 @@ import scala.jdk.CollectionConverters._
  */
 abstract class AbstractRouter[Input, Route](val label: String, jRoutes: JIterable[Route])
     extends Router[Input, Route] {
-
-  /** The [[Logger]] to use for this [[Router]]. Can be overridden to customize. */
-  def getLogger(): Logger = Router.Log
-
-  override final def logger: Logger = getLogger()
 
   /** Java-friendly version of [[apply]] */
   final def route(input: Input): Optional[Route] = apply(input) match {

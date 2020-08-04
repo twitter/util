@@ -33,7 +33,7 @@ class RouterTest extends FunSuite {
     val defWriteHandler =
       DynamicRoute(Method.Write, _.query == "def", _ => Future.value(Result.Failure))
 
-    val router = DynamicRouter
+    val router: DynamicRouter = DynamicRouter
       .newBuilder()
       .withRoute(abcReadHandler)
       .withRoute(xyzReadHandler)

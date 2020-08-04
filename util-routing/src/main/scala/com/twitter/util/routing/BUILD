@@ -7,7 +7,7 @@ scala_library(
     ),
     dependencies = [
         "util/util-core:util-core-util",
-        "util/util-logging/src/main/scala",
+        "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
     ],
-    exports = ["util/util-logging/src/main/scala"],
+    exports = ["util/util-slf4j-api/src/main/scala/com/twitter/util/logging"],
 )

@@ -476,7 +476,7 @@ lazy val utilRouting = Project(
     sharedSettings
   ).settings(
     name := "util-routing"
-  ).dependsOn(utilCore, utilLogging)
+  ).dependsOn(utilCore, utilSlf4jApi)
 
 lazy val utilTest = Project(
   id = "util-test",

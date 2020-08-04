@@ -3,14 +3,11 @@ package com.twitter.util.routing;
 import org.junit.Assert;
 import org.junit.Test;
 
-import scala.collection.Iterable;
-
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
-
-import static com.twitter.util.Function.exfunc;
-import static com.twitter.util.Function.func;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class RouterCompilationTest {
 
@@ -25,7 +22,13 @@ public class RouterCompilationTest {
   }
 
   private static final class StringRouter extends AbstractRouter<String, StringRoute> {
-    static StringRouterBuilder newBuilder() { return new StringRouterBuilder(); }
+    static RouterBuilder<String, StringRoute, StringRouter> newBuilder() {
+      return RouterBuilder.newBuilder(Generator.create((label, routes) -> {
+        Map<String, StringRoute> routeMap = new HashMap<>();
+        routes.forEach(r -> routeMap.put(r.input, r));
+        return new StringRouter(routeMap);
+      }));
+    }
 
     private final Map<String, StringRoute> routeMap;
 
@@ -42,35 +45,14 @@ public class RouterCompilationTest {
 
   }
 
-  private static final class StringRouterBuilder
-      extends RouterBuilder<String, StringRoute, StringRouter> {
-
-    @Override
-    public StringRouter newRouter(Iterable<StringRoute> routes) {
-      Map<String, StringRoute> routeMap = new HashMap<>();
-      routes.foreach(func(r -> routeMap.put(r.input, r)));
-      return new StringRouter(routeMap);
+  private static final class ValidatingStringRouterBuilder {
+    static RouterBuilder<String, StringRoute, StringRouter> newBuilder() {
+      return StringRouter.newBuilder().withValidator(Validator.create(routes ->
+          StreamSupport.stream(routes.spliterator(), false)
+            .filter(r -> r.input.equals("invalid"))
+            .map(msg -> new ValidationError("INVALID!"))
+            .collect(Collectors.toList())));
     }
-
-  }
-
-  private static final class ValidatingStringRouterBuilder
-      extends RouterBuilder<String, StringRoute, StringRouter> {
-
-    ValidatingStringRouterBuilder() {
-      super(exfunc(r -> {
-        if (r.input.equals("invalid")) throw new RouteValidationException("INVALID!");
-        return null;
-      }));
-    }
-
-    @Override
-    public StringRouter newRouter(Iterable<StringRoute> routes) {
-      Map<String, StringRoute> routeMap = new HashMap<>();
-      routes.foreach(func(r -> routeMap.put(r.input, r)));
-      return new StringRouter(routeMap);
-    }
-
   }
 
   @Test
@@ -103,10 +85,11 @@ public class RouterCompilationTest {
     Assert.assertEquals(router.route("oh-no"), Optional.empty());
   }
 
-  @Test(expected = RouteValidationException.class)
+  @Test(expected = ValidationException.class)
   public void testValidatingRouterBuilder() {
-    new ValidatingStringRouterBuilder()
-        .withRoute(new StringRoute("invalid", "other"));
+    ValidatingStringRouterBuilder.newBuilder()
+        .withRoute(new StringRoute("invalid", "other"))
+        .newRouter();
   }
 
 }
