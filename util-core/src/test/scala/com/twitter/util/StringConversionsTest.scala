@@ -17,9 +17,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.StringOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class StringConversionsTest extends FunSuite {
+class StringConversionsTest extends AnyFunSuite {
 
   test("string#quoteC") {
     assert("nothing".quoteC == "nothing")

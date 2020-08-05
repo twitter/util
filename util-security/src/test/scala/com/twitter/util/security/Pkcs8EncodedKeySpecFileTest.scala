@@ -4,9 +4,9 @@ import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
 import java.security.spec.PKCS8EncodedKeySpec
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class Pkcs8EncodedKeySpecFileTest extends FunSuite {
+class Pkcs8EncodedKeySpecFileTest extends AnyFunSuite {
 
   private[this] val readKeySpecFromFile: File => Try[PKCS8EncodedKeySpec] =
     (tempFile) => {

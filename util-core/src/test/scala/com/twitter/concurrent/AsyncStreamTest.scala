@@ -3,10 +3,10 @@ package com.twitter.concurrent
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
 
-class AsyncStreamTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   import AsyncStream.{mk, of}
   import AsyncStreamTest._
 

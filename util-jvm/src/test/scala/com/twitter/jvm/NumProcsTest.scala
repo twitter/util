@@ -1,8 +1,8 @@
 package com.twitter.jvm
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NumProcsTest extends FunSuite {
+class NumProcsTest extends AnyFunSuite {
 
   test("return the number of available processors according to the runtime by default") {
     assert(System.getProperty("com.twitter.jvm.numProcs") == null)

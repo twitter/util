@@ -18,7 +18,6 @@ package com.twitter.logging
 
 import java.io._
 import java.util.{Calendar, Date, UUID, logging => javalog}
-import org.scalatest.WordSpec
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
@@ -26,8 +25,9 @@ import com.twitter.util.Time
 import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file.{Files, Path, Paths}
 import java.util.function.BiPredicate
+import org.scalatest.wordspec.AnyWordSpec
 
-class FileHandlerTest extends WordSpec with TempFolder {
+class FileHandlerTest extends AnyWordSpec with TempFolder {
   def reader(filename: String): BufferedReader = {
     new BufferedReader(new InputStreamReader(new FileInputStream(new File(folderName, filename))))
   }

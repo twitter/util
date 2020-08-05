@@ -5,16 +5,16 @@ import java.nio.{ByteBuffer, CharBuffer}
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.Arrays
 import org.scalacheck.{Arbitrary, Gen, Prop}
-import org.scalatest.FunSuite
 import org.scalatestplus.junit.AssertionsForJUnit
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatestplus.scalacheck.Checkers
 import scala.collection.mutable
 import java.nio.charset.Charset
+import org.scalatest.funsuite.AnyFunSuite
 
 class BufTest
-    extends FunSuite
+    extends AnyFunSuite
     with MockitoSugar
     with ScalaCheckDrivenPropertyChecks
     with Checkers

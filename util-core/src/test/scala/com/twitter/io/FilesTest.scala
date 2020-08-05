@@ -1,9 +1,9 @@
 package com.twitter.io
 
 import java.io.File
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class FilesTest extends WordSpec with TempFolder {
+class FilesTest extends AnyWordSpec with TempFolder {
   "Files" should {
 
     "delete" in withTempFolder {

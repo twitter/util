@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Duration, Return, StorageUnit, Throw}
-import org.scalatest.FunSuite
 import scala.jdk.CollectionConverters._
+import org.scalatest.funsuite.AnyFunSuite
 
 // Used for veryifying custom deserialization
 case class Foo(number: Double)
 
-class JsonTunableMapperTest extends FunSuite {
+class JsonTunableMapperTest extends AnyFunSuite {
 
   test("returns a Throw if json is empty") {
     JsonTunableMapper().parse("") match {

@@ -1,8 +1,8 @@
 package com.twitter.util.lint
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class GlobalRulesTest extends FunSuite {
+class GlobalRulesTest extends AnyFunSuite {
   private val neverRule = Rule.apply(Category.Performance, "R2", "Good") {
     Nil
   }

@@ -1,10 +1,10 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
 
-class DiffTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class DiffTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   val f: Int => String = _.toString
 
   test("Diffable.ofSet") {

@@ -6,11 +6,11 @@ import java.util.concurrent.atomic.AtomicInteger
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.{IntegrationPatience, Eventually}
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class TimerTest extends FunSuite with MockitoSugar with Eventually with IntegrationPatience {
+class TimerTest extends AnyFunSuite with MockitoSugar with Eventually with IntegrationPatience {
 
   private def testTimerRunsWithLocals(timer: Timer): Unit = {
     val timerLocal = new AtomicInteger(0)

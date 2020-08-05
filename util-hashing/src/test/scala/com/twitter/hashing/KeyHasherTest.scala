@@ -2,11 +2,11 @@ package com.twitter.hashing
 
 import com.twitter.io.TempFile
 import java.util.Base64
-import org.scalatest.WordSpec
 import scala.collection.mutable.ListBuffer
 import java.nio.charset.StandardCharsets.UTF_8
+import org.scalatest.wordspec.AnyWordSpec
 
-class KeyHasherTest extends WordSpec {
+class KeyHasherTest extends AnyWordSpec {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
     val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/" + name))

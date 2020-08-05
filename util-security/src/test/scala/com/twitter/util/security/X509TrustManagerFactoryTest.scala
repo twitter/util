@@ -4,9 +4,9 @@ import com.twitter.io.TempFile
 import java.io.File
 import java.security.cert.X509Certificate
 import javax.net.ssl.{TrustManager, X509TrustManager}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class X509TrustManagerFactoryTest extends FunSuite {
+class X509TrustManagerFactoryTest extends AnyFunSuite {
 
   private[this] def loadCertFromResource(resourcePath: String): X509Certificate = {
     val tempFile = TempFile.fromResourcePath(resourcePath)

@@ -4,9 +4,9 @@ import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
 import java.security.cert.{CRLException, X509CRL}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class X509CrlFileTest extends FunSuite {
+class X509CrlFileTest extends AnyFunSuite {
 
   private[this] def assertCrlException(tryCrl: Try[X509CRL]): Unit =
     PemFileTestUtils.assertException[CRLException, X509CRL](tryCrl)

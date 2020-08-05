@@ -6,9 +6,9 @@ import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
 import java.util.concurrent.ConcurrentLinkedQueue
-import org.scalatest.FunSuite
 import scala.jdk.CollectionConverters._
 import scala.language.reflectiveCalls
+import org.scalatest.funsuite.AnyFunSuite
 
 class TestApp(f: () => Unit) extends App {
   var reason: Option[String] = None
@@ -60,7 +60,7 @@ trait ErrorOnExitApp extends App {
   }
 }
 
-class AppTest extends FunSuite {
+class AppTest extends AnyFunSuite {
   test("App: make sure system.exit called on exception from main") {
     val test1 = new TestApp(() => throw new RuntimeException("simulate main failing"))
 

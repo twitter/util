@@ -3,10 +3,10 @@ package com.twitter.zk
 /**
  * @author ver@twitter.com
  */
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.wordspec.AnyWordSpec
 
-class ZNodeTest extends WordSpec with MockitoSugar {
+class ZNodeTest extends AnyWordSpec with MockitoSugar {
   "ZNode" should {
     class ZNodeSpecHelper {
       val zk = mock[ZkClient]

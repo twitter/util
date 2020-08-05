@@ -3,9 +3,10 @@ package com.twitter.io
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise}
 import java.io.{ByteArrayOutputStream, OutputStream}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class WriterTest extends FunSuite with Matchers {
+class WriterTest extends AnyFunSuite with Matchers {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 

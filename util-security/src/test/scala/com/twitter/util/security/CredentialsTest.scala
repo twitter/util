@@ -16,10 +16,10 @@
 
 package com.twitter.util.security
 
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.Checkers
+import org.scalatest.funsuite.AnyFunSuite
 
-class CredentialsTest extends FunSuite with Checkers {
+class CredentialsTest extends AnyFunSuite with Checkers {
   test("parse a simple auth file") {
     val content = "username: root\npassword: hellokitty\n"
     val result = Credentials(content)

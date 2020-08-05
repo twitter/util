@@ -3,9 +3,9 @@ package com.twitter.util.security
 import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class PemFileTest extends FunSuite {
+class PemFileTest extends AnyFunSuite {
 
   private[this] def readPemFileMessage(messageType: String)(tempFile: File): Try[String] = {
     val pemFile = new PemFile(tempFile)

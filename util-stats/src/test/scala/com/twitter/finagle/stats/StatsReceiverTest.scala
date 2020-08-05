@@ -4,10 +4,10 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
 import java.util.concurrent.TimeUnit
 import org.mockito.Mockito._
-import org.scalatest.FunSuite
 import scala.collection.mutable.ArrayBuffer
+import org.scalatest.funsuite.AnyFunSuite
 
-class StatsReceiverTest extends FunSuite {
+class StatsReceiverTest extends AnyFunSuite {
   test("RollupStatsReceiver counter/stats") {
     val mem = new InMemoryStatsReceiver
     val receiver = new RollupStatsReceiver(mem)

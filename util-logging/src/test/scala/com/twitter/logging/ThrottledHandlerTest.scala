@@ -19,9 +19,10 @@ package com.twitter.logging
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
-import org.scalatest.{BeforeAndAfter, WordSpec}
+import org.scalatest.BeforeAndAfter
+import org.scalatest.wordspec.AnyWordSpec
 
-class ThrottledHandlerTest extends WordSpec with BeforeAndAfter with TempFolder {
+class ThrottledHandlerTest extends AnyWordSpec with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = _
 
   "ThrottledHandler" should {

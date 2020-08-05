@@ -1,8 +1,9 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.{FunSuite, OneInstancePerTest}
+import org.scalatest.OneInstancePerTest
+import org.scalatest.funsuite.AnyFunSuite
 
-class VerbosityAdjustingStatsReceiverTest extends FunSuite with OneInstancePerTest {
+class VerbosityAdjustingStatsReceiverTest extends AnyFunSuite with OneInstancePerTest {
 
   val inMemory = new InMemoryStatsReceiver()
   val verbose = new VerbosityAdjustingStatsReceiver(inMemory, Verbosity.Debug)

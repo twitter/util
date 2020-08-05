@@ -4,9 +4,9 @@ import com.twitter.io.TempFile
 import com.twitter.util.Try
 import java.io.File
 import java.security.cert.{CertificateException, X509Certificate}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class X509CertificateFileTest extends FunSuite {
+class X509CertificateFileTest extends AnyFunSuite {
 
   private[this] def assertIsCslCert(cert: X509Certificate): Unit = {
     val subjectData: String = cert.getSubjectX500Principal.getName()

@@ -1,10 +1,10 @@
 package com.twitter.logging
 
-import org.scalatest.FunSuite
 
 import com.twitter.util.StorageUnit
+import org.scalatest.funsuite.AnyFunSuite
 
-class PolicyTest extends FunSuite {
+class PolicyTest extends AnyFunSuite {
   import Policy._
 
   test("Policy.parse: never") {

@@ -4,13 +4,13 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, 
 import java.util.{Locale, TimeZone}
 import java.util.concurrent.TimeUnit
 
-import org.scalatest.WordSpec
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import com.twitter.conversions.DurationOps._
+import org.scalatest.wordspec.AnyWordSpec
 
-trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ScalaCheckDrivenPropertyChecks {
+trait TimeLikeSpec[T <: TimeLike[T]] extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
   val ops: TimeLikeOps[T]
   import ops._
 
@@ -371,7 +371,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends WordSpec with ScalaCheckDrivenPrope
   }
 }
 
-class TimeFormatTest extends WordSpec {
+class TimeFormatTest extends AnyWordSpec {
   "TimeFormat" should {
     "format correctly with non US locale" in {
       val locale = Locale.GERMAN

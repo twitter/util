@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CancellableTest extends FunSuite {
+class CancellableTest extends AnyFunSuite {
 
   test("Cancellable.nil is always cancelled") {
     assert(!Cancellable.nil.isCancelled)

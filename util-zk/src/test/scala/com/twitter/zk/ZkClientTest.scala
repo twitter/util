@@ -10,14 +10,14 @@ import org.mockito.Mockito._
 import org.mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.logging.{Level, Logger}
 import com.twitter.util._
+import org.scalatest.wordspec.AnyWordSpec
 
-class ZkClientTest extends WordSpec with MockitoSugar {
+class ZkClientTest extends AnyWordSpec with MockitoSugar {
   Logger.get("").setLevel(Level.FATAL)
 
   implicit val javaTimer = new JavaTimer(true)

@@ -1,10 +1,10 @@
 package com.twitter.conversions
 
 import com.twitter.util.Duration
-import org.scalatest.FunSuite
 import com.twitter.conversions.DurationOps._
+import org.scalatest.funsuite.AnyFunSuite
 
-class DurationOpsTest extends FunSuite {
+class DurationOpsTest extends AnyFunSuite {
   test("converts Duration.Zero") {
     assert(0.seconds eq Duration.Zero)
     assert(0.milliseconds eq Duration.Zero)

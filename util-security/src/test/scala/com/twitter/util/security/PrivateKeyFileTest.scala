@@ -2,9 +2,9 @@ package com.twitter.util.security
 
 import com.twitter.io.TempFile
 import java.security.spec.InvalidKeySpecException
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class PrivateKeyFileTest extends FunSuite {
+class PrivateKeyFileTest extends AnyFunSuite {
 
   test("File is garbage") {
     // Lines were manually deleted from a real pkcs 8 pem file

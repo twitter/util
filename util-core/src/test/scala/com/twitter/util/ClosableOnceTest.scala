@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ClosableOnceTest extends FunSuite {
+class ClosableOnceTest extends AnyFunSuite {
 
   private def ready[T <: Awaitable[_]](awaitable: T): T =
     Await.ready(awaitable, 10.seconds)

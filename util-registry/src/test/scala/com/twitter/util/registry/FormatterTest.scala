@@ -1,9 +1,9 @@
 package com.twitter.util.registry
 
-import org.scalatest.FunSuite
 import scala.util.control.NoStackTrace
+import org.scalatest.funsuite.AnyFunSuite
 
-class FormatterTest extends FunSuite {
+class FormatterTest extends AnyFunSuite {
   test("asMap generates reasonable Maps") {
     val registry = new SimpleRegistry
     registry.put(Seq("foo", "bar"), "baz")

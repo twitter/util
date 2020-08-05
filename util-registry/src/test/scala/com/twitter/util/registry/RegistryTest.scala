@@ -1,9 +1,9 @@
 package com.twitter.util.registry
 
 import java.lang.{Character => JCharacter}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-abstract class RegistryTest extends FunSuite {
+abstract class RegistryTest extends AnyFunSuite {
   def mkRegistry(): Registry
   def name: String
 

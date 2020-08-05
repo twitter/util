@@ -3,9 +3,9 @@ package com.twitter.util.security
 import com.twitter.io.TempFile
 import java.io.File
 import javax.net.ssl.{KeyManager, X509KeyManager}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class PKCS8KeyManagerFactoryTest extends FunSuite {
+class PKCS8KeyManagerFactoryTest extends AnyFunSuite {
 
   private[this] def assertContainsCertsAndKey(keyManager: KeyManager, numCerts: Int = 1): Unit = {
     assert(keyManager.isInstanceOf[X509KeyManager])

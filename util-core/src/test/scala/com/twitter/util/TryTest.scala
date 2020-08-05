@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TryTest extends FunSuite {
+class TryTest extends AnyFunSuite {
   class MyException extends Exception
   val e: Exception = new Exception("this is an exception")
 

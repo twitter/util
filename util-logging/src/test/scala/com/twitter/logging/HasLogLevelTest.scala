@@ -1,8 +1,8 @@
 package com.twitter.logging
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class HasLogLevelTest extends FunSuite {
+class HasLogLevelTest extends AnyFunSuite {
 
   private class WithLogLevel(val logLevel: Level, cause: Throwable = null)
       extends Exception(cause)

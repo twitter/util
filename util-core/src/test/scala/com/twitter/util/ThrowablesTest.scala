@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ThrowablesTest extends FunSuite {
+class ThrowablesTest extends AnyFunSuite {
   test("Throwables.mkString: flatten non-nested exception") {
     val t = new Throwable
     assert(Throwables.mkString(t) == Seq(t.getClass.getName))

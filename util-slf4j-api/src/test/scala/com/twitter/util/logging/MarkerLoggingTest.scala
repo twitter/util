@@ -3,12 +3,13 @@ package com.twitter.util.logging
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSuite, Matchers}
 import org.slf4j
 import org.slf4j.Marker
 import scala.language.reflectiveCalls
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class MarkerLoggingTest extends FunSuite with Matchers with MockitoSugar {
+class MarkerLoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
 
   test("Marker Logging#trace enabled") {
     val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = true)

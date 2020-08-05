@@ -1,8 +1,8 @@
 package com.twitter.hashing
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class DiagnosticsTest extends WordSpec {
+class DiagnosticsTest extends AnyWordSpec {
   "Diagnostics" should {
     "print distribution" in {
       val hosts = 1 until 500 map { "10.1.1." + _ + ":11211:4" }

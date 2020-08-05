@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
 import com.twitter.util.{Await, Return, ObjectSizeCalculator}
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class BrokerTest extends WordSpec {
+class BrokerTest extends AnyWordSpec {
   "Broker" should {
     "send data (send, recv)" in {
       val br = new Broker[Int]

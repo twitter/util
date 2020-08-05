@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class StateMachineTest extends WordSpec {
+class StateMachineTest extends AnyWordSpec {
   "StateMachine" should {
     class StateMachineHelper {
       class Machine extends StateMachine {

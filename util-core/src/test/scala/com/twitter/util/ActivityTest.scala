@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicReference
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ActivityTest extends FunSuite {
+class ActivityTest extends AnyFunSuite {
   test("Activity#flatMap") {
     val v = Var(Activity.Pending: Activity.State[Int])
     val ref = new AtomicReference[Seq[Activity.State[Int]]]

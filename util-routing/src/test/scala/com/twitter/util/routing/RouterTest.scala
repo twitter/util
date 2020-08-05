@@ -5,9 +5,9 @@ import com.twitter.util.routing.dynamic.{DynamicRouter, DynamicRoute, Method, Re
 import com.twitter.util.routing.simple.{SimpleRoute, SimpleRouter}
 import com.twitter.util.{Await, Awaitable, Closable, Future, Time}
 import java.util.concurrent.atomic.AtomicBoolean
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RouterTest extends FunSuite {
+class RouterTest extends AnyFunSuite {
 
   private def await[T](awaitable: Awaitable[T]): T =
     Await.result(awaitable, 2.seconds)

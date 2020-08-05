@@ -1,8 +1,9 @@
 package com.twitter.util
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class ConfigTest extends WordSpec with Matchers {
+class ConfigTest extends AnyWordSpec with Matchers {
   import Config._
 
   "Config" should {

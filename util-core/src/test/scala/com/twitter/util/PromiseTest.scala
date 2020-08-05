@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class PromiseTest extends FunSuite {
+class PromiseTest extends AnyFunSuite {
 
   test("Promise.detach should not detach other attached promises") {
     val p = new Promise[Unit]

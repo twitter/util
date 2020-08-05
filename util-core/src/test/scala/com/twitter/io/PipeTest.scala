@@ -3,10 +3,11 @@ package com.twitter.io
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, MockTimer, Return, Time}
 import java.io.ByteArrayOutputStream
-import org.scalatest.{FunSuite, Matchers}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class PipeTest extends FunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
+class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 

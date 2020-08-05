@@ -3,10 +3,10 @@ package com.twitter.concurrent
 import scala.util.Random
 
 import org.mockito.Mockito._
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, MockTimer, Promise, Return, Time}
+import org.scalatest.wordspec.AnyWordSpec
 
 class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
   def this(fut: Future[Tx[T]]) = this(Stream.continually(fut))
@@ -19,7 +19,7 @@ class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
   }
 }
 
-class OfferTest extends WordSpec with MockitoSugar {
+class OfferTest extends AnyWordSpec with MockitoSugar {
 
   def await[A](f: Future[A]): A = Await.result(f, 2.seconds)
 

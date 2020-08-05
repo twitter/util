@@ -1,9 +1,9 @@
 package com.twitter.logging
 
 import java.util.logging.{LogRecord => JRecord}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LogRecordTest extends FunSuite {
+class LogRecordTest extends AnyFunSuite {
   test("LogRecord should getMethod properly") {
     Logger.withLoggers(Nil) {
       new LogRecordTestHelper({ r: JRecord => r.getSourceMethodName() }) {

@@ -1,9 +1,9 @@
 package com.twitter.util.security
 
 import javax.net.ssl.SSLSession
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NullSslSessionTest extends FunSuite {
+class NullSslSessionTest extends AnyFunSuite {
 
   test("NullSslSession is an SSLSession") {
     val sslSession: SSLSession = NullSslSession

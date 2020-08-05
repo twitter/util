@@ -3,10 +3,10 @@ package com.twitter.conversions
 import com.twitter.conversions.PercentOps._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
 
-class PercentOpsTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class PercentOpsTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
   private[this] val Precision = 0.0000000001
 

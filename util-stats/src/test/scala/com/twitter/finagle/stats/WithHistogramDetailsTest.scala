@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class WithHistogramDetailsTest extends FunSuite {
+class WithHistogramDetailsTest extends AnyFunSuite {
   test("AggregateWithHistogramDetails rejects empties") {
     intercept[IllegalArgumentException] {
       AggregateWithHistogramDetails(Nil)

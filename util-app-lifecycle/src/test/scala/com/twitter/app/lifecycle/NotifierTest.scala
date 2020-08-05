@@ -1,9 +1,9 @@
 package com.twitter.app.lifecycle
 
-import org.scalatest.FunSuite
 import Event._
+import org.scalatest.funsuite.AnyFunSuite
 
-class NotifierTest extends FunSuite {
+class NotifierTest extends AnyFunSuite {
 
   test("emits success") {
     var success = false

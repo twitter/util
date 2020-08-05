@@ -4,11 +4,11 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.util.{Await, Future}
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.annotation.tailrec
+import org.scalatest.funsuite.AnyFunSuite
 
-class BufReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class BufReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 

@@ -1,10 +1,10 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
 import scala.collection.mutable
+import org.scalatest.funsuite.AnyFunSuite
 
-class SlowProbeProxyTimerTest extends FunSuite {
+class SlowProbeProxyTimerTest extends AnyFunSuite {
 
   private type Task = () => Unit
   private val NullTask = new TimerTask { def cancel(): Unit = () }

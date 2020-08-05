@@ -1,10 +1,10 @@
 package com.twitter.concurrent
 
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import com.twitter.util.{Promise, Return}
+import org.scalatest.wordspec.AnyWordSpec
 
-class FutureOfferTest extends WordSpec with MockitoSugar {
+class FutureOfferTest extends AnyWordSpec with MockitoSugar {
   "Future.toOffer" should {
     "activate when future is satisfied (poll)" in {
       val p = new Promise[Int]

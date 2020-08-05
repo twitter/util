@@ -2,10 +2,10 @@ package com.twitter.finagle.stats
 
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicInteger
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.funsuite.AnyFunSuite
 
-class CumulativeGaugeTest extends FunSuite with Eventually with IntegrationPatience {
+class CumulativeGaugeTest extends AnyFunSuite with Eventually with IntegrationPatience {
 
   private[this] val sameThreadExecutor = new Executor {
     def execute(command: Runnable): Unit = command.run()

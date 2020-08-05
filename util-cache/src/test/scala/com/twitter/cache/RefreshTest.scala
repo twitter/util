@@ -5,8 +5,9 @@ import com.twitter.util.{Await, Future, Promise, Time}
 import org.mockito.Mockito._
 import org.scalatest._
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class RefreshTest extends FunSuite with MockitoSugar {
+class RefreshTest extends AnyFunSuite with MockitoSugar {
 
   class Ctx {
     val provider = mock[() => Future[Int]]

@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class MultiCategorizingExceptionStatsHandlerTest extends FunSuite {
+class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
   test("uses label, flags, source, exception chain and rolls up") {
     val receiver = new InMemoryStatsReceiver
 

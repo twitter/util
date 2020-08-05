@@ -2,10 +2,10 @@ package com.twitter.io
 
 import java.lang.{Double => JDouble, Float => JFloat}
 import java.nio.charset.StandardCharsets
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
 
-final class BufByteWriterTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   import ByteWriter.OverflowException
 
   private[this] def assertIndex(bw: ByteWriter, index: Int): Unit = bw match {

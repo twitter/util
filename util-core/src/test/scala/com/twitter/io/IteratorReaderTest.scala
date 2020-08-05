@@ -2,10 +2,10 @@ package com.twitter.io
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.Checkers
+import org.scalatest.funsuite.AnyFunSuite
 
-class IteratorReaderTest extends FunSuite with Checkers {
+class IteratorReaderTest extends AnyFunSuite with Checkers {
 
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 

@@ -2,9 +2,9 @@ package com.twitter.util
 
 import java.util.Locale
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class TwitterDateFormatTest extends WordSpec {
+class TwitterDateFormatTest extends AnyWordSpec {
   "TwitterDateFormat" should {
     "disallow Y without w" in {
       intercept[IllegalArgumentException] {

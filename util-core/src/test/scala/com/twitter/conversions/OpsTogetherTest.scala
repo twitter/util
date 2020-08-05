@@ -1,9 +1,9 @@
 package com.twitter.conversions
 
 import com.twitter.util.{Duration, StorageUnit}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class OpsTogetherTest extends FunSuite {
+class OpsTogetherTest extends AnyFunSuite {
   test("multiple wildcard imports") {
     import com.twitter.conversions.DurationOps._
     import com.twitter.conversions.PercentOps._

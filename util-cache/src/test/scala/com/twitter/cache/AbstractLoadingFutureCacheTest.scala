@@ -2,9 +2,9 @@ package com.twitter.cache
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-abstract class AbstractLoadingFutureCacheTest extends FunSuite {
+abstract class AbstractLoadingFutureCacheTest extends AnyFunSuite {
   // NB we can't reuse AbstractFutureCacheTest since
   // loading cache semantics are sufficiently unique
   // to merit distinct tests.

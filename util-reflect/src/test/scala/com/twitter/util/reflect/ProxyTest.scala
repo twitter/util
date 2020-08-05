@@ -1,7 +1,7 @@
 package com.twitter.util.reflect
 
 import com.twitter.util.{Future, Promise, Stopwatch}
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
 object ProxySpec {
   trait TestInterface {
@@ -32,7 +32,7 @@ object ProxySpec {
   }
 }
 
-class ProxyTest extends WordSpec {
+class ProxyTest extends AnyWordSpec {
 
   import ProxySpec._
 

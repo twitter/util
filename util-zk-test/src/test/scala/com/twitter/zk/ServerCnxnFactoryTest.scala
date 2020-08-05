@@ -4,9 +4,10 @@ import com.twitter.io.TempDirectory
 import java.io.File
 import java.net.InetAddress
 import org.apache.zookeeper.server.ZooKeeperServer
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.BeforeAndAfter
+import org.scalatest.funsuite.AnyFunSuite
 
-class ServerCnxnFactoryTest extends FunSuite with BeforeAndAfter {
+class ServerCnxnFactoryTest extends AnyFunSuite with BeforeAndAfter {
   val addr = InetAddress.getLocalHost
 
   var testServer: ZooKeeperServer = null

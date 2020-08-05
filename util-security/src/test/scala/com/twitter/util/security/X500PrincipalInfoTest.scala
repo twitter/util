@@ -1,9 +1,9 @@
 package com.twitter.util.security
 
 import javax.security.auth.x500.X500Principal
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class X500PrincipalInfoTest extends FunSuite {
+class X500PrincipalInfoTest extends AnyFunSuite {
 
   test("Empty principal") {
     val principal = new X500Principal("")

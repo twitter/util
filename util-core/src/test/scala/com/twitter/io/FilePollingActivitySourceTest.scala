@@ -2,10 +2,11 @@ package com.twitter.io
 
 import com.twitter.util.{Activity, FuturePool, MockTimer, Time}
 import java.io.File
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.BeforeAndAfter
 import scala.util.Random
+import org.scalatest.funsuite.AnyFunSuite
 
-class FilePollingActivitySourceTest extends FunSuite with BeforeAndAfter {
+class FilePollingActivitySourceTest extends AnyFunSuite with BeforeAndAfter {
 
   def writeToTempFile(s: String): Unit = {
     val printer = new java.io.PrintWriter(new File(tempFile))

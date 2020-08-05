@@ -1,6 +1,6 @@
 package com.twitter.util.tunable
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 class ServiceLoadedTunableTestClient1 extends ServiceLoadedTunableMap with TunableMap.Proxy {
 
@@ -23,7 +23,7 @@ class ServiceLoadedTunableTestClient2Dup extends ServiceLoadedTunableMap with Tu
   def id: String = "client2"
 }
 
-class ServiceLoadedTunableMapTest extends FunSuite {
+class ServiceLoadedTunableMapTest extends AnyFunSuite {
 
   test(
     "IllegalArgumentException thrown when there is more than one ServiceLoadedTunableMap " +

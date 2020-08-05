@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class DenylistStatsReceiverTest extends FunSuite {
+class DenylistStatsReceiverTest extends AnyFunSuite {
   // scalafix:off StoreGaugesAsMemberVariables
   test("DenylistStatsReceiver denylists properly") {
     val inmemory = new InMemoryStatsReceiver()

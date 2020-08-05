@@ -1,9 +1,9 @@
 package com.twitter.util.routing
 
 import com.twitter.util.routing.simple.{SimpleRoute, SimpleRouter}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RouterBuilderTest extends FunSuite {
+class RouterBuilderTest extends AnyFunSuite {
 
   private object TestRouter {
     def newBuilder(): RouterBuilder[String, SimpleRoute, SimpleRouter] =
