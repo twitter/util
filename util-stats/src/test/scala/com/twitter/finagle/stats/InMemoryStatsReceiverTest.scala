@@ -332,25 +332,24 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
     stats.addGauge("coolGauge") { 3 }
     stats.counter("sweetCounter")
     stats.stat("radHisto")
+    val gauges = Array("coolGauge").toSeq
+    val histograms = Array("radHisto").toSeq
+    val counters = Array("sweetCounter").toSeq
 
     val baos = new ByteArrayOutputStream()
     val ps = new PrintStream(baos, true, "utf-8")
     try {
       stats.printSchemas(ps)
       val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
-      println(content)
       val parts = content.split('\n')
 
       assert(parts.length == 3)
-      assert(
-        parts(
-          0) == "coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(coolGauge), None, Vector(), InMemoryStatsReceiver))")
-      assert(
-        parts(
-          1) == "radHisto HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(radHisto), None, Vector(), InMemoryStatsReceiver))")
-      assert(
-        parts(
-          2) == "sweetCounter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, WrappedArray(sweetCounter), None, Vector(), InMemoryStatsReceiver))")
+      assert(parts(
+        0) == s"coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $gauges, None, Vector(), InMemoryStatsReceiver))")
+      assert(parts(
+        1) == s"radHisto HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $histograms, None, Vector(), InMemoryStatsReceiver))")
+      assert(parts(
+        2) == s"sweetCounter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $counters, None, Vector(), InMemoryStatsReceiver))")
     } finally {
       ps.close()
     }
