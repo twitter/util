@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar

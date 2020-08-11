@@ -3,7 +3,7 @@ package com.twitter.cache
 import com.github.benmanes.caffeine.cache.{CacheLoader, Caffeine}
 import com.twitter.cache.caffeine.LoadingFutureCache
 import com.twitter.util.{Await, Future, Promise}
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar

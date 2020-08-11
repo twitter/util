@@ -3,7 +3,7 @@ package com.twitter.util
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{ConcurrentLinkedQueue, ExecutionException, Future => JFuture}
 import java.util.concurrent.atomic.AtomicInteger
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, times, verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer

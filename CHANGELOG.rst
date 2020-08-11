@@ -7,6 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-mock: Introduce `mockito-scala <https://github.com/mockito/mockito-scala>`__ based mocking
+  integration. Fix up and update mockito testing dependencies:
+  - `mockito-all:1.10.19` to `mockito-core:3.3.3`
+  - `scalatestplus:mockito-1-10:3.1.0.0` to `scalatestplus:mockito-3-2:3.1.2.0`  ``PHAB_ID=D530995``
+
 20.8.0
 ------
 

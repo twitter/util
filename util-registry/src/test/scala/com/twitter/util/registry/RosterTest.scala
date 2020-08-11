@@ -2,7 +2,7 @@ package com.twitter.util.registry
 
 import java.util.logging.Logger
 import org.mockito.Mockito.{never, verify}
-import org.mockito.Matchers.anyObject
+import org.mockito.ArgumentMatchers.anyObject
 import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
 

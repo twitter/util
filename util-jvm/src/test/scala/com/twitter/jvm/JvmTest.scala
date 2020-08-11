@@ -3,7 +3,7 @@ package com.twitter.jvm
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.util.logging.{Level, Logger}
-import org.mockito.Matchers.contains
+import org.mockito.ArgumentMatchers.contains
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar

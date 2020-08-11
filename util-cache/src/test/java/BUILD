@@ -3,7 +3,7 @@ junit_tests(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         "3rdparty/jvm/junit",
-        "3rdparty/jvm/org/mockito:mockito-all",
+        "3rdparty/jvm/org/mockito:mockito-core",
         "3rdparty/jvm/org/scala-lang:scala-library",
         "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-cache/src/main/scala/com/twitter/cache",

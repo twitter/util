@@ -1,13 +1,12 @@
 COMMON_DEPS = [
     "3rdparty/jvm/junit",
-    "3rdparty/jvm/org/mockito:mockito-all",
+    "3rdparty/jvm/org/mockito:mockito-core",
     "3rdparty/jvm/org/scalatest",
-    "3rdparty/jvm/org/scalatestplus:mockito-1-10",
+    "3rdparty/jvm/org/scalatestplus:mockito-3-2",
     "util/util-app/src/main/scala",
     "util/util-core:util-core-util",
     "util/util-jvm/src/main/scala/com/twitter/jvm",
     "util/util-logging/src/main/scala",
-    "util/util-test/src/main/scala",
 ]
 
 junit_tests(

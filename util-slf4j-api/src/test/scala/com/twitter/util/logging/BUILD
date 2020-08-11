@@ -23,10 +23,10 @@ junit_tests(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         ":testutil",
-        "3rdparty/jvm/org/mockito:mockito-all",
+        "3rdparty/jvm/org/mockito:mockito-core",
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
-        "3rdparty/jvm/org/scalatestplus:mockito-1-10",
+        "3rdparty/jvm/org/scalatestplus:mockito-3-2",
         "3rdparty/jvm/org/slf4j:slf4j-simple",
     ],
 )

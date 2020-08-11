@@ -5,7 +5,7 @@ import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper._
 import org.apache.zookeeper.data.{ACL, Stat}
-import org.mockito.Matchers.{eq => meq, _}
+import org.mockito.ArgumentMatchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.mockito._
 import org.mockito.invocation.InvocationOnMock

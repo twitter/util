@@ -3,6 +3,11 @@ import scoverage.ScoverageKeys
 // All Twitter library releases are date versioned as YY.MM.patch
 val releaseVersion = "20.9.0-SNAPSHOT"
 
+val slf4jVersion = "1.7.30"
+val jacksonVersion = "2.11.0"
+val mockitoVersion = "3.3.3"
+val mockitoScalaVersion = "1.14.8"
+
 val zkVersion = "3.5.0-alpha"
 val zkClientVersion = "0.0.81"
 val zkGroupVersion = "0.0.92"
@@ -11,8 +16,6 @@ val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll (
   ExclusionRule("com.sun.jmx", "jmxri"),
   ExclusionRule("javax.jms", "jms")
 )
-val slf4jVersion = "1.7.30"
-val jacksonVersion = "2.11.0"
 
 val guavaLib = "com.google.guava" % "guava" % "25.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.5"
@@ -88,10 +91,8 @@ val baseSettings = Seq(
     "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.2",
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
-    "org.mockito" % "mockito-all" % "1.10.19" % "test",
     "org.scalatest" %% "scalatest" % "3.1.2" % "test",
-    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test",
-    "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0" % "test"
+    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
   ),
   fork in Test := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
@@ -200,6 +201,7 @@ lazy val util = Project(
     utilJvm,
     utilLint,
     utilLogging,
+    utilMock,
     utilReflect,
     utilRegistry,
     utilRouting,
@@ -220,17 +222,21 @@ lazy val utilApp = Project(
 ).settings(
     sharedSettings
   ).settings(
-    name := "util-app"
+    name := "util-app",
+    libraryDependencies ++= Seq(
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+    )
   ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
 
 lazy val utilAppLifecycle = Project(
   id = "util-app-lifecycle",
   base = file("util-app-lifecycle")
 ).settings(
-  sharedSettings
-).settings(
-  name := "util-app-lifecycle"
-).dependsOn(utilCore)
+    sharedSettings
+  ).settings(
+    name := "util-app-lifecycle"
+  ).dependsOn(utilCore)
 
 lazy val utilBenchmark = Project(
   id = "util-benchmark",
@@ -250,7 +256,12 @@ lazy val utilCache = Project(
     sharedSettings
   ).settings(
     name := "util-cache",
-    libraryDependencies ++= Seq(caffeineLib, jsr305Lib)
+    libraryDependencies ++= Seq(
+      caffeineLib,
+      jsr305Lib,
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+    )
   ).dependsOn(utilCore)
 
 lazy val utilCacheGuava = Project(
@@ -296,6 +307,8 @@ lazy val utilCore = Project(
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     ),
     resourceGenerators in Compile += Def.task {
@@ -381,8 +394,12 @@ lazy val utilJvm = Project(
 ).settings(
     sharedSettings
   ).settings(
-    name := "util-jvm"
-  ).dependsOn(utilApp, utilCore, utilStats, utilTest % "test")
+    name := "util-jvm",
+    libraryDependencies ++= Seq(
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+    )
+  ).dependsOn(utilApp, utilCore, utilStats)
 
 lazy val utilLint = Project(
   id = "util-lint",
@@ -402,6 +419,42 @@ lazy val utilLogging = Project(
     name := "util-logging"
   ).dependsOn(utilCore, utilApp, utilStats)
 
+lazy val utilMock = Project(
+  id = "util-mock",
+  base = file("util-mock")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-mock",
+    libraryDependencies ++= Seq(
+      // only depend on mockito-scala; it will pull in the correct corresponding version of mockito.
+      "org.mockito" %% "mockito-scala" % mockitoScalaVersion,
+      "org.mockito" %% "mockito-scala-scalatest" % mockitoScalaVersion % "test"
+    )
+  ).dependsOn(utilCore % "test")
+
+lazy val utilRegistry = Project(
+  id = "util-registry",
+  base = file("util-registry")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-registry",
+    libraryDependencies ++= Seq(
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+    )
+  ).dependsOn(utilCore)
+
+lazy val utilRouting = Project(
+  id = "util-routing",
+  base = file("util-routing")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-routing"
+  ).dependsOn(utilCore, utilSlf4jApi)
+
 lazy val utilSlf4jApi = Project(
   id = "util-slf4j-api",
   base = file("util-slf4j-api")
@@ -411,6 +464,8 @@ lazy val utilSlf4jApi = Project(
     name := "util-slf4j-api",
     libraryDependencies ++= Seq(
       slf4jApi,
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
     )
   ).dependsOn(utilCore % "test")
@@ -424,15 +479,6 @@ lazy val utilSlf4jJulBridge = Project(
     name := "util-slf4j-jul-bridge",
     libraryDependencies ++= Seq(slf4jApi, "org.slf4j" % "jul-to-slf4j" % slf4jVersion)
   ).dependsOn(utilCore, utilSlf4jApi)
-
-lazy val utilRegistry = Project(
-  id = "util-registry",
-  base = file("util-registry")
-).settings(
-    sharedSettings
-  ).settings(
-    name := "util-registry"
-  ).dependsOn(utilCore)
 
 lazy val utilSecurity = Project(
   id = "util-security",
@@ -458,6 +504,8 @@ lazy val utilStats = Project(
       caffeineLib,
       jsr305Lib,
       scalacheckLib,
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     ) ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
@@ -468,15 +516,6 @@ lazy val utilStats = Project(
       }
     }
   ).dependsOn(utilCore, utilLint)
-
-lazy val utilRouting = Project(
-  id = "util-routing",
-  base = file("util-routing")
-).settings(
-    sharedSettings
-  ).settings(
-    name := "util-routing"
-  ).dependsOn(utilCore, utilSlf4jApi)
 
 lazy val utilTest = Project(
   id = "util-test",
@@ -529,7 +568,11 @@ lazy val utilZk = Project(
     sharedSettings
   ).settings(
     name := "util-zk",
-    libraryDependencies += zkDependency
+    libraryDependencies ++= Seq(
+      zkDependency,
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+    )
   ).dependsOn(utilCore, utilLogging)
 
 lazy val utilZkTest = Project(

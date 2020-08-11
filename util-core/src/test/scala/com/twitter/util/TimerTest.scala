@@ -4,7 +4,7 @@ import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{CancellationException, ExecutorService, TimeUnit, CountDownLatch}
 import java.util.concurrent.atomic.AtomicInteger
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, verify, when}
 import org.scalatest.FunSuite
 import org.scalatest.concurrent.{IntegrationPatience, Eventually}
