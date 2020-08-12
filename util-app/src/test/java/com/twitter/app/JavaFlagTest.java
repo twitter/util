@@ -39,6 +39,11 @@ public class JavaFlagTest {
     }
   }
 
+  enum Disney {
+    MICKEY,
+    MINNIE
+  }
+
   @Test
   public void testJavaFlags() {
 
@@ -95,6 +100,32 @@ public class JavaFlagTest {
       fail();
     } catch (NumberFormatException expected) {
       assertEquals("For input string: \"9876543210L\"", expected.getMessage());
+    }
+  }
+
+  @Test
+  public void testJavaEnumFlags() {
+    Flags flags = new Flags("ApplicationName");
+    Flag<Disney> enumFlag = flags.create(
+            "disney",
+            Disney.MICKEY,
+            "",
+            Flaggable.ofJavaEnum(Disney.class)
+    );
+    assertEquals(Disney.MICKEY, enumFlag.apply());
+    // should parse Strings with matching cases without errors
+    enumFlag.parse("MICKEY");
+    // should parse Strings without matching cases without errors
+    enumFlag.parse("minnie");
+    // should thrown IllegalArgumentException when property doesn't exist in the Enum
+    try{
+      enumFlag.parse("MICKY");
+    } catch (IllegalArgumentException e) {
+      assertEquals(
+              "The property MICKY does not belong to Java Enum com.twitter.app.JavaFlagTest$Disney, " +
+                      "the constants defined in the class are: WrappedArray(MICKEY, MINNIE).",
+              e.getMessage()
+      );
     }
   }
 

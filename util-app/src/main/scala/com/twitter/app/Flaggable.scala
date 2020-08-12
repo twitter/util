@@ -166,6 +166,22 @@ object Flaggable {
     }
   }
 
+  /**
+   * Create a Flaggable of Java Enum.
+   * @param clazz The [[java.lang.Enum]] class.
+   * @note [[java.lang.Enum]] enumeration constant value look up is case insensitive.
+   */
+  def ofJavaEnum[T <: Enum[T]](clazz: Class[T]): Flaggable[T] =
+    mandatory { s: String =>
+      clazz.getEnumConstants.find(_.name.equalsIgnoreCase(s)) match {
+        case Some(prop) => prop
+        case _ =>
+          throw new IllegalArgumentException(
+            s"The property $s does not belong to Java Enum ${clazz.getName}, the constants defined " +
+              s"in the class are: ${clazz.getEnumConstants.toSeq}.")
+      }
+    }
+
   private[app] class SetFlaggable[T: Flaggable] extends Flaggable[Set[T]] {
     private val flag = implicitly[Flaggable[T]]
     assert(flag.default.isEmpty)

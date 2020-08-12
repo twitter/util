@@ -15,6 +15,8 @@ New Features
   - `mockito-all:1.10.19` to `mockito-core:3.3.3`
   - `scalatestplus:mockito-1-10:3.1.0.0` to `scalatestplus:mockito-3-2:3.1.2.0`  ``PHAB_ID=D530995``
 
+* util-app: Add support for flags of Java Enum types. ``PHAB_ID=D530205``
+
 20.8.0
 ------
 
