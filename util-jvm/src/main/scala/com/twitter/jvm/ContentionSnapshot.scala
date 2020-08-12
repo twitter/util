@@ -9,6 +9,9 @@ import java.lang.management.{ManagementFactory, ThreadInfo}
  *
  * While this could be an object, we use instantiation as a signal of
  * intent and enable contention monitoring.
+ *
+ * @note users should ensure that the [[java.lang.management.ManagementPermission("control")]] is
+ *       allowed via the [[java.lang.SecurityManager]].
  */
 class ContentionSnapshot {
   ManagementFactory.getThreadMXBean.setThreadContentionMonitoringEnabled(true)
