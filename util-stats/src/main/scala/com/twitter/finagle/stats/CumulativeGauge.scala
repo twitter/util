@@ -120,27 +120,18 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
    * The StatsReceiver implements these. They provide the cumulative
    * gauges.
    */
-  protected[this] def registerGauge(verbosity: Verbosity, name: Seq[String], f: => Float): Unit
+  protected[this] def registerGauge(schema: GaugeSchema, f: => Float): Unit
   protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  // To avoid creating a new function on each call to `whenGaugeNotPresent`, we cache these
-  // functions for [[Verbosity.Default]] and [[Verbosity.Debug]], the most common cases.
-  private[this] val whenDefaultNotPresent = whenNotPresent(Verbosity.Default)
-  private[this] val whenDebugNotPresent = whenNotPresent(Verbosity.Debug)
-
-  private[this] def getWhenNotPresent(verbosity: Verbosity) = verbosity match {
-    case Verbosity.Default => whenDefaultNotPresent
-    case Verbosity.Debug => whenDebugNotPresent
-    case _ => whenNotPresent(verbosity)
-  }
+  private[this] def getWhenNotPresent(schema: GaugeSchema) = whenNotPresent(schema)
 
   /** The executor that will be used for expiring gauges */
   def executor: Executor = ForkJoinPool.commonPool()
 
-  private[this] def whenNotPresent(verbosity: Verbosity) =
+  private[this] def whenNotPresent(schema: GaugeSchema) =
     new JFunction[Seq[String], CumulativeGauge] {
       def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge(executor) {
-        self.registerGauge(verbosity, key, getValue)
+        self.registerGauge(schema, getValue)
 
         // The number of registers starts at `0` because every new gauge will cause a
         // registration, even the one that created the `CumulativeGauge`. Because 0 is
@@ -179,9 +170,8 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
   def addGauge(schema: GaugeSchema)(f: => Float): Gauge = {
     var gauge: Gauge = null
     while (gauge == null) {
-      val cumulativeGauge = gauges.computeIfAbsent(
-        schema.metricBuilder.name,
-        getWhenNotPresent(schema.metricBuilder.verbosity))
+      val cumulativeGauge =
+        gauges.computeIfAbsent(schema.metricBuilder.name, getWhenNotPresent(schema))
       gauge = cumulativeGauge.addGauge(f)
     }
     gauge
