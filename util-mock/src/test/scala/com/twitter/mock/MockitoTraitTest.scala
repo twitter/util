@@ -1,8 +1,7 @@
 package com.twitter.mock
 
 import com.twitter.conversions.DurationOps._
-import com.twitter.util.{Return, Throw}
-import com.twitter.util.{Await, Awaitable, Future, Monitor}
+import com.twitter.util._
 import java.io.{File, FileOutputStream, ObjectOutputStream}
 import java.util.concurrent.atomic.AtomicInteger
 import org.junit.runner.RunWith
@@ -11,12 +10,14 @@ import org.mockito.captor.ArgCaptor
 import org.mockito.exceptions.verification.WantedButNotInvoked
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.{CallsRealMethods, DefaultAnswer, ScalaFirstStubbing}
-import org.scalatest.concurrent.ScalaFutures.{FutureConcept, whenReady}
-import org.scalatestplus.junit.JUnitRunner
+import org.scalatest.concurrent.PatienceConfiguration.{Interval, Timeout}
+import org.scalatest.concurrent.ScalaFutures.{FutureConcept, PatienceConfig, whenReady}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatestplus.junit.JUnitRunner
 import scala.annotation.varargs
-import scala.language.implicitConversions
+import scala.language.{higherKinds, implicitConversions}
 import scala.reflect.io.AbstractFile
 
 object MockitoTraitTest {
@@ -94,7 +95,9 @@ object MockitoTraitTest {
     def traitMethodWithDefaultArgs(defaultArg: Int = 30, anotherDefault: String = "hola"): Int = -1
   }
 
-  class ValueClass(val v: String) extends AnyVal {
+  // this is a case class in order to have equals/hashcode properly defined which
+  // is necessary for the eqTo syntax to work properly in Scala 2.11
+  case class ValueClass(v: String) extends AnyVal {
     override def toString = s"ValueClass($v)"
   }
   case class ValueCaseClassInt(v: Int) extends AnyVal
@@ -174,7 +177,7 @@ object MockitoTraitTest {
 }
 
 @RunWith(classOf[JUnitRunner])
-class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/ with Mockito {
+class MockitoTraitTest extends AnyFunSuite with Matchers with Mockito {
   import MockitoTraitTest._
 
   test("mocks are called with the right arguments") {
@@ -295,15 +298,15 @@ class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/
   test("eqTo syntax") {
     val aMock = mock[Foo2]
 
-    aMock.valueClass(1, eqTo(new ValueClass("meh"))) returns "mocked!"
-    aMock.valueClass(1, new ValueClass("meh")) should be("mocked!")
-    aMock.valueClass(1, eqTo(new ValueClass("meh"))) was called
+    aMock.valueClass(1, eqTo(ValueClass("meh"))) returns "mocked!"
+    aMock.valueClass(1, ValueClass("meh")) should be("mocked!")
+    aMock.valueClass(1, eqTo(ValueClass("meh"))) was called
 
-    aMock.valueClass(any[Int], new ValueClass("moo")) returns "mocked!"
-    aMock.valueClass(11, new ValueClass("moo")) should be("mocked!")
-    aMock.valueClass(any[Int], new ValueClass("moo")) was called
+    aMock.valueClass(any[Int], ValueClass("moo")) returns "mocked!"
+    aMock.valueClass(11, ValueClass("moo")) should be("mocked!")
+    aMock.valueClass(any[Int], ValueClass("moo")) was called
 
-    val valueClass = new ValueClass("blah")
+    val valueClass = ValueClass("blah")
     aMock.valueClass(1, eqTo(valueClass)) returns "mocked!"
     aMock.valueClass(1, valueClass) should be("mocked!")
     aMock.valueClass(1, eqTo(valueClass)) was called
@@ -663,11 +666,18 @@ class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/
     Await.result(mockFutureFn(), 2.seconds) should equal(42)
   }
 
+  // Function0 types seem to not play well with Mockito and Future.apply
+  // in Scala 2.11 so we use Future.value here -- this test is perhaps a bit
+  // tautological since mockFn() is called immediately in Future.value but it
+  // did expose a difference between Scala 2.11 and Scala 2.12.
   test("works with Future whenReady 1") {
-    val mockFn = mock[() => Unit]
+    val mockFn = mock[() => Boolean]
+    mockFn() returns true
 
-    val f = Future(mockFn.apply())
-    whenReady(f)(_ => mockFn() was called)
+    val f: Future[Boolean] = Future.value(mockFn())
+    whenReady(f) { _: Boolean =>
+      mockFn() was called
+    }
   }
 
   test("works with Future whenReady 2") {
@@ -675,6 +685,16 @@ class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/
     mockFutureFn() returns Future(42)
 
     whenReady(mockFutureFn())(result => result should equal(42))
+  }
+
+  test("works with Future whenReady 3") {
+    val mockFn = mock[Int => Boolean]
+    mockFn(any[Int]) returns true
+
+    val f: Future[Boolean] = Future.apply(mockFn(42))
+    whenReady(f) { result: Boolean =>
+      result should be(true)
+    }
   }
 
   test("works with Function types") {
@@ -713,6 +733,9 @@ class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/
     }
   }
 
+  private final implicit val patienceConfig: PatienceConfig =
+    PatienceConfig(timeout = Span(5, Seconds), interval = Span(20, Millis))
+
   private final implicit def convertTwitterFuture[T](twitterFuture: Future[T]): FutureConcept[T] =
     new FutureConcept[T] {
       def eitherValue: Option[Either[Throwable, T]] =
@@ -725,4 +748,12 @@ class MockitoTraitTest extends AnyFunSuite with Matchers /*with WhenReadyMixin*/
       def isExpired: Boolean = false
       def isCanceled: Boolean = false
     }
+
+  private final implicit def twitterDurationToScalaTestTimeout(duration: Duration): Timeout = {
+    Timeout(Span(duration.inMillis, Millis))
+  }
+
+  private final implicit def twitterDurationToScalaTestInterval(duration: Duration): Interval = {
+    Interval(Span(duration.inMillis, Millis))
+  }
 }
