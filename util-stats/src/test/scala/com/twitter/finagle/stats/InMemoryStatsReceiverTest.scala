@@ -330,11 +330,9 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
   test("printSchemas should print schemas") {
     val stats = new InMemoryStatsReceiver()
     stats.addGauge("coolGauge") { 3 }
-    stats.counter("sweetCounter")
-    stats.stat("radHisto")
-    val gauges = Array("coolGauge").toSeq
-    val histograms = Array("radHisto").toSeq
-    val counters = Array("sweetCounter").toSeq
+    stats.counter("sweet", "counter")
+    val radSr = stats.scope("rad")
+    radSr.stat("histo")
 
     val baos = new ByteArrayOutputStream()
     val ps = new PrintStream(baos, true, "utf-8")
@@ -344,12 +342,15 @@ class InMemoryStatsReceiverTest extends FunSuite with Eventually with Integratio
       val parts = content.split('\n')
 
       assert(parts.length == 3)
-      assert(parts(
-        0) == s"coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $gauges, None, Vector(), InMemoryStatsReceiver))")
-      assert(parts(
-        1) == s"radHisto HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $histograms, None, Vector(), InMemoryStatsReceiver))")
-      assert(parts(
-        2) == s"sweetCounter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, $counters, None, Vector(), InMemoryStatsReceiver))")
+      assert(
+        parts(
+          0) == "coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, coolGauge, None, Vector(), InMemoryStatsReceiver))")
+      assert(
+        parts(
+          1) == "rad/histo HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, rad/histo, None, Vector(), InMemoryStatsReceiver/rad))")
+      assert(
+        parts(
+          2) == "sweet/counter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, sweet/counter, None, Vector(), InMemoryStatsReceiver))")
     } finally {
       ps.close()
     }

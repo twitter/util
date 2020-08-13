@@ -35,10 +35,10 @@ class MetricBuilder(
   val role: SourceRole = NoRoleSpecified,
   val verbosity: Verbosity = Verbosity.Default,
   val sourceClass: Option[String] = None,
-  val name: Seq[String] = Seq(),
+  val name: Seq[String] = Seq.empty,
   val processPath: Option[String] = None,
   // Only persisted and relevant when building histograms.
-  val percentiles: IndexedSeq[Double] = IndexedSeq(),
+  val percentiles: IndexedSeq[Double] = IndexedSeq.empty,
   val statsReceiver: StatsReceiver) {
 
   /**
@@ -164,6 +164,8 @@ class MetricBuilder(
     hashCodes.foldLeft(0)((a, b) => 31 * a + b)
   }
 
-  override def toString =
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $name, $processPath, $percentiles, $statsReceiver)"
+  override def toString(): String = {
+    val nameString = name.mkString("/")
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $processPath, $percentiles, $statsReceiver)"
+  }
 }
