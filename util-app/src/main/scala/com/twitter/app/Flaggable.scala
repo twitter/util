@@ -178,7 +178,7 @@ object Flaggable {
         case _ =>
           throw new IllegalArgumentException(
             s"The property $s does not belong to Java Enum ${clazz.getName}, the constants defined " +
-              s"in the class are: ${clazz.getEnumConstants.toSeq}.")
+              s"in the class are: ${clazz.getEnumConstants.mkString(",")}.")
       }
     }
 

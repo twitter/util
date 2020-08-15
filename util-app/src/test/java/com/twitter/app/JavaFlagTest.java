@@ -112,6 +112,7 @@ public class JavaFlagTest {
             "",
             Flaggable.ofJavaEnum(Disney.class)
     );
+    enumFlag.parse();
     assertEquals(Disney.MICKEY, enumFlag.apply());
     // should parse Strings with matching cases without errors
     enumFlag.parse("MICKEY");
@@ -123,7 +124,7 @@ public class JavaFlagTest {
     } catch (IllegalArgumentException e) {
       assertEquals(
               "The property MICKY does not belong to Java Enum com.twitter.app.JavaFlagTest$Disney, " +
-                      "the constants defined in the class are: WrappedArray(MICKEY, MINNIE).",
+                      "the constants defined in the class are: MICKEY,MINNIE.",
               e.getMessage()
       );
     }
