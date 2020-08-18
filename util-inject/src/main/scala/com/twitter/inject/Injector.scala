@@ -1,4 +1,4 @@
-package com.twitter.util.inject
+package com.twitter.inject
 
 import com.google.inject.{Key, Injector => UnderlyingInjector}
 import java.lang.annotation.Annotation

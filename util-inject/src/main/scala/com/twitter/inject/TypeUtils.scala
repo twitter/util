@@ -1,4 +1,4 @@
-package com.twitter.util.inject
+package com.twitter.inject
 
 import com.google.inject.TypeLiteral
 import com.google.inject.internal.MoreTypes.ParameterizedTypeImpl

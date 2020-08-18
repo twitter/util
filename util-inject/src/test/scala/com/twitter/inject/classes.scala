@@ -1,8 +1,42 @@
-package com.twitter.util.inject
+package com.twitter.inject
 
 import com.google.inject.{Provider, TypeLiteral}
 import javax.inject.{Inject, Named}
 
+class SomeClient {
+  protected val underlying: String = "Hello, Alice."
+  def get: String = underlying
+}
+
+trait Augmentation { self: SomeClient =>
+  override def get: String = s"${self.underlying} Welcome to Wonderland."
+  def onlyHere: String = "Only on augmented classes."
+}
+
+class Baz @Inject() (client: SomeClient with Augmentation) {
+  client.onlyHere
+}
+trait MyServiceInterface {
+
+  def add2(int: Int): Int
+}
+
+class MyServiceImpl extends MyServiceInterface {
+  override def add2(int: Int): Int = {
+    int + 2
+  }
+}
+trait MultiService {
+  val name: String
+}
+
+class OneMultiService extends MultiService {
+  override val name = "one"
+}
+
+class TwoMultiService extends MultiService {
+  override val name = "two"
+}
 object classes {
   object Outer {
     trait X

@@ -1,4 +1,4 @@
-package com.twitter.util.inject
+package com.twitter.inject
 
 import org.scalacheck.Arbitrary
 import org.scalatest.funsuite.AnyFunSuite

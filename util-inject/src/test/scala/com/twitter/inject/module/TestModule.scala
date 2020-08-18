@@ -1,8 +1,9 @@
-package com.twitter.util.inject.module
+package com.twitter.inject.module
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import com.twitter.util.inject.{MyServiceImpl, MyServiceInterface, TestBindingAnnotation}
+import com.twitter.inject.TestBindingAnnotation
+import com.twitter.inject.{MyServiceImpl, MyServiceInterface}
 import java.util.Properties
 import javax.inject.Singleton
 import net.codingwell.scalaguice.ScalaModule

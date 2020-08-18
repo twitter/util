@@ -1,4 +1,4 @@
-package com.twitter.util.inject;
+package com.twitter.inject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

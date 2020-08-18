@@ -1,47 +1,15 @@
-package com.twitter.util.inject
+package com.twitter.inject
 
 import com.google.inject._
 import com.google.inject.name.Names
-import com.twitter.util.inject.classes.{TypeProvider, _}
-import com.twitter.util.inject.module.TestModule
-import javax.inject.{Inject, Named, Singleton}
+import com.twitter.inject.classes.{TypeProvider, _}
+import com.twitter.inject.module.{SeqAbstractModule, TestModule}
+import javax.inject.{Named, Singleton}
 import net.codingwell.scalaguice.ScalaModule
 import org.junit.runner.RunWith
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.junit.JUnitRunner
-
-object SeqAbstractModule extends AbstractModule with ScalaModule {
-  @Singleton
-  @Provides
-  def provideSeq: Seq[Array[Byte]] =
-    Seq.empty[Array[Byte]]
-}
-
-trait MyServiceInterface {
-
-  def add2(int: Int): Int
-}
-
-class MyServiceImpl extends MyServiceInterface {
-  override def add2(int: Int): Int = {
-    int + 2
-  }
-}
-
-class SomeClient {
-  protected val underlying: String = "Hello, Alice."
-  def get: String = underlying
-}
-
-trait Augmentation { self: SomeClient =>
-  override def get: String = s"${self.underlying} Welcome to Wonderland."
-  def onlyHere: String = "Only on augmented classes."
-}
-
-class Baz @Inject() (client: SomeClient with Augmentation) {
-  client.onlyHere
-}
 
 object InjectorTest {
   type AugmentedSomeClient = SomeClient with Augmentation
