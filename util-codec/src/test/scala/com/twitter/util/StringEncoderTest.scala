@@ -18,9 +18,9 @@ package com.twitter.util
 
 import java.lang.StringBuilder
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class StringEncoderTest extends WordSpec {
+class StringEncoderTest extends AnyWordSpec {
   val longString =
     "A string that is really really really really really really long and has more than 76 characters"
   val result =
@@ -35,7 +35,7 @@ class StringEncoderTest extends WordSpec {
   }
 }
 
-class Base64StringEncoderTest extends WordSpec {
+class Base64StringEncoderTest extends AnyWordSpec {
   val urlUnsafeBytes = Array(-1.toByte, -32.toByte)
   val resultUnsafe = "/+A"
   val resultSafe = "_-A"
@@ -55,7 +55,7 @@ class Base64StringEncoderTest extends WordSpec {
   }
 }
 
-class GZIPStringEncoderTest extends WordSpec {
+class GZIPStringEncoderTest extends AnyWordSpec {
   "a gzip string encoder" should {
     val gse = new GZIPStringEncoder {}
     "properly encode and decode strings" in {

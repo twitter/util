@@ -1,8 +1,8 @@
 package com.twitter.util.registry
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LibraryTest extends FunSuite {
+class LibraryTest extends AnyFunSuite {
   test("Library.register registers libraries") {
     val simple = new SimpleRegistry
     GlobalRegistry.withRegistry(simple) {

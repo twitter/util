@@ -2,10 +2,10 @@ package com.twitter.app
 
 import java.net.URLClassLoader
 import org.mockito.Mockito._
-import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class ClassPathTest extends FunSuite with MockitoSugar {
+class ClassPathTest extends AnyFunSuite with MockitoSugar {
 
   test("Null URL[] URLClassloader") {
     val classLoader = mock[URLClassLoader]

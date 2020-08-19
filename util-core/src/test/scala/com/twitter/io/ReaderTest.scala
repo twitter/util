@@ -10,12 +10,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatest.{FunSuite, Matchers}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable.ArrayBuffer
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 class ReaderTest
-    extends FunSuite
+    extends AnyFunSuite
     with ScalaCheckDrivenPropertyChecks
     with Matchers
     with Eventually

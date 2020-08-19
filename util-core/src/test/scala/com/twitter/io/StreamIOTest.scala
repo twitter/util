@@ -2,9 +2,9 @@ package com.twitter.io
 
 import scala.util.Random
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class StreamIOTest extends WordSpec {
+class StreamIOTest extends AnyWordSpec {
   "StreamIO.copy" should {
     "copy the entire stream" in {
       val buf = new Array[Byte](2048)

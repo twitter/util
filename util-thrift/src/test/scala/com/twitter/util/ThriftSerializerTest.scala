@@ -16,9 +16,9 @@
 
 package com.twitter.util
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class ThriftSerializerTest extends WordSpec {
+class ThriftSerializerTest extends AnyWordSpec {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)

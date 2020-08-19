@@ -1,8 +1,8 @@
 package com.twitter.jvm
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class EstimatorTest extends FunSuite {
+class EstimatorTest extends AnyFunSuite {
   test("LoadAverage") {
     // This makes LoadAverage.a = 1/2 for easy testing.
     val interval = -1d / math.log(0.5)

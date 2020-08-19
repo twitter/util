@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LazyStatsReceiverTest extends FunSuite {
+class LazyStatsReceiverTest extends AnyFunSuite {
   test("Doesn't eagerly initialize counters") {
     val underlying = new InMemoryStatsReceiver()
     val wrapped = new LazyStatsReceiver(underlying)

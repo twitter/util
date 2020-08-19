@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ThriftCodecTest extends FunSuite {
+class ThriftCodecTest extends AnyFunSuite {
 
   private def roundTrip(codec: ThriftCodec[TestThriftStructure, _]): Unit = {
     val struct = new TestThriftStructure("aString", 5)

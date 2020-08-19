@@ -5,11 +5,11 @@ import com.twitter.util.Time
 import java.util.logging.{Level, Logger}
 import org.mockito.ArgumentMatchers.contains
 import org.mockito.Mockito.{times, verify, when}
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import scala.collection.mutable
+import org.scalatest.wordspec.AnyWordSpec
 
-class JvmTest extends WordSpec with MockitoSugar {
+class JvmTest extends AnyWordSpec with MockitoSugar {
   "Jvm" should {
     class JvmHelper(suppliedLogger: Option[Logger] = None) extends Jvm {
       protected override def logger: Logger = suppliedLogger match {

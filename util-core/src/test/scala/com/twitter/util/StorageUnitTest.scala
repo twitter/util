@@ -1,10 +1,9 @@
 package com.twitter.util
 
-import org.scalatest.FunSuite
-
 import com.twitter.conversions.StorageUnitOps._
+import org.scalatest.funsuite.AnyFunSuite
 
-class StorageUnitTest extends FunSuite {
+class StorageUnitTest extends AnyFunSuite {
   test("StorageUnit: should convert whole numbers into storage units (back and forth)") {
     assert(1.byte.inBytes == 1)
     assert(1.kilobyte.inBytes == 1024)

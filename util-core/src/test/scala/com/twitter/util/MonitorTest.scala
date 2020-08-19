@@ -2,8 +2,8 @@ package com.twitter.util
 
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
 object MonitorTest {
   class MockMonitor extends Monitor {
@@ -11,7 +11,7 @@ object MonitorTest {
   }
 }
 
-class MonitorTest extends FunSuite with MockitoSugar {
+class MonitorTest extends AnyFunSuite with MockitoSugar {
   import MonitorTest._
 
   class MonitorOrElseHelper {

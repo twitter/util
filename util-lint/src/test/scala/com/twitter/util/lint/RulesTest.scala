@@ -1,8 +1,8 @@
 package com.twitter.util.lint
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RulesTest extends FunSuite {
+class RulesTest extends AnyFunSuite {
 
   private var flag = false
 

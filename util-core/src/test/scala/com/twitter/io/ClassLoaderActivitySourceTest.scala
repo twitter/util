@@ -2,9 +2,9 @@ package com.twitter.io
 
 import com.twitter.util.FuturePool
 import java.io.ByteArrayInputStream
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ClassLoaderActivitySourceTest extends FunSuite {
+class ClassLoaderActivitySourceTest extends AnyFunSuite {
 
   test("ClassLoaderActivitySource") {
     val classLoader = new ClassLoader() {

@@ -1,6 +1,6 @@
 package com.twitter.util.routing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 private object PolymorphicRouterCompilationTest {
 
@@ -80,7 +80,7 @@ private object PolymorphicRouterCompilationTest {
 }
 
 // these tests ensure that we properly support polymorphic Router and RouterBuilder types
-class PolymorphicRouterCompilationTest extends FunSuite {
+class PolymorphicRouterCompilationTest extends AnyFunSuite {
   import PolymorphicRouterCompilationTest._
 
   test("Supports routing with polymorphic destinations") {

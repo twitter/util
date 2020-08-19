@@ -1,9 +1,9 @@
 package com.twitter.app
 
 import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class FlagsTest extends FunSuite {
+class FlagsTest extends AnyFunSuite {
 
   class Ctx(failFastUntilParsed: Boolean = false) {
     val flag = new Flags("test", includeGlobal = false, failFastUntilParsed)

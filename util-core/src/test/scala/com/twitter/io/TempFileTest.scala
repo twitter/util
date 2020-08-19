@@ -2,9 +2,9 @@ package com.twitter.io
 
 import java.io.{ByteArrayInputStream, DataInputStream}
 import java.util.Arrays
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class TempFileTest extends WordSpec {
+class TempFileTest extends AnyWordSpec {
 
   "TempFile" should {
 

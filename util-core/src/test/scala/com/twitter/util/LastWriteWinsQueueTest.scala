@@ -1,8 +1,8 @@
 package com.twitter.util
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class LastWriteWinsQueueTest extends WordSpec {
+class LastWriteWinsQueueTest extends AnyWordSpec {
   "LastWriteWinsQueue" should {
     val queue = new LastWriteWinsQueue[String]
 

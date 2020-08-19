@@ -2,11 +2,11 @@ package com.twitter.finagle.stats
 
 import java.io.{ByteArrayOutputStream, PrintStream}
 import java.nio.charset.StandardCharsets
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import scala.collection.parallel.immutable.ParRange
+import org.scalatest.funsuite.AnyFunSuite
 
-class InMemoryStatsReceiverTest extends FunSuite with Eventually with IntegrationPatience {
+class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with IntegrationPatience {
 
   // scalafix:off StoreGaugesAsMemberVariables
   test("clear") {

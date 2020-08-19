@@ -3,9 +3,9 @@ package com.twitter.concurrent
 import com.twitter.util._
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{RejectedExecutionException, CancellationException}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class AsyncMeterTest extends FunSuite {
+class AsyncMeterTest extends AnyFunSuite {
   import AsyncMeter._
 
   // Workaround methods for dealing with Scala compiler warnings:

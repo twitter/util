@@ -2,9 +2,9 @@ package com.twitter.util
 
 import java.net.InetAddress
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class NetUtilTest extends WordSpec {
+class NetUtilTest extends AnyWordSpec {
   "NetUtil" should {
     "isIpv4Address" in {
       for (i <- 0.to(255)) {

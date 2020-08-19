@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
 import java.util.concurrent.CountDownLatch
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class SerializedTest extends WordSpec with Serialized {
+class SerializedTest extends AnyWordSpec with Serialized {
   "Serialized" should {
     "runs blocks, one at a time, in the order received" in {
       val t1CallsSerializedFirst = new CountDownLatch(1)

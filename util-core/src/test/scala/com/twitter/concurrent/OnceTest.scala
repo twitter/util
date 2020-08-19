@@ -2,9 +2,9 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Promise, Await}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class OnceTest extends FunSuite {
+class OnceTest extends AnyFunSuite {
   test("Once.apply should only be applied once") {
     var x = 0
     val once = Once { x += 1 }

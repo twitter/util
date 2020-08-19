@@ -3,9 +3,9 @@ package com.twitter.jvm
 import java.lang.{Boolean => JBool}
 import java.lang.management.ManagementFactory
 import javax.management.ObjectName
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class OptTest extends FunSuite {
+class OptTest extends AnyFunSuite {
   test("Opts") {
     if (System.getProperty("java.vm.name").contains("HotSpot")) {
       val DiagnosticName =

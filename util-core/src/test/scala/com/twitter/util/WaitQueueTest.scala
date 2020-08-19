@@ -1,10 +1,10 @@
 package com.twitter.util
 
 import org.scalacheck.Gen
-import org.scalatest.FunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
 
-class WaitQueueTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class WaitQueueTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
   private class EmptyK[A] extends Promise.K[A] {
     protected[util] def depth: Short = 0

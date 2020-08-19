@@ -3,10 +3,10 @@ package com.twitter.cache
 import com.twitter.util.{Promise, Future}
 import java.util.concurrent.ConcurrentHashMap
 import org.mockito.Mockito.{verify, never}
-import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class EvictingCacheTest extends FunSuite with MockitoSugar {
+class EvictingCacheTest extends AnyFunSuite with MockitoSugar {
   test("EvictingCache should evict on failed futures for set") {
     val cache = mock[FutureCache[String, String]]
     val fCache = new EvictingCache(cache)

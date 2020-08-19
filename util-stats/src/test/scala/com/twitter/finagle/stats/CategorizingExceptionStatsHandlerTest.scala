@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CategorizingExceptionStatsHandlerTest extends FunSuite {
+class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
   val categorizer = (t: Throwable) => { "clienterrors" }
 
   test("uses category, source, exception chains and rollup") {

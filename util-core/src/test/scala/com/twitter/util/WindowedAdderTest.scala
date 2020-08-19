@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class WindowedAdderTest extends FunSuite {
+class WindowedAdderTest extends AnyFunSuite {
   private def newAdder() = WindowedAdder(3 * 1000, 3, Stopwatch.timeMillis)
 
   test("sums things up when time stands still") {

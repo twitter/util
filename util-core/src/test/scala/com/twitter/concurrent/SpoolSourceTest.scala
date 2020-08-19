@@ -2,9 +2,9 @@ package com.twitter.concurrent
 
 import com.twitter.util.{Return, Await}
 import java.util.concurrent.atomic.AtomicInteger
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class SpoolSourceTest extends WordSpec {
+class SpoolSourceTest extends AnyWordSpec {
   "SpoolSource" should {
     class SpoolSourceHelper {
       val source = new SpoolSource[Int]

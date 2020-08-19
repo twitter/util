@@ -1,9 +1,9 @@
 package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class PeriodTest extends FunSuite {
+class PeriodTest extends AnyFunSuite {
   test("Period#numPeriods should behave reasonably") {
     val period = new Period(1.second)
     val dur = 1.second

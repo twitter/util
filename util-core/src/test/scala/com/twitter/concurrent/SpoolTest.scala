@@ -5,11 +5,11 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, Promise, Return, Throw}
 import java.io.EOFException
 import org.scalacheck.Arbitrary
-import org.scalatest.WordSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable.ArrayBuffer
+import org.scalatest.wordspec.AnyWordSpec
 
-class SpoolTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
+class SpoolTest extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
 
   def await[A](f: Future[A]): A = Await.result(f, 2.seconds)
 

@@ -21,10 +21,11 @@ import com.twitter.io.TempFolder
 import java.net.InetSocketAddress
 import java.util.concurrent.{Callable, CountDownLatch, Executors, Future, TimeUnit}
 import java.util.{logging => javalog}
-import org.scalatest.{BeforeAndAfter, WordSpec}
+import org.scalatest.BeforeAndAfter
 import scala.collection.mutable
+import org.scalatest.wordspec.AnyWordSpec
 
-class LoggerTest extends WordSpec with TempFolder with BeforeAndAfter {
+class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
   val logLevel =
     Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 

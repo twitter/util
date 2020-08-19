@@ -1,8 +1,8 @@
 package com.twitter.util.tunable
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TunableTest extends FunSuite {
+class TunableTest extends AnyFunSuite {
 
   test("Tunable cannot have empty id") {
     intercept[IllegalArgumentException] {

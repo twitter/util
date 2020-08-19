@@ -19,9 +19,9 @@ package com.twitter.logging
 import java.net.{DatagramPacket, DatagramSocket}
 import java.util.{logging => javalog}
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class SyslogHandlerTest extends WordSpec {
+class SyslogHandlerTest extends AnyWordSpec {
   val record1 = new javalog.LogRecord(Level.FATAL, "fatal message!")
   record1.setLoggerName("net.lag.whiskey.Train")
   record1.setMillis(1206769996722L)

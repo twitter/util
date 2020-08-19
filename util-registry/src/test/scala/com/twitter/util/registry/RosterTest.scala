@@ -3,10 +3,10 @@ package com.twitter.util.registry
 import java.util.logging.Logger
 import org.mockito.Mockito.{never, verify}
 import org.mockito.ArgumentMatchers.anyObject
-import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class RosterTest extends FunSuite with MockitoSugar {
+class RosterTest extends AnyFunSuite with MockitoSugar {
   def withRoster(fn: (Roster, Logger) => Unit): Unit = {
     val simple = new SimpleRegistry
     simple.put(Seq("foo", "bar"), "fantastic")

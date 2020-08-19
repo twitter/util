@@ -1,12 +1,12 @@
 package com.twitter.zk
 
 import org.mockito.Mockito._
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
 import com.twitter.util.Future
+import org.scalatest.wordspec.AnyWordSpec
 
-class ConnectorTest extends WordSpec with MockitoSugar {
+class ConnectorTest extends AnyWordSpec with MockitoSugar {
   "Connector.RoundRobin" should {
     "require underlying connections" in {
       intercept[Exception] {

@@ -5,10 +5,10 @@ import com.twitter.cache.caffeine.LoadingFutureCache
 import com.twitter.util.{Await, Future, Promise}
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{never, verify, when}
-import org.scalatest.FunSuite
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
 
-class LazilyEvictingCacheTest extends FunSuite with MockitoSugar {
+class LazilyEvictingCacheTest extends AnyFunSuite with MockitoSugar {
   private val explodingCacheLoader =
     new CacheLoader[String, Future[String]] {
       def load(k: String): Future[String] =

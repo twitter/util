@@ -18,11 +18,10 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 
-import org.scalatest.WordSpec
-
 import com.twitter.conversions.StringOps._
+import org.scalatest.wordspec.AnyWordSpec
 
-class FormatterTest extends WordSpec {
+class FormatterTest extends AnyWordSpec {
   val basicFormatter = new Formatter
 
   val utcFormatter = new Formatter(

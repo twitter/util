@@ -1,8 +1,8 @@
 package com.twitter.util.tunable
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class MutableTest extends FunSuite {
+class MutableTest extends AnyFunSuite {
 
   test("map is initially empty") {
     assert(TunableMap.newMutable().entries.size == 0)
@@ -384,7 +384,7 @@ class MutableTest extends FunSuite {
   }
 }
 
-class NullTunableMapTest extends FunSuite {
+class NullTunableMapTest extends AnyFunSuite {
 
   test("NullTunableMap returns Tunable.None") {
     val nullTunableMap = NullTunableMap

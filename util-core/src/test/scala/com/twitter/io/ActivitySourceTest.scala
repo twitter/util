@@ -1,9 +1,9 @@
 package com.twitter.io
 
 import com.twitter.util.Activity
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ActivitySourceTest extends FunSuite {
+class ActivitySourceTest extends AnyFunSuite {
 
   val ok: ActivitySource[String] = new ActivitySource[String] {
     def get(varName: String) = Activity.value(varName)

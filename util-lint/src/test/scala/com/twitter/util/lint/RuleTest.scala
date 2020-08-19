@@ -1,8 +1,8 @@
 package com.twitter.util.lint
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RuleTest extends FunSuite {
+class RuleTest extends AnyFunSuite {
 
   private def withName(name: String): Rule =
     Rule(Category.Performance, name, "descriptive description") { Nil }

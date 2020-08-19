@@ -3,14 +3,14 @@ package com.twitter.zk.coordination
 import scala.jdk.CollectionConverters._
 
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
-import org.scalatest.WordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, JavaTimer}
 import com.twitter.zk.{NativeConnector, RetryPolicy, ZkClient}
+import org.scalatest.wordspec.AnyWordSpec
 
-class ShardCoordinatorTest extends WordSpec with MockitoSugar {
+class ShardCoordinatorTest extends AnyWordSpec with MockitoSugar {
 
   "ShardCoordinator" should {
 

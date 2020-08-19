@@ -3,9 +3,9 @@ package com.twitter.jvm
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.io.ByteArrayOutputStream
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CpuProfileTest extends FunSuite {
+class CpuProfileTest extends AnyFunSuite {
   test("record") {
 
     // record() calls Time.now 3 times initially, and then 3 times on every loop iteration.

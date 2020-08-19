@@ -2,9 +2,9 @@ package com.twitter.jvm
 
 import com.twitter.util.{Await, Promise}
 import java.util.concurrent.locks.ReentrantLock
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.funsuite.AnyFunSuite
 
 class Philosopher {
   val ready = new Promise[Unit]
@@ -18,7 +18,7 @@ class Philosopher {
   }
 }
 
-class ContentionTest extends FunSuite with Eventually {
+class ContentionTest extends AnyFunSuite with Eventually {
 
   implicit override val patienceConfig =
     PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))

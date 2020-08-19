@@ -1,12 +1,12 @@
 package com.twitter.app
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 object MyGlobalFlag extends GlobalFlag[String]("a test flag", "a global test flag")
 object MyGlobalFlagNoDefault extends GlobalFlag[Int]("a global test flag with no default")
 object MyGlobalBooleanFlag extends GlobalFlag[Boolean](false, "a boolean flag")
 
-class GlobalFlagTest extends FunSuite {
+class GlobalFlagTest extends AnyFunSuite {
   val flagSet = Set(MyGlobalFlag, MyGlobalBooleanFlag, MyGlobalFlagNoDefault)
 
   test("GlobalFlag.get") {

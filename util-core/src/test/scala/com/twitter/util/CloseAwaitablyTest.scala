@@ -1,9 +1,9 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CloseAwaitablyTest extends FunSuite {
+class CloseAwaitablyTest extends AnyFunSuite {
   class Context extends Closable with CloseAwaitably {
     val p: Promise[Unit] = new Promise[Unit]
     var n: Int = 0

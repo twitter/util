@@ -1,14 +1,14 @@
 package com.twitter.hashing
 
 import org.scalacheck.Gen
-import org.scalatest.WordSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable
 import java.io.{BufferedReader, InputStreamReader}
 import java.nio.{ByteBuffer, ByteOrder}
 import java.security.MessageDigest
+import org.scalatest.wordspec.AnyWordSpec
 
-class ConsistentHashingDistributorTest extends WordSpec with ScalaCheckDrivenPropertyChecks {
+class ConsistentHashingDistributorTest extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
   "KetamaDistributor" should {
     val nodes = Seq(
       HashNode("10.0.1.1", 600, 1),

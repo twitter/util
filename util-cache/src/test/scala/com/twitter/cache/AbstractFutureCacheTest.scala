@@ -1,10 +1,10 @@
 package com.twitter.cache
 
 import com.twitter.util.{Future, Promise}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 // TODO: should also check for races
-abstract class AbstractFutureCacheTest extends FunSuite {
+abstract class AbstractFutureCacheTest extends AnyFunSuite {
 
   def name: String
 

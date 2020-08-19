@@ -3,10 +3,10 @@ package com.twitter.app
 import com.twitter.app.SolarSystemPlanets._
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Awaitable}
-import org.scalatest.FunSuite
 import scala.collection.mutable
+import org.scalatest.funsuite.AnyFunSuite
 
-class FlagTest extends FunSuite {
+class FlagTest extends AnyFunSuite {
 
   class Ctx(failFastUntilParsed: Boolean = false) {
     val flag = new Flags("test", includeGlobal = false, failFastUntilParsed)

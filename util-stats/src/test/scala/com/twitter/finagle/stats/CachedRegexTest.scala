@@ -1,9 +1,9 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
 import scala.jdk.CollectionConverters._
+import org.scalatest.funsuite.AnyFunSuite
 
-class CachedRegexTest extends FunSuite {
+class CachedRegexTest extends AnyFunSuite {
   test("Lets through things it should let through") {
     val cachedRegex = new CachedRegex("foo".r)
     val original: Map[String, Number] = Map("bar" -> 3)

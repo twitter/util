@@ -2,13 +2,13 @@ package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{Future => JFuture, _}
-import org.scalatest.FunSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.time.{Millis, Seconds, Span}
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NonFatal
+import org.scalatest.funsuite.AnyFunSuite
 
-class FuturePoolTest extends FunSuite with Eventually {
+class FuturePoolTest extends AnyFunSuite with Eventually {
 
   implicit override val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))

@@ -1,10 +1,10 @@
 package com.twitter.conversions
 
 import com.twitter.util.StorageUnit
-import org.scalatest.FunSuite
 import com.twitter.conversions.StorageUnitOps._
+import org.scalatest.funsuite.AnyFunSuite
 
-class StorageUnitOpsTest extends FunSuite {
+class StorageUnitOpsTest extends AnyFunSuite {
 
   test("converts") {
     assert(StorageUnit.fromBytes(1) == 1.byte)

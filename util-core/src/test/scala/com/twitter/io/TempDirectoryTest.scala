@@ -1,8 +1,8 @@
 package com.twitter.io
 
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class TempDirectoryTest extends WordSpec {
+class TempDirectoryTest extends AnyWordSpec {
 
   "TempDirectory" should {
 
