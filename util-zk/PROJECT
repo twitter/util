@@ -8,5 +8,5 @@ owners:
   - vkostyukov
 watchers:
   - coord-team@twitter.com
-  - csl@twitter.com
+  - csl-team:ldap
   - observability@twitter.com
