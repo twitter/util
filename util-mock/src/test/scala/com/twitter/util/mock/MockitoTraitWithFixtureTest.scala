@@ -1,4 +1,4 @@
-package com.twitter.mock
+package com.twitter.util.mock
 
 import org.junit.runner.RunWith
 import org.mockito.exceptions.verification.{NeverWantedButInvoked, NoInteractionsWanted}

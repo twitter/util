@@ -1,4 +1,4 @@
-package com.twitter.mock
+package com.twitter.util.mock
 
 import org.junit.runner.RunWith
 import org.mockito.MockitoSugar
@@ -24,7 +24,7 @@ object ResetMocksAfterEachTestTraitTest {
 }
 
 /**
- * Ensure [[ResetMocksAfterEachTest]] works with [[com.twitter.mock.Mockito]]
+ * Ensure [[ResetMocksAfterEachTest]] works with [[com.twitter.util.mock.Mockito]]
  */
 @RunWith(classOf[JUnitRunner])
 class ResetMocksAfterEachTestTraitTest

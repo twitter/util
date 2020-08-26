@@ -1,4 +1,4 @@
-package com.twitter.mock
+package com.twitter.util.mock
 
 import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 
@@ -13,7 +13,7 @@ import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
  *
  * This trait uses [[org.mockito.IdiomaticMockito]] which is heavily influenced by ScalaTest Matchers.
  *
- * To use, mix in the [[com.twitter.mock.Mockito]] trait where desired.
+ * To use, mix in the [[com.twitter.util.mock.Mockito]] trait where desired.
  *
  * ==Create a new mock==
  *
