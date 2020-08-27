@@ -4,7 +4,7 @@ import scoverage.ScoverageKeys
 val releaseVersion = "20.9.0-SNAPSHOT"
 
 val slf4jVersion = "1.7.30"
-val jacksonVersion = "2.11.0"
+val jacksonVersion = "2.11.2"
 val mockitoVersion = "3.3.3"
 val mockitoScalaVersion = "1.14.8"
 
