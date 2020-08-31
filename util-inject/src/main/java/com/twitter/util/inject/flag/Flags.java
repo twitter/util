@@ -1,4 +1,4 @@
-package com.twitter.inject.flag;
+package com.twitter.util.inject.flag;
 
 import com.google.inject.Key;
 

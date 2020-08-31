@@ -1,7 +1,7 @@
 package com.twitter.inject.internal
 
 import com.google.inject.{AbstractModule, Key}
-import com.twitter.inject.flag.Flags
+import com.twitter.util.inject.flag.Flags
 import com.twitter.util.logging.Logging
 import javax.inject.Provider
 
