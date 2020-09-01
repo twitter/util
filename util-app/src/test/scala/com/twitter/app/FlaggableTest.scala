@@ -77,4 +77,12 @@ class FlaggableTest extends AnyFunSuite {
     assert(Flaggable.ofTuple[Int, String].parse("1,hello") == ((1, "hello")))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
+
+  test("Flaggable: expose types and kinds") {
+    assert(Flaggable.ofFile.isInstanceOf[Flaggable.Typed[_]])
+    assert(Flaggable.ofJavaBoolean.isInstanceOf[Flaggable.Typed[_]])
+
+    assert(Flaggable.ofSeq[Int].isInstanceOf[Flaggable.Generic[_]])
+    assert(Flaggable.ofJavaSet[Int].isInstanceOf[Flaggable.Generic[_]])
+  }
 }

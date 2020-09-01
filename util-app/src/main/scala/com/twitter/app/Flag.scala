@@ -82,7 +82,7 @@ class Flag[T: Flaggable] private[app] (
   private[twitter] def this(name: String, help: String, usage: String) =
     this(name, help, usage, false)
 
-  protected val flaggable: Flaggable[T] = implicitly[Flaggable[T]]
+  private[twitter] val flaggable: Flaggable[T] = implicitly[Flaggable[T]]
 
   private[this] def localValue: Option[T] = localFlagValues() match {
     case None => None
@@ -249,6 +249,11 @@ class Flag[T: Flaggable] private[app] (
    *      determining if there is a supplied value.
    */
   def getWithDefault: Option[T] = valueOrDefault
+
+  /**
+   * Get the default value for this flag. This will return `None` if no default value is specified.
+   */
+  private[twitter] def getDefault: Option[T] = default
 
   /**
    * Get the *unparsed* (as string) value if it has been set or if there is a default value supplied.

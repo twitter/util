@@ -12,6 +12,7 @@ class FlagTest extends AnyFunSuite {
     val flag = new Flags("test", includeGlobal = false, failFastUntilParsed)
     val fooFlag = flag("foo", 123, "The foo value")
     val barFlag = flag("bar", "okay", "The bar value")
+    val bazFlag = flag[String]("baz", "The baz value")
   }
 
   test("Flag: defaults") {
@@ -21,6 +22,11 @@ class FlagTest extends AnyFunSuite {
     flag.finishParsing()
     assert(fooFlag() == 123)
     assert(barFlag() == "okay")
+    intercept[IllegalArgumentException](bazFlag())
+
+    assert(fooFlag.getDefault == Some(123))
+    assert(barFlag.getDefault == Some("okay"))
+    assert(bazFlag.getDefault.isEmpty)
   }
 
   test("Flag: override a flag") {

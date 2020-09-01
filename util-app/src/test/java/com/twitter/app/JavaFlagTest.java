@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scala.reflect.ClassTag$;
+
 import org.junit.Test;
 
 import com.twitter.util.Duration;
@@ -32,7 +34,7 @@ public class JavaFlagTest {
         @Override public Named apply(String n) {
           return new Named(n);
         }
-      });
+      }, ClassTag$.MODULE$.apply(Named.class));
 
     Named(String name) {
       this.name = name;

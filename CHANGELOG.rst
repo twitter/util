@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-app: `Flaggable.mandatory` now takes implicit `ClassTag[T]` as an argument. This is change is
+  source-compatible in Scala but requires Java users to pass argument explicitly via 
+  `ClassTag$.MODULE$.apply(clazz)`. ``PHAB_ID=D542135``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

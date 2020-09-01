@@ -43,10 +43,8 @@ private[inject] trait TwitterModuleFlags {
     help: String,
     flaggable: Flaggable[T]
   ): Flag[T] = {
-    implicit val implicitFlaggable: Flaggable[T] = flaggable
-    val flag = new Flag[T](name, help, default, failFastUntilParsed = failfastOnFlagsNotParsed) {
-      override protected val flaggable: Flaggable[T] = implicitFlaggable
-    }
+    val flag =
+      new Flag[T](name, help, default, failFastUntilParsed = failfastOnFlagsNotParsed)(flaggable)
     flags += flag
     flag
   }
@@ -66,10 +64,8 @@ private[inject] trait TwitterModuleFlags {
     usage: String,
     flaggable: Flaggable[T]
   ): Flag[T] = {
-    implicit val implicitFlaggable: Flaggable[T] = flaggable
-    val flag = new Flag[T](name, help, usage, failFastUntilParsed = failfastOnFlagsNotParsed) {
-      override protected val flaggable: Flaggable[T] = implicitFlaggable
-    }
+    val flag =
+      new Flag[T](name, help, usage, failFastUntilParsed = failfastOnFlagsNotParsed)(flaggable)
     flags += flag
     flag
   }
