@@ -27,6 +27,9 @@ junit_tests(
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
         "3rdparty/jvm/org/scalatestplus:mockito-3-2",
-        "3rdparty/jvm/org/slf4j:slf4j-simple",
+        scoped(
+            "3rdparty/jvm/org/slf4j:slf4j-simple",
+            scope = "runtime",
+        ),
     ],
 )

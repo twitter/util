@@ -5,7 +5,10 @@ junit_tests(
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatestplus:junit",
         "3rdparty/jvm/org/slf4j:slf4j-api",
-        "3rdparty/jvm/org/slf4j:slf4j-simple",
+        scoped(
+            "3rdparty/jvm/org/slf4j:slf4j-simple",
+            scope = "runtime",
+        ),
         "util/util-slf4j-api/src/main/scala",
     ],
 )
