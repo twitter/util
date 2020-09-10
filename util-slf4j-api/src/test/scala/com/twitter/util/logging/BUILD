@@ -23,13 +23,13 @@ junit_tests(
     compiler_option_sets = ["fatal_warnings"],
     dependencies = [
         ":testutil",
-        "3rdparty/jvm/org/mockito:mockito-core",
+        "3rdparty/jvm/org/mockito:mockito-scala",
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
-        "3rdparty/jvm/org/scalatestplus:mockito-3-2",
         scoped(
             "3rdparty/jvm/org/slf4j:slf4j-simple",
             scope = "runtime",
         ),
+        "util/util-mock/src/main/scala/com/twitter/util/mock",
     ],
 )

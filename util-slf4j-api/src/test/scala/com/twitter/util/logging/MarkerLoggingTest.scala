@@ -1,288 +1,284 @@
 package com.twitter.util.logging
 
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
-import org.slf4j
-import org.slf4j.Marker
-import scala.language.reflectiveCalls
+import com.twitter.util.mock.Mockito
+import org.mockito.Mockito.when
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import org.slf4j.Marker
+import scala.language.reflectiveCalls
 
-class MarkerLoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
+class MarkerLoggingTest extends AnyFunSuite with Matchers with Mockito {
 
   test("Marker Logging#trace enabled") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = true)
 
     f.logger.trace(f.marker, f.message)
-    verify(f.underlying).trace(f.marker, f.message)
+    f.underlying.trace(f.marker, f.message) was called
   }
 
   test("Marker Logging#trace not enabled") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = false)
 
     f.logger.trace(f.marker, f.message)
-    verify(f.underlying, never).trace(anyObject[Marker], anyString)
+    f.underlying.trace(any[Marker], any[String]) wasNever called
   }
 
   test("Marker Logging#trace enabled with message and cause") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = true)
 
     f.logger.trace(f.marker, f.message, f.cause)
-    verify(f.underlying).trace(f.marker, f.message, f.cause)
+    f.underlying.trace(f.marker, f.message, f.cause) was called
   }
 
   test("Marker Logging#trace not enabled with message and cause") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = false)
 
     f.logger.trace(f.marker, f.message, f.cause)
-    verify(f.underlying, never).trace(anyObject[Marker], anyString, anyObject)
+    f.underlying.trace(any[Marker], any[String], any) wasNever called
   }
 
   test("Marker Logging#trace enabled with parameters") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = true)
 
     f.logger.traceWith(f.marker, f.message, f.arg1)
-    verify(f.underlying).trace(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.trace(f.marker, f.message, Seq(f.arg1): _*) was called
     f.logger.traceWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying).trace(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.trace(f.marker, f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.traceWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).trace(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.trace(f.marker, f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Marker Logging#trace not enabled with parameters") {
-    val f = fixture(_.isTraceEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isTraceEnabled(any[Marker]), isEnabled = false)
 
     f.logger.traceWith(f.marker, f.message, f.arg1)
-    verify(f.underlying, never).trace(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.trace(f.marker, f.message, Seq(f.arg1): _*) wasNever called
     f.logger.traceWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).trace(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.trace(f.marker, f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.traceWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).trace(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.trace(f.marker, f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Debug */
 
   test("Marker Logging#debug enabled") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = true)
 
     f.logger.debug(f.marker, f.message)
-    verify(f.underlying).debug(f.marker, f.message)
+    f.underlying.debug(f.marker, f.message) was called
   }
 
   test("Marker Logging#debug not enabled") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = false)
 
     f.logger.debug(f.marker, f.message)
-    verify(f.underlying, never).debug(anyObject[Marker], anyString)
+    f.underlying.debug(any[Marker], any[String]) wasNever called
   }
 
   test("Marker Logging#debug enabled with message and cause") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = true)
 
     f.logger.debug(f.marker, f.message, f.cause)
-    verify(f.underlying).debug(f.marker, f.message, f.cause)
+    f.underlying.debug(f.marker, f.message, f.cause) was called
   }
 
   test("Marker Logging#debug not enabled with message and cause") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = false)
 
     f.logger.debug(f.marker, f.message, f.cause)
-    verify(f.underlying, never).debug(anyObject[Marker], anyString, anyObject)
+    f.underlying.debug(any[Marker], any[String], any) wasNever called
   }
 
   test("Marker Logging#debug enabled with parameters") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = true)
 
     f.logger.debugWith(f.marker, f.message, f.arg1)
-    verify(f.underlying).debug(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.debug(f.marker, f.message, Seq(f.arg1): _*) was called
     f.logger.debugWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying).debug(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.debug(f.marker, f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.debugWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).debug(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.debug(f.marker, f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Marker Logging#debug not enabled with parameters") {
-    val f = fixture(_.isDebugEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isDebugEnabled(any[Marker]), isEnabled = false)
 
     f.logger.debugWith(f.marker, f.message, f.arg1)
-    verify(f.underlying, never).debug(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.debug(f.marker, f.message, Seq(f.arg1): _*) wasNever called
     f.logger.debugWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).debug(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.debug(f.marker, f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.debugWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).debug(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.debug(f.marker, f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Info */
 
   test("Marker Logging#info enabled") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = true)
 
     f.logger.info(f.marker, f.message)
-    verify(f.underlying).info(f.marker, f.message)
+    f.underlying.info(f.marker, f.message) was called
   }
 
   test("Marker Logging#info not enabled") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = false)
 
     f.logger.info(f.marker, f.message)
-    verify(f.underlying, never).info(anyObject[Marker], anyString)
+    f.underlying.info(any[Marker], any[String]) wasNever called
   }
 
   test("Marker Logging#info enabled with message and cause") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = true)
 
     f.logger.info(f.marker, f.message, f.cause)
-    verify(f.underlying).info(f.marker, f.message, f.cause)
+    f.underlying.info(f.marker, f.message, f.cause) was called
   }
 
   test("Marker Logging#info not enabled with message and cause") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = false)
 
     f.logger.info(f.marker, f.message, f.cause)
-    verify(f.underlying, never).info(anyObject[Marker], anyString, anyObject)
+    f.underlying.info(any[Marker], any[String], any) wasNever called
   }
 
   test("Marker Logging#info enabled with parameters") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = true)
 
     f.logger.infoWith(f.marker, f.message, f.arg1)
-    verify(f.underlying).info(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.info(f.marker, f.message, Seq(f.arg1): _*) was called
     f.logger.infoWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying).info(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.info(f.marker, f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.infoWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).info(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.info(f.marker, f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Marker Logging#info not enabled with parameters") {
-    val f = fixture(_.isInfoEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isInfoEnabled(any[Marker]), isEnabled = false)
 
     f.logger.infoWith(f.marker, f.message, f.arg1)
-    verify(f.underlying, never).info(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.info(f.marker, f.message, Seq(f.arg1): _*) wasNever called
     f.logger.infoWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).info(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.info(f.marker, f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.infoWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).info(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.info(f.marker, f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Warn */
 
   test("Marker Logging#warn enabled") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = true)
 
     f.logger.warn(f.marker, f.message)
-    verify(f.underlying).warn(f.marker, f.message)
+    f.underlying.warn(f.marker, f.message) was called
   }
 
   test("Marker Logging#warn not enabled") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = false)
 
     f.logger.warn(f.marker, f.message)
-    verify(f.underlying, never).warn(anyObject[Marker], anyString)
+    f.underlying.warn(any[Marker], any[String]) wasNever called
   }
 
   test("Marker Logging#warn enabled with message and cause") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = true)
 
     f.logger.warn(f.marker, f.message, f.cause)
-    verify(f.underlying).warn(f.marker, f.message, f.cause)
+    f.underlying.warn(f.marker, f.message, f.cause) was called
   }
 
   test("Marker Logging#warn not enabled with message and cause") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = false)
 
     f.logger.warn(f.marker, f.message, f.cause)
-    verify(f.underlying, never).warn(anyObject[Marker], anyString, anyObject)
+    f.underlying.warn(any[Marker], any[String], any) wasNever called
   }
 
   test("Marker Logging#warn enabled with parameters") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = true)
 
     f.logger.warnWith(f.marker, f.message, f.arg1)
-    verify(f.underlying).warn(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.warn(f.marker, f.message, Seq(f.arg1): _*) was called
     f.logger.warnWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying).warn(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.warn(f.marker, f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.warnWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).warn(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.warn(f.marker, f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Marker Logging#warn not enabled with parameters") {
-    val f = fixture(_.isWarnEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isWarnEnabled(any[Marker]), isEnabled = false)
 
     f.logger.warnWith(f.marker, f.message, f.arg1)
-    verify(f.underlying, never).warn(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.warn(f.marker, f.message, Seq(f.arg1): _*) wasNever called
     f.logger.warnWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).warn(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.warn(f.marker, f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.warnWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).warn(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.warn(f.marker, f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Error */
 
   test("Marker Logging#error enabled") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = true)
 
     f.logger.error(f.marker, f.message)
-    verify(f.underlying).error(f.marker, f.message)
+    f.underlying.error(f.marker, f.message) was called
   }
 
   test("Marker Logging#error not enabled") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = false)
 
     f.logger.error(f.marker, f.message)
-    verify(f.underlying, never).error(anyObject[Marker], anyString)
+    f.underlying.error(any[Marker], any[String]) wasNever called
   }
 
   test("Marker Logging#error enabled with message and cause") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = true)
 
     f.logger.error(f.marker, f.message, f.cause)
-    verify(f.underlying).error(f.marker, f.message, f.cause)
+    f.underlying.error(f.marker, f.message, f.cause) was called
   }
 
   test("Marker Logging#error not enabled with message and cause") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = false)
 
     f.logger.error(f.marker, f.message, f.cause)
-    verify(f.underlying, never).error(anyObject[Marker], anyString, anyObject)
+    f.underlying.error(any[Marker], any[String], any) wasNever called
   }
 
   test("Marker Logging#error enabled with parameters") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = true)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = true)
 
     f.logger.errorWith(f.marker, f.message, f.arg1)
-    verify(f.underlying).error(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.error(f.marker, f.message, Seq(f.arg1): _*) was called
     f.logger.errorWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying).error(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.error(f.marker, f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.errorWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).error(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.error(f.marker, f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Marker Logging#error not enabled with parameters") {
-    val f = fixture(_.isErrorEnabled(anyObject[Marker]), isEnabled = false)
+    val f = fixture(_.isErrorEnabled(any[Marker]), isEnabled = false)
 
     f.logger.errorWith(f.marker, f.message, f.arg1)
-    verify(f.underlying, never).error(f.marker, f.message, Seq(f.arg1): _*)
+    f.underlying.error(f.marker, f.message, Seq(f.arg1): _*) wasNever called
     f.logger.errorWith(f.marker, f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).error(f.marker, f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.error(f.marker, f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.errorWith(f.marker, f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).error(f.marker, f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.error(f.marker, f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Private */
 
-  private def fixture(p: slf4j.Logger => Boolean, isEnabled: Boolean) = {
-    new {
-      val marker: Marker = TestMarker
-      val message = "msg"
-      val cause = new RuntimeException("TEST EXCEPTION")
-      val arg1 = "arg1"
-      val arg2 = new Integer(1)
-      val arg3 = "arg3"
-      val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
-      when(p(underlying)).thenReturn(isEnabled)
-      val logger = Logger(underlying)
-    }
+  private def fixture(p: org.slf4j.Logger => Boolean, isEnabled: Boolean) = new {
+    val marker: Marker = TestMarker
+    val message = "msg"
+    val cause = new RuntimeException("TEST EXCEPTION")
+    val arg1 = "arg1"
+    val arg2 = new Integer(1)
+    val arg3 = "arg3"
+    val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
+    when(p(underlying)).thenReturn(isEnabled)
+    val logger: Logger = Logger(underlying)
   }
 
   object TestMarker extends Marker {

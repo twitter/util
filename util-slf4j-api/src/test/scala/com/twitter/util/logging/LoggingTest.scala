@@ -1,14 +1,12 @@
 package com.twitter.util.logging
 
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
-import org.slf4j
-import scala.language.reflectiveCalls
+import com.twitter.util.mock.Mockito
+import org.mockito.Mockito.when
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import scala.language.reflectiveCalls
 
-class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
+class LoggingTest extends AnyFunSuite with Matchers with Mockito {
 
   /* Trace */
 
@@ -16,50 +14,50 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val f = fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.trace(f.message)
-    verify(f.underlying).trace(f.message)
+    f.underlying.trace(f.message) was called
   }
 
   test("Logging#trace not enabled") {
     val f = fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.trace(f.message)
-    verify(f.underlying, never).trace(anyString)
+    f.underlying.trace(any[String]) wasNever called
   }
 
   test("Logging#trace enabled with message and cause") {
     val f = fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.trace(f.message, f.cause)
-    verify(f.underlying).trace(f.message, f.cause)
+    f.underlying.trace(f.message, f.cause) was called
   }
 
   test("Logging#trace not enabled with message and cause") {
     val f = fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.trace(f.message, f.cause)
-    verify(f.underlying, never).trace(anyString, anyObject)
+    f.underlying.trace(any[String], any) wasNever called
   }
 
   test("Logging#trace enabled with parameters") {
     val f = fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.traceWith(f.message, f.arg1)
-    verify(f.underlying).trace(f.message, Seq(f.arg1): _*)
+    f.underlying.trace(f.message, Seq(f.arg1): _*) was called
     f.logger.traceWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying).trace(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.trace(f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.traceWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).trace(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.trace(f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Logging#trace not enabled with parameters") {
     val f = fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.traceWith(f.message, f.arg1)
-    verify(f.underlying, never).trace(f.message, Seq(f.arg1): _*)
+    f.underlying.trace(f.message, Seq(f.arg1): _*) wasNever called
     f.logger.traceWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).trace(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.trace(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.traceWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).trace(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.trace(f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Debug */
@@ -68,50 +66,50 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val f = fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debug(f.message)
-    verify(f.underlying).debug(f.message)
+    f.underlying.debug(f.message) was called
   }
 
   test("Logging#debug not enabled") {
     val f = fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debug(f.message)
-    verify(f.underlying, never).debug(anyString)
+    f.underlying.debug(any[String]) wasNever called
   }
 
   test("Logging#debug enabled with message and cause") {
     val f = fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debug(f.message, f.cause)
-    verify(f.underlying).debug(f.message, f.cause)
+    f.underlying.debug(f.message, f.cause) was called
   }
 
   test("Logging#debug not enabled with message and cause") {
     val f = fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debug(f.message, f.cause)
-    verify(f.underlying, never).debug(anyString, anyObject)
+    f.underlying.debug(any[String], any) wasNever called
   }
 
   test("Logging#debug enabled with parameters") {
     val f = fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debugWith(f.message, f.arg1)
-    verify(f.underlying).debug(f.message, Seq(f.arg1): _*)
+    f.underlying.debug(f.message, Seq(f.arg1): _*) was called
     f.logger.debugWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying).debug(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.debug(f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.debugWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).debug(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.debug(f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Logging#debug not enabled with parameters") {
     val f = fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debugWith(f.message, f.arg1)
-    verify(f.underlying, never).debug(f.message, Seq(f.arg1): _*)
+    f.underlying.debug(f.message, Seq(f.arg1): _*) wasNever called
     f.logger.debugWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).debug(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.debug(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.debugWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).debug(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.debug(f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Info */
@@ -120,50 +118,50 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val f = fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.info(f.message)
-    verify(f.underlying).info(f.message)
+    f.underlying.info(f.message) was called
   }
 
   test("Logging#info not enabled") {
     val f = fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.info(f.message)
-    verify(f.underlying, never).info(anyString)
+    f.underlying.info(any[String]) wasNever called
   }
 
   test("Logging#info enabled with message and cause") {
     val f = fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.info(f.message, f.cause)
-    verify(f.underlying).info(f.message, f.cause)
+    f.underlying.info(f.message, f.cause) was called
   }
 
   test("Logging#info not enabled with message and cause") {
     val f = fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.info(f.message, f.cause)
-    verify(f.underlying, never).info(anyString, anyObject)
+    f.underlying.info(any[String], any) wasNever called
   }
 
   test("Logging#info enabled with parameters") {
     val f = fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.infoWith(f.message, f.arg1)
-    verify(f.underlying).info(f.message, Seq(f.arg1): _*)
+    f.underlying.info(f.message, Seq(f.arg1): _*) was called
     f.logger.infoWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying).info(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.info(f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.infoWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).info(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.info(f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Logging#info not enabled with parameters") {
     val f = fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.infoWith(f.message, f.arg1)
-    verify(f.underlying, never).info(f.message, Seq(f.arg1): _*)
+    f.underlying.info(f.message, Seq(f.arg1): _*) wasNever called
     f.logger.infoWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).info(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.info(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.infoWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).info(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.info(f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Warn */
@@ -172,50 +170,50 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val f = fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warn(f.message)
-    verify(f.underlying).warn(f.message)
+    f.underlying.warn(f.message) was called
   }
 
   test("Logging#warn not enabled") {
     val f = fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warn(f.message)
-    verify(f.underlying, never).warn(anyString)
+    f.underlying.warn(any[String]) wasNever called
   }
 
   test("Logging#warn enabled with message and cause") {
     val f = fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warn(f.message, f.cause)
-    verify(f.underlying).warn(f.message, f.cause)
+    f.underlying.warn(f.message, f.cause) was called
   }
 
   test("Logging#warn not enabled with message and cause") {
     val f = fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warn(f.message, f.cause)
-    verify(f.underlying, never).warn(anyString, anyObject)
+    f.underlying.warn(any[String], any) wasNever called
   }
 
   test("Logging#warn enabled with parameters") {
     val f = fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warnWith(f.message, f.arg1)
-    verify(f.underlying).warn(f.message, Seq(f.arg1): _*)
+    f.underlying.warn(f.message, Seq(f.arg1): _*) was called
     f.logger.warnWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying).warn(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.warn(f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.warnWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).warn(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.warn(f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Logging#warn not enabled with parameters") {
     val f = fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warnWith(f.message, f.arg1)
-    verify(f.underlying, never).warn(f.message, Seq(f.arg1): _*)
+    f.underlying.warn(f.message, Seq(f.arg1): _*) wasNever called
     f.logger.warnWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).warn(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.warn(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.warnWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).warn(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.warn(f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Error */
@@ -224,50 +222,50 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val f = fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.error(f.message)
-    verify(f.underlying).error(f.message)
+    f.underlying.error(f.message) was called
   }
 
   test("Logging#error not enabled") {
     val f = fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.error(f.message)
-    verify(f.underlying, never).error(anyString)
+    f.underlying.error(any[String]) wasNever called
   }
 
   test("Logging#error enabled with message and cause") {
     val f = fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.error(f.message, f.cause)
-    verify(f.underlying).error(f.message, f.cause)
+    f.underlying.error(f.message, f.cause) was called
   }
 
   test("Logging#error not enabled with message and cause") {
     val f = fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.error(f.message, f.cause)
-    verify(f.underlying, never).error(anyString, anyObject)
+    f.underlying.error(any[String], any) wasNever called
   }
 
   test("Logging#error enabled with parameters") {
     val f = fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.errorWith(f.message, f.arg1)
-    verify(f.underlying).error(f.message, Seq(f.arg1): _*)
+    f.underlying.error(f.message, Seq(f.arg1): _*) was called
     f.logger.errorWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying).error(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.error(f.message, Seq(f.arg1, f.arg2): _*) was called
     f.logger.errorWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying).error(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.error(f.message, f.arg1, f.arg2, f.arg3) was called
   }
 
   test("Logging#error not enabled with parameters") {
     val f = fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.errorWith(f.message, f.arg1)
-    verify(f.underlying, never).error(f.message, Seq(f.arg1): _*)
+    f.underlying.error(f.message, Seq(f.arg1): _*) wasNever called
     f.logger.errorWith(f.message, f.arg1, f.arg2)
-    verify(f.underlying, never).error(f.message, Seq(f.arg1, f.arg2): _*)
+    f.underlying.error(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
     f.logger.errorWith(f.message, f.arg1, f.arg2, f.arg3)
-    verify(f.underlying, never).error(f.message, f.arg1, f.arg2, f.arg3)
+    f.underlying.error(f.message, f.arg1, f.arg2, f.arg3) wasNever called
   }
 
   /* Instance Logging */
@@ -318,7 +316,7 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
   }
 
   test("Logging#null values") {
-    val logger = Logger(slf4j.LoggerFactory.getLogger(this.getClass))
+    val logger = Logger(org.slf4j.LoggerFactory.getLogger(this.getClass))
     logger.info(null)
     val list = Nil
     logger.info(list.toString)
@@ -350,16 +348,16 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
 
   /* Private */
 
-  private def fixture(isEnabledFn: slf4j.Logger => Boolean, isEnabled: Boolean) = {
+  private def fixture(isEnabledFn: org.slf4j.Logger => Boolean, isEnabled: Boolean) = {
     new {
       val message = "msg"
       val cause = new RuntimeException("TEST EXCEPTION")
       val arg1 = "arg1"
       val arg2 = new Integer(1)
       val arg3 = "arg3"
-      val underlying = mock[slf4j.Logger]
+      val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
       when(isEnabledFn(underlying)).thenReturn(isEnabled)
-      val logger = Logger(underlying)
+      val logger: Logger = Logger(underlying)
     }
   }
 }
