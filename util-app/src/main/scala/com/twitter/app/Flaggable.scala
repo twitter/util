@@ -183,9 +183,6 @@ object Flaggable {
     private val tflag = implicitly[Flaggable[T]]
     private val uflag = implicitly[Flaggable[U]]
 
-    assert(tflag.default.isEmpty)
-    assert(uflag.default.isEmpty)
-
     def parse(v: String): (T, U) = v.split(",") match {
       case Array(t, u) => (tflag.parse(t), uflag.parse(u))
       case _ => throw new IllegalArgumentException("not a 't,u'")
@@ -220,8 +217,7 @@ object Flaggable {
 
   private[app] class SetFlaggable[T: Flaggable] extends Generic[Set[T]] {
     private val flag = implicitly[Flaggable[T]]
-    assert(flag.default.isEmpty)
-    override def parse(v: String): Set[T] =
+    def parse(v: String): Set[T] =
       if (v.isEmpty) Set.empty[T]
       else v.split(",").iterator.map(flag.parse(_)).toSet
     override def show(set: Set[T]): String = set.map(flag.show).mkString(",")
@@ -232,7 +228,6 @@ object Flaggable {
 
   private[app] class SeqFlaggable[T: Flaggable] extends Generic[Seq[T]] {
     private val flag = implicitly[Flaggable[T]]
-    assert(flag.default.isEmpty)
     def parse(v: String): Seq[T] =
       if (v.isEmpty) Seq.empty[T]
       else v.split(",").toSeq.map(flag.parse)
@@ -245,9 +240,6 @@ object Flaggable {
   private[app] class MapFlaggable[K: Flaggable, V: Flaggable] extends Generic[Map[K, V]] {
     private val kflag = implicitly[Flaggable[K]]
     private val vflag = implicitly[Flaggable[V]]
-
-    assert(kflag.default.isEmpty)
-    assert(vflag.default.isEmpty)
 
     def parse(in: String): Map[K, V] = {
       val tuples = in.split(',').foldLeft(Seq.empty[String]) {

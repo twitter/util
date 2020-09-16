@@ -48,33 +48,32 @@ class FlaggableTest extends AnyFunSuite {
   test("Flaggable: parse seqs") {
     assert(Flaggable.ofSeq[Int].parse("1,2,3,4") == Seq(1, 2, 3, 4))
     assert(Flaggable.ofSeq[Int].parse("") == Seq.empty[Int])
+    assert(Flaggable.ofSeq[Boolean].parse("true,false,true") == Seq(true, false, true))
   }
 
   test("Flaggable: parse sets") {
     assert(Flaggable.ofSet[Int].parse("1,2,3,4") == Set(1, 2, 3, 4))
     assert(Flaggable.ofSet[Int].parse("") == Set.empty[Int])
+    assert(Flaggable.ofSeq[Boolean].parse("true,false,true") == Seq(true, false, true))
   }
 
   test("Flaggable: parse maps") {
     assert(Flaggable.ofMap[Int, Int].parse("1=2,3=4") == Map(1 -> 2, 3 -> 4))
+    assert(
+      Flaggable
+        .ofMap[String, Boolean].parse("foo=true,bar=false") == Map("foo" -> true, "bar" -> false))
   }
 
   test("Flaggable: parse maps with comma-separated values") {
     assert(
-      Flaggable.ofMap[String, Seq[Int]].parse("a=1,2,3,3,b=4,5") ==
+      Flaggable.ofMap[String, Seq[Int]].parse("a=1,2,3,3,b=4,5") == // 1000191039
         Map("a" -> Seq(1, 2, 3, 3), "b" -> Seq(4, 5))
-    )
-  }
-
-  test("Flaggable: parse maps of sets with comma-separated values") {
-    assert(
-      Flaggable.ofMap[String, Set[Int]].parse("a=1,2,3,3,b=4,5") ==
-        Map("a" -> Set(1, 2, 3), "b" -> Set(4, 5))
     )
   }
 
   test("Flaggable: parse tuples") {
     assert(Flaggable.ofTuple[Int, String].parse("1,hello") == ((1, "hello")))
+    assert(Flaggable.ofTuple[String, Boolean].parse("foo,true") == (("foo", true)))
     intercept[IllegalArgumentException] { Flaggable.ofTuple[Int, String].parse("1") }
   }
 

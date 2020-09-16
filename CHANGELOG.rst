@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-app: `Seq`/`Tuple2`/`Map` flags can now operate on booleans. For example,
+  `Flag[Seq[Boolean]]` now works as expected instead of throwing an assert exception (previous
+  behaviour). ``PHAB_ID=D549196``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
