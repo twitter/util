@@ -206,6 +206,7 @@ lazy val util = Project(
     utilRegistry,
     utilRouting,
     utilSecurity,
+    utilSecurityTestCerts,
     utilSlf4jApi,
     utilSlf4jJulBridge,
     utilStats,
@@ -490,7 +491,16 @@ lazy val utilSecurity = Project(
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     )
-  ).dependsOn(utilCore, utilLogging)
+).dependsOn(utilCore, utilLogging, utilSecurityTestCerts % "test")
+
+lazy val utilSecurityTestCerts = Project(
+  id = "util-security-test-certs",
+  base = file("util-security-test-certs")
+).settings(
+  sharedSettings
+).settings(
+  name := "util-security-test-certs"
+)
 
 lazy val utilStats = Project(
   id = "util-stats",

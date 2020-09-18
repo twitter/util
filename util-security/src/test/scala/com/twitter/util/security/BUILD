@@ -9,7 +9,7 @@ junit_tests(
         "3rdparty/jvm/org/scalatestplus:scalacheck",
         "util/util-core:util-core-util",
         "util/util-core/src/main/scala/com/twitter/io",
+        "util/util-security-test-certs/src/main/resources",
         "util/util-security/src/main/scala/com/twitter/util/security",
-        "util/util-security/src/test/resources",
     ],
 )
