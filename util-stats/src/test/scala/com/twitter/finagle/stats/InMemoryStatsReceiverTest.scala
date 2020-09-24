@@ -344,13 +344,13 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       assert(parts.length == 3)
       assert(
         parts(
-          0) == "coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, coolGauge, None, Vector(), InMemoryStatsReceiver))")
+          0) == "coolGauge GaugeSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, coolGauge, List(), None, Vector(), InMemoryStatsReceiver))")
       assert(
         parts(
-          1) == "rad/histo HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, rad/histo, None, Vector(), InMemoryStatsReceiver/rad))")
+          1) == "rad/histo HistogramSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, rad/histo, List(), None, Vector(), InMemoryStatsReceiver/rad))")
       assert(
         parts(
-          2) == "sweet/counter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, sweet/counter, None, Vector(), InMemoryStatsReceiver))")
+          2) == "sweet/counter CounterSchema(MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, sweet/counter, List(), None, Vector(), InMemoryStatsReceiver))")
     } finally {
       ps.close()
     }

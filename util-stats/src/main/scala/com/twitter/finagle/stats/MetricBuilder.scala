@@ -23,7 +23,8 @@ case object Server extends SourceRole
  * @param role whether the service is playing the part of client or server regarding this metric
  * @param verbosity see StatsReceiver for details
  * @param sourceClass the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)
- * @param name the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
+ * @param name the full metric name
+ * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
  * @param processPath a universal coordinate for the resource
  * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
  * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
@@ -36,6 +37,7 @@ class MetricBuilder(
   val verbosity: Verbosity = Verbosity.Default,
   val sourceClass: Option[String] = None,
   val name: Seq[String] = Seq.empty,
+  val relativeName: Seq[String] = Seq.empty,
   val processPath: Option[String] = None,
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double] = IndexedSeq.empty,
@@ -54,6 +56,7 @@ class MetricBuilder(
     verbosity: Verbosity = this.verbosity,
     sourceClass: Option[String] = this.sourceClass,
     name: Seq[String] = this.name,
+    relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
     percentiles: IndexedSeq[Double] = this.percentiles
   ): MetricBuilder = {
@@ -65,6 +68,7 @@ class MetricBuilder(
       verbosity = verbosity,
       sourceClass = sourceClass,
       name = name,
+      relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
       statsReceiver = this.statsReceiver
@@ -89,6 +93,9 @@ class MetricBuilder(
   def withRole(role: SourceRole): MetricBuilder = this.copy(role = role)
 
   def withName(name: Seq[String]): MetricBuilder = this.copy(name = name)
+
+  def withRelativeName(relativeName: Seq[String]): MetricBuilder =
+    if (this.relativeName == Seq.empty) this.copy(relativeName = relativeName) else this
 
   def withPercentiles(percentiles: IndexedSeq[Double]) = this.copy(percentiles = percentiles)
 
@@ -152,6 +159,7 @@ class MetricBuilder(
         verbosity == that.verbosity &&
         sourceClass == that.sourceClass &&
         name == that.name &&
+        relativeName == that.relativeName &&
         processPath == that.processPath &&
         percentiles == that.percentiles
     case _ => false
@@ -159,13 +167,22 @@ class MetricBuilder(
 
   override def hashCode(): Int = {
     val state =
-      Seq[AnyRef](description, units, role, verbosity, sourceClass, name, processPath, percentiles)
+      Seq[AnyRef](
+        description,
+        units,
+        role,
+        verbosity,
+        sourceClass,
+        name,
+        relativeName,
+        processPath,
+        percentiles)
     val hashCodes = keyIndicator.hashCode() +: state.map(_.hashCode())
     hashCodes.foldLeft(0)((a, b) => 31 * a + b)
   }
 
   override def toString(): String = {
     val nameString = name.mkString("/")
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $processPath, $percentiles, $statsReceiver)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $relativeName, $processPath, $percentiles, $statsReceiver)"
   }
 }
