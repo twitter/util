@@ -184,7 +184,7 @@ object Activity {
    * Collect a collection of activities into an activity of a collection
    * of values.
    *
-   * @usecase def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
+   * @example def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
   def collect[T: ClassTag, CC[X] <: Iterable[X]](
     acts: CC[Activity[T]]
@@ -202,7 +202,7 @@ object Activity {
    * Like Var.collectIndependent this is a workaround and should be deprecated when a version
    * of Var.collect without a stack overflow issue is implemented.
    *
-   * @usecase def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
+   * @example def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
   def collectIndependent[T: ClassTag, CC[X] <: Iterable[X]](
     acts: CC[Activity[T]]
