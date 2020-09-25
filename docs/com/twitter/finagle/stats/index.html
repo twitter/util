@@ -283,6 +283,10 @@
                         <a href="Requests$.html" title="">Requests</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="RoleConfiguredStatsReceiver.html" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;."></a>
+                        <a href="RoleConfiguredStatsReceiver.html" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;.">RoleConfiguredStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="RollupStatsReceiver.html" title="A RollupStatsReceiver reports stats on multiple Counter/Stat/Gauge based on the sequence of names you pass."></a>
                         <a href="RollupStatsReceiver.html" title="A RollupStatsReceiver reports stats on multiple Counter/Stat/Gauge based on the sequence of names you pass.">RollupStatsReceiver</a>
                       </li><li class="current-entities indented4">
@@ -823,6 +827,25 @@ required.
       </span>
       
       <p class="shortcomment cmt">A variation of <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a> that also supports reading of the current time series via the <code>apply</code> method.</p>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RoleConfiguredStatsReceiverextendsStatsReceiverProxywithProductwithSerializable"></a><a id="RoleConfiguredStatsReceiver:RoleConfiguredStatsReceiver"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;." href="RoleConfiguredStatsReceiver.html"><span class="name">RoleConfiguredStatsReceiver</span></a><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="role">role: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a></span>)</span><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A StatsReceiver proxy that configures all counter, stat, and gauge
+SourceRoles to the passed in &quot;role&quot;.</p><div class="fullcomment"><div class="comment cmt"><p>A StatsReceiver proxy that configures all counter, stat, and gauge
+SourceRoles to the passed in &quot;role&quot;.
+</p></div><dl class="paramcmts block"><dt class="param">self</dt><dd class="cmt"><p>The underlying StatsReceiver to which translated names are passed</p></dd><dt class="param">role</dt><dd class="cmt"><p>the role used for SourceRole Metadata</p></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.RollupStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="RollupStatsReceiverextendsStatsReceiverProxy"></a><a id="RollupStatsReceiver:RollupStatsReceiver"></a>
       <span class="permalink">

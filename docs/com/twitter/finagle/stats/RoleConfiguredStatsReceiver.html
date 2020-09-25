@@ -263,8 +263,8 @@
                         <a href="NoRoleSpecified$.html" title="">NoRoleSpecified</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="NullStatsReceiver$.html" title=""></a>
-                        <a class="class" href="" title="A no-op StatsReceiver."></a>
-                        <a href="" title="A no-op StatsReceiver.">NullStatsReceiver</a>
+                        <a class="class" href="NullStatsReceiver.html" title="A no-op StatsReceiver."></a>
+                        <a href="NullStatsReceiver.html" title="A no-op StatsReceiver.">NullStatsReceiver</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="object" href="Percentage$.html" title=""></a>
@@ -283,8 +283,8 @@
                         <a href="Requests$.html" title="">Requests</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="RoleConfiguredStatsReceiver.html" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;."></a>
-                        <a href="RoleConfiguredStatsReceiver.html" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;.">RoleConfiguredStatsReceiver</a>
+                        <a class="class" href="" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;."></a>
+                        <a href="" title="A StatsReceiver proxy that configures all counter, stat, and gauge SourceRoles to the passed in &quot;role&quot;.">RoleConfiguredStatsReceiver</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="RollupStatsReceiver.html" title="A RollupStatsReceiver reports stats on multiple Counter/Stat/Gauge based on the sequence of names you pass."></a>
@@ -344,43 +344,35 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <a href="NullStatsReceiver$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <div class="big-circle class">c</div>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="index.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1><a href="NullStatsReceiver$.html" title="See companion object">NullStatsReceiver</a><span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html" title="Permalink">
+        <h1>RoleConfiguredStatsReceiver<span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"><div>
-            Companion <a href="NullStatsReceiver$.html" title="See companion object">object NullStatsReceiver</a>
-          </div></span></h3>
+        <h3><span class="morelinks"></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">NullStatsReceiver</span><span class="result"> extends <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <span class="name">RoleConfiguredStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="role">role: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a></span>)</span><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A no-op <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>. Metrics are not recorded, making this receiver useful
-in unit tests and as defaults in situations where metrics are not strictly
-required.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A StatsReceiver proxy that configures all counter, stat, and gauge
+SourceRoles to the passed in &quot;role&quot;.
+</p></div><dl class="paramcmts block"><dt class="param">self</dt><dd class="cmt"><p>The underlying StatsReceiver to which translated names are passed</p></dd><dt class="param">role</dt><dd class="cmt"><p>the role used for SourceRole Metadata</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
-        </div><div class="toggleContainer block">
-            <span class="toggle">
-              Known Subclasses
-            </span>
-            <div class="subClasses hiddenContent"><a href="NullStatsReceiver$.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a></div>
-          </div></div>
+          <div class="superTypes hiddenContent"><a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Equals.html#scala.Equals" class="extype" name="scala.Equals">Equals</a>, <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a>, <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a>, <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>, <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+        </div></div>
         
 
       <div id="mbrsel">
@@ -405,7 +397,7 @@ required.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.finagle.stats.NullStatsReceiver"><span>NullStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver"><span>RoleConfiguredStatsReceiver</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiverProxy"><span>StatsReceiverProxy</span></li><li class="in" name="com.twitter.finagle.stats.DelegatingStatsReceiver"><span>DelegatingStatsReceiver</span></li><li class="in" name="com.twitter.finagle.stats.StatsReceiver"><span>StatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -425,10 +417,10 @@ required.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.finagle.stats.NullStatsReceiver#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():com.twitter.finagle.stats.NullStatsReceiver"></a><a id="&lt;init&gt;:NullStatsReceiver"></a>
+              <ol><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,role:com.twitter.finagle.stats.SourceRole):com.twitter.finagle.stats.RoleConfiguredStatsReceiver"></a><a id="&lt;init&gt;:RoleConfiguredStatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#&lt;init&gt;():com.twitter.finagle.stats.NullStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#&lt;init&gt;(self:com.twitter.finagle.stats.StatsReceiver,role:com.twitter.finagle.stats.SourceRole):com.twitter.finagle.stats.RoleConfiguredStatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -437,10 +429,10 @@ required.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">NullStatsReceiver</span><span class="params">()</span>
+        <span class="name">RoleConfiguredStatsReceiver</span><span class="params">(<span name="self">self: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="role">role: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a></span>)</span>
       </span>
       
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">self</dt><dd class="cmt"><p>The underlying StatsReceiver to which translated names are passed</p></dd><dt class="param">role</dt><dd class="cmt"><p>the role used for SourceRole Metadata</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -454,7 +446,7 @@ required.
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -470,7 +462,7 @@ required.
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html###():Int" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -486,7 +478,7 @@ required.
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -499,10 +491,10 @@ required.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="addGauge(schema:com.twitter.finagle.stats.GaugeSchema)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(GaugeSchema)(⇒Float):Gauge"></a>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addGauge(gaugeSchema:com.twitter.finagle.stats.GaugeSchema)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(GaugeSchema)(⇒Float):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#addGauge(schema:com.twitter.finagle.stats.GaugeSchema)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#addGauge(gaugeSchema:com.twitter.finagle.stats.GaugeSchema)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -511,7 +503,7 @@ required.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addGauge</span><span class="params">(<span name="schema">schema: <a href="GaugeSchema.html" class="extype" name="com.twitter.finagle.stats.GaugeSchema">GaugeSchema</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="https://www.scala-lang.org/api/2.12.11/scala/Float.html#scala.Float" class="extype" name="scala.Float">Float</a></span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
+        <span class="name">addGauge</span><span class="params">(<span name="gaugeSchema">gaugeSchema: <a href="GaugeSchema.html" class="extype" name="com.twitter.finagle.stats.GaugeSchema">GaugeSchema</a></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="https://www.scala-lang.org/api/2.12.11/scala/Float.html#scala.Float" class="extype" name="scala.Float">Float</a></span>)</span><span class="result">: <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">Gauge</a></span>
       </span>
       
       <p class="shortcomment cmt">Add the function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Add the function <code>f</code> as a <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> with the given name.</p><p>The returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> value is only weakly referenced by the
@@ -520,12 +512,12 @@ be a part of this measurement: thus, it needs to be retained by the
 caller. Or put another way, the measurement is only guaranteed to exist
 as long as there exists a strong reference to the returned
 <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> and typically should be stored in a member variable.</p><p>Measurements under the same name are added together.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver">RoleConfiguredStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#provideGauge">StatsReceiver.provideGauge</a> when there is not a good location
     to store the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a> that can give the desired lifecycle.</p></span><span class="cmt"><p><a href="https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html" target="_blank">java.lang.ref.WeakReference</a></p></span></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(Supplier[Float],Verbosity,String*):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -545,7 +537,7 @@ as long as there exists a strong reference to the returned
     </li><li name="com.twitter.finagle.stats.StatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(f:java.util.function.Supplier[Float],name:String*):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(Supplier[Float],String*):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],name:String*):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],name:String*):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -565,7 +557,7 @@ as long as there exists a strong reference to the returned
     </li><li name="com.twitter.finagle.stats.StatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(Verbosity,String*)(⇒Float):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#addGauge(verbosity:com.twitter.finagle.stats.Verbosity,name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -589,7 +581,7 @@ as long as there exists a strong reference to the returned
     </li><li name="com.twitter.finagle.stats.StatsReceiver#addGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge"></a><a id="addGauge(String*)(⇒Float):Gauge"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#addGauge(name:String*)(f:=&gt;Float):com.twitter.finagle.stats.Gauge" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -613,7 +605,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -629,7 +621,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#clone():Object" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -650,10 +642,10 @@ as long as there exists a strong reference to the returned
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="counter(schema:com.twitter.finagle.stats.CounterSchema):com.twitter.finagle.stats.Counter"></a><a id="counter(CounterSchema):Counter"></a>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="counter(counterSchema:com.twitter.finagle.stats.CounterSchema):com.twitter.finagle.stats.Counter"></a><a id="counter(CounterSchema):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#counter(schema:com.twitter.finagle.stats.CounterSchema):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#counter(counterSchema:com.twitter.finagle.stats.CounterSchema):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -662,15 +654,15 @@ as long as there exists a strong reference to the returned
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">counter</span><span class="params">(<span name="schema">schema: <a href="CounterSchema.html" class="extype" name="com.twitter.finagle.stats.CounterSchema">CounterSchema</a></span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
+        <span class="name">counter</span><span class="params">(<span name="counterSchema">counterSchema: <a href="CounterSchema.html" class="extype" name="com.twitter.finagle.stats.CounterSchema">CounterSchema</a></span>)</span><span class="result">: <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">Counter</a></span>
       </span>
       
       <p class="shortcomment cmt">Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given schema.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> with the given schema.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver">RoleConfiguredStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter"></a><a id="counter(Verbosity,String*):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#counter(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -690,7 +682,7 @@ as long as there exists a strong reference to the returned
     </li><li name="com.twitter.finagle.stats.StatsReceiver#counter" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="counter(name:String*):com.twitter.finagle.stats.Counter"></a><a id="counter(String*):Counter"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#counter(name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#counter(name:String*):com.twitter.finagle.stats.Counter" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -710,7 +702,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -723,26 +715,10 @@ as long as there exists a strong reference to the returned
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#equals(x$1:Any):Boolean" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="https://www.scala-lang.org/api/2.12.11/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#finalize():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -764,7 +740,7 @@ as long as there exists a strong reference to the returned
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -780,29 +756,10 @@ as long as there exists a strong reference to the returned
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="hashCode():Int"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#hashCode():Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
-                <span class="name">@native</span><span class="args">()</span>
-              
-        </dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -815,10 +772,10 @@ as long as there exists a strong reference to the returned
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#isNull" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#isNull" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isNull:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#isNull:Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#isNull:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -830,14 +787,14 @@ as long as there exists a strong reference to the returned
         <span class="name">isNull</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Accurately indicates if this is a <a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Accurately indicates if this is a <a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
+      <p class="shortcomment cmt">Accurately indicates if this is a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Accurately indicates if this is a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
 Because equality is not forwarded via scala.Proxy, this
-is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+is helpful to check for a <a href="NullStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a>.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#metricBuilder" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="metricBuilder():com.twitter.finagle.stats.MetricBuilder"></a><a id="metricBuilder():MetricBuilder"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#metricBuilder():com.twitter.finagle.stats.MetricBuilder" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#metricBuilder():com.twitter.finagle.stats.MetricBuilder" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -854,7 +811,7 @@ is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.st
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -870,7 +827,7 @@ is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.st
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#notify():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -889,7 +846,7 @@ is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.st
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -908,7 +865,7 @@ is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.st
     </li><li name="com.twitter.finagle.stats.StatsReceiver#provideGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit"></a><a id="provideGauge(Supplier[Float],String*):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#provideGauge(f:java.util.function.Supplier[Float],name:String*):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -928,7 +885,7 @@ is helpful to check for a <a href="" class="extype" name="com.twitter.finagle.st
     </li><li name="com.twitter.finagle.stats.StatsReceiver#provideGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="provideGauge(name:String*)(f:=&gt;Float):Unit"></a><a id="provideGauge(String*)(⇒Float):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#provideGauge(name:String*)(f:=&gt;Float):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -946,10 +903,10 @@ a lifecycle with no end.</p><p>This measurement exists in perpetuity.</p><p>Meas
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="StatsReceiver.html#addGauge(f:java.util.function.Supplier[Float],verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Gauge" class="extmbr" name="com.twitter.finagle.stats.StatsReceiver#addGauge">StatsReceiver.addGauge</a> if you can properly control the lifecycle
     of the returned <a href="Gauge.html" class="extype" name="com.twitter.finagle.stats.Gauge">gauge</a>.</p></span><span class="cmt"><p><span class="extype" name="StatsReceiver.provideGauge(java.util.function.Supplier,">String*)</span> for a Java-friendly
      version.</p></span></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#repr" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="repr:com.twitter.finagle.stats.NullStatsReceiver"></a><a id="repr:NullStatsReceiver"></a>
+    </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#repr" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="repr:AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#repr:com.twitter.finagle.stats.NullStatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#repr:AnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -958,35 +915,33 @@ a lifecycle with no end.</p><p>This measurement exists in perpetuity.</p><p>Meas
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">repr</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a></span>
+        <span class="name">repr</span><span class="result">: <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Specifies the representative receiver.</p><div class="fullcomment"><div class="comment cmt"><p>Specifies the representative receiver.  This is in order to
 expose an object we can use for comparison so that global stats
 are only reported once per receiver.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="scope(namespace:String):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String):StatsReceiver"></a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#role" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="role:com.twitter.finagle.stats.SourceRole"></a><a id="role:SourceRole"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#scope(namespace:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#role:com.twitter.finagle.stats.SourceRole" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">scope</span><span class="params">(<span name="namespace">namespace: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+        <span class="name">role</span><span class="result">: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a></span>
       </span>
       
-      <p class="shortcomment cmt">Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)
-statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"backend"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counters</a> named <code>/client/adds</code> and <code>/client/backend/adds</code>.</p><p>Note it's recommended to be mindful with usage of the <code>scope</code> method as it's almost always
-more efficient to pass a full metric name directly to a constructing method.</p><p>Put this way, whenever possible prefer</p><pre>statsReceiver.counter(<span class="lit">"client"</span>, <span class="lit">"adds"</span>)</pre><p>to</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+      
     </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String*):StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#scope(namespaces:String*):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1003,10 +958,28 @@ more efficient to pass a full metric name directly to a constructing method.</p>
                 <span class="name">@varargs</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#scopeSuffix" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.StatsReceiver#scope" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scope(namespace:String):com.twitter.finagle.stats.StatsReceiver"></a><a id="scope(String):StatsReceiver"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#scope(namespace:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">scope</span><span class="params">(<span name="namespace">namespace: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend <code>namespace</code> to the names of the returned <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p><p>For example:</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)
+statsReceiver.scope(<span class="lit">"client"</span>).scope(<span class="lit">"backend"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counters</a> named <code>/client/adds</code> and <code>/client/backend/adds</code>.</p><p>Note it's recommended to be mindful with usage of the <code>scope</code> method as it's almost always
+more efficient to pass a full metric name directly to a constructing method.</p><p>Put this way, whenever possible prefer</p><pre>statsReceiver.counter(<span class="lit">"client"</span>, <span class="lit">"adds"</span>)</pre><p>to</p><pre>statsReceiver.scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.StatsReceiver#scopeSuffix" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver"></a><a id="scopeSuffix(String):StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#scopeSuffix(suffix:String):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1019,11 +992,27 @@ more efficient to pass a full metric name directly to a constructing method.</p>
       </span>
       
       <p class="shortcomment cmt">Prepend a suffix value to the next scope.</p><div class="fullcomment"><div class="comment cmt"><p>Prepend a suffix value to the next scope.</p><p>For example:</p><pre>statsReceiver.scopeSuffix(<span class="lit">"toto"</span>).scope(<span class="lit">"client"</span>).counter(<span class="lit">"adds"</span>)</pre><p>will generate a <a href="Counter.html" class="extype" name="com.twitter.finagle.stats.Counter">counter</a> named <code>/client/toto/adds</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stat(schema:com.twitter.finagle.stats.HistogramSchema):com.twitter.finagle.stats.Stat"></a><a id="stat(HistogramSchema):Stat"></a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#self" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="self:com.twitter.finagle.stats.StatsReceiver"></a><a id="self:StatsReceiver"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#stat(schema:com.twitter.finagle.stats.HistogramSchema):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#self:com.twitter.finagle.stats.StatsReceiver" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">self</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver">RoleConfiguredStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stat(histogramSchema:com.twitter.finagle.stats.HistogramSchema):com.twitter.finagle.stats.Stat"></a><a id="stat(HistogramSchema):Stat"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#stat(histogramSchema:com.twitter.finagle.stats.HistogramSchema):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1032,15 +1021,15 @@ more efficient to pass a full metric name directly to a constructing method.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stat</span><span class="params">(<span name="schema">schema: <a href="HistogramSchema.html" class="extype" name="com.twitter.finagle.stats.HistogramSchema">HistogramSchema</a></span>)</span><span class="result">: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>
+        <span class="name">stat</span><span class="params">(<span name="histogramSchema">histogramSchema: <a href="HistogramSchema.html" class="extype" name="com.twitter.finagle.stats.HistogramSchema">HistogramSchema</a></span>)</span><span class="result">: <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a></span>
       </span>
       
       <p class="shortcomment cmt">Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given schema.</p><div class="fullcomment"><div class="comment cmt"><p>Get a <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">stat</a> with the given schema.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver">RoleConfiguredStatsReceiver</a> → <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></dd></dl></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat"></a><a id="stat(Verbosity,String*):Stat"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#stat(verbosity:com.twitter.finagle.stats.Verbosity,name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1060,7 +1049,7 @@ more efficient to pass a full metric name directly to a constructing method.</p>
     </li><li name="com.twitter.finagle.stats.StatsReceiver#stat" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stat(name:String*):com.twitter.finagle.stats.Stat"></a><a id="stat(String*):Stat"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#stat(name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#stat(name:String*):com.twitter.finagle.stats.Stat" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1080,7 +1069,7 @@ more efficient to pass a full metric name directly to a constructing method.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1093,10 +1082,10 @@ more efficient to pass a full metric name directly to a constructing method.</p>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.NullStatsReceiver#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#toString():String" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1108,11 +1097,28 @@ more efficient to pass a full metric name directly to a constructing method.</p>
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.finagle.stats.NullStatsReceiver">NullStatsReceiver</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.StatsReceiverProxy#underlying" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="underlying:Seq[com.twitter.finagle.stats.StatsReceiver]"></a><a id="underlying:Seq[StatsReceiver]"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#underlying:Seq[com.twitter.finagle.stats.StatsReceiver]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">underlying</span><span class="result">: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><div class="fullcomment"><div class="comment cmt"><p>The underlying <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceivers</a> that the class delegates to.</p><p>Must be nonempty.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a> → <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#wait():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1134,7 +1140,7 @@ more efficient to pass a full metric name directly to a constructing method.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1156,7 +1162,7 @@ more efficient to pass a full metric name directly to a constructing method.</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/NullStatsReceiver.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/RoleConfiguredStatsReceiver.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1187,7 +1193,19 @@ more efficient to pass a full metric name directly to a constructing method.</p>
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <a href="https://www.scala-lang.org/api/2.12.11/scala/Equals.html#scala.Equals" class="extype" name="scala.Equals">Equals</a></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.StatsReceiverProxy">
+              <h3>Inherited from <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.DelegatingStatsReceiver">
+              <h3>Inherited from <a href="DelegatingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.DelegatingStatsReceiver">DelegatingStatsReceiver</a></h3>
+            </div><div class="parent" name="com.twitter.finagle.stats.StatsReceiver">
               <h3>Inherited from <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
