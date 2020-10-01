@@ -6,14 +6,14 @@
 [![Gitter](https://badges.gitter.im/twitter/finagle.svg)](https://gitter.im/twitter/finagle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.twitter/util-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.twitter/util-core_2.12)
 
-A bunch of idiomatic, small, general purpose tools.
+**_Util is a collection of Twitter's core JVM libraries including: concurrency, I/O, caching, stats, time and duration, conversions and so on._**
 
 See the Scaladoc [here](https://twitter.github.com/util).
 
 ## Status
 
-This project is used in production at Twitter (and many other organizations),
-and is being actively developed and maintained.
+This project is used in production at **Twitter (and many other organizations)**,
+and is being **actively developed and maintained**.
 
 ## Releases
 
