@@ -6,7 +6,9 @@ import org.slf4j
  * For Java usability.
  *
  * @note Scala users see [[com.twitter.util.logging.Logger]]
+ * @deprecated Java users can use corresponding methods in [[com.twitter.util.logging.Logger]]
  */
+@deprecated("Use com.twitter.util.logging.Logger", "2020-09-30")
 object Loggers {
 
   /**
@@ -15,9 +17,10 @@ object Loggers {
    * @param name name of the underlying `slf4j.Logger`.
    *
    * {{{
-   *    val logger = Logger("name")
+   *    Logger logger = Logger.getLogger("name");
    * }}}
    */
+  @deprecated("Use com.twitter.util.logging.Logger", "2020-09-30")
   def getLogger(name: String): Logger =
     Logger(name)
 
@@ -27,22 +30,24 @@ object Loggers {
    * @param clazz class to use for naming the underlying slf4j.Logger.
    *
    * {{{
-   *    val logger = Logger(classOf[MyClass])
+   *    Logger logger = Logger.getLogger(classOf[MyClass]);
    * }}}
    */
+  @deprecated("Use com.twitter.util.logging.Logger", "2020-09-30")
   def getLogger(clazz: Class[_]): Logger =
     Logger(clazz)
 
   /**
    * Create a [[Logger]] wrapping the given underlying
-   * [[org.slf4j.Logger]].
+   * `org.slf4j.Logger`.
    *
    * @param underlying an `org.slf4j.Logger`
    *
    * {{{
-   *    val logger = Logger(LoggerFactory.getLogger("name"))
+   *    Logger logger = Logger.getLogger(LoggerFactory.getLogger("name"));
    * }}}
    */
+  @deprecated("Use com.twitter.util.logging.Logger", "2020-09-30")
   def getLogger(underlying: slf4j.Logger): Logger =
     Logger(underlying)
 }

@@ -7,14 +7,13 @@ import scala.reflect.{ClassTag, classTag}
 /**
  * Companion object for [[com.twitter.util.logging.Logger]] which provides
  * factory methods for creation.
- *
- * @note Java users, see [[com.twitter.util.logging.Loggers.getLogger]]
  */
 object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the given name.
-   * @param name name of the underlying Logger.
+   * @param name name of the underlying `org.slf4j.Logger`.
+   * @see Java users see [[getLogger(name:String)]]
    *
    * {{{
    *    val logger = Logger("name")
@@ -25,8 +24,21 @@ object Logger {
   }
 
   /**
+   * Create a [[Logger]] for the given name.
+   * @param name name of the underlying `org.slf4j.Logger`.
+   * @see Scala users see [[apply(name:String)]]
+   *
+   * {{{
+   *    Logger logger = Logger.getLogger("name");
+   * }}}
+   */
+  def getLogger(name: String): Logger =
+    Logger(name)
+
+  /**
    * Create a [[com.twitter.util.logging.Logger]] named for the given class.
    * @param clazz class to use for naming the underlying Logger.
+   * @see Java users see [[getLogger(clazz:Class[_])]]
    *
    * {{{
    *    val logger = Logger(classOf[MyClass])
@@ -35,6 +47,18 @@ object Logger {
   def apply(clazz: Class[_]): Logger = {
     new Logger(LoggerFactory.getLogger(clazz))
   }
+
+  /**
+   * Create a [[Logger]] named for the given class.
+   * @param clazz class to use for naming the underlying `org.slf4j.Logger`.
+   * @see Scala users see [[apply(clazz:Class[_])]]
+   *
+   * {{{
+   *    Logger logger = Logger.getLogger(MyClass.class);
+   * }}}
+   */
+  def getLogger(clazz: Class[_]): Logger =
+    Logger(clazz)
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the runtime class wrapped
@@ -51,8 +75,9 @@ object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] wrapping the given underlying
-   * [[org.slf4j.Logger]].
+   * `org.slf4j.Logger`.
    * @param underlying an `org.slf4j.Logger`
+   * @see Java users see [[getLogger(underlying:Logger)]]
    *
    * {{{
    *    val logger = Logger(LoggerFactory.getLogger("name"))
@@ -61,14 +86,27 @@ object Logger {
   def apply(underlying: slf4j.Logger): Logger = {
     new Logger(underlying)
   }
+
+  /**
+   * Create a [[Logger]] wrapping the given underlying
+   * `org.slf4j.Logger`.
+   * @param underlying an `org.slf4j.Logger`
+   * @see Scala users see [[apply(underlying:Logger)]]
+   *
+   * {{{
+   *    Logger logger = Logger.getLogger(LoggerFactory.getLogger("name"));
+   * }}}
+   */
+  def getLogger(underlying: slf4j.Logger): Logger =
+    Logger(underlying)
 }
 
 /**
- * A scala wrapper over a [[org.slf4j.Logger]].
+ * A scala wrapper over a `org.slf4j.Logger`.
  *
- * The Logger is [[Serializable]] to support it's usage through the
- * [[com.twitter.util.logging.Logging]] trait when the trait is mixed
- * into a [[Serializable]] class.
+ * The Logger extends [[https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html java.io.Serializable]]
+ * to support it's usage through the [[com.twitter.util.logging.Logging]] trait when the trait is mixed
+ * into a [[https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html java.io.Serializable]] class.
  *
  * @define isLevelEnabled
  *
@@ -76,8 +114,8 @@ object Logger {
  *
  * @define isLevelEnabledMarker
  *
- * Determines if the named log level is enabled taking into consideration the given [[Marker]] data.
- * Returns `true` if enabled, `false` otherwise.
+ * Determines if the named log level is enabled taking into consideration the given
+ * `org.slf4j.Marker` data. Returns `true` if enabled, `false` otherwise.
  *
  * @define log
  *
@@ -86,7 +124,7 @@ object Logger {
  * @define logMarker
  *
  * Logs the given message at the named log level taking into consideration the
- * given [[Marker]] data.
+ * given `org.slf4j.Marker` data.
  *
  * @define logWith
  *
@@ -96,8 +134,7 @@ object Logger {
  * @define logWithMarker
  *
  * Log the given parameterized message at the named log level using the given
- * args taking into consideration the given [[Marker]] data.
- * See [[https://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
+ * args taking into consideration the given `org.slf4j.Marker` data. See [[https://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
  */
 @SerialVersionUID(1L)
 final class Logger private (underlying: slf4j.Logger) extends Serializable {

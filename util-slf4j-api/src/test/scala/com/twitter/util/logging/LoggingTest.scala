@@ -306,7 +306,16 @@ class LoggingTest extends AnyFunSuite with Matchers with Mockito {
   }
 
   test("Logging#Java class with new logger") {
-    new TestJavaClass()
+    new TestJavaClass // INFO com.twitter.util.logging.TestJavaClass - Creating new TestJavaClass instance.
+
+    val t = new TraitWithLogging {}
+    t.myMethod1 // INFO com.twitter.util.logging.LoggingTest$$anon$1 - In myMethod1
+
+    val je = new JavaExtension
+    je.myMethod1 // INFO com.twitter.util.logging.JavaExtension - In myMethod1
+    je.myMethod2() // INFO com.twitter.util.logging.JavaExtension - In myMethod2: using trait#info
+    // INFO com.twitter.util.logging.JavaExtension - In myMethod2: using logger#info
+    // INFO com.twitter.util.logging.JavaExtension - In myMethod2: using LOG#info
   }
 
   test("Logging#Java class that extends Scala class with Logging trait and new logger") {
@@ -353,7 +362,7 @@ class LoggingTest extends AnyFunSuite with Matchers with Mockito {
       val message = "msg"
       val cause = new RuntimeException("TEST EXCEPTION")
       val arg1 = "arg1"
-      val arg2 = new Integer(1)
+      val arg2 = Integer.valueOf(1)
       val arg3 = "arg3"
       val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
       when(isEnabledFn(underlying)).thenReturn(isEnabled)

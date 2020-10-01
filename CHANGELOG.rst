@@ -7,6 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+* util-slf4j-api: Better Java interop. Deprecate `c.t.util.logging.Loggers` as Java users should be
+  able to use the `c.t.util.logging.Logger` companion object with less verbosity required.
+  ``PHAB_ID=D558605``
+
 20.9.0
 ------
 

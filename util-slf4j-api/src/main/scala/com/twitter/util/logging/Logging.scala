@@ -30,7 +30,7 @@ import scala.language.implicitConversions
  * @define isLevelEnabledMarker
  *
  * Determines if the named log level is enabled on the underlying logger taking into
- * consideration the given [[Marker]] data. Returns `true` if enabled, `false` otherwise.
+ * consideration the given `org.slf4j.Marker` data. Returns `true` if enabled, `false` otherwise.
  *
  * @define log
  *
@@ -40,7 +40,7 @@ import scala.language.implicitConversions
  * @define logMarker
  *
  * Logs the given message at the named log level with the underlying logger taking into
- * consideration the given [[Marker]] data.
+ * consideration the given `org.slf4j.Marker` data.
  *
  * @define logResult
  *
