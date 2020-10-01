@@ -13,6 +13,21 @@ case object Client extends SourceRole
 case object Server extends SourceRole
 
 /**
+ * finagle-stats has configurable scope separators. As this package is wrapped by finagle-stats, we
+ * cannot retrieve it from finagle-stats. Consequently, we created this object so that the
+ * scope-separator can be passed in for stringification of the MetricBuilder objects.
+ */
+object metadataScopeSeparator {
+  @volatile private var separator: String = "/"
+
+  def apply(): String = separator
+
+  private[finagle] def setSeparator(separator: String): Unit = {
+    this.separator = separator
+  }
+}
+
+/**
  * A builder class used to configure settings and metadata for metrics prior to instantiating them.
  * Calling any of the three build methods (counter, gauge, or histogram) will cause the metric to be
  * instantiated in the underlying StatsReceiver.
@@ -182,7 +197,7 @@ class MetricBuilder(
   }
 
   override def toString(): String = {
-    val nameString = name.mkString("/")
+    val nameString = name.mkString(metadataScopeSeparator())
     s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $relativeName, $processPath, $percentiles, $statsReceiver)"
   }
 }

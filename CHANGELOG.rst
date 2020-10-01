@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Bug Fixes
+~~~~~~~~~
+* util-stat: `MetricBuilder` now uses a configurable metadataScopeSeparator to align
+  more closely with the metrics.json api. Services with an overridden scopeSeparator will
+  now see that reflected in metric_metadata.json where previously it was erroneously using
+  / in all cases. ``PHAB_ID=D557994``
+
 * util-slf4j-api: Better Java interop. Deprecate `c.t.util.logging.Loggers` as Java users should be
   able to use the `c.t.util.logging.Logger` companion object with less verbosity required.
   ``PHAB_ID=D558605``
