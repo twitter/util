@@ -10,7 +10,7 @@ import scala.util.control.NonFatal
  * as the first invocation irrespective of the deadline provided.
  *
  * @see [[ClosableOnce]] if you are not mixing in or extending an existing [[Closable]]
- * @see [[ClosableOnce.of(closable: Closable)]] for creating a proxy to a [[Closable]]
+ * @see [[ClosableOnce.of]] for creating a proxy to a [[Closable]]
  *       that has already been instantiated.
  */
 trait CloseOnce { self: Closable =>
@@ -40,9 +40,9 @@ trait CloseOnce { self: Closable =>
   protected def closeOnce(deadline: Time): Future[Unit]
 
   /**
-   * The [[Future]] satisfied upon completion of [[close()]].
+   * The [[Future]] satisfied upon completion of [[close]].
    *
-   * @note we do not expose direct access to the underlying [[closePromise Promise]], because
+   * @note we do not expose direct access to the underlying [[Promise closePromise]], because
    *       the [[Promise]] state is mutable - we only want mutation to occur within this
    *       [[CloseOnce]] trait.
    */

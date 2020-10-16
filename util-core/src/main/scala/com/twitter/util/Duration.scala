@@ -26,13 +26,13 @@ object Duration extends TimeLikeOps[Duration] {
   val NanosPerDay: Long = NanosPerHour * 24
 
   /**
-   * Create a duration from a [[java.util.concurrent.TimeUnit]].
-   * Synonym for `apply`.
+   * Create a duration from a `java.util.concurrent.TimeUnit`.
+   * Synonym for [[apply]].
    */
   def fromTimeUnit(value: Long, unit: TimeUnit): Duration = apply(value, unit)
 
   /**
-   * Create a duration from a [[java.util.concurrent.TimeUnit]].
+   * Create a duration from a `java.util.concurrent.TimeUnit`.
    */
   def apply(value: Long, unit: TimeUnit): Duration = {
     val ns = TimeUnit.NANOSECONDS.convert(value, unit)
@@ -222,7 +222,7 @@ object Duration extends TimeLikeOps[Duration] {
    *
    * The parser is case-insensitive.
    *
-   * @throws RuntimeException if the string cannot be parsed.
+   * @note Throws `RuntimeException` if the string cannot be parsed.
    */
   def parse(s: String): Duration = {
     val ss = s.toLowerCase

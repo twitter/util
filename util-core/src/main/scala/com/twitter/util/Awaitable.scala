@@ -46,7 +46,8 @@ object Awaitable {
    *
    * This should only be enabled for threads where blocking is discouraged.
    *
-   * @see [[Scheduler.blockingTimeNanos]] and [[Scheduler.blocking]]
+   * @see [[com.twitter.concurrent.Scheduler.blockingTimeNanos]] and
+   *      [[com.twitter.concurrent.Scheduler.blocking]]
    */
   def enableBlockingTimeTracking(): Unit =
     TrackElapsedBlocking.set(java.lang.Boolean.TRUE)
@@ -60,7 +61,8 @@ object Awaitable {
   /**
    * Whether or not this thread should track time spent in blocking operations.
    *
-   * @see [[Scheduler.blockingTimeNanos]] and [[Scheduler.blocking]]
+   * @see [[com.twitter.concurrent.Scheduler.blockingTimeNanos]] and
+   *      [[com.twitter.concurrent.Scheduler.blocking]]
    */
   def getBlockingTimeTracking: Boolean = {
     TrackElapsedBlocking.get() != null

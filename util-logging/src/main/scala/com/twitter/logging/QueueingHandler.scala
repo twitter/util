@@ -1,19 +1,3 @@
-/*
- * Copyright 2011 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.twitter.logging
 
 import com.twitter.concurrent.{NamedPoolThreadFactory, AsyncQueue}
@@ -69,7 +53,7 @@ object QueueingHandler {
  * [[onOverflow]] when it is at capacity.
  *
  * @param inferClassNames [[com.twitter.logging.LogRecord]] and
- * [[java.util.logging.LogRecord]] both attempt to infer the class and
+ * `java.util.logging.LogRecord` both attempt to infer the class and
  * method name of the caller, but the inference needs the stack trace at
  * the time that the record is logged. QueueingHandler breaks the
  * inference because the log record is rendered out of band, so the stack

@@ -4,7 +4,7 @@ import java.nio.charset.{Charset, CharsetDecoder, CharsetEncoder, CodingErrorAct
 import java.util
 
 /**
- * A set of [[java.nio.charset.Charset]] utilities.
+ * A set of `java.nio.charset.Charset` utilities.
  */
 object Charsets {
 
@@ -17,10 +17,10 @@ object Charsets {
   }
 
   /**
-   * Returns a cached thread-local [[java.nio.charset.CharsetEncoder]] for
+   * Returns a cached thread-local `java.nio.charset.CharsetEncoder` for
    * the specified `charset`.
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    */
   def encoder(charset: Charset): CharsetEncoder = {
     var e = encoders.get.get(charset)
@@ -34,10 +34,10 @@ object Charsets {
   }
 
   /**
-   * Returns a cached thread-local [[java.nio.charset.CharsetDecoder]] for
+   * Returns a cached thread-local `java.nio.charset.CharsetDecoder` for
    * the specified `charset`.
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    */
   def decoder(charset: Charset): CharsetDecoder = {
     var d = decoders.get.get(charset)

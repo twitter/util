@@ -9,7 +9,7 @@ private object ValidationException {
 }
 
 /**
- * Exception thrown when a [[RouterBuilder]] observes any [[Route routes]] that are not valid for
+ * Exception thrown when a [[RouterBuilder]] observes any routes that are not valid for
  * the [[Router]] type it is building.
  */
 case class ValidationException private[routing] (failures: Iterable[ValidationError])

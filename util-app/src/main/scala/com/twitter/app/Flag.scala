@@ -19,7 +19,7 @@ object Flag {
  * A single command-line flag, instantiated by a [[com.twitter.app.Flags]]
  * instance.
  *
- * The current value can be extracted via [[apply()]], [[get]], and
+ * The current value can be extracted via [[apply]], [[get]], and
  * [[getWithDefault]]. [[com.twitter.util.Local Local]]-scoped modifications
  * of their values, which can be useful for tests, can be done by calls to
  * [[let]] and [[letClear]].
@@ -163,7 +163,7 @@ class Flag[T: Flaggable] private[app] (
     let(Some(t), f)
 
   /**
-   * Override the value of this flag with `arg` [[String] parsed to this [[Flag]]'s [[T]] type,
+   * Override the value of this flag with `arg` `String` parsed to this [[Flag]]'s `T` type,
    * only for the scope of the current [[com.twitter.util.Local]] for the given function `f`.
    *
    * @see [[let]]

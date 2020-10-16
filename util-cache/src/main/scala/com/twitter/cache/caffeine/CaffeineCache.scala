@@ -11,7 +11,7 @@ import java.util.function.Function
  *
  * Any correct implementation should make sure that you evict failed results,
  * and don't interrupt the underlying request that has been fired off.
- * [[EvictingCache]] and [[Future#interrupting]] are useful tools for building
+ * [[EvictingCache$]] and interrupting [[com.twitter.util.Future]]s are useful tools for building
  * correct FutureCaches.  A reference implementation for caching the results of
  * an asynchronous function with a caffeine Cache can be found at
  * [[CaffeineCache$.fromCache]].
@@ -32,7 +32,7 @@ class CaffeineCache[K, V](cache: Cache[K, Future[V]])
 
  * Any correct implementation should make sure that you evict failed results,
  * and don't interrupt the underlying request that has been fired off.
- * [[EvictingCache]] and [[Future#interrupting]] are useful tools for building
+ * [[EvictingCache$]] and interrupting [[com.twitter.util.Future]]s are useful tools for building
  * correct FutureCaches.  A reference implementation for caching the results of
  * an asynchronous function with a caffeine LoadingCache can be found at
  * [[CaffeineCache$.fromLoadingCache]].

@@ -10,7 +10,7 @@ import java.util.UUID
 import javax.net.ssl.{TrustManager, TrustManagerFactory}
 
 /**
- * A factory which can create a [[javax.net.ssl.TrustManager TrustManager]] which contains
+ * A factory which can create a `javax.net.ssl.TrustManager` which contains
  * a collection of X.509 certificates.
  */
 class X509TrustManagerFactory(certsFile: File) {
@@ -47,9 +47,9 @@ class X509TrustManagerFactory(certsFile: File) {
 
   /**
    * Attempts to read the contents of a file containing a collection of X.509 certificates,
-   * and combines them into a [[javax.net.ssl.TrustManager TrustManager]].
+   * and combines them into a `javax.net.ssl.TrustManager`.
    * The singular value is returned in an Array for ease of use with
-   * [[javax.net.ssl.SSLContext SSLContext's]] init method.
+   * `javax.net.ssl.SSLContext`'s init method.
    */
   def getTrustManagers(): Try[Array[TrustManager]] = {
     val tryCerts: Try[Seq[X509Certificate]] =

@@ -21,8 +21,8 @@ import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
  *
  * Reads and writes on the pipe are matched one to one and only one outstanding `read`
  * or `write` is permitted in the current implementation (multiple pending writes or reads
- * resolve into [[IllegalStateException]] while leaving the pipe healthy). That is, the `write`
- * (its returned [[Future]]) is resolved when the `read` consumes the written data.
+ * resolve into `IllegalStateException` while leaving the pipe healthy). That is, the `write`
+ * (its returned [[com.twitter.util.Future]]) is resolved when the `read` consumes the written data.
  *
  * Here is, for example, a very typical write-loop that writes into a pipe-backed [[Writer]]:
  *
@@ -55,8 +55,8 @@ import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
  * The following behavior is expected with regards to reading from or writing into a closed or a
  * failed pipe:
  *
- *  - Writing into a closed pipe yields [[IllegalStateException]]
- *  - Reading from a closed pipe yields EOF ([[Future.None]])
+ *  - Writing into a closed pipe yields `IllegalStateException`
+ *  - Reading from a closed pipe yields EOF ([[com.twitter.util.Future.None]])
  *  - Reading from or writing into a failed pipe yields a failure it was failed with
  *
  * It's also worth discussing how pipes are being closed. As closure is always initiated by a
@@ -65,8 +65,9 @@ import com.twitter.util.{Future, Promise, Return, Throw, Time, Timer}
  *
  * The following rules should help reasoning about closure signals in pipes:
  *
- * - Closing a pipe with a pending read resolves said read into EOF and returns a [[Future.Unit]]
- * - Closing a pipe with a pending write by default fails said write with [[IllegalStateException]] and
+ * - Closing a pipe with a pending read resolves said read into EOF and returns a
+ *   [[com.twitter.util.Future.Unit]]
+ * - Closing a pipe with a pending write by default fails said write with `IllegalStateException` and
  *   returns a future that will be satisfied when a consumer observes the closure (EOF) via read. If
  *   a timer is provided, the pipe will wait until the provided deadline for a successful read before
  *   failing the write.

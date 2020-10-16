@@ -12,7 +12,7 @@ import scala.util.control.NonFatal
  * account of incorrectly-interpreted or malformed flag values.
  *
  * @param message A string name of the flag for which parsing failed.
- * @param cause The underlying [[java.lang.Throwable]] that caused this exception.
+ * @param cause The underlying `java.lang.Throwable` that caused this exception.
  */
 case class FlagParseException(message: String, cause: Throwable = null)
     extends Exception(message, cause)
@@ -347,7 +347,7 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param includeGlobal If true, all registered
    * [[com.twitter.app.GlobalFlag GlobalFlags]] will be included
    * in output. Defaults to the `includeGlobal` settings of this instance.
-   * @param classLoader The [[java.lang.ClassLoader]] used to fetch
+   * @param classLoader The `java.lang.ClassLoader` used to fetch
    * [[com.twitter.app.GlobalFlag GlobalFlags]], if necessary. Defaults to this
    * instance's classloader.
    * @return All of the flags known to this this Flags instance.

@@ -37,9 +37,10 @@ abstract class Buf { outer =>
    * want to manually set the first bytes of an `Array[Byte]` and then efficiently copy the
    * contents of this `Buf` to the remaining space.
    *
-   * @see [[write(ByteBuffer)]] for writing to nio buffers.
+   * @see [[com.twitter.io.Buf.write(output:java\.nio\.ByteBuffer):Unit* write(ByteBuffer)]]
+   * for writing to nio buffers.
    *
-   * @throws IllegalArgumentException when `output` is too small to
+   * @note Throws `IllegalArgumentException` when `output` is too small to
    * contain all the data.
    *
    * @note [[Buf]] implementors should use the helper [[checkWriteArgs]].
@@ -57,12 +58,13 @@ abstract class Buf { outer =>
    * the data is destined for an IO operation, it may be preferable to provide a direct
    * nio `ByteBuffer` to ensure the avoidance of intermediate heap-based representations.
    *
-   * @see [[write(Array[Byte], Int)]] for writing to byte arrays.
+   * @see [[com.twitter.io.Buf.write(output:Array[Byte],off:Int):Unit* write(Array[Byte],Int)]]
+   * for writing to byte arrays.
    *
-   * @throws java.lang.IllegalArgumentException when `output` doesn't have enough
+   * @note Throws `java.lang.IllegalArgumentException` when `output` doesn't have enough
    * space as defined by `ByteBuffer.remaining()` to hold the contents of this `Buf`.
    *
-   * @throws ReadOnlyBufferException if the provided buffer is read-only.
+   * @note Throws `ReadOnlyBufferException` if the provided buffer is read-only.
    *
    * @note [[Buf]] implementors should use the helper [[checkWriteArgs]].
    */
@@ -261,7 +263,7 @@ abstract class Buf { outer =>
   protected[this] def isSliceIdentity(from: Int, until: Int): Boolean =
     from == 0 && until >= length
 
-  /** Helps implementations validate the arguments to [[write]]. */
+  /** Helps implementations validate the arguments to [[Buf.write(output:Array[Byte],off:Int):Unit*]]. */
   protected[this] def checkWriteArgs(outputLen: Int, outputOff: Int): Unit = {
     if (outputOff < 0)
       throw new IllegalArgumentException(s"offset must be non-negative: $outputOff")
@@ -298,7 +300,7 @@ object Buf {
    * @return `true` if the processor would like to continue processing
    *        more bytes and `false` otherwise.
    *
-   * @see [[Buf.process]]
+   * @see [[com.twitter.io.Buf.process(processor:com\.twitter\.io\.Buf\.Processor):Int* process(Processor)]]
    *
    * @note this is not a `Function1[Byte, Boolean]` despite very
    *       much fitting that interface. This was done to avoiding boxing
@@ -884,7 +886,7 @@ object Buf {
 
   object ByteBuffer {
 
-    /** Extract a read-only view of the underlying [[java.nio.ByteBuffer]]. */
+    /** Extract a read-only view of the underlying `java.nio.ByteBuffer`. */
     def unapply(buf: ByteBuffer): Some[java.nio.ByteBuffer] =
       Some(buf.underlying.asReadOnlyBuffer)
 
@@ -917,13 +919,13 @@ object Buf {
       // it prevents direct access to its underlying byte array.
 
       /**
-       * Create a Buf.ByteBuffer by directly wrapping the provided [[java.nio.ByteBuffer]].
+       * Create a Buf.ByteBuffer by directly wrapping the provided `java.nio.ByteBuffer`.
        */
       def apply(bb: java.nio.ByteBuffer): Buf =
         if (bb.remaining == 0) Buf.Empty
         else new ByteBuffer(bb)
 
-      /** Extract the buffer's underlying [[java.nio.ByteBuffer]]. */
+      /** Extract the buffer's underlying `java.nio.ByteBuffer`. */
       def unapply(buf: ByteBuffer): Some[java.nio.ByteBuffer] = Some(buf.underlying)
 
       /**
@@ -1067,7 +1069,7 @@ object Buf {
    * Create and deconstruct Utf-8 encoded buffers.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.UTF_8` for a Java-friendly API.
    */
@@ -1077,7 +1079,7 @@ object Buf {
    * Create and deconstruct 16-bit UTF buffers.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.UTF_16` for a Java-friendly API.
    */
@@ -1088,7 +1090,7 @@ object Buf {
    * with big-endian byte order.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.UTF_16BE` for a Java-friendly API.
    */
@@ -1099,7 +1101,7 @@ object Buf {
    * with little-endian byte order.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.UTF_16LE` for a Java-friendly API.
    */
@@ -1110,7 +1112,7 @@ object Buf {
    * ISO Latin Alphabet No. 1 charset.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.ISO_8859_1` for a Java-friendly API.
    */
@@ -1122,19 +1124,19 @@ object Buf {
    * Unicode character set.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @note See `com.twitter.io.Bufs.US_ASCII` for a Java-friendly API.
    */
   object UsAscii extends StringCoder(JChar.US_ASCII)
 
   /**
-   * A [[StringCoder]] for a given [[java.nio.charset.Charset]] provides an
-   * [[apply(String) encoder]]: `String` to [[Buf]]
-   * and an [[unapply(Buf) extractor]]: [[Buf]] to `Some[String]`.
+   * A [[StringCoder]] for a given `java.nio.charset.Charset` provides an
+   * [[apply encoder]]: `String` to [[Buf]]
+   * and an [[unapply extractor]]: [[Buf]] to `Some[String]`.
    *
    * @note Malformed and unmappable input is silently replaced
-   *       see [[java.nio.charset.CodingErrorAction.REPLACE]]
+   *       see `java.nio.charset.CodingErrorAction.REPLACE`
    *
    * @see [[Utf8]] for UTF-8 encoding and decoding, and `Bufs.UTF8` for
    *      Java users. Constants exist for other standard charsets as well.

@@ -75,7 +75,7 @@ object FuturePool {
 
   /**
    * The default future pool, using a cached threadpool, provided by
-   * [[java.util.concurrent.Executors.newCachedThreadPool]]. Note
+   * `java.util.concurrent.Executors.newCachedThreadPool`. Note
    * that this is intended for IO concurrency; computational
    * parallelism typically requires special treatment. If an interrupt
    * is raised on a returned Future and the work has started, the worker
@@ -89,7 +89,7 @@ object FuturePool {
 
   /**
    * The default future pool, using a cached threadpool, provided by
-   * [[java.util.concurrent.Executors.newCachedThreadPool]]. Note
+   * `java.util.concurrent.Executors.newCachedThreadPool`. Note
    * that this is intended for IO concurrency; computational
    * parallelism typically requires special treatment.  If an interrupt
    * is raised on a returned Future and the work has started, an attempt

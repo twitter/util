@@ -26,13 +26,13 @@ import java.io.{File, FileInputStream, InputStream}
  *
  * == Error Handling ==
  *
- * Given the read-loop above, its returned [[Future]] could be used to observe both successful and
- * unsuccessful outcomes.
+ * Given the read-loop above, its returned [[com.twitter.util.Future]] could be used to observe both
+ * successful and unsuccessful outcomes.
  *
  * {{{
  *   consume(stream)(processor).respond {
  *     case Return(()) => println("Consumed an entire stream successfully.")
- *     case Throw(e) => println(s"Encountered an error while consuming a stream: $e")
+ *     case Throw(e) => println(s"Encountered an error while consuming a stream: \$e")
  *   }
  * }}}
  *
@@ -51,11 +51,11 @@ import java.io.{File, FileInputStream, InputStream}
  *
  * == Back Pressure ==
  *
- * The pattern above leverages [[Future]] recursion to exert back-pressure via allowing only one
- * outstanding read. It's usually a good idea to structure consumers this way (i.e., the next read
- * isn't issued until the previous read finishes). This would always ensure a finer grained
- * back-pressure in network systems allowing the consumers to artificially slow down the producers
- * and not rely solely on transport and IO buffering.
+ * The pattern above leverages [[com.twitter.util.Future]] recursion to exert back-pressure via
+ * allowing only one outstanding read. It's usually a good idea to structure consumers this way
+ * (i.e., the next read isn't issued until the previous read finishes). This would always ensure a
+ * finer grained back-pressure in network systems allowing the consumers to artificially slow down
+ * the producers and not rely solely on transport and IO buffering.
  *
  * @note Whether or not multiple outstanding reads are allowed on a `Reader` type is an undefined
  *       behaviour but could be changed in a refinement.
@@ -77,16 +77,18 @@ import java.io.{File, FileInputStream, InputStream}
 trait Reader[+A] { self =>
 
   /**
-   * Asynchronously read the next element of this stream. Returned [[Future]] will resolve into
-   * `Some(e)` when the element is available or into `None` when stream is exhausted.
+   * Asynchronously read the next element of this stream. Returned [[com.twitter.util.Future]]
+   * will resolve into `Some(e)` when the element is available or into `None` when stream
+   * is exhausted.
    *
-   * Stream failures are terminal such that all subsequent reads will resolve in failed [[Future]]s.
+   * Stream failures are terminal such that all subsequent reads will resolve in failed
+   * [[com.twitter.util.Future]]s.
    */
   def read(): Future[Option[A]]
 
   /**
    * Discard this stream as its output is no longer required. This could be used to signal the
-   * producer of this stream similarly how [[Future.raise]] used to propagate interrupts across
+   * producer of this stream similarly how [[com.twitter.util.Future.raise]] used to propagate interrupts across
    * future chains.
    *
    * @note Although unnecessary, it's always safe to discard a fully-consumed stream.
@@ -94,7 +96,8 @@ trait Reader[+A] { self =>
   def discard(): Unit
 
   /**
-   * A [[Future]] that resolves once this reader is closed upon reading of end-of-stream.
+   * A [[com.twitter.util.Future]] that resolves once this reader is closed upon reading
+   * of end-of-stream.
    *
    * If the result is a failed future, this indicates that it was not closed either by reading
    * until the end of the stream nor by discarding. This is useful for any extra resource cleanup
@@ -129,7 +132,6 @@ trait Reader[+A] { self =>
   /**
    * Converts a `Reader[Reader[B]]` into a `Reader[B]`
    *
-   * @define flattenBehavior
    * @note All operations of the new Reader will be in sync with the outermost Reader. Discarding
    *       one Reader will discard the other Reader. When one Reader's onClose resolves, the other
    *       Reader's onClose will be resolved immediately with the same value.
@@ -218,32 +220,32 @@ object Reader {
   def fromBuf(buf: Buf, chunkSize: Int): Reader[Buf] = BufReader(buf, chunkSize)
 
   /**
-   * Create a new [[Reader]] from a given [[File]]. The output of a returned reader is chunked by
+   * Create a new [[Reader]] from a given `File`. The output of a returned reader is chunked by
    * at most `chunkSize` (bytes).
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    *
    * @see `Readers.fromFile` for a Java API
    */
   def fromFile(f: File): Reader[Buf] = fromFile(f, InputStreamReader.DefaultMaxBufferSize)
 
   /**
-   * Create a new [[Reader]] from a given [[File]]. The output of a returned reader is chunked by
+   * Create a new [[Reader]] from a given `File`. The output of a returned reader is chunked by
    * at most `chunkSize` (bytes).
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    *
    * @see `Readers.fromFile` for a Java API
    */
   def fromFile(f: File, chunkSize: Int): Reader[Buf] = fromStream(new FileInputStream(f), chunkSize)
 
   /**
-   * Create a new [[Reader]] from a given [[Iterator]].
+   * Create a new [[Reader]] from a given `Iterator`.
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    *
    * @note It is not recommended to call `it.next()` after creating a `Reader` from it.
    *       Doing so will affect the behavior of `Reader.read()` because it will skip
@@ -252,38 +254,38 @@ object Reader {
   def fromIterator[A](it: Iterator[A]): Reader[A] = new IteratorReader[A](it)
 
   /**
-   * Create a new [[Reader]] from a given [[InputStream]]. The output of a returned reader is
+   * Create a new [[Reader]] from a given `InputStream`. The output of a returned reader is
    * chunked by at most `chunkSize` (bytes).
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    */
   def fromStream(s: InputStream): Reader[Buf] =
     fromStream(s, InputStreamReader.DefaultMaxBufferSize)
 
   /**
-   * Create a new [[Reader]] from a given [[InputStream]]. The output of a returned reader is
+   * Create a new [[Reader]] from a given `InputStream`. The output of a returned reader is
    * chunked by at most `chunkSize` (bytes).
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    *
    * @see `Readers.fromStream` for a Java API
    */
   def fromStream(s: InputStream, chunkSize: Int): Reader[Buf] = InputStreamReader(s, chunkSize)
 
   /**
-   * Create a new [[Reader]] from a given [[Seq]].
+   * Create a new [[Reader]] from a given `Seq`.
    *
    * The resources held by the returned [[Reader]] are released on reading of EOF and
-   * [[Reader.discard()]].
+   * [[Reader.discard]].
    *
    * @note Multiple outstanding reads are not allowed on this reader.
    */
   def fromSeq[A](seq: Seq[A]): Reader[A] = fromIterator(seq.iterator)
 
   /**
-   * Allow [[AsyncStream]] to be consumed as a [[Reader]]
+   * Allow [[com.twitter.concurrent.AsyncStream]] to be consumed as a [[Reader]]
    */
   def fromAsyncStream[A](as: AsyncStream[A]): Reader[A] = {
     val pipe = new Pipe[A]
@@ -346,7 +348,11 @@ object Reader {
    * Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.
    * @param readers A Reader holds a stream of Reader[A]
    *
-   * $flattenBehavior
+   * @note All operations of the new Reader will be in sync with the outermost Reader. Discarding
+   *       one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+   *       Reader's onClose will be resolved immediately with the same value.
+   *       The subsequent readers are unmanaged, the caller is responsible for discarding those
+   *       when abandoned.
    */
   def flatten[A](readers: Reader[Reader[A]]): Reader[A] = new Reader[A] { self =>
     // access currentReader and curReaderClosep are synchronized on `self`

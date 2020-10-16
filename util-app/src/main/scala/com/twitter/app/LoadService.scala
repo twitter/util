@@ -13,11 +13,11 @@ import scala.reflect.ClassTag
 import scala.util.control.NonFatal
 
 /**
- * Load classes in the manner of [[java.util.ServiceLoader]]. It is
+ * Load classes in the manner of `java.util.ServiceLoader`. It is
  * more resilient to varying Java packaging configurations than ServiceLoader.
  *
  * For further control, see [[App.loadServiceBindings]] and the
- * [[loadServiceDenied]] flag.
+ * `loadServiceDenied` flag.
  */
 object LoadService {
 
@@ -80,11 +80,11 @@ object LoadService {
    *
    * The public API entry point for this is [[App.loadServiceBindings]].
    *
-   * If [[bind]] is called for a `Class[T]` after [[LoadService.apply]]
+   * If `bind` is called for a `Class[T]` after [[LoadService.apply]]
    * has been called for that same interface, an `IllegalStateException`
    * will be thrown.
    *
-   * If [[bind]] is called multiple times for the same interface, the
+   * If `bind` is called multiple times for the same interface, the
    * last one registered is used, but warnings and lint violations will
    * be emitted.
    *
@@ -113,7 +113,7 @@ object LoadService {
   }
 
   /**
-   * Return any interfaces that have been registered multiple times via [[bind]].
+   * Return any interfaces that have been registered multiple times via `bind`.
    */
   def duplicateBindings: Set[Class[_]] = bindDupes.keySet.asScala.toSet
 
@@ -142,7 +142,7 @@ object LoadService {
    * Returns classes for the given `ClassTag` as specified by
    * resource files in `META-INF/services/FullyQualifiedClassTagsClassName`.
    *
-   * @see [[apply(Class)]] for a Java friendly API.
+   * @see [[apply[T](iface:Class[T]):Seq[T]*]] for a Java friendly API.
    */
   def apply[T: ClassTag](): Seq[T] = {
     val iface = implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]

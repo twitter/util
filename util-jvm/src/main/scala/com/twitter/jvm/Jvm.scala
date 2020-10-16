@@ -190,7 +190,7 @@ object Jvm {
   /**
    * Return an instance of the [[Jvm]] for this runtime.
    *
-   * See [[Jvms.apply()]] for Java compatibility.
+   * See `Jvms.apply` for Java compatibility.
    */
   def apply(): Jvm = _jvm
 
@@ -218,7 +218,7 @@ object Jvms {
     Jvm.ProcessId
 
   /**
-   * Java compatibility for [[Jvm.apply()]].
+   * Java compatibility for [[Jvm.apply]].
    */
   def get(): Jvm = Jvm()
 

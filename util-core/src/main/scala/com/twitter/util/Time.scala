@@ -405,7 +405,7 @@ object Time extends TimeLikeOps[Time] {
    *
    * Note that nanosecond precision is only available in JDK versions
    * greater than JDK8. In JDK8 this API has the same precision as
-   * [[Time#now]] and [[System#currentTimeMillis]]. In JDK9+ this will
+   * [[Time#now]] and `System#currentTimeMillis`. In JDK9+ this will
    * change and all timestamps taken from this API will have nanosecond
    * resolution.
    *
@@ -440,7 +440,7 @@ object Time extends TimeLikeOps[Time] {
   private[util] val localGetTimer: Local[MockTimer] = new Local[MockTimer]
 
   /**
-   * Creates a [[Time]] instance of the given [[Date]].
+   * Creates a [[Time]] instance of the given `Date`.
    */
   def apply(date: Date): Time = fromMilliseconds(date.getTime)
 

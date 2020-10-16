@@ -35,6 +35,9 @@ import scala.util.control.NonFatal
  *
  * Note that a missing `main` is OK: mixins may provide behavior that
  * does not require defining a custom `main` method.
+ *
+ * @define LoadServiceApplyScaladocLink
+ * [[com.twitter.app.LoadService.apply[T]()(implicitevidence\$1:scala\.reflect\.ClassTag[T]):Seq[T]* LoadService.apply]]
  */
 trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
 
@@ -121,7 +124,8 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
   protected lazy val shutdownTimer: Timer = new JavaTimer(isDaemon = true)
 
   /**
-   * Programmatically specify which implementations to use in [[LoadService.apply]]
+   * Programmatically specify which implementations to use in
+   * $LoadServiceApplyScaladocLink
    * for the given interfaces. This allows applications to circumvent
    * the standard service loading mechanism when needed. It may be useful
    * if the application has a broad and/or rapidly changing set of dependencies.
@@ -148,7 +152,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
    * }
    * }}}
    *
-   * If this is called for a `Class[T]` after [[LoadService.apply]]
+   * If this is called for a `Class[T]` after $LoadServiceApplyScaladocLink
    * has been called for that same interface, an `IllegalStateException`
    * will be thrown. For this reason, bindings are done as early
    * as possible in the application lifecycle, before even `inits`
@@ -158,9 +162,9 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
    *       their user's implementation choice.
    *
    * @return a mapping from `Class` to the 1 or more implementations to
-   *         be used by [[LoadService.apply]] for that interface.
+   *         be used by $LoadServiceApplyScaladocLink for that interface.
    *
-   * @see [[LoadService.apply]]
+   * @see $LoadServiceApplyScaladocLink
    */
   protected[this] def loadServiceBindings: Seq[LoadService.Binding[_]] = Nil
 

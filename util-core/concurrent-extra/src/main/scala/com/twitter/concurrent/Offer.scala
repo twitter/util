@@ -185,7 +185,7 @@ object Offer {
    * A constant offer: synchronizes the given value always. This is
    * call-by-name and a new value is produced for each `prepare()`.
    *
-   * Note: Updates here must also be done at [[com.twitter.concurrent.Offers.newConstOffer()]].
+   * Note: Updates here must also be done at `Offers.newConstOffer`.
    */
   def const[T](x: => T): Offer[T] = new Offer[T] {
     def prepare(): Future[Tx[T]] = Future.value(Tx.const(x))

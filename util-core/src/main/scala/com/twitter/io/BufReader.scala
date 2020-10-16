@@ -115,7 +115,7 @@ object BufReader {
     new Framed(r, new ChunkedFramer(chunkSize))
 
   /**
-   * Wraps a [[ Reader[Buf] ]] and emits frames as decided by `framer`.
+   * Wraps a [[Reader]] and emits frames as decided by `framer`.
    *
    * @note The returned `Reader` may not be thread safe depending on the behavior
    *       of the framer.

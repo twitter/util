@@ -23,7 +23,7 @@ object Level {
     Seq(OFF, FATAL, CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE, ALL)
 
   /**
-   * Associate [[java.util.logging.Level]] and `Level` by their integer
+   * Associate `java.util.logging.Level` and `Level` by their integer
    * values. If there is no match, we return `None`.
    */
   def fromJava(level: javalog.Level): Option[Level] =

@@ -22,12 +22,12 @@ object JsonTunableMapper {
 
   /**
    * The Deserializers that [[JsonTunableMapper]] uses by default, in addition to Scala data type
-   * deserializers afforded by [[com.fasterxml.jackson.module.scala.DefaultScalaModule]].
+   * deserializers afforded by `com.fasterxml.jackson.module.scala.DefaultScalaModule`.
    *
    * These deserializers are:
    *
-   * - [[com.twitter.util.tunable.json.DurationFromString]]
-   * - [[com.twitter.util.tunable.json.StorageUnitFromString]]
+   * - `com.twitter.util.tunable.json.DurationFromString`
+   * - `com.twitter.util.tunable.json.StorageUnitFromString`
    */
   val DefaultDeserializers: Seq[JsonDeserializer[_]] =
     Seq(DurationFromString, StorageUnitFromString)
@@ -49,10 +49,10 @@ object JsonTunableMapper {
    * in priority order. Where environementOpt and instanceOpt are available (env, instance),
    * paths are ordered:
    *
-   * i. $root/$env/instance-$id.json
-   * i. $root/$env/instances.json
-   * i. $root/instance-$id.json
-   * i. $root/instances.json
+   * i. \$root/\$env/instance-\$id.json
+   * i. \$root/\$env/instances.json
+   * i. \$root/instance-\$id.json
+   * i. \$root/instances.json
    */
   def pathsByPriority(
     root: String,
@@ -86,24 +86,24 @@ object JsonTunableMapper {
  *    "tunables":
  *      [
  *         {
- *           "id" : "$id1",
- *           "value" : $value,
- *           "type" : "$class"
+ *           "id" : "\$id1",
+ *           "value" : \$value,
+ *           "type" : "\$class"
  *         },
  *         {
- *           "id" : "$id2",
- *           "value" : $value,
- *           "type" : "$class",
+ *           "id" : "\$id2",
+ *           "value" : \$value,
+ *           "type" : "\$class",
  *           "comment": "optional comment"
  *         }
  *     ]
  * }
  *
- * Where $id1 and $id2 are unique identifiers used to access the [[Tunable]], $value is the value,
- * and $class is the fully-qualified class name (e.g. com.twitter.util.Duration)
+ * Where \$id1 and \$id2 are unique identifiers used to access the [[Tunable]], \$value is the value,
+ * and \$class is the fully-qualified class name (e.g. com.twitter.util.Duration)
  *
  * If the JSON is invalid, or contains duplicate ids for [[Tunable]]s, `parse` will
- * return a [[Throw]]. Otherwise, `parse` returns [[Return[TunableMap]]
+ * return a [[Throw]]. Otherwise, `parse` returns [[Return Return[TunableMap]]
  */
 final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
 
@@ -171,8 +171,8 @@ final class JsonTunableMapper(deserializers: Seq[JsonDeserializer[_ <: Any]]) {
    * Load and parse the JSON file located at `path` in the application's resources.
    *
    * If no configuration files exist, return [[NullTunableMap]].
-   * If multiple configuration files exists, return [[IllegalArgumentException]]
-   * If the configuration file cannot be parsed, return [[IllegalArgumentException]]
+   * If multiple configuration files exists, return `IllegalArgumentException`
+   * If the configuration file cannot be parsed, return `IllegalArgumentException`
    */
   def loadJsonTunables(id: String, path: String): TunableMap = {
     val classLoader = getClass.getClassLoader

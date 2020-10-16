@@ -69,7 +69,7 @@ object StorageUnit {
 /**
  * Representation of storage units.
  *
- * Use either `StorageUnit.fromX` or [[com.twitter.conversions.storage implicit conversions]]
+ * Use either `StorageUnit.fromX` or `com.twitter.conversions.storage` `implicit conversions`
  * from `Long` and `Int` to construct instances.
  *
  * {{{

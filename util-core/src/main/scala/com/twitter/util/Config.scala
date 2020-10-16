@@ -178,7 +178,7 @@ trait Config[T] extends (() => T) {
   }
 
   /**
-   * @throws RequiredValuesMissing if there are any missing values.
+   * @note Throws `RequiredValuesMissing` if there are any missing values.
    */
   def validate(): Unit = {
     val missing = missingValues

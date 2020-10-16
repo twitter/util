@@ -4,9 +4,9 @@ object U64Ops {
 
   /**
    * Parses this HEX string as an unsigned 64-bit long value. Be careful, this can throw
-   * [[NumberFormatException]].
+   * `NumberFormatException`.
    *
-   * @see [[java.lang.Long.parseUnsignedLong()]]
+   * See `java.lang.Long.parseUnsignedLong()` for more information.
    */
   implicit class RichU64String(val self: String) extends AnyVal {
     def toU64Long: Long = java.lang.Long.parseUnsignedLong(self, 16)

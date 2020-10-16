@@ -6,7 +6,7 @@ import com.twitter.util.security.X500PrincipalInfo._
 import scala.jdk.CollectionConverters._
 
 /**
- * Parses an [[javax.security.auth.x500.X500Principal X500Principal]] into
+ * Parses an `javax.security.auth.x500.X500Principal` into
  * its individual pieces for easily extracting widely used items like an X.509
  * certificate's Common Name.
  */

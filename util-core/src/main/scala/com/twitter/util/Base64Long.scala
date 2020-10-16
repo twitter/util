@@ -127,16 +127,16 @@ object Base64Long {
 
   /**
    * Decode a sequence of characters representing a base-64-encoded
-   * Long, as produced by [[toBase64]].  An empty range of characters
-   * will yield 0L. Leading "zero" digits will not cause overflow.
+   * Long, as produced by [[com.twitter.util.Base64Long.toBase64(l:Long):String* toBase64(Long)]].
+   * An empty range of characters will yield 0L. Leading "zero" digits will not cause overflow.
    *
    * @param alphabet defines the mapping between characters in the
    *   string and 6-bit numbers.
    *
-   * @throws IllegalArgumentException if any characters in the specified
+   * @note Throws `IllegalArgumentException` if any characters in the specified
    *   range are not in the specified base-64 alphabet.
    *
-   * @throws ArithmeticException if the resulting value overflows a Long.
+   * @note Throws `ArithmeticException` if the resulting value overflows a Long.
    */
   def fromBase64(
     chars: CharSequence,

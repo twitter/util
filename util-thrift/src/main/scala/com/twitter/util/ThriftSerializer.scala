@@ -33,7 +33,7 @@ trait ThriftSerializer extends StringEncoder {
 }
 
 /**
- * A thread-safe [[ThriftSerializer]] that uses [[TSimpleJSONProtocol]].
+ * A thread-safe [[ThriftSerializer]] that uses `TSimpleJSONProtocol`.
  */
 class JsonThriftSerializer extends ThriftSerializer {
   override def protocolFactory: TProtocolFactory = new TSimpleJSONProtocol.Factory
@@ -46,7 +46,7 @@ class JsonThriftSerializer extends ThriftSerializer {
 }
 
 /**
- * A thread-safe [[ThriftSerializer]] that uses [[TBinaryProtocol]].
+ * A thread-safe [[ThriftSerializer]] that uses `TBinaryProtocol`.
  *
  * @note an implementation using `com.twitter.finagle.thrift.Protocols.binaryFactory`
  *       instead of this is recommended.
@@ -56,7 +56,7 @@ class BinaryThriftSerializer extends ThriftSerializer with Base64StringEncoder {
 }
 
 /**
- * A thread-safe [[ThriftSerializer]] that uses [[TCompactProtocol]].
+ * A thread-safe [[ThriftSerializer]] that uses `TCompactProtocol`.
  */
 class CompactThriftSerializer extends ThriftSerializer with Base64StringEncoder {
   override def protocolFactory: TProtocolFactory = new TCompactProtocol.Factory

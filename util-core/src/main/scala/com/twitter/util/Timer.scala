@@ -188,7 +188,7 @@ class ReferenceCountingTimer(factory: () => Timer) extends ProxyTimer with Refer
 }
 
 /**
- * A [[Timer]] that is implemented via a [[java.util.Timer]].
+ * A [[Timer]] that is implemented via a `java.util.Timer`.
  *
  * This timer has millisecond granularity.
  *
@@ -202,9 +202,9 @@ class ReferenceCountingTimer(factory: () => Timer) extends ProxyTimer with Refer
  *       scheduling tasks that take a long time to execute (e.g. blocking IO)
  *       as this blocks other tasks from running at their scheduled time.
  *
- * @param isDaemon whether or not the associated [[Thread]] should run
+ * @param isDaemon whether or not the associated `Thread` should run
  *   as a daemon.
- * @param name used as the name of the associated [[Thread]] when specified.
+ * @param name used as the name of the associated `Thread` when specified.
  */
 class JavaTimer(isDaemon: Boolean, name: Option[String]) extends Timer {
   def this(isDaemon: Boolean) = this(isDaemon, None)

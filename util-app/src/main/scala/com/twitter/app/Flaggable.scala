@@ -199,8 +199,8 @@ object Flaggable {
 
   /**
    * Create a Flaggable of Java Enum.
-   * @param clazz The [[java.lang.Enum]] class.
-   * @note [[java.lang.Enum]] enumeration constant value look up is case insensitive.
+   * @param clazz The `java.lang.Enum` class.
+   * @note `java.lang.Enum` enumeration constant value look up is case insensitive.
    */
   def ofJavaEnum[T <: Enum[T]](clazz: Class[T]): Flaggable[T] = new Typed[T] {
     def parse(s: String): T =

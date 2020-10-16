@@ -157,16 +157,16 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   override def toString: String = "InMemoryStatsReceiver"
 
   /**
-   * Dumps this in-memory stats receiver to the given [[PrintStream]].
-   * @param p the [[PrintStream]] to which to write in-memory values.
+   * Dumps this in-memory stats receiver to the given `PrintStream`.
+   * @param p the `PrintStream` to which to write in-memory values.
    */
   def print(p: PrintStream): Unit = {
     print(p, includeHeaders = false)
   }
 
   /**
-   * Dumps this in-memory stats receiver to the given [[PrintStream]].
-   * @param p the [[PrintStream]] to which to write in-memory values.
+   * Dumps this in-memory stats receiver to the given `PrintStream`.
+   * @param p the `PrintStream` to which to write in-memory values.
    * @param includeHeaders optionally include printing underlines headers for the different types
    *                       of stats printed, e.g., "Counters:", "Gauges:", "Stats;"
    */
@@ -197,8 +197,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   }
 
   /**
-   * Dumps this in-memory stats receiver's MetricMetadata to the given [[PrintStream]].
-   * @param p the [[PrintStream]] to which to write in-memory metadata.
+   * Dumps this in-memory stats receiver's MetricMetadata to the given `PrintStream`.
+   * @param p the `PrintStream` to which to write in-memory metadata.
    */
   def printSchemas(p: PrintStream): Unit = {
     val sortedSchemas = schemas.mapKeys(_.mkString("/")).toSortedMap

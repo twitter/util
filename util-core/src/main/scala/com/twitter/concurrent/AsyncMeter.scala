@@ -32,7 +32,7 @@ object AsyncMeter {
    *
    * This is equivalent to `AsyncMeter.newMeter(permits, 1.second, maxWaiters)`.
    *
-   * @see [[perSecondUnbounded()]] for creating an async meter that allows unbounded waiters
+   * @see [[perSecondUnbounded]] for creating an async meter that allows unbounded waiters
    */
   def perSecond(permits: Int, maxWaiters: Int)(implicit timer: Timer): AsyncMeter =
     newMeter(permits, Duration.fromSeconds(1), maxWaiters)
@@ -44,7 +44,7 @@ object AsyncMeter {
    * This meter is not bounded by the number of allowed waiters. This is equivalent to
    * `AsyncMeter.newUnboundedMeter(permits, 1.second, maxWaiters)`.
    *
-   * @see [[perSecond()]] for creating an async meter that only allows a certain number of waiters
+   * @see [[perSecond]] for creating an async meter that only allows a certain number of waiters
    */
   def perSecondUnbounded(permits: Int)(implicit timer: Timer): AsyncMeter =
     newUnboundedMeter(permits, Duration.fromSeconds(1))
@@ -220,16 +220,16 @@ class AsyncMeter private (
    * If the returned [[com.twitter.util.Future]] is interrupted, we
    * try to cancel it. If it's successfully cancelled, the
    * [[com.twitter.util.Future]] is satisfied with a
-   * [[java.util.concurrent.CancellationException]], and the permits
+   * `java.util.concurrent.CancellationException`, and the permits
    * will not be issued, so a subsequent waiter can take advantage
    * of the permits.
    *
    * If `await` is invoked when there are already `maxWaiters` waiters waiting
    * for permits, the [[com.twitter.util.Future]] is immediately satisfied with
-   * a [[java.util.concurrent.RejectedExecutionException]].
+   * a `java.util.concurrent.RejectedExecutionException`.
    *
    * If more permits are requested than `burstSize` then it returns a failed
-   * [[java.lang.IllegalArgumentException]] [[com.twitter.util.Future]]
+   * `java.lang.IllegalArgumentException` [[com.twitter.util.Future]]
    * immediately.
    */
   def await(permits: Int): Future[Unit] = {

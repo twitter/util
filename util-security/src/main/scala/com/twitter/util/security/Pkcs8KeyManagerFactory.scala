@@ -11,7 +11,7 @@ import java.util.UUID
 import javax.net.ssl.{KeyManager, KeyManagerFactory}
 
 /**
- * A factory which can create a [[javax.net.ssl.KeyManager KeyManager]] which contains
+ * A factory which can create a `javax.net.ssl.KeyManager` which contains
  * an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
  */
 class Pkcs8KeyManagerFactory(certsFile: File, keyFile: File) {
@@ -46,9 +46,9 @@ class Pkcs8KeyManagerFactory(certsFile: File, keyFile: File) {
 
   /**
    * Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
-   * Private Key file and combine the contents into a [[javax.net.ssl.KeyManager KeyManager]].
+   * Private Key file and combine the contents into a `javax.net.ssl.KeyManager`
    * The singular value is returned in an Array for ease of use with
-   * [[javax.net.ssl.SSLContext SSLContext's]] init method.
+   * `javax.net.ssl.SSLContext` init method.
    */
   def getKeyManagers(): Try[Array[KeyManager]] = {
     val tryCerts: Try[Seq[X509Certificate]] =

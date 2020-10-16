@@ -639,7 +639,7 @@ object AsyncStream {
     fromFuture[A](Future.exception(e))
 
   /**
-   * Transformation (or lift) from [[Seq]] into `AsyncStream`.
+   * Transformation (or lift) from `Seq` into `AsyncStream`.
    */
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {
     case Nil => empty
@@ -648,13 +648,13 @@ object AsyncStream {
   }
 
   /**
-   * Transformation (or lift) from [[Future]] into `AsyncStream`.
+   * Transformation (or lift) from [[com.twitter.util.Future]] into `AsyncStream`.
    */
   def fromFuture[A](f: Future[A]): AsyncStream[A] =
     FromFuture(f)
 
   /**
-   * Transformation (or lift) from [[Option]] into `AsyncStream`.
+   * Transformation (or lift) from `Option` into `AsyncStream`.
    */
   def fromOption[A](o: Option[A]): AsyncStream[A] =
     o match {

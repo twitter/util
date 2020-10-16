@@ -4,7 +4,7 @@ import com.twitter.util.Duration
 import java.util.concurrent.TimeUnit
 
 /**
- * Implicits for writing readable [[Duration]]s.
+ * Implicits for writing readable [[com.twitter.util.Duration]]s.
  *
  * @example
  * {{{

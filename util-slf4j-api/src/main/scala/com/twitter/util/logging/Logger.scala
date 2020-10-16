@@ -7,13 +7,31 @@ import scala.reflect.{ClassTag, classTag}
 /**
  * Companion object for [[com.twitter.util.logging.Logger]] which provides
  * factory methods for creation.
+ *
+ * @define ApplyScaladocLink
+ * [[com.twitter.util.logging.Logger.apply(name:String):com\.twitter\.util\.logging\.Logger* apply(String)]]
+ *
+ * @define ApplyLoggerScaladocLink
+ * [[com.twitter.util.logging.Logger.apply(underlying:org\.slf4j\.Logger):com\.twitter\.util\.logging\.Logger* apply(Logger)]]
+ *
+ * @define ApplyClassScaladocLink
+ * [[com.twitter.util.logging.Logger.apply(clazz:Class[_]):com\.twitter\.util\.logging\.Logger* apply(Class)]]
+ *
+ * @define GetLoggerScaladocLink
+ * [[com.twitter.util.logging.Logger.getLogger(name:String):com\.twitter\.util\.logging\.Logger* getLogger(String)]]
+ *
+ * @define GetLoggerClassScaldocLink
+ * [[com.twitter.util.logging.Logger.getLogger(clazz:Class[_]):com\.twitter\.util\.logging\.Logger* getLogger(Class)]]
+ *
+ * @define GetLoggerLoggerScaladocLink
+ * [[com.twitter.util.logging.Logger.getLogger(underlying:org\.slf4j\.Logger):com\.twitter\.util\.logging\.Logger* getLogger(Logger)]]
  */
 object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the given name.
    * @param name name of the underlying `org.slf4j.Logger`.
-   * @see Java users see [[getLogger(name:String)]]
+   * @see Java users see $GetLoggerScaladocLink
    *
    * {{{
    *    val logger = Logger("name")
@@ -26,7 +44,7 @@ object Logger {
   /**
    * Create a [[Logger]] for the given name.
    * @param name name of the underlying `org.slf4j.Logger`.
-   * @see Scala users see [[apply(name:String)]]
+   * @see Scala users see $ApplyScaladocLink
    *
    * {{{
    *    Logger logger = Logger.getLogger("name");
@@ -38,7 +56,7 @@ object Logger {
   /**
    * Create a [[com.twitter.util.logging.Logger]] named for the given class.
    * @param clazz class to use for naming the underlying Logger.
-   * @see Java users see [[getLogger(clazz:Class[_])]]
+   * @see Java users see $GetLoggerClassScaldocLink
    *
    * {{{
    *    val logger = Logger(classOf[MyClass])
@@ -51,7 +69,7 @@ object Logger {
   /**
    * Create a [[Logger]] named for the given class.
    * @param clazz class to use for naming the underlying `org.slf4j.Logger`.
-   * @see Scala users see [[apply(clazz:Class[_])]]
+   * @see Scala users see $ApplyClassScaladocLink
    *
    * {{{
    *    Logger logger = Logger.getLogger(MyClass.class);
@@ -62,7 +80,7 @@ object Logger {
 
   /**
    * Create a [[com.twitter.util.logging.Logger]] for the runtime class wrapped
-   * by the implicit [[scala.reflect.ClassTag]] denoting the runtime class `T`.
+   * by the implicit `scala.reflect.ClassTag` denoting the runtime class `T`.
    * @tparam T the runtime class type
    *
    * {{{
@@ -77,7 +95,7 @@ object Logger {
    * Create a [[com.twitter.util.logging.Logger]] wrapping the given underlying
    * `org.slf4j.Logger`.
    * @param underlying an `org.slf4j.Logger`
-   * @see Java users see [[getLogger(underlying:Logger)]]
+   * @see Java users see $GetLoggerLoggerScaladocLink
    *
    * {{{
    *    val logger = Logger(LoggerFactory.getLogger("name"))
@@ -91,7 +109,7 @@ object Logger {
    * Create a [[Logger]] wrapping the given underlying
    * `org.slf4j.Logger`.
    * @param underlying an `org.slf4j.Logger`
-   * @see Scala users see [[apply(underlying:Logger)]]
+   * @see Scala users see $ApplyLoggerScaladocLink
    *
    * {{{
    *    Logger logger = Logger.getLogger(LoggerFactory.getLogger("name"));

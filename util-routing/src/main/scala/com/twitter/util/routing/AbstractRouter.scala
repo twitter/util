@@ -10,8 +10,8 @@ import scala.jdk.CollectionConverters._
  *
  * @param label A label used for identifying this Router (i.e. for distinguishing between [[Router]]
  *              instances in error messages or for StatsReceiver scope).
- * @param jRoutes All of the [[Route]] routes contained within this [[Router]], represented as
- *                a Java [[JIterable]].
+ * @param jRoutes All of the `Route` routes contained within this [[Router]], represented as
+ *                a Java `Iterable`.
  * @tparam Input The Input type used to determine a route destination
  * @tparam Route The output/resulting route type
  */

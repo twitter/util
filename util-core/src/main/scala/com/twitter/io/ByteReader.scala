@@ -184,14 +184,14 @@ trait ByteReader extends AutoCloseable {
    * Extract exactly the specified number of bytes into a `String` using the
    * specified `Charset`, advancing the byte cursor by `bytes`.
    *
-   * @throws UnderflowException if there are < `bytes` bytes available
+   * @throws ByteReader.UnderflowException if there are < `bytes` bytes available
    */
   def readString(bytes: Int, charset: Charset): String
 
   /**
    * Skip over the next `n` bytes.
    *
-   * @throws UnderflowException if there are < `n` bytes available
+   * @throws ByteReader.UnderflowException if there are < `n` bytes available
    */
   def skip(n: Int): Unit
 

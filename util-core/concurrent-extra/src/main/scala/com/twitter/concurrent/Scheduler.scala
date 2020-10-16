@@ -8,7 +8,7 @@ import java.util.logging.{Level, Logger}
 import scala.collection.mutable
 
 /**
- * An interface for scheduling [[java.lang.Runnable]] tasks.
+ * An interface for scheduling `java.lang.Runnable` tasks.
  */
 trait Scheduler {
 
@@ -32,7 +32,7 @@ trait Scheduler {
    * Total time spent doing [[blocking]] operations, in nanoseconds.
    *
    * This should only include time spent on threads where
-   * [[CanAwait.trackElapsedBlocking]] returns `true`.
+   * [[com.twitter.util.Awaitable.CanAwait.trackElapsedBlocking]] returns `true`.
    *
    * @return -1 if the [[Scheduler]] does not support tracking this.
    *
@@ -258,7 +258,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
 
 /**
  * A named Scheduler mix-in that causes submitted tasks to be dispatched according to
- * an [[java.util.concurrent.ExecutorService]] created by an abstract factory
+ * an `java.util.concurrent.ExecutorService` created by an abstract factory
  * function.
  */
 trait ExecutorScheduler { self: Scheduler =>

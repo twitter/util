@@ -16,7 +16,7 @@ object Library {
    * May only be called once with a given `name`.  `params` and `name` must abide
    * by the guidelines for keys and values set in [[Registry]].
    *
-   * @returns None if a library has already been registered with the given `name`,
+   * @return None if a library has already been registered with the given `name`,
    * or a [[Roster]] for resetting existing fields in the map otherwise.
    */
   def register(name: String, params: Map[String, String]): Option[Roster] = {

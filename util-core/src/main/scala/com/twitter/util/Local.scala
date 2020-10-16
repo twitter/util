@@ -4928,7 +4928,7 @@ object Local {
 }
 
 /**
- * A Local is a [[ThreadLocal]] whose scope is flexible. The state of all Locals may
+ * A Local is a `ThreadLocal` whose scope is flexible. The state of all Locals may
  * be saved or restored onto the current thread by the user. This is useful for
  * threading Locals through execution contexts.
  *

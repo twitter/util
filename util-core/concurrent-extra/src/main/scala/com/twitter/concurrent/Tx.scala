@@ -50,7 +50,7 @@ object Tx {
   /**
    * A `Tx` that will always commit the given value immediately.
    *
-   * Note: Updates here must also be done at [[com.twitter.concurrent.Txs.newConstTx()]].
+   * Note: Updates here must also be done at `Txs.newConstTx`.
    */
   def const[T](msg: T): Tx[T] = new Tx[T] {
     def ack() = Future.value(Commit(msg))

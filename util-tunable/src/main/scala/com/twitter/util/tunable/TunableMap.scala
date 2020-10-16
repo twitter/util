@@ -13,7 +13,7 @@ abstract class TunableMap { self =>
 
   /**
    * Returns a [[Tunable]] for the given `key.id` in the [[TunableMap]]. If the [[Tunable]] is not
-   * of type `T` or a subclass of type `T`, throws a [[ClassCastException]]
+   * of type `T` or a subclass of type `T`, throws a `ClassCastException`
    */
   def apply[T](key: TunableMap.Key[T]): Tunable[T]
 
@@ -40,8 +40,8 @@ abstract class TunableMap { self =>
   def entries: Iterator[TunableMap.Entry[_]]
 
   /**
-   * Compose this [[TunableMap]] with another [[TunableMap]]. [[Tunables]] retrieved from
-   * the composed map prioritize the values of [[Tunables]] in the this map over the other
+   * Compose this [[TunableMap]] with another [[TunableMap]]. [[Tunable]]s retrieved from
+   * the composed map prioritize the values of [[Tunable]]s in the this map over the other
    * [[TunableMap]].
    */
   def orElse(that: TunableMap): TunableMap = (self, that) match {
@@ -141,7 +141,7 @@ object TunableMap {
    * A [[TunableMap]] that can be updated via `put` and `clear` operations. Putting
    * a value for a given `id` will update the current value for the `id`, or create
    * a new [[Tunable]] if it does not exist. The type of the new value must match that of the
-   * existing value, or a [[ClassCastException]] will be thrown.
+   * existing value, or a `ClassCastException` will be thrown.
    *
    * `apply` returns a [[Tunable]] for a given [[TunableMap.Key]] and creates it if does not already
    * exist. Updates to the [[TunableMap]] update the underlying [[Tunable]]s; for example, a

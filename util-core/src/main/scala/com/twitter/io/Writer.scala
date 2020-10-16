@@ -20,22 +20,23 @@ import java.io.OutputStream
  *
  * == Closures and Failures ==
  *
- * Writers are [[Closable]] and the producer MUST `close` the stream when it finishes or `fail` the
- * stream when it encounters a failure and can no longer continue. Streams backed by network
- * connections are particularly prone to resource leaks when they aren't cleaned up properly.
+ * Writers are [[com.twitter.util.Closable]] and the producer MUST `close` the stream when it
+ * finishes or `fail` the stream when it encounters a failure and can no longer continue. Streams
+ * backed by network connections are particularly prone to resource leaks when they aren't
+ * cleaned up properly.
  *
- * Observing stream failures in the producer could be done via a [[Future]] returned form
- * a write-loop:
+ * Observing stream failures in the producer could be done via a [[com.twitter.util.Future]]
+ * returned form a write-loop:
  *
  * {{{
  *   produce(writer)(generator).respond {
  *     case Return(()) => println("Produced a stream successfully.")
- *     case Throw(e) => println(s"Could not produce a stream because of a failure: $e")
+ *     case Throw(e) => println(s"Could not produce a stream because of a failure: \$e")
  *   }
  * }}}
  *
- * @note Encountering a stream failure would terminate the write-loop given the [[Future]]
- *       recursion semantics.
+ * @note Encountering a stream failure would terminate the write-loop given the
+ *       [[com.twitter.util.Future]] recursion semantics.
  *
  * @note Once failed or closed, a stream can not be restarted such that all future writes will
  *       resolve into a failure.
@@ -44,10 +45,10 @@ import java.io.OutputStream
  *
  * == Back Pressure ==
  *
- * By analogy with read-loops (see [[Reader]] API), write-loops leverage [[Future]] recursion to
- * exert back-pressure: the next write isn't issued until the previous write finishes. This will
- * always ensure a finer grained back-pressure in network systems allowing the producers to
- * adjust the flow rate based on consumer's speed and not on IO buffering.
+ * By analogy with read-loops (see [[Reader]] API), write-loops leverage[[com.twitter.util.Future]]
+ * recursion to exert back-pressure: the next write isn't issued until the previous write finishes.
+ * This will always ensure a finer grained back-pressure in network systems allowing the producers
+ * to adjust the flow rate based on consumer's speed and not on IO buffering.
  *
  * @note Whether or not multiple pending writes are allowed on a `Writer` type is an undefined
  *       behaviour but could be changed in a refinement.
@@ -56,23 +57,23 @@ trait Writer[-A] extends Closable { self =>
 
   /**
    * Write an `element` into this stream. Although undefined by this contract, a trustworthy
-   * implementation (such as [[Pipe]]) would do its best to resolve the returned [[Future]] only
-   * when a consumer observes a written `element`.
+   * implementation (such as [[Pipe]]) would do its best to resolve the returned
+   * [[com.twitter.util.Future]] only when a consumer observes a written `element`.
    *
-   * The write can also resolve into a failure (failed [[Future]]).
+   * The write can also resolve into a failure (failed [[com.twitter.util.Future]]).
    */
   def write(element: A): Future[Unit]
 
   /**
    * Fail this stream with a given `cause`. No further writes are allowed, but if happen, will
-   * resolve into a [[Future]] failed with `cause`.
+   * resolve into a [[com.twitter.util.Future]] failed with `cause`.
    *
    * @note Failing an already closed stream does not have an effect.
    */
   def fail(cause: Throwable): Unit
 
   /**
-   * A [[Future]] that resolves once this writer is closed and flushed.
+   * A [[com.twitter.util.Future]] that resolves once this writer is closed and flushed.
    *
    * It may contain an error if the writer is failed.
    *

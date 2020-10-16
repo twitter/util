@@ -14,6 +14,21 @@ import scala.util.control.NoStackTrace
  * @see [[Futures]] for Java-friendly APIs.
  * @see The [[https://twitter.github.io/finagle/guide/Futures.html user guide]]
  *      on concurrent programming with Futures.
+ *
+ * @define FutureJoinScaladocLink
+ * [[[com.twitter.util.Future.join[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[Unit]* join(Seq[A])]]]
+ *
+ * @define FuturesJoinScaladocLink
+ * [[com.twitter.util.Futures.join[A,B](a:com\.twitter\.util\.Future[A],b:com\.twitter\.util\.Future[B]):com\.twitter\.util\.Future[(A,B)]* Futures.join(Future[A],Future[B])]]
+ *
+ * @define FutureCollectScaladocLink
+ * [[[com.twitter.util.Future.collect[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[Seq[A]]* collect(Seq[Future[A]])]]]
+ *
+ * @define FutureCollectToTryScaladocLink
+ * [[[[com.twitter.util.Future.collectToTry[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[Seq[com\.twitter\.util\.Try[A]]]* collectToTry(Seq[Future[A]])]]]]
+ *
+ * @define FutureSelectScaladocLink
+ * [[[com.twitter.util.Future.select[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[(com\.twitter\.util\.Try[A],Seq[com\.twitter\.util\.Future[A]])]* select(Seq[Future])]]]
  */
 object Future {
   val DEFAULT_TIMEOUT: Duration = Duration.Top
@@ -87,7 +102,7 @@ object Future {
   @inline private final def raiseException = RaiseException
 
   /**
-   * A failed `Future` analogous to [[Predef.???]].
+   * A failed `Future` analogous to `Predef.???`.
    */
   def ??? : Future[Nothing] =
     Future.exception(new NotImplementedError("an implementation is missing"))
@@ -258,10 +273,10 @@ object Future {
    *
    * @param fs a sequence of Futures
    *
-   * @see [[Futures.join]] for a Java friendly API.
-   * @see [[collect]] if you want to be able to see the results of each `Future`.
-   * @see [[collectToTry]] if you want to be able to see the results of each
-   *     `Future` regardless of if they succeed or fail.
+   * @see $FuturesJoinScaladocLink for a Java friendly API.
+   * @see $FutureCollectScaladocLink if you want to be able to see the results of each `Future`.
+   * @see $FutureCollectToTryScaladocLink if you want to be able to see the results of each
+   *      `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: AnySeq[Future[A]]): Future[Unit] = {
     if (fs.isEmpty) Future.Unit
@@ -1029,10 +1044,10 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    *
    * @param fs a java.util.List of Futures
    *
-   * @see [[Futures.join]] for a Java friendly API.
-   * @see [[collect]] if you want to be able to see the results of each `Future`.
-   * @see [[collectToTry]] if you want to be able to see the results of each
-   *     `Future` regardless of if they succeed or fail.
+   * @see $FuturesJoinScaladocLink for a Java friendly API.
+   * @see $FutureCollectScaladocLink if you want to be able to see the results of each `Future`.
+   * @see $FutureCollectToTryScaladocLink if you want to be able to see the results of each
+   *      `Future` regardless of if they succeed or fail.
    */
   def join[A](fs: JList[Future[A]]): Future[Unit] = Futures.join(fs)
 
@@ -1102,9 +1117,9 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    * @param fs a sequence of Futures
    * @return a `Future[Seq[A]]` containing the collected values from fs.
    *
-   * @see [[collectToTry]] if you want to be able to see the results of each
+   * @see $FutureCollectToTryScaladocLink if you want to be able to see the results of each
    *     `Future` regardless of if they succeed or fail.
-   * @see [[join]] if you are not interested in the results of the individual
+   * @see $FutureJoinScaladocLink if you are not interested in the results of the individual
    *     `Futures`, only when they are complete.
    */
   def collect[A](fs: AnySeq[Future[A]]): Future[Seq[A]] =
@@ -1252,7 +1267,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
    *
    * @param fs cannot be empty
    *
-   * @see [[select]] which can be an easier API to use.
+   * @see $FutureSelectScaladocLink which can be an easier API to use.
    */
   def selectIndex[A](fs: IndexedSeq[Future[A]]): Future[Int] =
     if (fs.isEmpty) {
@@ -2196,7 +2211,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * For example:
    * {{{
    * val p = new Promise[Int]()
-   * p.setInterruptHandler { case x => println(s"interrupt handler for ${x.getClass}") }
+   * p.setInterruptHandler { case x => println(s"interrupt handler for \${x.getClass}") }
    * val f1: Future[Int] = p.mask {
    *   case _: IllegalArgumentException => true
    * }
@@ -2211,7 +2226,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @see [[raise]]
    * @see [[masked]]
-   * @see [[interruptible()]]
+   * @see [[interruptible]]
    */
   def mask(pred: PartialFunction[Throwable, Boolean]): Future[A] = {
     val p = Promise[A]()
@@ -2242,7 +2257,7 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    *
    * @see [[raise]]
    * @see [[mask]]
-   * @see [[interruptible()]]
+   * @see [[interruptible]]
    */
   def masked: Future[A] = mask(Future.AlwaysMasked)
 

@@ -5,14 +5,14 @@ import java.util.concurrent.ConcurrentMap
 
 /**
  * A [[com.twitter.cache.FutureCache]] backed by a
- * [[java.util.concurrent.ConcurrentMap]]
+ * `java.util.concurrent.ConcurrentMap`
  *
  * Any correct implementation should make sure that you evict failed
  * results, and don't interrupt the underlying request that has been
- * fired off.  [[EvictingCache]] and [[Future#interrupting]] are
+ * fired off.  [[EvictingCache$]] and interrupting [[com.twitter.util.Future]]s are
  * useful tools for building correct FutureCaches.  A reference
  * implementation for caching the results of an asynchronous function
- * with a [[ConcurrentMap]] can be found at [[FutureCache$.fromMap]].
+ * with a `ConcurrentMap` can be found at [[FutureCache$.fromMap]].
  */
 class ConcurrentMapCache[K, V](underlying: ConcurrentMap[K, Future[V]]) extends FutureCache[K, V] {
   def get(key: K): Option[Future[V]] = Option(underlying.get(key))

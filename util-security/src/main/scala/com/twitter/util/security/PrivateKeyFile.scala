@@ -47,10 +47,9 @@ class PrivateKeyFile(file: File) {
   /**
    * Attemps to read the contents of an unencrypted PrivateKey file.
    *
-   * @throws InvalidPemFormatException if the file is not a PEM format
-   * file.
+   * @note Throws `InvalidPemFormatException` if the file is not a PEM format file.
    *
-   * @throws InvalidKeySpecException if the file cannot be loaded as an
+   * @note Throws `InvalidKeySpecException` if the file cannot be loaded as an
    * RSA, DSA, or EC PrivateKey.
    *
    * @note This method will attempt to load the key first as an RSA key, then

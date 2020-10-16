@@ -3,7 +3,7 @@ package com.twitter.util.lint
 import java.util.regex.Pattern
 
 /**
- * A single lint rule, that when [[Rule.apply() run]] evaluates
+ * A single lint rule, that when [[Rule.apply run]] evaluates
  * whether or not there are any issues.
  */
 trait Rule {

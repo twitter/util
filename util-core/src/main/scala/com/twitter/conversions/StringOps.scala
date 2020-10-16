@@ -82,7 +82,7 @@ object StringOps {
 
     /**
      * Unquote an ASCII string that has been quoted in a style like
-     * [[quoteC()]] and convert it into a standard unicode string.
+     * [[quoteC():String*]] and convert it into a standard unicode string.
      * `"\\uHHHH"` and `"\xHH"` expressions are unpacked
      * into unicode characters, as well as `"\r"`, `"\n"`,
      * `"\t"`, `"\\"`, and `'\"'`.

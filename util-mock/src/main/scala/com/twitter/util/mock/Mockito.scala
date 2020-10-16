@@ -4,14 +4,14 @@ import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
 
 /**
  * Helper for Mockito Scala sugar with [[https://github.com/mockito/mockito-scala#idiomatic-mockito idiomatic stubbing]].
- * Java users are encouraged to use [[org.mockito.Mockito]] directly.
+ * Java users are encouraged to use `org.mockito.Mockito` directly.
  *
  * Note that the Specs2 `smartMock[]` or `mock[].smart` is the default behavior
  * for [[https://github.com/mockito/mockito-scala Mockito Scala]].
  *
  * =Usage=
  *
- * This trait uses [[org.mockito.IdiomaticMockito]] which is heavily influenced by ScalaTest Matchers.
+ * This trait uses `org.mockito.IdiomaticMockito` which is heavily influenced by ScalaTest Matchers.
  *
  * To use, mix in the [[com.twitter.util.mock.Mockito]] trait where desired.
  *
@@ -156,8 +156,8 @@ import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
  * [[https://github.com/mockito/mockito-scala#getting-started Getting Started]] documentation for general
  * information.
  *
- * @see [[org.mockito.IdiomaticMockito]]
- * @see [[org.mockito.ArgumentMatchersSugar]]
+ * see `org.mockito.IdiomaticMockito`
+ * see `org.mockito.ArgumentMatchersSugar`
  */
 trait Mockito extends IdiomaticMockito with ArgumentMatchersSugar
 

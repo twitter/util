@@ -33,7 +33,7 @@ object Refresh {
    *
    * From Java:
    *   Refresh.every(Duration.fromSeconds(3600), new Function0<Future<T>>() {
-   *     @Override
+   *     \@Override
    *     public Future<T> apply() {
    *       ...
    *     }

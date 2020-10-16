@@ -3,7 +3,7 @@ package com.twitter.conversions
 import com.twitter.util.StorageUnit
 
 /**
- * Implicits for writing readable [[StorageUnit]]s.
+ * Implicits for writing readable [[com.twitter.util.StorageUnit]]s.
  *
  * @example
  * {{{

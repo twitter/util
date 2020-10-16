@@ -8,9 +8,14 @@ import scala.util.control.NonFatal
  * An append-only collection of time-series data. Example Stats are
  * "queue depth" or "query width in a stream of requests".
  *
+ * @define StatTimeScaladocLink
+ * [[com.twitter.finagle.stats.Stat.time[A](stat:com\.twitter\.finagle\.stats\.Stat,unit:java\.util\.concurrent\.TimeUnit)(f:=>A):A* time(Stat,TimeUnit)]]
+ *
+ * @define StatTimeFutureScaladocLink
+ * [[com.twitter.finagle.stats.Stat.timeFuture[A](stat:com\.twitter\.finagle\.stats\.Stat,unit:java\.util\.concurrent\.TimeUnit)(f:=>com\.twitter\.util\.Future[A]):com\.twitter\.util\.Future[A]* timeFuture(Stat,TimeUnit)]]
+ *
  * Utilities for timing synchronous execution and asynchronous
- * execution are on the companion object ([[Stat.time(Stat)]] and
- * [[Stat.timeFuture(Stat)]].
+ * execution are on the companion object ($StatTimeScaladocLink and $StatTimeFutureScaladocLink).
  */
 trait Stat {
   def add(value: Float): Unit

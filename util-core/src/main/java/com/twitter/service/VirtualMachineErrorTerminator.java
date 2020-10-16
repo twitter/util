@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 /**
  * Utility class to terminate the JVM in case of a virtual machine error.
  * Classes wishing to use should initialize it early using
- * {@link #initialize()}, as it might be unable to initialize properly after
- * the virtual machine error has been thrown. See {@link #checkTerminating()}
+ * `initialize`, as it might be unable to initialize properly after
+ * the virtual machine error has been thrown. See `checkTerminating`
  * for the typical usage pattern.
  * @author Attila Szegedi
  */

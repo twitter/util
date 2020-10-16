@@ -18,15 +18,15 @@ import scala.language.higherKinds
  * To listen to an Event stream for values, register a handler.
  *
  * {{{
- * val you = ints.respond { n => println(s"$n for you") }
+ * val you = ints.respond { n => println(s"\$n for you") }
  * }}}
  *
- * Handlers in Event-speak are called [[com.twitter.util.Witness Witnesses]].
+ * Handlers in Event-speak are called [[Witness Witnesses]].
  * And, respond is equivalent to `register(Witness { ... })`, so we can also
  * write:
  *
  * {{{
- * val me = ints.register(Witness { n => println(s"$n for me") })
+ * val me = ints.register(Witness { n => println(s"\$n for me") })
  * }}}
  *
  * Registration is time-sensitive. Witnesses registered to an Event stream
@@ -473,11 +473,14 @@ abstract class AbstractWitness[T] extends Witness[T]
 
 /**
  * Note: There is Java-friendly API for this object: [[com.twitter.util.Witnesses]].
+ *
+ * @define VarApplyScaladocLink
+ * [[com.twitter.util.Var.apply[T](init:T,e:com\.twitter\.util\.Event[T]):com\.twitter\.util\.Var[T]* Var.apply(T, Event[T])]]
  */
 object Witness {
 
   /**
-   * Create a [[Witness]] from an [[AtomicReference atomic reference]].
+   * Create a [[Witness]] from an atomic reference.
    */
   def apply[T](ref: AtomicReference[T]): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = ref.set(t)
@@ -491,7 +494,7 @@ object Witness {
   }
 
   /**
-   * Create a [[Witness]] from a [[Function1]].
+   * Create a [[Witness]] from a `Function1`.
    */
   def apply[T](f: T => Unit): Witness[T] = new Witness[T] {
     def notify(t: T): Unit = f(t)
@@ -506,7 +509,7 @@ object Witness {
 
   /**
    * Create a [[Witness]] which keeps only a `java.lang.ref.WeakReference`
-   * to the [[Function1]].
+   * to the `Function1`.
    *
    * @see [[Var.patch]] for example.
    */
@@ -524,7 +527,7 @@ object Witness {
    * Create a [[Witness]] which keeps only a `java.lang.ref.WeakReference`
    * to `u`.
    *
-   * @see [[Var.apply]] for example.
+   * @see $VarApplyScaladocLink for example.
    */
   def weakReference[T](u: Updatable[T]): Witness[T] = new Witness[T] {
     private[this] val weakRef = new WeakReference(u)

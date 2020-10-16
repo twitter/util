@@ -53,13 +53,13 @@ trait TempFolder {
 
   /**
    * @return The current thread's active temporary folder.
-   * @throws RuntimeException if not running within a withTempFolder block
+   * @note Throws `RuntimeException` if not running within a withTempFolder block
    */
   def folderName: String = { _folderName.get.getPath }
 
   /**
    * @return The canonical path of the current thread's active temporary folder.
-   * @throws RuntimeException if not running within a withTempFolder block
+   * @note Throws `RuntimeException` if not running within a withTempFolder block
    */
   def canonicalFolderName: String = { _folderName.get.getCanonicalPath }
 }

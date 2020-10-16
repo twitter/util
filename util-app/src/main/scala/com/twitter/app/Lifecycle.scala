@@ -15,18 +15,18 @@ private[app] trait Lifecycle { self: App =>
   private[this] val notifier = new Notifier(observers.asScala)
 
   /**
-   * Notifies [[Observer observers]] of [[com.twitter.app.lifecycle.Event events]]
+   * Notifies `Observer`s of `Event`s.
    */
   protected final def observe(event: Event)(f: => Unit): Unit =
     notifier(event)(f)
 
   /**
-   * Notifies [[Observer observers]] of [[Future]] [[com.twitter.app.lifecycle.Event events]]
+   * Notifies `Observer`s of [[com.twitter.util.Future]] `Event`s.
    */
   protected final def observeFuture(event: Event)(f: Future[Unit]): Future[Unit] =
     notifier.future(event)(f)
 
-  /** Add a lifecycle [[com.twitter.app.lifecycle.Event]] [[Observer]] */
+  /** Add a lifecycle [[com.twitter.app.lifecycle.Event]] [[com.twitter.app.lifecycle.Observer]] */
   private[twitter] final def withObserver(observer: Observer): Unit =
     observers.add(observer)
 }

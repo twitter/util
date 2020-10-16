@@ -29,12 +29,15 @@ object StatsReceiver {
 
 /**
  * [[StatsReceiver]] utility methods for ease of use from java.
+ *
+ * @define ProvideGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.provideGauge(name:String*)(f:=>Float):Unit* provideGauge(String*)(=>Float)]]
  */
 @deprecated("Use StatsReceiver addGauge and provideGauge methods directly", "2020-06-10")
 object StatsReceivers {
 
   /**
-   * Java compatible version of [[StatsReceiver.addGauge]].
+   * Java compatible version of [[addGauge]].
    */
   @varargs
   def addGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Gauge = {
@@ -44,7 +47,7 @@ object StatsReceivers {
   }
 
   /**
-   * Java compatible version of [[StatsReceiver.provideGauge]].
+   * Java compatible version of $ProvideGaugeScaladocLink.
    */
   @varargs
   def provideGauge(statsReceiver: StatsReceiver, callable: Callable[JFloat], name: String*): Unit =
@@ -66,6 +69,24 @@ object StatsReceivers {
  *
  * Metrics created w/o an explicitly specified [[Verbosity]] level, will use [[Verbosity.Default]].
  * Use [[VerbosityAdjustingStatsReceiver]] to adjust this behaviour.
+ *
+ * @define ProvideGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.provideGauge(name:String*)(f:=>Float):Unit* provideGauge(String*)(=>Float)]]
+ *
+ * @define AddGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.addGauge(name:String*)(f:=>Float):com\.twitter\.finagle\.stats\.Gauge* addGauge(String*)(=>Float)]]
+ *
+ * @define JavaProvideGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.provideGauge(f:java\.util\.function\.Supplier[Float],name:String*):Unit* provideGauge(Supplier[Float],String*)]]
+ *
+ * @define JavaAddGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.addGauge(f:java\.util\.function\.Supplier[Float],name:String*):com\.twitter\.finagle\.stats\.Gauge* addGauge(Supplier[Float],String*)]]
+ *
+ * @define AddVerboseGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.addGauge(verbosity:com\.twitter\.finagle\.stats\.Verbosity,name:String*)(f:=>Float):com\.twitter\.finagle\.stats\.Gauge* addGauge(Verbosity,String*)(=>Float)]]
+ *
+ * @define JavaVerboseAddGaugeScaladocLink
+ * [[com.twitter.finagle.stats.StatsReceiver.addGauge(f:java\.util\.function\.Supplier[Float],verbosity:com\.twitter\.finagle\.stats\.Verbosity,name:String*):com\.twitter\.finagle\.stats\.Gauge* addGauge(Supplier[Float],Verbosity,String*)]]
  */
 trait StatsReceiver {
 
@@ -132,11 +153,10 @@ trait StatsReceiver {
    *
    * Measurements under the same name are added together.
    *
-   * @see [[StatsReceiver.addGauge]] if you can properly control the lifecycle
+   * @see $AddGaugeScaladocLink if you can properly control the lifecycle
    *     of the returned [[Gauge gauge]].
    *
-   * @see [[StatsReceiver.provideGauge(java.util.function.Supplier, String*)]] for a Java-friendly
-   *      version.
+   * @see $JavaProvideGaugeScaladocLink for a Java-friendly version.
    */
   def provideGauge(name: String*)(f: => Float): Unit = {
     val gauge = addGauge(name: _*)(f)
@@ -146,7 +166,7 @@ trait StatsReceiver {
   }
 
   /**
-   * Just like [[provideGauge()]] but optimized for better Java experience.
+   * Just like $ProvideGaugeScaladocLink but optimized for better Java experience.
    */
   @varargs
   def provideGauge(f: Supplier[Float], name: String*): Unit =
@@ -164,11 +184,10 @@ trait StatsReceiver {
    *
    * Measurements under the same name are added together.
    *
-   * @see [[StatsReceiver.provideGauge]] when there is not a good location
+   * @see $ProvideGaugeScaladocLink when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    *
-   * @see [[StatsReceiver.addGauge(java.util.function.Supplier,String*)]] for a Java-friendly
-   *      version.
+   * @see $JavaAddGaugeScaladocLink for a Java-friendly version.
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
@@ -186,11 +205,10 @@ trait StatsReceiver {
    *
    * Measurements under the same name are added together.
    *
-   * @see [[StatsReceiver.provideGauge]] when there is not a good location
+   * @see $ProvideGaugeScaladocLink when there is not a good location
    *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    *
-   * @see [[StatsReceiver.addGauge(java.util.function.Supplier,Verbosity,String*)]] for a
-   *      Java-friendly version.
+   * @see $JavaVerboseAddGaugeScaladocLink for a Java-friendly version.
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
@@ -198,13 +216,13 @@ trait StatsReceiver {
     addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name)))(f)
 
   /**
-   * Just like [[addGauge(String*,=>Float)]] but optimized for better Java experience.
+   * Just like $AddGaugeScaladocLink but optimized for better Java experience.
    */
   @varargs
   def addGauge(f: Supplier[Float], name: String*): Gauge = addGauge(f, Verbosity.Default, name: _*)
 
   /**
-   * Just like [[addGauge(Verbosity,String*,=>Float)]] but optimized for better Java experience.
+   * Just like $AddVerboseGaugeScaladocLink but optimized for better Java experience.
    */
   @varargs
   def addGauge(f: Supplier[Float], verbosity: Verbosity, name: String*): Gauge =
@@ -222,8 +240,8 @@ trait StatsReceiver {
    *
    * Measurements under the same name are added together.
    *
-   * @see [[StatsReceiver.provideGauge]] when there is not a good location
-   *     to store the returned [[Gauge gauge]] that can give the desired lifecycle.
+   * @see $ProvideGaugeScaladocLink when there is not a
+   *      good location to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(schema: GaugeSchema)(f: => Float): Gauge

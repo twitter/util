@@ -5,7 +5,7 @@ import java.net.{InetSocketAddress, Socket}
 import scala.util.control.NonFatal
 
 /**
- * A generator of random local [[java.net.InetSocketAddress]] objects with
+ * A generator of random local `java.net.InetSocketAddress` objects with
  * ephemeral ports.
  */
 object RandomSocket {

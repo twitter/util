@@ -51,7 +51,7 @@ object Function {
   def ofCallable[A](c: Callable[A]): () => A = () => c.call()
 
   /**
-   * Creates a [[Function]] of `T` to `R` from a [[JavaFunction]].
+   * Creates a [[Function]] of `T` to `R` from a [[com.twitter.function.JavaFunction]].
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
    *
@@ -99,7 +99,7 @@ object Function {
   }
 
   /**
-   * Creates a [[Function]] of `T` to `Unit` from a [[JavaConsumer]].
+   * Creates a [[Function]] of `T` to `Unit` from a [[com.twitter.function.JavaConsumer]].
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
    *
@@ -123,7 +123,8 @@ object Function {
   }
 
   /**
-   * Creates an [[ExceptionalFunction]] of `T` to `R` from an [[ExceptionalJavaFunction]].
+   * Creates an [[ExceptionalFunction]] of `T` to `R` from an
+   * [[com.twitter.function.ExceptionalJavaFunction]].
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
    *
@@ -143,7 +144,8 @@ object Function {
     }
 
   /**
-   * Creates an [[ExceptionalFunction]] of `T` to `Unit` from an [[ExceptionalJavaConsumer]].
+   * Creates an [[ExceptionalFunction]] of `T` to `Unit` from an
+   * [[com.twitter.function.ExceptionalJavaConsumer]].
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
    *
@@ -163,7 +165,8 @@ object Function {
     }
 
   /**
-   * Creates an [[ExceptionalFunction0]] to `T` from an [[ExceptionalSupplier]].
+   * Creates an [[ExceptionalFunction0]] to `T` from an
+   * [[com.twitter.function.ExceptionalSupplier]].
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
    *

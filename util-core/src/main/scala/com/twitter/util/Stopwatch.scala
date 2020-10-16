@@ -122,7 +122,7 @@ object Stopwatch extends Stopwatch {
 object Stopwatches {
   import Stopwatch.Elapsed
 
-  /** @see [[Stopwatch.start()]] */
+  /** @see [[Stopwatch.start]] */
   def start(): Elapsed =
     Stopwatch.start()
 
@@ -159,7 +159,7 @@ object Stopwatches {
  * A trivial implementation of [[Stopwatch]] for use as a null
  * object.
  *
- * All calls to [[Stopwatch.start()]] return an [[Stopwatch.Elapsed]]
+ * All calls to [[Stopwatch.start]] return an [[Stopwatch.Elapsed]]
  * instance that always returns [[Duration.Bottom]] for its elapsed time.
  *
  * @see `NilStopwatch.get` for accessing this instance from Java.

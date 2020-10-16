@@ -48,8 +48,8 @@ class ShardCoordinator(zk: ZkClient, path: String, numShards: Int) {
    * client is finished performing work for the shard.
    *
    * @return A Future of ShardPermit that is satisfied when a shard slot becomes available.
-   * @throws SemaphoreError when the underlying semaphore throws an exception.
-   * @throws RejectedExecutionException when a shard cannot be acquired due to an unexpected
+   * @note Throws `SemaphoreError` when the underlying semaphore throws an exception.
+   * @note Throws `RejectedExecutionException` when a shard cannot be acquired due to an unexpected
    *                                    state in the zookeeper tree. Assumed to only happen if some
    *                                    zookeeper client clobbers the tree location for this
    *                                    ShardCoordinator.

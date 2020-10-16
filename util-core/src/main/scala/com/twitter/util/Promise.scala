@@ -5,13 +5,23 @@ import scala.annotation.tailrec
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NonFatal
 
+/**
+ * @define PromiseInterruptsSingleArgLink
+ * [[com.twitter.util.Promise.interrupts[A](f:com\.twitter\.util\.Future[_]):com\.twitter\.util\.Promise[A]* interrupts(Future)]]
+ *
+ * @define PromiseInterruptsTwoArgsLink
+ * [[com.twitter.util.Promise.interrupts[A](a:com\.twitter\.util\.Future[_],b:com\.twitter\.util\.Future[_]):com\.twitter\.util\.Promise[A]* interrupts(Future,Future)]]
+ *
+ * @define PromiseInterruptsVarargsLink
+ * [[com.twitter.util.Promise.interrupts[A](fs:com\.twitter\.util\.Future[_]*):com\.twitter\.util\.Promise[A]* interrupts(Future*)]]
+ */
 object Promise {
 
   /**
    * Embeds an "interrupt handler" into a [[Promise]].
    *
-   * This is a total handler such that it's defined on any [[Throwable]]. Use
-   * [[Promise.setInterruptHandler()]] if you need to leave an interrupt handler
+   * This is a total handler such that it's defined on any `Throwable`. Use
+   * [[Promise.setInterruptHandler]] if you need to leave an interrupt handler
    * undefined for certain types of exceptions.
    *
    * Example: (`p` and `q` are equivalent, but `p` allocates less):
@@ -358,8 +368,8 @@ object Promise {
   /**
    * Single-arg version to avoid object creation and take advantage of `forwardInterruptsTo`.
    *
-   * @see [[interrupts(Future, Future)]]
-   * @see [[interrupts(Future*)]]
+   * @see $PromiseInterruptsTwoArgsLink
+   * @see $PromiseInterruptsVarargsLink
    */
   def interrupts[A](f: Future[_]): Promise[A] = new Promise[A](f)
 
@@ -367,8 +377,8 @@ object Promise {
    * Create a promise that interrupts `a` and `b` futures. In particular:
    * the returned promise handles an interrupt when either `a` or `b` does.
    *
-   * @see [[interrupts(Future)]]
-   * @see [[interrupts(Future*)]]
+   * @see $PromiseInterruptsSingleArgLink
+   * @see $PromiseInterruptsVarargsLink
    */
   def interrupts[A](a: Future[_], b: Future[_]): Promise[A] =
     new Promise[A] with InterruptHandler {
@@ -382,8 +392,8 @@ object Promise {
    * Create a promise that interrupts all of `fs`. In particular:
    * the returned promise handles an interrupt when any of `fs` do.
    *
-   * @see [[interrupts(Future)]]
-   * @see [[interrupts(Future, Future)]]
+   * @see $PromiseInterruptsSingleArgLink
+   * @see $PromiseInterruptsTwoArgsLink
    */
   def interrupts[A](fs: Future[_]*): Promise[A] =
     new Promise[A] with InterruptHandler {
@@ -436,9 +446,9 @@ object Promise {
  * `Interrupted`, `Transforming`, `Done` and `Linked` where `Interruptible`,
  * `Interrupted`, and `Transforming` are variants of `Waiting` to deal with future
  * interrupts. Promises are concurrency-safe, using lock-free operations
- * throughout. Callback dispatch is scheduled with [[Scheduler]].
+ * throughout. Callback dispatch is scheduled with [[com.twitter.concurrent.Scheduler]].
  *
- * Waiters (i.e., continuations) are stored in a [[Promise.WaitQueue]] and
+ * Waiters (i.e., continuations) are stored in a `Promise.WaitQueue` and
  * executed in the LIFO order.
  *
  * `Promise.become` merges two promises: they are declared equivalent.
@@ -726,14 +736,14 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   /**
    * Populate the Promise with the given result.
    *
-   * @throws ImmutableResult if the Promise is already populated
+   * @throws Promise.ImmutableResult if the Promise is already populated
    */
   def setValue(result: A): Unit = update(Return(result))
 
   /**
    * Populate the Promise with the given exception.
    *
-   * @throws ImmutableResult if the Promise is already populated
+   * @throws Promise.ImmutableResult if the Promise is already populated
    */
   def setException(throwable: Throwable): Unit = update(Throw(throwable))
 
@@ -749,7 +759,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    * value or an exception. setValue and setException are generally
    * more readable methods to use.
    *
-   * @throws ImmutableResult if the Promise is already populated
+   * @throws Promise.ImmutableResult if the Promise is already populated
    */
   def update(result: Try[A]): Unit = {
     updateIfEmpty(result) || {

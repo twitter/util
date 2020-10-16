@@ -17,8 +17,8 @@ object Generator {
 }
 
 /**
- * Functional alias for creating a [[RouterType router]] given a [[String label]] and
- * all of the defined [[Route routes]] for the router to be generated.
+ * Functional alias for creating a [[Router router]] given a label and
+ * all of the defined routes for the router to be generated.
  */
 abstract class Generator[Input, Route, +RouterType <: Router[Input, Route]]
     extends ((String, Iterable[Route]) => RouterType)

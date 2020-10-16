@@ -8,7 +8,7 @@ import java.io.InputStream
  * Provides the [[Reader]] API for an `InputStream`.
  *
  * The given `InputStream` will be closed when [[Reader.read]]
- * reaches the EOF or a call to [[discard()]] or [[close()]].
+ * reaches the EOF or a call to [[discard]] or [[[close()*]]].
  */
 class InputStreamReader private[io] (inputStream: InputStream, chunkSize: Int, pool: FuturePool)
     extends Reader[Buf]
@@ -27,7 +27,7 @@ class InputStreamReader private[io] (inputStream: InputStream, chunkSize: Int, p
 
   /**
    * Asynchronously read at most min(`n`, `maxBufferSize`) bytes from
-   * the `InputStream`. The returned [[Future]] represents the results of
+   * the `InputStream`. The returned [[com.twitter.util.Future]] represents the results of
    * the read operation.  Any failure indicates an error; an empty buffer
    * indicates that the stream has completed.
    *
@@ -91,15 +91,15 @@ object InputStreamReader {
 
   /**
    * Create an [[InputStreamReader]] from the given `InputStream`
-   * using [[FuturePool.interruptibleUnboundedPool]] for executing
-   * all I/O.
+   * using [[com.twitter.util.FuturePool.interruptibleUnboundedPool]]
+   * for executing all I/O.
    */
   def apply(inputStream: InputStream, chunkSize: Int = DefaultMaxBufferSize): InputStreamReader =
     new InputStreamReader(inputStream, chunkSize)
 
   /**
    * Create an [[InputStreamReader]] from the given `InputStream`
-   * using the provided [[FuturePool]] for executing all I/O. The resulting
+   * using the provided [[com.twitter.util.FuturePool]] for executing all I/O. The resulting
    * [[InputStreamReader]] emits chunks of at most `DefaultMaxBufferSize`.
    */
   def apply(inputStream: InputStream, pool: FuturePool): InputStreamReader =

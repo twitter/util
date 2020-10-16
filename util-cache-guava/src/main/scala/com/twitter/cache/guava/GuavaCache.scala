@@ -6,12 +6,12 @@ import com.twitter.util.Future
 import java.util.concurrent.Callable
 
 /**
- * A [[com.twitter.cache.FutureCache]] backed by a
- * [[com.google.common.cache.Cache]].
+ * A `com.twitter.cache.FutureCache` backed by a
+ * `com.google.common.cache.Cache`.
  *
  * Any correct implementation should make sure that you evict failed results,
  * and don't interrupt the underlying request that has been fired off.
- * [[EvictingCache]] and [[Future#interrupting]] are useful tools for building
+ * [[EvictingCache$]] and interrupting [[com.twitter.util.Future]]s are useful tools for building
  * correct FutureCaches.  A reference implementation for caching the results of
  * an asynchronous function with a guava Cache can be found at
  * [[GuavaCache$.fromCache]].
@@ -27,11 +27,11 @@ class GuavaCache[K, V](cache: GCache[K, Future[V]]) extends ConcurrentMapCache[K
 
 /**
  * A [[com.twitter.cache.FutureCache]] backed by a
- * [[com.google.common.cache.LoadingCache]].
+ * `com.google.common.cache.LoadingCache`.
 
  * Any correct implementation should make sure that you evict failed results,
  * and don't interrupt the underlying request that has been fired off.
- * [[EvictingCache]] and [[Future#interrupting]] are useful tools for building
+ * [[EvictingCache$]] and interrupting [[com.twitter.util.Future]]s are useful tools for building
  * correct FutureCaches.  A reference implementation for caching the results of
  * an asynchronous function with a guava LoadingCache can be found at
  * [[GuavaCache$.fromLoadingCache]].
@@ -49,7 +49,7 @@ object GuavaCache {
 
   /**
    * Creates a function which properly handles the asynchronous behavior of
-   * [[com.google.common.cache.LoadingCache]].
+   * `com.google.common.cache.LoadingCache`.
    */
   def fromLoadingCache[K, V](cache: LoadingCache[K, Future[V]]): K => Future[V] = {
     val evicting = EvictingCache.lazily(new LoadingFutureCache(cache));
@@ -58,7 +58,7 @@ object GuavaCache {
 
   /**
    * Creates a function which caches the results of `fn` in a
-   * [[com.google.common.cache.Cache]].
+   * `com.google.common.cache.Cache`.
    */
   def fromCache[K, V](fn: K => Future[V], cache: GCache[K, Future[V]]): K => Future[V] =
     FutureCache.default(fn, new GuavaCache(cache))
