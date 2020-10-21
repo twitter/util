@@ -8,7 +8,7 @@ import java.io.InputStream
  * Provides the [[Reader]] API for an `InputStream`.
  *
  * The given `InputStream` will be closed when [[Reader.read]]
- * reaches the EOF or a call to [[discard]] or [[[close()*]]].
+ * reaches the EOF or a call to [[discard]] or `close`.
  */
 class InputStreamReader private[io] (inputStream: InputStream, chunkSize: Int, pool: FuturePool)
     extends Reader[Buf]

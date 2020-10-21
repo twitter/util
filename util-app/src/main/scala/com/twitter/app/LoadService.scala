@@ -141,8 +141,6 @@ object LoadService {
   /**
    * Returns classes for the given `ClassTag` as specified by
    * resource files in `META-INF/services/FullyQualifiedClassTagsClassName`.
-   *
-   * @see [[apply[T](iface:Class[T]):Seq[T]*]] for a Java friendly API.
    */
   def apply[T: ClassTag](): Seq[T] = {
     val iface = implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]]

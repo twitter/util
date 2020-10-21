@@ -25,8 +25,7 @@ object AsyncQueue {
 
 /**
  * An asynchronous FIFO queue. In addition to providing [[offer]]
- * and [[poll]], the queue can be [[fail(exc:Throwable,discard:Boolean):Unit* "failed"]],
- * flushing current pollers.
+ * and [[poll]], the queue can be failed, flushing current pollers.
  *
  * @param maxPendingOffers optional limit on the number of pending `offers`.
  * The default is unbounded, but any other positive value can be used to limit
@@ -47,8 +46,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
 
   /**
    * An asynchronous, unbounded, FIFO queue. In addition to providing [[offer]]
-   * and [[poll]], the queue can be [[fail(exc:Throwable):Unit* "failed"]], flushing current
-   * pollers.
+   * and [[poll]], the queue can be failed, flushing current pollers.
    */
   def this() = this(AsyncQueue.UnboundedCapacity)
 
@@ -127,7 +125,7 @@ class AsyncQueue[T](maxPendingOffers: Int) {
   /**
    * Drains any pending elements into a `Try[Queue]`.
    *
-   * If the queue has been [[fail(exc:Throwable):Unit* failed]] and is now empty,
+   * If the queue has been failed and is now empty,
    * a `Throw` of the exception used to fail will be returned.
    * Otherwise, return a `Return(Queue)` of the pending elements.
    */

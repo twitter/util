@@ -82,7 +82,7 @@ object JsonTunableMapper {
 /**
  * Parses a given JSON string into a [[TunableMap]]. The expected format is:
  *
- * {
+ * {{{
  *    "tunables":
  *      [
  *         {
@@ -97,7 +97,7 @@ object JsonTunableMapper {
  *           "comment": "optional comment"
  *         }
  *     ]
- * }
+ * }}}
  *
  * Where \$id1 and \$id2 are unique identifiers used to access the [[Tunable]], \$value is the value,
  * and \$class is the fully-qualified class name (e.g. com.twitter.util.Duration)
