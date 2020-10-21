@@ -4973,10 +4973,24 @@ final class Local[T] {
    * upon completion.
    */
   def let[U](value: T)(f: => U): U = {
-    val saved = apply()
-    update(value)
+    val oldCtx = Local.save()
+    val newCtx = oldCtx.set(key, Some(value))
+    Local.restore(newCtx)
     try f
-    finally set(saved)
+    finally {
+      val now = Local.save()
+      if (newCtx eq now) {
+        // Fast path: no other ctx modifications to worry about
+        Local.restore(oldCtx)
+      } else {
+        // Another element was updated in the meantime. We just have to set the old value.
+        val next = oldCtx.get(key) match {
+          case s @ Some(_) => now.set(key, s)
+          case None => now.remove(key)
+        }
+        Local.restore(next)
+      }
+    }
   }
 
   /**
@@ -4984,10 +4998,24 @@ final class Local[T] {
    * completion.
    */
   def letClear[U](f: => U): U = {
-    val saved = apply()
-    clear()
+    val oldCtx = Local.save()
+    val newCtx = oldCtx.remove(key)
+    Local.restore(newCtx)
     try f
-    finally set(saved)
+    finally {
+      val now = Local.save()
+      if (newCtx eq now) {
+        // Fast path: no other ctx modifications to worry about
+        Local.restore(oldCtx)
+      } else {
+        // Another element was updated in the meantime. We just have to set the old value.
+        val next = oldCtx.get(key) match {
+          case s @ Some(_) => now.set(key, s)
+          case None => now.remove(key)
+        }
+        Local.restore(next)
+      }
+    }
   }
 
   /**

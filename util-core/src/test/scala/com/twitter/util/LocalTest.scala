@@ -129,6 +129,22 @@ class LocalTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     assert(local() == Some(123))
   }
 
+  test("Local.let: should only restore the given key, value pair") {
+    val l1, l2 = new Local[Int]
+    l1() = 1
+    l2() = 2
+    val ctx = Local.save()
+
+    l1.let(2) {
+      l2() = 4
+      assert(l1() == Some(2))
+      assert(l2() == Some(4))
+    }
+
+    assert(l1() == Some(1))
+    assert(l2() == Some(4))
+  }
+
   test("Local.letClear: should clear Local and restore previous value") {
     val local = new Local[Int]
     local() = 123
@@ -136,6 +152,23 @@ class LocalTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
       assert(local() == None)
     }
     assert(local() == Some(123))
+  }
+
+  test("Local.letClear: should only restore the given key, value pair") {
+    val l1, l2 = new Local[Int]
+    l1() = 1
+    l2() = 2
+    val ctx = Local.save()
+
+    l1.letClear {
+      assert(l1() == None)
+      assert(l2() == Some(2))
+      l2() = 4
+      assert(l2() == Some(4))
+    }
+
+    assert(l1() == Some(1))
+    assert(l2() == Some(4))
   }
 
   test("Local.clear: should make a copy when clearing") {
