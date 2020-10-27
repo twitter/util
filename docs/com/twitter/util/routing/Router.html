@@ -139,8 +139,8 @@
                         <a href="AbstractRouter.html" title="Java-friendly version of Router">AbstractRouter</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router."></a>
-                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router.">ClosedRouterException</a>
+                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router."></a>
+                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router.">ClosedRouterException</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="Generator$.html" title=""></a>
                         <a class="class" href="Generator.html" title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated."></a>
@@ -155,8 +155,8 @@
                         <a href="RouterBuilder.html" title="Utility for building and creating routers.">RouterBuilder</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder."></a>
-                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder.">ValidationError</a>
+                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder."></a>
+                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder.">ValidationError</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="ValidationException.html" title="Exception thrown when a RouterBuilder observes any routes that are not valid for the Router type it is building."></a>
@@ -194,21 +194,21 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A generic interface for routing an input to an optional matching route.
-</p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The Input type used when determining a route destination</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The resulting route type. A <span class="extype" name="Route">Route</span> may have dynamic
-              properties and may be found to satisfy multiple <span class="extype" name="Input">Input</span>
+</p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The Input type used when determining a route destination</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The resulting route type. A <code>Route</code> may have dynamic
+              properties and may be found to satisfy multiple <code>Input</code>
               instances. As there may not be a 1-to-1 mapping of
-              <span class="extype" name="Input">Input</span> to <span class="extype" name="Route">Route</span>, it is encouraged that a <span class="extype" name="Route">Route</span>
-              encapsulates its relationship to an <span class="extype" name="Input">Input</span>.
+              <code>Input</code> to <code>Route</code>, it is encouraged that a <code>Route</code>
+              encapsulates its relationship to an <code>Input</code>.
               An example to consider would be an HTTP <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>.
               An HTTP request contains a Method (i.e. GET, POST) and
               a URI. A <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> for a REST API may match &quot;GET /users/{id}&quot;
               for multiple HTTP requests (i.e. &quot;GET /users/123&quot; AND &quot;GET /users/456&quot; would map
-              to the same destination <span class="extype" name="Route">Route</span>). As a result, the <span class="extype" name="Route">Route</span> in this example
+              to the same destination <code>Route</code>). As a result, the <code>Route</code> in this example
               should be aware of the method, path, and and the destination/logic responsible
-              for handling an <span class="extype" name="Input">Input</span> that matches.
-              Another property to consider for a <span class="extype" name="Route">Route</span> is &quot;uniqueness&quot;. It may or may not
+              for handling an <code>Input</code> that matches.
+              Another property to consider for a <code>Route</code> is &quot;uniqueness&quot;. It may or may not
               be desirable for a <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> to contain multiple routes that correspond to
-              the same <span class="extype" name="Input">Input</span>.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>A <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> should be considered immutable unless explicitly noted.</p></span></dd></dl><div class="toggleContainer block">
+              the same <code>Input</code>.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>A <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> should be considered immutable unless explicitly noted.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -282,11 +282,11 @@
         <span class="name">find</span><span class="params">(<span name="input">input: <span class="extype" name="com.twitter.util.routing.Router.Input">Input</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.util.routing.Router.Route">Route</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Logic used to determine if this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> contains a <span class="extype" name="Route">Route</span>
-for an <span class="extype" name="Input">Input</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Logic used to determine if this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> contains a <span class="extype" name="Route">Route</span>
-for an <span class="extype" name="Input">Input</span>.
-</p></div><dl class="paramcmts block"><dt class="param">input</dt><dd class="cmt"><p>The <span class="extype" name="Input">Input</span> to determine a route for.</p></dd><dt>returns</dt><dd class="cmt"><p><code>Some(Route)</code> if a matching route is defined, <code>None</code> if a route destination is
-        not defined for the <span class="extype" name="Input">Input</span>.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Note</dt><dd><span class="cmt"><p>This method is only meant to be called within the <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>'s <a href="#apply(input:Input):Option[Route]" class="extmbr" name="com.twitter.util.routing.Router#apply">apply</a>, which
+      <p class="shortcomment cmt">Logic used to determine if this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> contains a <code>Route</code>
+for an <code>Input</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Logic used to determine if this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> contains a <code>Route</code>
+for an <code>Input</code>.
+</p></div><dl class="paramcmts block"><dt class="param">input</dt><dd class="cmt"><p>The <code>Input</code> to determine a route for.</p></dd><dt>returns</dt><dd class="cmt"><p><code>Some(Route)</code> if a matching route is defined, <code>None</code> if a route destination is
+        not defined for the <code>Input</code>.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Note</dt><dd><span class="cmt"><p>This method is only meant to be called within the <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>'s <code>apply</code>, which
       handles lifecycle concerns. It should not be accessed directly.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.routing.Router#label" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="label:String"></a>
@@ -321,9 +321,9 @@ in error messages or for StatsReceiver scope).
         <span class="name">routes</span><span class="result">: <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Router.Route">Route</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">All of the <span class="extype" name="Route">Route</span> routes contained within this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>
-</p><div class="fullcomment"><div class="comment cmt"><p>All of the <span class="extype" name="Route">Route</span> routes contained within this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This property is used to linearly determine the routes when <span class="extype" name="closed()">closed()</span> is called.
+      <p class="shortcomment cmt">All of the <code>Route</code> routes contained within this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>All of the <code>Route</code> routes contained within this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>This property is used to linearly determine the routes when <code>close()</code> is called.
       It may also be used as a way to determine what routes are defined within a <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>
       (i.e. for generating meaningful error messages). This property does not imply
       any relationship with <a href="#apply(input:Input):Option[Route]" class="extmbr" name="com.twitter.util.routing.Router#apply">apply</a> or <a href="#find(input:Input):Option[Route]" class="extmbr" name="com.twitter.util.routing.Router#find">find</a> or that a <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a>'s runtime behavior
@@ -416,9 +416,9 @@ in error messages or for StatsReceiver scope).
         <span class="name">apply</span><span class="params">(<span name="input">input: <span class="extype" name="com.twitter.util.routing.Router.Input">Input</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.util.routing.Router.Route">Route</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Attempt to route an <span class="extype" name="Input">Input</span> to a <span class="extype" name="Route">Route</span> route known by this Router.</p><div class="fullcomment"><div class="comment cmt"><p>Attempt to route an <span class="extype" name="Input">Input</span> to a <span class="extype" name="Route">Route</span> route known by this Router.
-</p></div><dl class="paramcmts block"><dt class="param">input</dt><dd class="cmt"><p>The <span class="extype" name="Input">Input</span> to use for determining an available route</p></dd><dt>returns</dt><dd class="cmt"><p><code>Some(Route)</code> if a route is found to match, <code>None</code> otherwise</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> → Function1</dd><dt>Note</dt><dd><span class="cmt"><p>A <a href="ClosedRouterException.html" class="extype" name="com.twitter.util.routing.ClosedRouterException">ClosedRouterException</a> will be thrown if <a href="#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.routing.Router#close">close</a> has been initiated on this
-      <span class="extype" name="router">router</span> and subsequent routing attempts are received.</p></span></dd></dl></div>
+      <p class="shortcomment cmt">Attempt to route an <code>Input</code> to a <code>Route</code> route known by this Router.</p><div class="fullcomment"><div class="comment cmt"><p>Attempt to route an <code>Input</code> to a <code>Route</code> route known by this Router.
+</p></div><dl class="paramcmts block"><dt class="param">input</dt><dd class="cmt"><p>The <code>Input</code> to use for determining an available route</p></dd><dt>returns</dt><dd class="cmt"><p><code>Some(Route)</code> if a route is found to match, <code>None</code> otherwise</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> → Function1</dd><dt>Note</dt><dd><span class="cmt"><p>A <a href="ClosedRouterException.html" class="extype" name="com.twitter.util.routing.ClosedRouterException">ClosedRouterException</a> will be thrown if <code>close()</code>
+      has been initiated on this <a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> and subsequent routing attempts are received.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -527,8 +527,8 @@ the resource has been fully relinquished.
         <span class="name">closeFuture</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <span class="extype" name="closePromise">Promise</span>, because
+      <p class="shortcomment cmt">The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <a href="../CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <a href="../CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <a href="../Promise.html" class="extype" name="com.twitter.util.Promise">closePromise</a>, because
       the <a href="../Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> state is mutable - we only want mutation to occur within this
       <a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> trait.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.routing.Router#closeOnce" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -546,11 +546,8 @@ the resource has been fully relinquished.
         <span class="name">closeOnce</span><span class="params">(<span name="deadline">deadline: <a href="../Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>)</span><span class="result">: <a href="../Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Close the resource with the given deadline exactly once.</p><div class="fullcomment"><div class="comment cmt"><p>Close the resource with the given deadline exactly once. This deadline is
-advisory, giving the callee some leeway, for example to drain clients or
-finish up other tasks.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> → <a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>NonFatal exceptions encountered when calling <span class="extype" name="close()">close()</span> on a <span class="extype" name="Route">Route</span> will be
-      suppressed and Fatal exceptions will take on the same exception behavior of a
-      <a href="../Future$.html#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#join">Future.join</a>.</p></span></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.routing.Router">Router</a> → <a href="../CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>NonFatal exceptions encountered when calling <code>close()</code> on a <code>Route</code> will be
+      suppressed and Fatal exceptions will take on the same exception behavior of a <code>Future.join</code>.</p></span></dd></dl></div>
     </li><li name="scala.Function1#compose" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="compose[A](g:A=&gt;T1):A=&gt;R"></a><a id="compose[A]((A)⇒Input):(A)⇒Option[Route]"></a>
       <span class="permalink">
@@ -586,8 +583,8 @@ finish up other tasks.</p></div><dl class="attributes block"> <dt>Attributes</dt
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#debug" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="debug(message:=&gt;Any,cause:Throwable):Unit"></a><a id="debug(⇒Any,Throwable):Unit"></a>
@@ -624,8 +621,8 @@ the message parameter with the underlying logger.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#debug" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="debug(message:=&gt;Any):Unit"></a><a id="debug(⇒Any):Unit"></a>
@@ -713,8 +710,8 @@ contain a single <code>%s</code> which will be replaced with the result[T] of th
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#error" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="error(message:=&gt;Any,cause:Throwable):Unit"></a><a id="error(⇒Any,Throwable):Unit"></a>
@@ -751,8 +748,8 @@ the message parameter with the underlying logger.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#error" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="error(message:=&gt;Any):Unit"></a><a id="error(⇒Any):Unit"></a>
@@ -868,8 +865,8 @@ contain a single <code>%s</code> which will be replaced with the result[T] of th
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#info" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="info(message:=&gt;Any,cause:Throwable):Unit"></a><a id="info(⇒Any,Throwable):Unit"></a>
@@ -906,8 +903,8 @@ the message parameter with the underlying logger.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#info" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="info(message:=&gt;Any):Unit"></a><a id="info(⇒Any):Unit"></a>
@@ -980,8 +977,8 @@ contain a single <code>%s</code> which will be replaced with the result[T] of th
       </span>
       
       <p class="shortcomment cmt">Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#isDebugEnabled" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isDebugEnabled:Boolean"></a>
@@ -1017,8 +1014,8 @@ consideration the given <span class="extype" name="Marker">Marker</span> data. R
       </span>
       
       <p class="shortcomment cmt">Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#isErrorEnabled" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isErrorEnabled:Boolean"></a>
@@ -1054,8 +1051,8 @@ consideration the given <span class="extype" name="Marker">Marker</span> data. R
       </span>
       
       <p class="shortcomment cmt">Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#isInfoEnabled" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInfoEnabled:Boolean"></a>
@@ -1107,8 +1104,8 @@ consideration the given <span class="extype" name="Marker">Marker</span> data. R
       </span>
       
       <p class="shortcomment cmt">Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#isTraceEnabled" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isTraceEnabled:Boolean"></a>
@@ -1144,8 +1141,8 @@ consideration the given <span class="extype" name="Marker">Marker</span> data. R
       </span>
       
       <p class="shortcomment cmt">Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled on the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#isWarnEnabled" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isWarnEnabled:Boolean"></a>
@@ -1299,8 +1296,8 @@ consideration the given <span class="extype" name="Marker">Marker</span> data. R
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#trace" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="trace(message:=&gt;Any,cause:Throwable):Unit"></a><a id="trace(⇒Any,Throwable):Unit"></a>
@@ -1337,8 +1334,8 @@ the message parameter with the underlying logger.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#trace" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="trace(message:=&gt;Any):Unit"></a><a id="trace(⇒Any):Unit"></a>
@@ -1462,8 +1459,8 @@ contain a single <code>%s</code> which will be replaced with the result[T] of th
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#warn" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="warn(message:=&gt;Any,cause:Throwable):Unit"></a><a id="warn(⇒Any,Throwable):Unit"></a>
@@ -1500,8 +1497,8 @@ the message parameter with the underlying logger.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
-consideration the given <span class="extype" name="Marker">Marker</span> data.
+consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Logs the given message at the named log level with the underlying logger taking into
+consideration the given <code>org.slf4j.Marker</code> data.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="../logging/Logging.html" class="extype" name="com.twitter.util.logging.Logging">Logging</a></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logging#warn" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="warn(message:=&gt;Any):Unit"></a><a id="warn(⇒Any):Unit"></a>

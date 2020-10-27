@@ -374,7 +374,7 @@ up other tasks.
       </span>
       
       <p class="shortcomment cmt">Fail this stream with a given <code>cause</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Fail this stream with a given <code>cause</code>. No further writes are allowed, but if happen, will
-resolve into a <span class="extype" name="Future">Future</span> failed with <code>cause</code>.
+resolve into a <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> failed with <code>cause</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd><dt>Note</dt><dd><span class="cmt"><p>Failing an already closed stream does not have an effect.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writer#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]"></a><a id="onClose:Future[StreamTermination]"></a>
@@ -391,7 +391,7 @@ resolve into a <span class="extype" name="Future">Future</span> failed with <cod
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
 being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li><li name="com.twitter.io.Writer#write" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -410,8 +410,8 @@ being used.
       </span>
       
       <p class="shortcomment cmt">Write an <code>element</code> into this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Write an <code>element</code> into this stream. Although undefined by this contract, a trustworthy
-implementation (such as <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned <span class="extype" name="Future">Future</span> only
-when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <span class="extype" name="Future">Future</span>).
+implementation (such as <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> only when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>).
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li></ol>
             </div>

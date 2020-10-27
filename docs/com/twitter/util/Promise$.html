@@ -799,7 +799,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -900,8 +900,8 @@ after that promise had already been satisfied.</p>
         <a title="Embeds an &quot;interrupt handler&quot; into a Promise." href="Promise$$InterruptHandler.html"><span class="name">InterruptHandler</span></a><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../scala/index.html#Throwable=Throwable" class="extmbr" name="scala.Throwable">Throwable</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><p>This is a total handler such that it's defined on any <span class="extype" name="Throwable">Throwable</span>. Use
-<span class="extype" name="Promise.setInterruptHandler()">Promise.setInterruptHandler()</span> if you need to leave an interrupt handler
+      <p class="shortcomment cmt">Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><p>This is a total handler such that it's defined on any <code>Throwable</code>. Use
+<a href="Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise.setInterruptHandler</a> if you need to leave an interrupt handler
 undefined for certain types of exceptions.</p><p>Example: (<code>p</code> and <code>q</code> are equivalent, but <code>p</code> allocates less):</p><pre><span class="kw">import</span> com.twitter.util.Promise
 
 <span class="kw">val</span> p = <span class="kw">new</span> Promise[A] <span class="kw">with</span> Promise.InterruptHandler {
@@ -1174,7 +1174,9 @@ detacher).</p><p>Ex:</p><pre><span class="kw">val</span> f: Future[<span class="
       
       <p class="shortcomment cmt">Create a promise that interrupts all of <code>fs</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a promise that interrupts all of <code>fs</code>. In particular:
 the returned promise handles an interrupt when any of <code>fs</code> do.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="interrupts(Future)">interrupts(Future)</span></p></span><span class="cmt"><p><span class="extype" name="interrupts(Future,">Future)</span></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="#interrupts[A](f:com.twitter.util.Future[_]):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future)</a></p></span><span class="cmt"><p>
+<a href="#interrupts[A](a:com.twitter.util.Future[_],b:com.twitter.util.Future[_]):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future,Future)</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#interrupts" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="interrupts[A](a:com.twitter.util.Future[_],b:com.twitter.util.Future[_]):com.twitter.util.Promise[A]"></a><a id="interrupts[A](Future[_],Future[_]):Promise[A]"></a>
       <span class="permalink">
@@ -1192,7 +1194,9 @@ the returned promise handles an interrupt when any of <code>fs</code> do.
       
       <p class="shortcomment cmt">Create a promise that interrupts <code>a</code> and <code>b</code> futures.</p><div class="fullcomment"><div class="comment cmt"><p>Create a promise that interrupts <code>a</code> and <code>b</code> futures. In particular:
 the returned promise handles an interrupt when either <code>a</code> or <code>b</code> does.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="interrupts(Future)">interrupts(Future)</span></p></span><span class="cmt"><p><span class="extype" name="interrupts(Future*)">interrupts(Future*)</span></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="#interrupts[A](f:com.twitter.util.Future[_]):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future)</a></p></span><span class="cmt"><p>
+<a href="#interrupts[A](fs:com.twitter.util.Future[_]*):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future*)</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#interrupts" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="interrupts[A](f:com.twitter.util.Future[_]):com.twitter.util.Promise[A]"></a><a id="interrupts[A](Future[_]):Promise[A]"></a>
       <span class="permalink">
@@ -1209,7 +1213,9 @@ the returned promise handles an interrupt when either <code>a</code> or <code>b<
       </span>
       
       <p class="shortcomment cmt">Single-arg version to avoid object creation and take advantage of <code>forwardInterruptsTo</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Single-arg version to avoid object creation and take advantage of <code>forwardInterruptsTo</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="interrupts(Future,">Future)</span></p></span><span class="cmt"><p><span class="extype" name="interrupts(Future*)">interrupts(Future*)</span></p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="#interrupts[A](a:com.twitter.util.Future[_],b:com.twitter.util.Future[_]):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future,Future)</a></p></span><span class="cmt"><p>
+<a href="#interrupts[A](fs:com.twitter.util.Future[_]*):com.twitter.util.Promise[A]" class="extmbr" name="com.twitter.util.Promise#interrupts">interrupts(Future*)</a></p></span></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">

@@ -1062,12 +1062,12 @@ standard base-64 alphabet.</p>
       </span>
       
       <p class="shortcomment cmt">Decode a sequence of characters representing a base-64-encoded
-Long, as produced by <a href="#toBase64(builder:StringBuilder,l:Long,alphabet:Int=&gt;Char):Unit" class="extmbr" name="com.twitter.util.Base64Long#toBase64">toBase64</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Decode a sequence of characters representing a base-64-encoded
-Long, as produced by <a href="#toBase64(builder:StringBuilder,l:Long,alphabet:Int=&gt;Char):Unit" class="extmbr" name="com.twitter.util.Base64Long#toBase64">toBase64</a>.  An empty range of characters
-will yield 0L. Leading &quot;zero&quot; digits will not cause overflow.
+Long, as produced by <a href="#toBase64(l:Long):String" class="extmbr" name="com.twitter.util.Base64Long#toBase64">toBase64(Long)</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Decode a sequence of characters representing a base-64-encoded
+Long, as produced by <a href="#toBase64(l:Long):String" class="extmbr" name="com.twitter.util.Base64Long#toBase64">toBase64(Long)</a>.
+An empty range of characters will yield 0L. Leading &quot;zero&quot; digits will not cause overflow.
 </p></div><dl class="paramcmts block"><dt class="param">alphabet</dt><dd class="cmt"><p>defines the mapping between characters in the
-  string and 6-bit numbers.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="ArithmeticException"><code>ArithmeticException</code></span> if the resulting value overflows a Long.</p></span><span class="cmt"><p><span class="extype" name="IllegalArgumentException"><code>IllegalArgumentException</code></span> if any characters in the specified
-  range are not in the specified base-64 alphabet.</p></span></dd></dl></div>
+  string and 6-bit numbers.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Throws <code>IllegalArgumentException</code> if any characters in the specified
+  range are not in the specified base-64 alphabet.</p></span>, <span class="cmt"><p>Throws <code>ArithmeticException</code> if the resulting value overflows a Long.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">

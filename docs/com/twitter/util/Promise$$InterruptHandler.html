@@ -132,7 +132,7 @@
         <a title="" href="Promise$.html"><span class="name">Promise</span></a>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="trait" href="Promise$$Detachable.html" title="A template trait for Promises that are derived and capable of being detached from other Promises."></a>
@@ -177,8 +177,8 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><p>This is a total handler such that it's defined on any <span class="extype" name="Throwable">Throwable</span>. Use
-<span class="extype" name="Promise.setInterruptHandler()">Promise.setInterruptHandler()</span> if you need to leave an interrupt handler
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Embeds an &quot;interrupt handler&quot; into a <a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a>.</p><p>This is a total handler such that it's defined on any <code>Throwable</code>. Use
+<a href="Promise.html#setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit" class="extmbr" name="com.twitter.util.Promise#setInterruptHandler">Promise.setInterruptHandler</a> if you need to leave an interrupt handler
 undefined for certain types of exceptions.</p><p>Example: (<code>p</code> and <code>q</code> are equivalent, but <code>p</code> allocates less):</p><pre><span class="kw">import</span> com.twitter.util.Promise
 
 <span class="kw">val</span> p = <span class="kw">new</span> Promise[A] <span class="kw">with</span> Promise.InterruptHandler {

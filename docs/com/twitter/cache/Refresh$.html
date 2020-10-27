@@ -405,7 +405,13 @@ features that it supports.</p><p>A non-memoized function like this:
       
       <p class="shortcomment cmt">Create a memoized future with TTL.</p><div class="fullcomment"><div class="comment cmt"><p>Create a memoized future with TTL.</p><p>From Scala:
   Refresh.every(1.hour) { ... }</p><p>From Java:
-  Refresh.every(Duration.fromSeconds(3600), new Function0&lt;Future&lt;T&gt;&gt;() {</p></div><dl class="paramcmts block"><dt class="param">ttl</dt><dd class="cmt"><p>The amount of time between refreshes</p></dd><dt class="param">provider</dt><dd class="cmt"><p>A provider function that returns a future to refresh</p></dd><dt>returns</dt><dd class="cmt"><p>A memoized version of <code>operation</code> that will refresh on invocation
+  Refresh.every(Duration.fromSeconds(3600), new Function0&lt;Future&lt;T&gt;&gt;() {
+    \@Override
+    public Future&lt;T&gt; apply() {
+      ...
+    }
+  });
+</p></div><dl class="paramcmts block"><dt class="param">ttl</dt><dd class="cmt"><p>The amount of time between refreshes</p></dd><dt class="param">provider</dt><dd class="cmt"><p>A provider function that returns a future to refresh</p></dd><dt>returns</dt><dd class="cmt"><p>A memoized version of <code>operation</code> that will refresh on invocation
         if more than <code>ttl</code> time has passed since <code>operation</code> was last called.</p></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>

@@ -139,8 +139,8 @@
                         <a href="AbstractRouter.html" title="Java-friendly version of Router">AbstractRouter</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router."></a>
-                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router.">ClosedRouterException</a>
+                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router."></a>
+                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router.">ClosedRouterException</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="Generator$.html" title=""></a>
                         <a class="class" href="Generator.html" title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated."></a>
@@ -155,8 +155,8 @@
                         <a href="" title="Utility for building and creating routers.">RouterBuilder</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder."></a>
-                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder.">ValidationError</a>
+                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder."></a>
+                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder.">ValidationError</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="ValidationException.html" title="Exception thrown when a RouterBuilder observes any routes that are not valid for the Router type it is building."></a>
@@ -195,12 +195,12 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Utility for building and creating <span class="extype" name="RouterType">routers</span>. The resulting <span class="extype" name="RouterType">router</span>
-should be considered immutable, unless the <span class="extype" name="RouterType">router's</span> implementation
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Utility for building and creating <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">routers</a>. The resulting <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a>
+should be considered immutable, unless the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> implementation
 explicitly states otherwise.
 </p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> <code>Input</code> type.</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> destination <code>Route</code> type. It is recommended that the <code>Route</code>
               is a self-contained/self-describing type for the purpose of validation via
-              the <span class="extype" name="validator">validator</span>. Put differently, the <code>Route</code> should know of the
+              the <a href="Validator.html" class="extype" name="com.twitter.util.routing.Validator">Validator</a>. Put differently, the <code>Route</code> should know of the
               <code>Input</code> that maps to itself.</p></dd><dt class="tparam">RouterType</dt><dd class="cmt"><p>The type of <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> to build.</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -450,7 +450,7 @@ explicitly states otherwise.
         <span class="name">newRouter</span><span class="params">()</span><span class="result">: <span class="extype" name="com.twitter.util.routing.RouterBuilder.RouterType">RouterType</span></span>
       </span>
       
-      <p class="shortcomment cmt">Generate a new <span class="extype" name="RouterType">router</span> from the defined <span class="extype" name="routes">routes</span></p>
+      <p class="shortcomment cmt">Generate a new <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a> from the defined routes</p>
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
@@ -588,7 +588,7 @@ explicitly states otherwise.
         <span class="name">withLabel</span><span class="params">(<span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a>[<span class="extype" name="com.twitter.util.routing.RouterBuilder.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.RouterBuilder.Route">Route</span>, <span class="extype" name="com.twitter.util.routing.RouterBuilder.RouterType">RouterType</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Set the <a href="Router.html#label:String" class="extmbr" name="com.twitter.util.routing.Router#label">label</a> for the resulting <span class="extype" name="RouterType">router</span></p>
+      <p class="shortcomment cmt">Set the <a href="Router.html#label:String" class="extmbr" name="com.twitter.util.routing.Router#label">label</a> for the resulting <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a></p>
     </li><li name="com.twitter.util.routing.RouterBuilder#withRoute" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="withRoute(route:Route):com.twitter.util.routing.RouterBuilder[Input,Route,RouterType]"></a><a id="withRoute(Route):RouterBuilder[Input,Route,RouterType]"></a>
       <span class="permalink">
@@ -604,8 +604,8 @@ explicitly states otherwise.
         <span class="name">withRoute</span><span class="params">(<span name="route">route: <span class="extype" name="com.twitter.util.routing.RouterBuilder.Route">Route</span></span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a>[<span class="extype" name="com.twitter.util.routing.RouterBuilder.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.RouterBuilder.Route">Route</span>, <span class="extype" name="com.twitter.util.routing.RouterBuilder.RouterType">RouterType</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Add the <span class="extype" name="Route">route</span> to the routes that will be present in
-the <span class="extype" name="RouterType">router</span> when <span class="extype" name="newRouter()">newRouter()</span> is called.</p>
+      <p class="shortcomment cmt">Add the route to the routes that will be present in
+the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a> when <a href="#newRouter():RouterType" class="extmbr" name="com.twitter.util.routing.RouterBuilder#newRouter">newRouter</a> is called.</p>
     </li><li name="com.twitter.util.routing.RouterBuilder#withValidator" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="withValidator(validator:com.twitter.util.routing.Validator[Route]):com.twitter.util.routing.RouterBuilder[Input,Route,RouterType]"></a><a id="withValidator(Validator[Route]):RouterBuilder[Input,Route,RouterType]"></a>
       <span class="permalink">

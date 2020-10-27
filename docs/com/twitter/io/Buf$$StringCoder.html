@@ -229,11 +229,11 @@ immutably.</p><p>Note: There are Java-friendly APIs for this object at <code>com
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> provides an
-<span class="extype" name="apply(String)">encoder</span>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
-and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <code>java.nio.charset.Charset</code> provides an
+<a href="#apply(s:String):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf.StringCoder#apply">encoder</a>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
+and an <a href="#unapply(buf:com.twitter.io.Buf):Some[String]" class="extmbr" name="com.twitter.io.Buf.StringCoder#unapply">extractor</a>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$Utf8$.html" class="extype" name="com.twitter.io.Buf.Utf8">Utf8</a> for UTF-8 encoding and decoding, and <code>Bufs.UTF8</code> for
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$Utf8$.html" class="extype" name="com.twitter.io.Buf.Utf8">Utf8</a> for UTF-8 encoding and decoding, and <code>Bufs.UTF8</code> for
      Java users. Constants exist for other standard charsets as well.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes

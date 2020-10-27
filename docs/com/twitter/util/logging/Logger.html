@@ -179,9 +179,9 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A scala wrapper over a <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><p>The Logger is <span class="extype" name="Serializable">Serializable</span> to support it's usage through the
-<a href="Logging.html" class="extype" name="com.twitter.util.logging.Logging">com.twitter.util.logging.Logging</a> trait when the trait is mixed
-into a <span class="extype" name="Serializable">Serializable</span> class.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A scala wrapper over a <code>org.slf4j.Logger</code>.</p><p>The Logger extends <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" target="_blank">java.io.Serializable</a>
+to support it's usage through the <a href="Logging.html" class="extype" name="com.twitter.util.logging.Logging">com.twitter.util.logging.Logging</a> trait when the trait is mixed
+into a <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" target="_blank">java.io.Serializable</a> class.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@SerialVersionUID</span><span class="args">()</span>
               
         </dd></dl><div class="toggleContainer block">
@@ -345,7 +345,7 @@ into a <span class="extype" name="Serializable">Serializable</span> class.</p></
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#debug" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="debug(marker:org.slf4j.Marker,message:String):Unit"></a><a id="debug(Marker,String):Unit"></a>
       <span class="permalink">
@@ -362,7 +362,7 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#debug" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="debug(message:String,cause:Throwable):Unit"></a><a id="debug(String,Throwable):Unit"></a>
       <span class="permalink">
@@ -411,9 +411,8 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
+args taking into consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
+args taking into consideration the given <code>org.slf4j.Marker</code> data. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
     </li><li name="com.twitter.util.logging.Logger#debugWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="debugWith(message:String,args:AnyRef*):Unit"></a><a id="debugWith(String,AnyRef*):Unit"></a>
       <span class="permalink">
@@ -481,7 +480,7 @@ args. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#error" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="error(marker:org.slf4j.Marker,message:String):Unit"></a><a id="error(Marker,String):Unit"></a>
       <span class="permalink">
@@ -498,7 +497,7 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#error" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="error(message:String,cause:Throwable):Unit"></a><a id="error(String,Throwable):Unit"></a>
       <span class="permalink">
@@ -547,9 +546,8 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
+args taking into consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
+args taking into consideration the given <code>org.slf4j.Marker</code> data. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
     </li><li name="com.twitter.util.logging.Logger#errorWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="errorWith(message:String,args:AnyRef*):Unit"></a><a id="errorWith(String,AnyRef*):Unit"></a>
       <span class="permalink">
@@ -645,7 +643,7 @@ args. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#info" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="info(marker:org.slf4j.Marker,message:String):Unit"></a><a id="info(Marker,String):Unit"></a>
       <span class="permalink">
@@ -662,7 +660,7 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#info" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="info(message:String,cause:Throwable):Unit"></a><a id="info(String,Throwable):Unit"></a>
       <span class="permalink">
@@ -711,9 +709,8 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
+args taking into consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
+args taking into consideration the given <code>org.slf4j.Marker</code> data. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
     </li><li name="com.twitter.util.logging.Logger#infoWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="infoWith(message:String,args:AnyRef*):Unit"></a><a id="infoWith(String,AnyRef*):Unit"></a>
       <span class="permalink">
@@ -748,8 +745,9 @@ args. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_
         <span class="name">isDebugEnabled</span><span class="params">(<span name="marker">marker: <span class="extype" name="org.slf4j.Marker">Marker</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-Returns <code>true</code> if enabled, <code>false</code> otherwise.
+      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div></div>
     </li><li name="com.twitter.util.logging.Logger#isDebugEnabled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isDebugEnabled:Boolean"></a>
@@ -783,8 +781,9 @@ Returns <code>true</code> if enabled, <code>false</code> otherwise.
         <span class="name">isErrorEnabled</span><span class="params">(<span name="marker">marker: <span class="extype" name="org.slf4j.Marker">Marker</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-Returns <code>true</code> if enabled, <code>false</code> otherwise.
+      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div></div>
     </li><li name="com.twitter.util.logging.Logger#isErrorEnabled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isErrorEnabled:Boolean"></a>
@@ -818,8 +817,9 @@ Returns <code>true</code> if enabled, <code>false</code> otherwise.
         <span class="name">isInfoEnabled</span><span class="params">(<span name="marker">marker: <span class="extype" name="org.slf4j.Marker">Marker</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-Returns <code>true</code> if enabled, <code>false</code> otherwise.
+      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div></div>
     </li><li name="com.twitter.util.logging.Logger#isInfoEnabled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInfoEnabled:Boolean"></a>
@@ -869,8 +869,9 @@ Returns <code>true</code> if enabled, <code>false</code> otherwise.
         <span class="name">isTraceEnabled</span><span class="params">(<span name="marker">marker: <span class="extype" name="org.slf4j.Marker">Marker</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-Returns <code>true</code> if enabled, <code>false</code> otherwise.
+      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div></div>
     </li><li name="com.twitter.util.logging.Logger#isTraceEnabled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isTraceEnabled:Boolean"></a>
@@ -904,8 +905,9 @@ Returns <code>true</code> if enabled, <code>false</code> otherwise.
         <span class="name">isWarnEnabled</span><span class="params">(<span name="marker">marker: <span class="extype" name="org.slf4j.Marker">Marker</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-Returns <code>true</code> if enabled, <code>false</code> otherwise.
+      <p class="shortcomment cmt">Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Determines if the named log level is enabled taking into consideration the given
+<code>org.slf4j.Marker</code> data. Returns <code>true</code> if enabled, <code>false</code> otherwise.
 </p></div></div>
     </li><li name="com.twitter.util.logging.Logger#isWarnEnabled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isWarnEnabled:Boolean"></a>
@@ -1042,7 +1044,7 @@ Returns <code>true</code> if enabled, <code>false</code> otherwise.
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#trace" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="trace(marker:org.slf4j.Marker,message:String):Unit"></a><a id="trace(Marker,String):Unit"></a>
       <span class="permalink">
@@ -1059,7 +1061,7 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#trace" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="trace(message:String,cause:Throwable):Unit"></a><a id="trace(String,Throwable):Unit"></a>
       <span class="permalink">
@@ -1108,9 +1110,8 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
+args taking into consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
+args taking into consideration the given <code>org.slf4j.Marker</code> data. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
     </li><li name="com.twitter.util.logging.Logger#traceWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="traceWith(message:String,args:AnyRef*):Unit"></a><a id="traceWith(String,AnyRef*):Unit"></a>
       <span class="permalink">
@@ -1214,7 +1215,7 @@ args. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#warn" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="warn(marker:org.slf4j.Marker,message:String):Unit"></a><a id="warn(Marker,String):Unit"></a>
       <span class="permalink">
@@ -1231,7 +1232,7 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Logs the given message at the named log level taking into consideration the
-given <span class="extype" name="Marker">Marker</span> data.</p>
+given <code>org.slf4j.Marker</code> data.</p>
     </li><li name="com.twitter.util.logging.Logger#warn" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="warn(message:String,cause:Throwable):Unit"></a><a id="warn(String,Throwable):Unit"></a>
       <span class="permalink">
@@ -1280,9 +1281,8 @@ given <span class="extype" name="Marker">Marker</span> data.</p>
       </span>
       
       <p class="shortcomment cmt">Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
-args taking into consideration the given <span class="extype" name="Marker">Marker</span> data.
-See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
+args taking into consideration the given <code>org.slf4j.Marker</code> data.</p><div class="fullcomment"><div class="comment cmt"><p>Log the given parameterized message at the named log level using the given
+args taking into consideration the given <code>org.slf4j.Marker</code> data. See <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">Parameterized Message Logging</a></p></div></div>
     </li><li name="com.twitter.util.logging.Logger#warnWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="warnWith(message:String,args:AnyRef*):Unit"></a><a id="warnWith(String,AnyRef*):Unit"></a>
       <span class="permalink">

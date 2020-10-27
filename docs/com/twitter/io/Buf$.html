@@ -386,7 +386,7 @@ be immutable in practice.
        more bytes and <code>false</code> otherwise.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this is not a <code>Function1[Byte, Boolean]</code> despite very
       much fitting that interface. This was done to avoiding boxing
       of the <code>Bytes</code> which was quite squirrely and had an impact on
-      performance.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf.html#process(processor:com.twitter.io.Buf.Processor):Int" class="extmbr" name="com.twitter.io.Buf#process">Buf.process</a></p></span></dd></dl></div>
+      performance.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf.html#process(processor:com.twitter.io.Buf.Processor):Int" class="extmbr" name="com.twitter.io.Buf#process">process(Processor)</a></p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.StringCoder" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="StringCoderextendsAnyRef"></a><a id="StringCoder:StringCoder"></a>
       <span class="permalink">
@@ -402,13 +402,13 @@ be immutable in practice.
         <a title="A StringCoder for a given java.nio.charset.Charset provides an encoder: String to Buf and an extractor: Buf to Some[String]." href="Buf$$StringCoder.html"><span class="name">StringCoder</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">A <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> provides an
-<span class="extype" name="apply(String)">encoder</span>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
-and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <span class="extype" name="java.nio.charset.Charset">java.nio.charset.Charset</span> provides an
-<span class="extype" name="apply(String)">encoder</span>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
-and an <span class="extype" name="unapply(Buf)">extractor</span>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.
+      <p class="shortcomment cmt">A <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <code>java.nio.charset.Charset</code> provides an
+<a href="Buf$$StringCoder.html#apply(s:String):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf.StringCoder#apply">encoder</a>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
+and an <a href="Buf$$StringCoder.html#unapply(buf:com.twitter.io.Buf):Some[String]" class="extmbr" name="com.twitter.io.Buf.StringCoder#unapply">extractor</a>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Buf$$StringCoder.html" class="extype" name="com.twitter.io.Buf.StringCoder">StringCoder</a> for a given <code>java.nio.charset.Charset</code> provides an
+<a href="Buf$$StringCoder.html#apply(s:String):com.twitter.io.Buf" class="extmbr" name="com.twitter.io.Buf.StringCoder#apply">encoder</a>: <code>String</code> to <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>
+and an <a href="Buf$$StringCoder.html#unapply(buf:com.twitter.io.Buf):Some[String]" class="extmbr" name="com.twitter.io.Buf.StringCoder#unapply">extractor</a>: <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a> to <code>Some[String]</code>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$Utf8$.html" class="extype" name="com.twitter.io.Buf.Utf8">Utf8</a> for UTF-8 encoding and decoding, and <code>Bufs.UTF8</code> for
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Buf$$Utf8$.html" class="extype" name="com.twitter.io.Buf.Utf8">Utf8</a> for UTF-8 encoding and decoding, and <code>Bufs.UTF8</code> for
      Java users. Constants exist for other standard charsets as well.</p></span></dd></dl></div>
     </li></ol>
             </div>
@@ -953,7 +953,7 @@ contents in hexadecimal.</p>
 ISO Latin Alphabet No.</p><div class="fullcomment"><div class="comment cmt"><p>Create and deconstruct buffers encoded by the
 ISO Latin Alphabet No. 1 charset.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.ISO_8859_1</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.ISO_8859_1</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.U32BE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="U32BE"></a><a id="U32BE:U32BE"></a>
       <span class="permalink">
@@ -1055,7 +1055,7 @@ Unicode character set.</p><div class="fullcomment"><div class="comment cmt"><p>C
 also known as ISO646-US or the Basic Latin block of the
 Unicode character set.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.US_ASCII</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.US_ASCII</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.Utf16" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Utf16"></a><a id="Utf16:Utf16"></a>
       <span class="permalink">
@@ -1073,7 +1073,7 @@ Unicode character set.
       
       <p class="shortcomment cmt">Create and deconstruct 16-bit UTF buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Create and deconstruct 16-bit UTF buffers.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.Utf16BE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Utf16BE"></a><a id="Utf16BE:Utf16BE"></a>
       <span class="permalink">
@@ -1093,7 +1093,7 @@ Unicode character set.
 with big-endian byte order.</p><div class="fullcomment"><div class="comment cmt"><p>Create and deconstruct buffers encoded by the 16-bit UTF charset
 with big-endian byte order.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16BE</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16BE</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.Utf16LE" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Utf16LE"></a><a id="Utf16LE:Utf16LE"></a>
       <span class="permalink">
@@ -1113,7 +1113,7 @@ with big-endian byte order.
 with little-endian byte order.</p><div class="fullcomment"><div class="comment cmt"><p>Create and deconstruct buffers encoded by the 16-bit UTF charset
 with little-endian byte order.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16LE</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_16LE</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Buf.Utf8" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Utf8"></a><a id="Utf8:Utf8"></a>
       <span class="permalink">
@@ -1131,7 +1131,7 @@ with little-endian byte order.
       
       <p class="shortcomment cmt">Create and deconstruct Utf-8 encoded buffers.</p><div class="fullcomment"><div class="comment cmt"><p>Create and deconstruct Utf-8 encoded buffers.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Malformed and unmappable input is silently replaced
-      see <span class="extype" name="java.nio.charset.CodingErrorAction.REPLACE">java.nio.charset.CodingErrorAction.REPLACE</span></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_8</code> for a Java-friendly API.</p></span></dd></dl></div>
+      see <code>java.nio.charset.CodingErrorAction.REPLACE</code></p></span>, <span class="cmt"><p>See <code>com.twitter.io.Bufs.UTF_8</code> for a Java-friendly API.</p></span></dd></dl></div>
     </li>
               </ol>
             </div>

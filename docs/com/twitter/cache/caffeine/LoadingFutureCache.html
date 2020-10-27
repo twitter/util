@@ -172,7 +172,7 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="../FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
 <code>com.github.benmanes.caffeine.cache.LoadingCache</code>.</p><p>Any correct implementation should make sure that you evict failed results,
 and don't interrupt the underlying request that has been fired off.
-<span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are useful tools for building
+<a href="../EvictingCache$.html" class="extype" name="com.twitter.cache.EvictingCache">EvictingCache$</a> and interrupting <a href="../../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s are useful tools for building
 correct FutureCaches.  A reference implementation for caching the results of
 an asynchronous function with a caffeine LoadingCache can be found at
 <a href="CaffeineCache$.html#fromLoadingCache[K,V](cache:com.github.benmanes.caffeine.cache.LoadingCache[K,com.twitter.util.Future[V]]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.caffeine.CaffeineCache#fromLoadingCache">CaffeineCache$.fromLoadingCache</a>.

@@ -635,7 +635,7 @@ process' resources.
       <p class="shortcomment cmt">Creates an <a href="AsyncMeter.html" class="extype" name="com.twitter.concurrent.AsyncMeter">AsyncMeter</a> that allows smoothed out <code>permits</code> per
 second, and has a maximum burst size of <code>permits</code> over one second.</p><div class="fullcomment"><div class="comment cmt"><p>Creates an <a href="AsyncMeter.html" class="extype" name="com.twitter.concurrent.AsyncMeter">AsyncMeter</a> that allows smoothed out <code>permits</code> per
 second, and has a maximum burst size of <code>permits</code> over one second.</p><p>This is equivalent to <code>AsyncMeter.newMeter(permits, 1.second, maxWaiters)</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="perSecondUnbounded()">perSecondUnbounded()</span> for creating an async meter that allows unbounded waiters</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#perSecondUnbounded(permits:Int)(implicittimer:com.twitter.util.Timer):com.twitter.concurrent.AsyncMeter" class="extmbr" name="com.twitter.concurrent.AsyncMeter#perSecondUnbounded">perSecondUnbounded</a> for creating an async meter that allows unbounded waiters</p></span></dd></dl></div>
     </li><li name="com.twitter.concurrent.AsyncMeter#perSecondLimited" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="perSecondLimited(permits:Int,maxWaiters:Int)(implicittimer:com.twitter.util.Timer):com.twitter.concurrent.AsyncMeter"></a><a id="perSecondLimited(Int,Int)(Timer):AsyncMeter"></a>
       <span class="permalink">
@@ -679,7 +679,7 @@ is sent at any point of time.</p><pre><span class="kw">val</span> meter = AsyncM
 second, and has a maximum burst size of <code>permits</code> over one second.</p><div class="fullcomment"><div class="comment cmt"><p>Creates an <a href="AsyncMeter.html" class="extype" name="com.twitter.concurrent.AsyncMeter">AsyncMeter</a> that allows smoothed out <code>permits</code> per
 second, and has a maximum burst size of <code>permits</code> over one second.</p><p>This meter is not bounded by the number of allowed waiters. This is equivalent to
 <code>AsyncMeter.newUnboundedMeter(permits, 1.second, maxWaiters)</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="perSecond()">perSecond()</span> for creating an async meter that only allows a certain number of waiters</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#perSecond(permits:Int,maxWaiters:Int)(implicittimer:com.twitter.util.Timer):com.twitter.concurrent.AsyncMeter" class="extmbr" name="com.twitter.concurrent.AsyncMeter#perSecond">perSecond</a> for creating an async meter that only allows a certain number of waiters</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

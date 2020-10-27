@@ -243,7 +243,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An interface for scheduling <span class="extype" name="java.lang.Runnable">java.lang.Runnable</span> tasks.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An interface for scheduling <code>java.lang.Runnable</code> tasks.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -456,7 +456,7 @@ work to do.
       </span>
       
       <p class="shortcomment cmt">Total time spent doing <a href="#blocking[T](f:=&gt;T)(implicitperm:com.twitter.util.Awaitable.CanAwait):T" class="extmbr" name="com.twitter.concurrent.Scheduler#blocking">blocking</a> operations, in nanoseconds.</p><div class="fullcomment"><div class="comment cmt"><p>Total time spent doing <a href="#blocking[T](f:=&gt;T)(implicitperm:com.twitter.util.Awaitable.CanAwait):T" class="extmbr" name="com.twitter.concurrent.Scheduler#blocking">blocking</a> operations, in nanoseconds.</p><p>This should only include time spent on threads where
-<span class="extype" name="CanAwait.trackElapsedBlocking">CanAwait.trackElapsedBlocking</span> returns <code>true</code>.
+<a href="../util/Awaitable$$CanAwait.html#trackElapsedBlocking:Boolean" class="extmbr" name="com.twitter.util.Awaitable.CanAwait#trackElapsedBlocking">com.twitter.util.Awaitable.CanAwait.trackElapsedBlocking</a> returns <code>true</code>.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if the <a href="" class="extype" name="com.twitter.concurrent.Scheduler">Scheduler</a> does not support tracking this.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>this does not include time spent doing blocking code
       outside of <a href="Scheduler$.html#blocking[T](f:=&gt;T)(implicitperm:com.twitter.util.Awaitable.CanAwait):T" class="extmbr" name="com.twitter.concurrent.Scheduler#blocking">Scheduler.blocking</a>. For example,
       <code>Future(someSlowSynchronousIO)</code> would not be accounted

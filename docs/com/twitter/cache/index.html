@@ -444,13 +444,13 @@
       </span>
       
       <p class="shortcomment cmt">A <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
-<span class="extype" name="java.util.concurrent.ConcurrentMap">java.util.concurrent.ConcurrentMap</span></p><div class="fullcomment"><div class="comment cmt"><p>A <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
-<span class="extype" name="java.util.concurrent.ConcurrentMap">java.util.concurrent.ConcurrentMap</span></p><p>Any correct implementation should make sure that you evict failed
+<code>java.util.concurrent.ConcurrentMap</code></p><div class="fullcomment"><div class="comment cmt"><p>A <a href="FutureCache.html" class="extype" name="com.twitter.cache.FutureCache">com.twitter.cache.FutureCache</a> backed by a
+<code>java.util.concurrent.ConcurrentMap</code></p><p>Any correct implementation should make sure that you evict failed
 results, and don't interrupt the underlying request that has been
-fired off.  <span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are
+fired off.  <a href="EvictingCache$.html" class="extype" name="com.twitter.cache.EvictingCache">EvictingCache$</a> and interrupting <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s are
 useful tools for building correct FutureCaches.  A reference
 implementation for caching the results of an asynchronous function
-with a <span class="extype" name="ConcurrentMap">ConcurrentMap</span> can be found at <a href="FutureCache$.html#fromMap[K,V](fn:K=&gt;com.twitter.util.Future[V],map:java.util.concurrent.ConcurrentMap[K,com.twitter.util.Future[V]]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.FutureCache#fromMap">FutureCache$.fromMap</a>.
+with a <code>ConcurrentMap</code> can be found at <a href="FutureCache$.html#fromMap[K,V](fn:K=&gt;com.twitter.util.Future[V],map:java.util.concurrent.ConcurrentMap[K,com.twitter.util.Future[V]]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.FutureCache#fromMap">FutureCache$.fromMap</a>.
 </p></div></div>
     </li><li name="com.twitter.cache.FutureCache" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="FutureCache[K,V]extendsAnyRef"></a><a id="FutureCache[K,V]:FutureCache[K,V]"></a>
@@ -469,7 +469,7 @@ with a <span class="extype" name="ConcurrentMap">ConcurrentMap</span> can be fou
       
       <p class="shortcomment cmt">FutureCache is used to represent an in-memory, in-process, asynchronous cache.</p><div class="fullcomment"><div class="comment cmt"><p>FutureCache is used to represent an in-memory, in-process, asynchronous cache.</p><p>Every cache operation is atomic.</p><p>Any correct implementation should make sure that you evict failed
 results, and don't interrupt the underlying request that has been
-fired off.  <span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are
+fired off.  <a href="EvictingCache$.html" class="extype" name="com.twitter.cache.EvictingCache">EvictingCache$</a> and interrupting <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s are
 useful tools for building correct FutureCaches.  A reference
 implementation for caching the results of an asynchronous function
 can be found at <a href="FutureCache$.html#default[K,V](fn:K=&gt;com.twitter.util.Future[V],cache:com.twitter.cache.FutureCache[K,V]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.FutureCache#default">FutureCache$.default</a>.

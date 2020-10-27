@@ -797,7 +797,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <code>java.util.Timer</code>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
 and can trade off some precision of when tasks run,
 <a href="https://twitter.github.io/finagle/" target="_blank">Finagle</a> has a higher throughput
 <a href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala" target="_blank">hashed-wheel implementation</a>.
@@ -900,8 +900,8 @@ and can trade off some precision of when tasks run,
         <span class="name">JavaTimer</span><span class="params">(<span name="isDaemon">isDaemon: <a href="https://www.scala-lang.org/api/2.12.11/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>, <span name="name">name: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span>
       </span>
       
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">isDaemon</dt><dd class="cmt"><p>whether or not the associated <span class="extype" name="Thread">Thread</span> should run
-  as a daemon.</p></dd><dt class="param">name</dt><dd class="cmt"><p>used as the name of the associated <span class="extype" name="Thread">Thread</span> when specified.</p></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">isDaemon</dt><dd class="cmt"><p>whether or not the associated <code>Thread</code> should run
+  as a daemon.</p></dd><dt class="param">name</dt><dd class="cmt"><p>used as the name of the associated <code>Thread</code> when specified.</p></dd></dl></div>
     </li></ol>
             </div>
 

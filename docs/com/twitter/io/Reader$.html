@@ -550,8 +550,11 @@ it were a single Reader.</p></div><dl class="paramcmts block"><dt class="param">
         <span class="name">flatten</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="readers">readers: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>A Reader holds a stream of Reader[A]
-$flattenBehavior</p></dd></dl></div>
+      <p class="shortcomment cmt">Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient abstraction to read from a stream (Reader) of Readers as if it were a single Reader.</p></div><dl class="paramcmts block"><dt class="param">readers</dt><dd class="cmt"><p>A Reader holds a stream of Reader[A]</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with the outermost Reader. Discarding
+      one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+      Reader's onClose will be resolved immediately with the same value.
+      The subsequent readers are unmanaged, the caller is responsible for discarding those
+      when abandoned.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromAsyncStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="fromAsyncStream[A](as:com.twitter.concurrent.AsyncStream[A]):com.twitter.io.Reader[A]"></a><a id="fromAsyncStream[A](AsyncStream[A]):Reader[A]"></a>
       <span class="permalink">
@@ -567,7 +570,7 @@ $flattenBehavior</p></dd></dl></div>
         <span class="name">fromAsyncStream</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="as">as: <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">AsyncStream</a>[<span class="extype" name="com.twitter.io.Reader.fromAsyncStream.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromAsyncStream.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Allow <span class="extype" name="AsyncStream">AsyncStream</span> to be consumed as a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>
+      <p class="shortcomment cmt">Allow <a href="../concurrent/AsyncStream.html" class="extype" name="com.twitter.concurrent.AsyncStream">com.twitter.concurrent.AsyncStream</a> to be consumed as a <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>
 </p>
     </li><li name="com.twitter.io.Reader#fromBuf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromBuf(buf:com.twitter.io.Buf,chunkSize:Int):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromBuf(Buf,Int):Reader[Buf]"></a>
@@ -620,9 +623,9 @@ a least <code>chunkSize</code> (bytes).
         <span class="name">fromFile</span><span class="params">(<span name="f">f: <span class="extype" name="java.io.File">File</span></span>, <span name="chunkSize">chunkSize: <a href="https://www.scala-lang.org/api/2.12.11/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="File">File</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="File">File</span>. The output of a returned reader is chunked by
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>File</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>File</code>. The output of a returned reader is chunked by
 at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromFile</code> for a Java API</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromFile(f:java.io.File):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromFile(File):Reader[Buf]"></a>
@@ -639,9 +642,9 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="name">fromFile</span><span class="params">(<span name="f">f: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="File">File</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="File">File</span>. The output of a returned reader is chunked by
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>File</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>File</code>. The output of a returned reader is chunked by
 at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromFile</code> for a Java API</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromFuture[A](fa:com.twitter.util.Future[A]):com.twitter.io.Reader[A]"></a><a id="fromFuture[A](Future[A]):Reader[A]"></a>
@@ -676,8 +679,8 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="name">fromIterator</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="it">it: <a href="../../../scala/index.html#Iterator[+A]=Iterator[A]" class="extmbr" name="scala.Iterator">Iterator</a>[<span class="extype" name="com.twitter.io.Reader.fromIterator.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromIterator.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Iterator">Iterator</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Iterator">Iterator</span>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>Iterator</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>Iterator</code>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>It is not recommended to call <code>it.next()</code> after creating a <code>Reader</code> from it.
       Doing so will affect the behavior of <code>Reader.read()</code> because it will skip
       the value returned from <code>it.next</code>.</p></span></dd></dl></div>
@@ -696,8 +699,8 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="name">fromSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="seq">seq: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromSeq.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="Seq">Seq</span>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>Seq</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>Seq</code>.</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Multiple outstanding reads are not allowed on this reader.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream,chunkSize:Int):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromStream(InputStream,Int):Reader[Buf]"></a>
@@ -714,9 +717,9 @@ at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned
         <span class="name">fromStream</span><span class="params">(<span name="s">s: <span class="extype" name="java.io.InputStream">InputStream</span></span>, <span name="chunkSize">chunkSize: <a href="https://www.scala-lang.org/api/2.12.11/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="InputStream">InputStream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="InputStream">InputStream</span>. The output of a returned reader is
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>InputStream</code>. The output of a returned reader is
 chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>Readers.fromStream</code> for a Java API</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#fromStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromStream(s:java.io.InputStream):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromStream(InputStream):Reader[Buf]"></a>
@@ -733,9 +736,9 @@ chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by t
         <span class="name">fromStream</span><span class="params">(<span name="s">s: <span class="extype" name="java.io.InputStream">InputStream</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="InputStream">InputStream</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <span class="extype" name="InputStream">InputStream</span>. The output of a returned reader is
+      <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <code>InputStream</code>. The output of a returned reader is
 chunked by at most <code>chunkSize</code> (bytes).</p><p>The resources held by the returned <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> are released on reading of EOF and
-<span class="extype" name="Reader.discard()">Reader.discard()</span>.
+<a href="Reader.html#discard():Unit" class="extmbr" name="com.twitter.io.Reader#discard">Reader.discard</a>.
 </p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>

@@ -205,7 +205,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>FutureCache is used to represent an in-memory, in-process, asynchronous cache.</p><p>Every cache operation is atomic.</p><p>Any correct implementation should make sure that you evict failed
 results, and don't interrupt the underlying request that has been
-fired off.  <span class="extype" name="EvictingCache">EvictingCache</span> and <span class="extype" name="Future#interrupting">Future#interrupting</span> are
+fired off.  <a href="EvictingCache$.html" class="extype" name="com.twitter.cache.EvictingCache">EvictingCache$</a> and interrupting <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s are
 useful tools for building correct FutureCaches.  A reference
 implementation for caching the results of an asynchronous function
 can be found at <a href="FutureCache$.html#default[K,V](fn:K=&gt;com.twitter.util.Future[V],cache:com.twitter.cache.FutureCache[K,V]):K=&gt;com.twitter.util.Future[V]" class="extmbr" name="com.twitter.cache.FutureCache#default">FutureCache$.default</a>.

@@ -180,8 +180,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Companion object for <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> which provides
-factory methods for creation.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Java users, see <a href="Loggers$.html#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Loggers#getLogger">com.twitter.util.logging.Loggers.getLogger</a></p></span></dd></dl><div class="toggleContainer block">
+factory methods for creation.</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -302,8 +301,9 @@ factory methods for creation.
       </span>
       
       <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> wrapping the given underlying
-<span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> wrapping the given underlying
-<span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>an <code>org.slf4j.Logger</code></p><pre><span class="kw">val</span> logger = Logger(LoggerFactory.getLogger(<span class="lit">"name"</span>))</pre></dd></dl></div>
+<code>org.slf4j.Logger</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> wrapping the given underlying
+<code>org.slf4j.Logger</code>.</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>an <code>org.slf4j.Logger</code></p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Java users see
+<a href="#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#getLogger">getLogger(Logger)</a></p><pre><span class="kw">val</span> logger = Logger(LoggerFactory.getLogger(<span class="lit">"name"</span>))</pre></span></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logger#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply[T](implicitevidence$1:scala.reflect.ClassTag[T]):com.twitter.util.logging.Logger"></a><a id="apply[T](ClassTag[T]):Logger"></a>
       <span class="permalink">
@@ -320,8 +320,8 @@ factory methods for creation.
       </span>
       
       <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the runtime class wrapped
-by the implicit <span class="extype" name="scala.reflect.ClassTag">scala.reflect.ClassTag</span> denoting the runtime class <code>T</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the runtime class wrapped
-by the implicit <span class="extype" name="scala.reflect.ClassTag">scala.reflect.ClassTag</span> denoting the runtime class <code>T</code>.</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the runtime class type</p><pre><span class="kw">val</span> logger = Logger[MyClass]</pre></dd></dl></div>
+by the implicit <code>scala.reflect.ClassTag</code> denoting the runtime class <code>T</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the runtime class wrapped
+by the implicit <code>scala.reflect.ClassTag</code> denoting the runtime class <code>T</code>.</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the runtime class type</p><pre><span class="kw">val</span> logger = Logger[MyClass]</pre></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logger#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(clazz:Class[_]):com.twitter.util.logging.Logger"></a><a id="apply(Class[_]):Logger"></a>
       <span class="permalink">
@@ -337,7 +337,8 @@ by the implicit <span class="extype" name="scala.reflect.ClassTag">scala.reflect
         <span class="name">apply</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> named for the given class.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> named for the given class.</p></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>class to use for naming the underlying Logger.</p><pre><span class="kw">val</span> logger = Logger(classOf[MyClass])</pre></dd></dl></div>
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> named for the given class.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> named for the given class.</p></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>class to use for naming the underlying Logger.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Java users see
+<a href="#getLogger(clazz:Class[_]):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#getLogger">getLogger(Class)</a></p><pre><span class="kw">val</span> logger = Logger(classOf[MyClass])</pre></span></dd></dl></div>
     </li><li name="com.twitter.util.logging.Logger#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(name:String):com.twitter.util.logging.Logger"></a><a id="apply(String):Logger"></a>
       <span class="permalink">
@@ -353,7 +354,8 @@ by the implicit <span class="extype" name="scala.reflect.ClassTag">scala.reflect
         <span class="name">apply</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the given name.</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>name of the underlying Logger.</p><pre><span class="kw">val</span> logger = Logger(<span class="lit">"name"</span>)</pre></dd></dl></div>
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> for the given name.</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>name of the underlying <code>org.slf4j.Logger</code>.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Java users see
+<a href="#getLogger(name:String):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#getLogger">getLogger(String)</a></p><pre><span class="kw">val</span> logger = Logger(<span class="lit">"name"</span>)</pre></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -467,6 +469,59 @@ by the implicit <span class="extype" name="scala.reflect.ClassTag">scala.reflect
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.util.logging.Logger#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger"></a><a id="getLogger(org.slf4j.Logger):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Logger$.html#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogger</span><span class="params">(<span name="underlying">underlying: <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
+<code>org.slf4j.Logger</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
+<code>org.slf4j.Logger</code>.</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>an <code>org.slf4j.Logger</code></p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Scala users see
+<a href="#apply(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#apply">apply(Logger)</a></p><pre>Logger logger = Logger.getLogger(LoggerFactory.getLogger(<span class="lit">"name"</span>));</pre></span></dd></dl></div>
+    </li><li name="com.twitter.util.logging.Logger#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(clazz:Class[_]):com.twitter.util.logging.Logger"></a><a id="getLogger(Class[_]):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Logger$.html#getLogger(clazz:Class[_]):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogger</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.</p></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>class to use for naming the underlying <code>org.slf4j.Logger</code>.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Scala users see
+<a href="#apply(clazz:Class[_]):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#apply">apply(Class)</a></p><pre>Logger logger = Logger.getLogger(MyClass.<span class="kw">class</span>);</pre></span></dd></dl></div>
+    </li><li name="com.twitter.util.logging.Logger#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(name:String):com.twitter.util.logging.Logger"></a><a id="getLogger(String):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Logger$.html#getLogger(name:String):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getLogger</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>name of the underlying <code>org.slf4j.Logger</code>.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>Scala users see
+<a href="#apply(name:String):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Logger#apply">apply(String)</a></p><pre>Logger logger = Logger.getLogger(<span class="lit">"name"</span>);</pre></span></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">

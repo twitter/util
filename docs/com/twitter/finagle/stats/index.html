@@ -279,6 +279,10 @@
                         <a href="ReadableStat.html" title="A variation of Stat that also supports reading of the current time series via the apply method.">ReadableStat</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="RelativeNameMarkingStatsReceiver.html" title="A StatsReceiver receiver proxy that populates relativeName for all counter, stat, and gauge schemas/metadata."></a>
+                        <a href="RelativeNameMarkingStatsReceiver.html" title="A StatsReceiver receiver proxy that populates relativeName for all counter, stat, and gauge schemas/metadata.">RelativeNameMarkingStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="object" href="Requests$.html" title=""></a>
                         <a href="Requests$.html" title="">Requests</a>
                       </li><li class="current-entities indented4">
@@ -337,6 +341,10 @@
                         <span class="separator"></span>
                         <a class="trait" href="WithHistogramDetails.html" title="Allow StatsReceivers to provide snapshots of histogram counts."></a>
                         <a href="WithHistogramDetails.html" title="Allow StatsReceivers to provide snapshots of histogram counts.">WithHistogramDetails</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="metadataScopeSeparator$.html" title="finagle-stats has configurable scope separators."></a>
+                        <a href="metadataScopeSeparator$.html" title="finagle-stats has configurable scope separators.">metadataScopeSeparator</a>
                       </li><li name="com.twitter.finagle.util" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="util"></a><a id="util:util"></a>
       <span class="permalink">
@@ -827,6 +835,23 @@ required.
       </span>
       
       <p class="shortcomment cmt">A variation of <a href="Stat.html" class="extype" name="com.twitter.finagle.stats.Stat">Stat</a> that also supports reading of the current time series via the <code>apply</code> method.</p>
+    </li><li name="com.twitter.finagle.stats.RelativeNameMarkingStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RelativeNameMarkingStatsReceiverextendsStatsReceiverProxy"></a><a id="RelativeNameMarkingStatsReceiver:RelativeNameMarkingStatsReceiver"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/RelativeNameMarkingStatsReceiver.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A StatsReceiver receiver proxy that populates relativeName for all counter, stat, and gauge schemas/metadata." href="RelativeNameMarkingStatsReceiver.html"><span class="name">RelativeNameMarkingStatsReceiver</span></a><span class="result"> extends <a href="StatsReceiverProxy.html" class="extype" name="com.twitter.finagle.stats.StatsReceiverProxy">StatsReceiverProxy</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A StatsReceiver receiver proxy that populates relativeName for all counter, stat, and gauge
+schemas/metadata.</p>
     </li><li name="com.twitter.finagle.stats.RoleConfiguredStatsReceiver" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="RoleConfiguredStatsReceiverextendsStatsReceiverProxywithProductwithSerializable"></a><a id="RoleConfiguredStatsReceiver:RoleConfiguredStatsReceiver"></a>
       <span class="permalink">
@@ -906,10 +931,7 @@ case NoRole should be used.
       </span>
       
       <p class="shortcomment cmt">An append-only collection of time-series data.</p><div class="fullcomment"><div class="comment cmt"><p>An append-only collection of time-series data. Example Stats are
-&quot;queue depth&quot; or &quot;query width in a stream of requests&quot;.</p><p>Utilities for timing synchronous execution and asynchronous
-execution are on the companion object (<span class="extype" name="Stat.time(Stat)">Stat.time(Stat)</span> and
-<span class="extype" name="Stat.timeFuture(Stat)">Stat.timeFuture(Stat)</span>.
-</p></div></div>
+&quot;queue depth&quot; or &quot;query width in a stream of requests&quot;.</p></div></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiver" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="StatsReceiverextendsAnyRef"></a><a id="StatsReceiver:StatsReceiver"></a>
       <span class="permalink">
@@ -932,8 +954,7 @@ Doing this, however, helps to separate <a href="Verbosity$.html#Debug:com.twitte
 troubleshooting) from their <a href="Verbosity$.html#Default:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Default">operationally-required counterparts</a> (provide
 a corresponding degree of visibility into a healthy process) thus potentially reducing the
 observability cost.</p><p>Metrics created w/o an explicitly specified <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> level, will use <a href="Verbosity$.html#Default:com.twitter.finagle.stats.Verbosity" class="extmbr" name="com.twitter.finagle.stats.Verbosity#Default">Verbosity.Default</a>.
-Use <a href="VerbosityAdjustingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.VerbosityAdjustingStatsReceiver">VerbosityAdjustingStatsReceiver</a> to adjust this behaviour.
-</p></div></div>
+Use <a href="VerbosityAdjustingStatsReceiver.html" class="extype" name="com.twitter.finagle.stats.VerbosityAdjustingStatsReceiver">VerbosityAdjustingStatsReceiver</a> to adjust this behaviour.</p></div></div>
     </li><li name="com.twitter.finagle.stats.StatsReceiverProxy" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="StatsReceiverProxyextendsStatsReceiverwithDelegatingStatsReceiver"></a><a id="StatsReceiverProxy:StatsReceiverProxy"></a>
       <span class="permalink">
@@ -1423,6 +1444,25 @@ errors separately so success rate can from valid non cancelled requests.
       </span>
       
       
+    </li><li name="com.twitter.finagle.stats.metadataScopeSeparator" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="metadataScopeSeparator"></a><a id="metadataScopeSeparator:metadataScopeSeparator"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/metadataScopeSeparator$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="finagle-stats has configurable scope separators." href="metadataScopeSeparator$.html"><span class="name">metadataScopeSeparator</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">finagle-stats has configurable scope separators.</p><div class="fullcomment"><div class="comment cmt"><p>finagle-stats has configurable scope separators. As this package is wrapped by finagle-stats, we
+cannot retrieve it from finagle-stats. Consequently, we created this object so that the
+scope-separator can be passed in for stringification of the MetricBuilder objects.
+</p></div></div>
     </li>
               </ol>
             </div>
@@ -1446,8 +1486,7 @@ errors separately so success rate can from valid non cancelled requests.
         <a title="StatsReceiver utility methods for ease of use from java." href="StatsReceivers$.html"><span class="name deprecated" title="Deprecated: (Since version 2020-06-10) Use StatsReceiver addGauge and provideGauge methods directly">StatsReceivers</span></a>
       </span>
       
-      <p class="shortcomment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p><div class="fullcomment"><div class="comment cmt"><p><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt"><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p><div class="fullcomment"><div class="comment cmt"><p><a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a> utility methods for ease of use from java.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-06-10)</i> Use StatsReceiver addGauge and provideGauge methods directly</p></dd></dl></div>

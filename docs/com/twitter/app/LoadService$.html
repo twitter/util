@@ -197,9 +197,9 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>. It is
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Load classes in the manner of <code>java.util.ServiceLoader</code>. It is
 more resilient to varying Java packaging configurations than ServiceLoader.</p><p>For further control, see <a href="App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" class="extmbr" name="com.twitter.app.App#loadServiceBindings">App.loadServiceBindings</a> and the
-<span class="extype" name="loadServiceDenied">loadServiceDenied</span> flag.
+<code>loadServiceDenied</code> flag.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -327,7 +327,7 @@ interface given by <code>iface</code>.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]"></a><a id="apply[T]()(ClassTag[T]):Seq[T]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/app/LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" title="Permalink">
@@ -343,9 +343,7 @@ interface given by <code>iface</code>.
       </span>
       
       <p class="shortcomment cmt">Returns classes for the given <code>ClassTag</code> as specified by
-resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns classes for the given <code>ClassTag</code> as specified by
-resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="apply(Class)">apply(Class)</span> for a Java friendly API.</p></span></dd></dl></div>
+resource files in <code>META-INF/services/FullyQualifiedClassTagsClassName</code>.</p>
     </li><li name="com.twitter.app.LoadService#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](iface:Class[T]):Seq[T]"></a><a id="apply[T](Class[T]):Seq[T]"></a>
       <span class="permalink">
@@ -418,7 +416,7 @@ resource files in <code>META-INF/services/FullyQualifiedClassName</code>.</p>
         <span class="name">duplicateBindings</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="scala.Predef.Class">Class</span>[_]]</span>
       </span>
       
-      <p class="shortcomment cmt">Return any interfaces that have been registered multiple times via <span class="extype" name="bind">bind</span>.</p>
+      <p class="shortcomment cmt">Return any interfaces that have been registered multiple times via <code>bind</code>.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

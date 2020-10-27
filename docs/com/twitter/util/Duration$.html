@@ -1085,7 +1085,7 @@ itself. <code>Top</code>'s complement is <code>Bottom</code>.
         <span class="name">apply</span><span class="params">(<span name="value">value: <a href="https://www.scala-lang.org/api/2.12.11/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.</p>
+      <p class="shortcomment cmt">Create a duration from a <code>java.util.concurrent.TimeUnit</code>.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -1327,8 +1327,8 @@ limits precision.  Currently we can assume at least microsecond precision.
         <span class="name">fromTimeUnit</span><span class="params">(<span name="value">value: <a href="https://www.scala-lang.org/api/2.12.11/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="unit">unit: <span class="extype" name="java.util.concurrent.TimeUnit">TimeUnit</span></span>)</span><span class="result">: <a href="Duration.html" class="extype" name="com.twitter.util.Duration">Duration</a></span>
       </span>
       
-      <p class="shortcomment cmt">Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a duration from a <span class="extype" name="java.util.concurrent.TimeUnit">java.util.concurrent.TimeUnit</span>.
-Synonym for <code>apply</code>.
+      <p class="shortcomment cmt">Create a duration from a <code>java.util.concurrent.TimeUnit</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a duration from a <code>java.util.concurrent.TimeUnit</code>.
+Synonym for <a href="#apply(value:Long,unit:java.util.concurrent.TimeUnit):com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#apply">apply</a>.
 </p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
@@ -1461,7 +1461,7 @@ will ignore whitespace around signs and at the beginning and end.
 (That is, it accepts &quot;1.second + 1.minute&quot; and &quot; 1.second &quot;.)
 It's permissible to omit the sign before the first duration.</p><p>The special values are &quot;Duration.Top&quot;, &quot;Duration.Bottom&quot; and
 &quot;Duration.Undefined&quot;.</p><p>The parser is case-insensitive.
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="RuntimeException"><code>RuntimeException</code></span> if the string cannot be parsed.</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Throws <code>RuntimeException</code> if the string cannot be parsed.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

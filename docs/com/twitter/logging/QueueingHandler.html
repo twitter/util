@@ -352,7 +352,7 @@ a nested handler. Useful for when a handler may block.
       
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">handler</dt><dd class="cmt"><p>Wrapped handler that publishing is proxied to.</p></dd><dt class="param">maxQueueSize</dt><dd class="cmt"><p>Maximum queue size. Records are sent to
 <a href="#onOverflow(record:java.util.logging.LogRecord):Unit" class="extmbr" name="com.twitter.logging.QueueingHandler#onOverflow">onOverflow</a> when it is at capacity.</p></dd><dt class="param">inferClassNames</dt><dd class="cmt"><p><a href="LogRecord.html" class="extype" name="com.twitter.logging.LogRecord">com.twitter.logging.LogRecord</a> and
-<span class="extype" name="java.util.logging.LogRecord">java.util.logging.LogRecord</span> both attempt to infer the class and
+<code>java.util.logging.LogRecord</code> both attempt to infer the class and
 method name of the caller, but the inference needs the stack trace at
 the time that the record is logged. QueueingHandler breaks the
 inference because the log record is rendered out of band, so the stack

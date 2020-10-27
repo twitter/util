@@ -329,10 +329,10 @@ shardCoordinator.acquire flatMap { shard <span class="kw">=&gt;</span>
       <p class="shortcomment cmt">Acquire a permit for a shard (ShardPermit) asynchronously.</p><div class="fullcomment"><div class="comment cmt"><p>Acquire a permit for a shard (ShardPermit) asynchronously. A ShardPermit contains
 a zero-indexed shard ID. Be sure to call release() on the ShardPermit when your
 client is finished performing work for the shard.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A Future of ShardPermit that is satisfied when a shard slot becomes available.</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="RejectedExecutionException"><code>RejectedExecutionException</code></span> when a shard cannot be acquired due to an unexpected
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A Future of ShardPermit that is satisfied when a shard slot becomes available.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Throws <code>SemaphoreError</code> when the underlying semaphore throws an exception.</p></span>, <span class="cmt"><p>Throws <code>RejectedExecutionException</code> when a shard cannot be acquired due to an unexpected
                                    state in the zookeeper tree. Assumed to only happen if some
                                    zookeeper client clobbers the tree location for this
-                                   ShardCoordinator.</p></span><span class="cmt"><p><span class="extype" name="SemaphoreError"><code>SemaphoreError</code></span> when the underlying semaphore throws an exception.</p></span></dd></dl></div>
+                                   ShardCoordinator.</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">

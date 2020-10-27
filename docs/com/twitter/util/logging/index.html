@@ -371,9 +371,9 @@
         <a title="A scala wrapper over a org.slf4j.Logger." href="Logger.html"><span class="name">Logger</span></a><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
-      <p class="shortcomment cmt">A scala wrapper over a <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A scala wrapper over a <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><p>The Logger is <span class="extype" name="Serializable">Serializable</span> to support it's usage through the
-<a href="Logging.html" class="extype" name="com.twitter.util.logging.Logging">com.twitter.util.logging.Logging</a> trait when the trait is mixed
-into a <span class="extype" name="Serializable">Serializable</span> class.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">A scala wrapper over a <code>org.slf4j.Logger</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A scala wrapper over a <code>org.slf4j.Logger</code>.</p><p>The Logger extends <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" target="_blank">java.io.Serializable</a>
+to support it's usage through the <a href="Logging.html" class="extype" name="com.twitter.util.logging.Logging">com.twitter.util.logging.Logging</a> trait when the trait is mixed
+into a <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" target="_blank">java.io.Serializable</a> class.</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@SerialVersionUID</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -408,7 +408,7 @@ into a <span class="extype" name="Serializable">Serializable</span> class.</p></
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="com.twitter.util.logging.Logger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+                <li name="com.twitter.util.logging.Logger" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Logger"></a><a id="Logger:Logger"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/logging/Logger$.html" title="Permalink">
@@ -424,26 +424,7 @@ into a <span class="extype" name="Serializable">Serializable</span> class.</p></
       </span>
       
       <p class="shortcomment cmt">Companion object for <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> which provides
-factory methods for creation.</p><div class="fullcomment"><div class="comment cmt"><p>Companion object for <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a> which provides
-factory methods for creation.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Java users, see <a href="Loggers$.html#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" class="extmbr" name="com.twitter.util.logging.Loggers#getLogger">com.twitter.util.logging.Loggers.getLogger</a></p></span></dd></dl></div>
-    </li><li name="com.twitter.util.logging.Loggers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Loggers"></a><a id="Loggers:Loggers"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/logging/Loggers$.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="For Java usability." href="Loggers$.html"><span class="name">Loggers</span></a>
-      </span>
-      
-      <p class="shortcomment cmt">For Java usability.</p><div class="fullcomment"><div class="comment cmt"><p>For Java usability.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Scala users see <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a></p></span></dd></dl></div>
+factory methods for creation.</p>
     </li><li name="com.twitter.util.logging.Slf4jBridgeUtility" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Slf4jBridgeUtility"></a><a id="Slf4jBridgeUtility:Slf4jBridgeUtility"></a>
       <span class="permalink">
@@ -473,7 +454,30 @@ manner. However, using the <a href="https://logback.qos.ch/manual/configuration.
 
         
 
-        
+        <div class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.util.logging.Loggers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Loggers"></a><a id="Loggers:Loggers"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Loggers$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="For Java usability." href="Loggers$.html"><span class="name deprecated" title="Deprecated: (Since version 2020-09-30) Use com.twitter.util.logging.Logger">Loggers</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">For Java usability.</p><div class="fullcomment"><div class="comment cmt"><p>For Java usability.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-09-30)</i> Use com.twitter.util.logging.Logger</p></dd><dt>Note</dt><dd><span class="cmt"><p>Scala users see <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a></p></span></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

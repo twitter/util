@@ -391,24 +391,22 @@
         <a title="Parses a given JSON string into a TunableMap." href="JsonTunableMapper.html"><span class="name">JsonTunableMapper</span></a><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. The expected format is:</p><p>{
-   &quot;tunables&quot;:
-     [
-        {
-          &quot;id&quot; : &quot;$id1&quot;,
-          &quot;value&quot; : $value,
-          &quot;type&quot; : &quot;$class&quot;
-        },
-        {
-          &quot;id&quot; : &quot;$id2&quot;,
-          &quot;value&quot; : $value,
-          &quot;type&quot; : &quot;$class&quot;,
-          &quot;comment&quot;: &quot;optional comment&quot;
-        }
-    ]
-}</p><p>Where $id1 and $id2 are unique identifiers used to access the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>, $value is the value,
+      <p class="shortcomment cmt">Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. The expected format is:</p><pre><span class="lit">"tunables"</span>:
+  [
+     {
+       <span class="lit">"id"</span> : <span class="lit">"$id1"</span>,
+       <span class="lit">"value"</span> : $value,
+       <span class="lit">"type"</span> : <span class="lit">"$class"</span>
+     },
+     {
+       <span class="lit">"id"</span> : <span class="lit">"$id2"</span>,
+       <span class="lit">"value"</span> : $value,
+       <span class="lit">"type"</span> : <span class="lit">"$class"</span>,
+       <span class="lit">"comment"</span>: <span class="lit">"optional comment"</span>
+     }
+ ]</pre><p>Where $id1 and $id2 are unique identifiers used to access the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>, $value is the value,
 and $class is the fully-qualified class name (e.g. com.twitter.util.Duration)</p><p>If the JSON is invalid, or contains duplicate ids for <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s, <code>parse</code> will
-return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>. Otherwise, <code>parse</code> returns <span class="extype" name="Return[TunableMap">Return[TunableMap</span>
+return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>. Otherwise, <code>parse</code> returns <a href="../Return.html" class="extype" name="com.twitter.util.Return">Return[TunableMap</a>
 </p></div></div>
     </li><li name="com.twitter.util.tunable.ServiceLoadedTunableMap" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ServiceLoadedTunableMapextendsTunableMap"></a><a id="ServiceLoadedTunableMap:ServiceLoadedTunableMap"></a>

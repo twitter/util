@@ -409,12 +409,12 @@ the last waiter was permitted so that permits would have built up while it
 was waiting, it will be permitted immediately.</p><p>If the returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> is interrupted, we
 try to cancel it. If it's successfully cancelled, the
 <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> is satisfied with a
-<span class="extype" name="java.util.concurrent.CancellationException">java.util.concurrent.CancellationException</span>, and the permits
+<code>java.util.concurrent.CancellationException</code>, and the permits
 will not be issued, so a subsequent waiter can take advantage
 of the permits.</p><p>If <code>await</code> is invoked when there are already <code>maxWaiters</code> waiters waiting
 for permits, the <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> is immediately satisfied with
-a <span class="extype" name="java.util.concurrent.RejectedExecutionException">java.util.concurrent.RejectedExecutionException</span>.</p><p>If more permits are requested than <code>burstSize</code> then it returns a failed
-<span class="extype" name="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException</span> <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+a <code>java.util.concurrent.RejectedExecutionException</code>.</p><p>If more permits are requested than <code>burstSize</code> then it returns a failed
+<code>java.lang.IllegalArgumentException</code> <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
 immediately.
 </p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">

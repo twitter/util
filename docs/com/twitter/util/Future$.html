@@ -939,7 +939,7 @@
         <span title="gt4s: $qmark$qmark$qmark" class="name">???</span><span class="result">: <a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Nothing.html#scala.Nothing" class="extype" name="scala.Nothing">Nothing</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A failed <code>Future</code> analogous to <span class="extype" name="Predef.???">Predef.???</span>.</p>
+      <p class="shortcomment cmt">A failed <code>Future</code> analogous to <code>Predef.???</code>.</p>
     </li><li name="com.twitter.util.Future#DEFAULT_TIMEOUT" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DEFAULT_TIMEOUT:com.twitter.util.Duration"></a><a id="DEFAULT_TIMEOUT:Duration"></a>
       <span class="permalink">
@@ -1223,8 +1223,12 @@ result will the first exception encountered.
 <code>Seq[A]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Collect the results from the given futures into a new future of
 <code>Seq[A]</code>. If one or more of the given Futures is exceptional, the resulting
 Future result will be the first exception encountered.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
-    <code>Future</code> regardless of if they succeed or fail.</p></span><span class="cmt"><p><a href="#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#join">join</a> if you are not interested in the results of the individual
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd><dt>returns</dt><dd class="cmt"><p>a <code>Future[Seq[A]]</code> containing the collected values from fs.</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="#collectToTry[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry(Seq[Future[A]])</a>
+if you want to be able to see the results of each
+    <code>Future</code> regardless of if they succeed or fail.</p></span><span class="cmt"><p>
+<a href="#join[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#join">join(Seq[A])</a>
+if you are not interested in the results of the individual
     <code>Futures</code>, only when they are complete.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#collectToTry" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]"></a><a id="collectToTry[A](List[Future[A]]):Future[List[Try[A]]]"></a>
@@ -1443,8 +1447,14 @@ indicates completion via a failed <code>Future</code>.
 are successfully satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
 are successfully satisfied. If any of the futures in <code>fs</code> fail,
 the returned <code>Future</code> is immediately satisfied by that failure.</p><p>TODO: This method should be deprecated in favour of <code>Futures.join()</code>.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Futures$.html#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join</a> for a Java friendly API.</p></span><span class="cmt"><p><a href="#collect[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect</a> if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
-    <code>Future</code> regardless of if they succeed or fail.</p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a java.util.List of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="Futures$.html#join[A,B](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B]):com.twitter.util.Future[(A,B)]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join(Future[A],Future[B])</a>
+for a Java friendly API.</p></span><span class="cmt"><p>
+<a href="#collect[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect(Seq[Future[A]])</a>
+if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p>
+<a href="#collectToTry[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry(Seq[Future[A]])</a>
+if you want to be able to see the results of each
+     <code>Future</code> regardless of if they succeed or fail.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#join" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B],c:com.twitter.util.Future[C],d:com.twitter.util.Future[D],e:com.twitter.util.Future[E],f:com.twitter.util.Future[F],g:com.twitter.util.Future[G],h:com.twitter.util.Future[H],i:com.twitter.util.Future[I],j:com.twitter.util.Future[J],k:com.twitter.util.Future[K],l:com.twitter.util.Future[L],m:com.twitter.util.Future[M],n:com.twitter.util.Future[N],o:com.twitter.util.Future[O],p:com.twitter.util.Future[P],q:com.twitter.util.Future[Q],r:com.twitter.util.Future[R],s:com.twitter.util.Future[S],t:com.twitter.util.Future[T],u:com.twitter.util.Future[U],v:com.twitter.util.Future[V]):com.twitter.util.Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a><a id="join[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V](Future[A],Future[B],Future[C],Future[D],Future[E],Future[F],Future[G],Future[H],Future[I],Future[J],Future[K],Future[L],Future[M],Future[N],Future[O],Future[P],Future[Q],Future[R],Future[S],Future[T],Future[U],Future[V]):Future[(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V)]"></a>
       <span class="permalink">
@@ -1863,8 +1873,14 @@ do.
 are successfully satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>Future</code> that is satisfied when all futures in <code>fs</code>
 are successfully satisfied. If any of the futures in <code>fs</code> fail,
 the returned <code>Future</code> is immediately satisfied by that failure.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Futures$.html#join[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join</a> for a Java friendly API.</p></span><span class="cmt"><p><a href="#collect[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect</a> if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p><a href="#collectToTry[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[java.util.List[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry</a> if you want to be able to see the results of each
-    <code>Future</code> regardless of if they succeed or fail.</p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>a sequence of Futures</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="Futures$.html#join[A,B](a:com.twitter.util.Future[A],b:com.twitter.util.Future[B]):com.twitter.util.Future[(A,B)]" class="extmbr" name="com.twitter.util.Futures#join">Futures.join(Future[A],Future[B])</a>
+for a Java friendly API.</p></span><span class="cmt"><p>
+<a href="#collect[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[A]]" class="extmbr" name="com.twitter.util.Future#collect">collect(Seq[Future[A]])</a>
+if you want to be able to see the results of each <code>Future</code>.</p></span><span class="cmt"><p>
+<a href="#collectToTry[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[Seq[com.twitter.util.Try[A]]]" class="extmbr" name="com.twitter.util.Future#collectToTry">collectToTry(Seq[Future[A]])</a>
+if you want to be able to see the results of each
+     <code>Future</code> regardless of if they succeed or fail.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#monitored" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="monitored[A](mkFuture:=&gt;com.twitter.util.Future[A]):com.twitter.util.Future[A]"></a><a id="monitored[A](⇒Future[A]):Future[A]"></a>
       <span class="permalink">
@@ -2030,7 +2046,8 @@ result, with the remainder of the Futures as a sequence.
       </span>
       
       <p class="shortcomment cmt">Select the index into <code>fs</code> of the first future to be satisfied.</p><div class="fullcomment"><div class="comment cmt"><p>Select the index into <code>fs</code> of the first future to be satisfied.
-</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>cannot be empty</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="#select[A](fs:java.util.List[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],java.util.List[com.twitter.util.Future[A]])]" class="extmbr" name="com.twitter.util.Future#select">select</a> which can be an easier API to use.</p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">fs</dt><dd class="cmt"><p>cannot be empty</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="#select[A](fs:Seq[com.twitter.util.Future[A]]):com.twitter.util.Future[(com.twitter.util.Try[A],Seq[com.twitter.util.Future[A]])]" class="extmbr" name="com.twitter.util.Future#select">select(Seq[Future])</a> which can be an easier API to use.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#sleep" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sleep(howlong:com.twitter.util.Duration)(implicittimer:com.twitter.util.Timer):com.twitter.util.Future[Unit]"></a><a id="sleep(Duration)(Timer):Future[Unit]"></a>
       <span class="permalink">

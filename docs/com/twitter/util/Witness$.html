@@ -799,8 +799,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is Java-friendly API for this object: <a href="Witnesses.html" class="extype" name="com.twitter.util.Witnesses">com.twitter.util.Witnesses</a>.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Note: There is Java-friendly API for this object: <a href="Witnesses.html" class="extype" name="com.twitter.util.Witnesses">com.twitter.util.Witnesses</a>.</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -936,7 +935,7 @@
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="f">f: (<span class="extype" name="com.twitter.util.Witness.apply.T">T</span>) ⇒ <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.Witness.apply.T">T</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from a <span class="extype" name="Function1">Function1</span>.</p>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from a <code>Function1</code>.</p>
     </li><li name="com.twitter.util.Witness#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply[T](p:com.twitter.util.Promise[T]):com.twitter.util.Witness[T]"></a><a id="apply[T](Promise[T]):Witness[T]"></a>
       <span class="permalink">
@@ -968,7 +967,7 @@
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="ref">ref: <span class="extype" name="java.util.concurrent.atomic.AtomicReference">AtomicReference</span>[<span class="extype" name="com.twitter.util.Witness.apply.T">T</span>]</span>)</span><span class="result">: <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a>[<span class="extype" name="com.twitter.util.Witness.apply.T">T</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from an <span class="extype" name="AtomicReference">atomic reference</span>.</p>
+      <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> from an atomic reference.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -1305,7 +1304,8 @@
       <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
 to <code>u</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
 to <code>u</code>.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Var$.html#apply[T](init:T,e:com.twitter.util.Event[T]):com.twitter.util.Var[T]" class="extmbr" name="com.twitter.util.Var#apply">Var.apply</a> for example.</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>
+<a href="Var$.html#apply[T](init:T,e:com.twitter.util.Event[T]):com.twitter.util.Var[T]" class="extmbr" name="com.twitter.util.Var#apply">Var.apply(T, Event[T])</a> for example.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Witness#weakReference" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="weakReference[T](f:T=&gt;Unit):com.twitter.util.Witness[T]"></a><a id="weakReference[T]((T)⇒Unit):Witness[T]"></a>
       <span class="permalink">
@@ -1322,8 +1322,8 @@ to <code>u</code>.
       </span>
       
       <p class="shortcomment cmt">Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
-to the <span class="extype" name="Function1">Function1</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
-to the <span class="extype" name="Function1">Function1</span>.
+to the <code>Function1</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Witness.html" class="extype" name="com.twitter.util.Witness">Witness</a> which keeps only a <code>java.lang.ref.WeakReference</code>
+to the <code>Function1</code>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Var$.html#patch[CC[_],T](diffs:com.twitter.util.Event[com.twitter.util.Diff[CC,T]])(implicitevidence$2:com.twitter.util.Diffable[CC]):com.twitter.util.Var[CC[T]]" class="extmbr" name="com.twitter.util.Var#patch">Var.patch</a> for example.</p></span></dd></dl></div>
     </li>
               </ol>

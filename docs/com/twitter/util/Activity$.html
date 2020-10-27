@@ -1047,26 +1047,12 @@ the given witness.
       
       <p class="shortcomment cmt">A Java friendly method for <code>Activity.collect()</code>.</p>
     </li><li name="com.twitter.util.Activity#collect" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="collect[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]"></a><a id="collect[T](&lt;error&gt;):Activity[&lt;error&gt;]"></a>
+      <a id="collect[T,CC[X]&lt;:Iterable[X]](acts:CC[com.twitter.util.Activity[T]])(implicitevidence$1:scala.reflect.ClassTag[T],implicitfactory:collection.compat.Factory[T,CC[T]]):com.twitter.util.Activity[CC[T]]"></a><a id="collect[T,CC[X]&lt;:Iterable[X]](CC[Activity[T]])(ClassTag[T],scala.collection.compat.Factory[T,CC[T]]):Activity[CC[T]]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Activity$.html#collect[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]" title="Permalink">
+      <a href="../../../com/twitter/util/Activity$.html#collect[T,CC[X]&lt;:Iterable[X]](acts:CC[com.twitter.util.Activity[T]])(implicitevidence$1:scala.reflect.ClassTag[T],implicitfactory:collection.compat.Factory[T,CC[T]]):com.twitter.util.Activity[CC[T]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">collect</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="activities">activities: &lt;error&gt;</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[&lt;error&gt;]</span>
-      </span>
-      
-      <p class="shortcomment cmt">[use case] </p><div class="fullcomment">[use case] <div class="comment cmt"></div><dl class="attributes block"> <div class="full-signature-block toggleContainer">
-            <span class="toggle">
-              <i class="material-icons"></i>
-              Full Signature
-            </span>
-            <div class="hiddenContent full-signature-usecase"><h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
@@ -1074,12 +1060,17 @@ the given witness.
       <span class="symbol">
         <span class="name">collect</span><span class="tparams">[<span name="T">T</span>, <span name="CC">CC<span class="tparams">[<span name="X">X</span>]</span> &lt;: <a href="../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC.X">X</span>]</span>]</span><span class="params">(<span name="acts">acts: <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scala.reflect.ClassTag">ClassTag</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]</span>, <span name="factory">factory: <a href="../../../scala/collection/compat/index.html#Factory[-A,+C]=scala.collection.generic.CanBuildFrom[Nothing,A,C]" class="extmbr" name="scala.collection.compat.Factory">scala.collection.compat.Factory</a>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>, <span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collect.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collect.T">T</span>]]</span>
       </span>
-      </h4></div>
-          </div></dl></div>
+      
+      <p class="shortcomment cmt">Collect a collection of activities into an activity of a collection
+of values.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a collection of activities into an activity of a collection
+of values.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p>def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]</p></li></ol>
+            </div></dl></div>
     </li><li name="com.twitter.util.Activity#collectIndependent" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="collectIndependent[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]"></a><a id="collectIndependent[T](&lt;error&gt;):Activity[&lt;error&gt;]"></a>
+      <a id="collectIndependent[T,CC[X]&lt;:Iterable[X]](acts:CC[com.twitter.util.Activity[T]])(implicitevidence$2:scala.reflect.ClassTag[T],implicitfactory:collection.compat.Factory[T,CC[T]]):com.twitter.util.Activity[CC[T]]"></a><a id="collectIndependent[T,CC[X]&lt;:Iterable[X]](CC[Activity[T]])(ClassTag[T],scala.collection.compat.Factory[T,CC[T]]):Activity[CC[T]]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/util/Activity$.html#collectIndependent[T](activities:&lt;error&gt;):com.twitter.util.Activity[&lt;error&gt;]" title="Permalink">
+      <a href="../../../com/twitter/util/Activity$.html#collectIndependent[T,CC[X]&lt;:Iterable[X]](acts:CC[com.twitter.util.Activity[T]])(implicitevidence$2:scala.reflect.ClassTag[T],implicitfactory:collection.compat.Factory[T,CC[T]]):com.twitter.util.Activity[CC[T]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -1088,24 +1079,17 @@ the given witness.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">collectIndependent</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="activities">activities: &lt;error&gt;</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[&lt;error&gt;]</span>
-      </span>
-      
-      <p class="shortcomment cmt">[use case] </p><div class="fullcomment">[use case] <div class="comment cmt"></div><dl class="attributes block"> <div class="full-signature-block toggleContainer">
-            <span class="toggle">
-              <i class="material-icons"></i>
-              Full Signature
-            </span>
-            <div class="hiddenContent full-signature-usecase"><h4 id="signature" class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
         <span class="name">collectIndependent</span><span class="tparams">[<span name="T">T</span>, <span name="CC">CC<span class="tparams">[<span name="X">X</span>]</span> &lt;: <a href="../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.CC.X">X</span>]</span>]</span><span class="params">(<span name="acts">acts: <span class="extype" name="com.twitter.util.Activity.collectIndependent.CC">CC</span>[<a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.T">T</span>]]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <span class="extype" name="scala.reflect.ClassTag">ClassTag</span>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.T">T</span>]</span>, <span name="factory">factory: <a href="../../../scala/collection/compat/index.html#Factory[-A,+C]=scala.collection.generic.CanBuildFrom[Nothing,A,C]" class="extmbr" name="scala.collection.compat.Factory">scala.collection.compat.Factory</a>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.T">T</span>, <span class="extype" name="com.twitter.util.Activity.collectIndependent.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.T">T</span>]]</span>)</span><span class="result">: <a href="Activity.html" class="extype" name="com.twitter.util.Activity">Activity</a>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.CC">CC</span>[<span class="extype" name="com.twitter.util.Activity.collectIndependent.T">T</span>]]</span>
       </span>
-      </h4></div>
-          </div></dl></div>
+      
+      <p class="shortcomment cmt">Collect a collection of activities into an activity of a collection
+of values.</p><div class="fullcomment"><div class="comment cmt"><p>Collect a collection of activities into an activity of a collection
+of values. This version relies on <a href="Var.html" class="extype" name="com.twitter.util.Var">Var</a>'s collectIndependent, and has
+the same benefits and drawbacks of that method.</p><p>Like Var.collectIndependent this is a workaround and should be deprecated when a version
+of Var.collect without a stack overflow issue is implemented.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p>def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]</p></li></ol>
+            </div></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

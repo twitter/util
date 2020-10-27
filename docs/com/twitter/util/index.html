@@ -1299,7 +1299,7 @@ and decoding from strings encoded in base64 to byte arrays.</p><p>The encoding f
         <a title="A thread-safe ThriftSerializer that uses TBinaryProtocol." href="BinaryThriftSerializer.html"><span class="name">BinaryThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> with <a href="Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a></span>
       </span>
       
-      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TBinaryProtocol">TBinaryProtocol</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TBinaryProtocol">TBinaryProtocol</span>.
+      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <code>TBinaryProtocol</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <code>TBinaryProtocol</code>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>an implementation using <code>com.twitter.finagle.thrift.Protocols.binaryFactory</code>
       instead of this is recommended.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Cancellable" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -1434,7 +1434,7 @@ of a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">com
       <p class="shortcomment cmt">A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A mixin trait to describe resources that are an idempotent <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>.</p><p>The first call to <code>close(Time)</code> triggers closing the resource with the
 provided deadline while subsequent calls will yield the same <code>Future</code>
 as the first invocation irrespective of the deadline provided.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> if you are not mixing in or extending an existing <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></p></span><span class="cmt"><p><span class="extype" name="ClosableOnce.of(closable:">Closable)</span> for creating a proxy to a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableOnce">ClosableOnce</a> if you are not mixing in or extending an existing <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a></p></span><span class="cmt"><p><a href="ClosableOnce$.html#of(closable:com.twitter.util.Closable):com.twitter.util.ClosableOnce" class="extmbr" name="com.twitter.util.ClosableOnce#of">ClosableOnce.of</a> for creating a proxy to a <a href="Closable.html" class="extype" name="com.twitter.util.Closable">Closable</a>
       that has already been instantiated.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.CloseOnceAwaitably" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="CloseOnceAwaitablyextendsCloseOnceAwaitably0[Unit]"></a><a id="CloseOnceAwaitably:CloseOnceAwaitably"></a>
@@ -1522,7 +1522,7 @@ of a <a href="ClosableOnce.html" class="extype" name="com.twitter.util.ClosableO
         <a title="A thread-safe ThriftSerializer that uses TCompactProtocol." href="CompactThriftSerializer.html"><span class="name">CompactThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> with <a href="Base64StringEncoder.html" class="extype" name="com.twitter.util.Base64StringEncoder">Base64StringEncoder</a></span>
       </span>
       
-      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TCompactProtocol">TCompactProtocol</span>.</p>
+      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <code>TCompactProtocol</code>.</p>
     </li><li name="com.twitter.util.ConstFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ConstFuture[A]extendsFuture[A]"></a><a id="ConstFuture[A]:ConstFuture[A]"></a>
       <span class="permalink">
@@ -2140,7 +2140,7 @@ that supports cancellation.</p>
         <a title="A Timer that is implemented via a java.util.Timer." href="JavaTimer.html"><span class="name">JavaTimer</span></a><span class="result"> extends <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a></span>
       </span>
       
-      <p class="shortcomment cmt">A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <span class="extype" name="java.util.Timer">java.util.Timer</span>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
+      <p class="shortcomment cmt">A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <code>java.util.Timer</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <code>java.util.Timer</code>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
 and can trade off some precision of when tasks run,
 <a href="https://twitter.github.io/finagle/" target="_blank">Finagle</a> has a higher throughput
 <a href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala" target="_blank">hashed-wheel implementation</a>.
@@ -2162,7 +2162,7 @@ and can trade off some precision of when tasks run,
         <a title="A thread-safe ThriftSerializer that uses TSimpleJSONProtocol." href="JsonThriftSerializer.html"><span class="name">JsonThriftSerializer</span></a><span class="result"> extends <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a></span>
       </span>
       
-      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <span class="extype" name="TSimpleJSONProtocol">TSimpleJSONProtocol</span>.</p>
+      <p class="shortcomment cmt">A thread-safe <a href="ThriftSerializer.html" class="extype" name="com.twitter.util.ThriftSerializer">ThriftSerializer</a> that uses <code>TSimpleJSONProtocol</code>.</p>
     </li><li name="com.twitter.util.LastWriteWinsQueue" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LastWriteWinsQueue[A]extendsQueue[A]"></a><a id="LastWriteWinsQueue[A]:LastWriteWinsQueue[A]"></a>
       <span class="permalink">
@@ -2195,7 +2195,7 @@ When the Queue is full, a push replaces the item.</p>
         <a title="A Local is a ThreadLocal whose scope is flexible." href="Local.html"><span class="name">Local</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
-      <p class="shortcomment cmt">A Local is a <span class="extype" name="ThreadLocal">ThreadLocal</span> whose scope is flexible.</p><div class="fullcomment"><div class="comment cmt"><p>A Local is a <span class="extype" name="ThreadLocal">ThreadLocal</span> whose scope is flexible. The state of all Locals may
+      <p class="shortcomment cmt">A Local is a <code>ThreadLocal</code> whose scope is flexible.</p><div class="fullcomment"><div class="comment cmt"><p>A Local is a <code>ThreadLocal</code> whose scope is flexible. The state of all Locals may
 be saved or restored onto the current thread by the user. This is useful for
 threading Locals through execution contexts.</p><p>Promises pass locals through control dependencies, not through data
 dependencies.  This means that Locals have exactly the same semantics as
@@ -2373,7 +2373,7 @@ Callbacks (responders) of Promises are scheduled with
 <code>Interrupted</code>, <code>Transforming</code>, <code>Done</code> and <code>Linked</code> where <code>Interruptible</code>,
 <code>Interrupted</code>, and <code>Transforming</code> are variants of <code>Waiting</code> to deal with future
 interrupts. Promises are concurrency-safe, using lock-free operations
-throughout. Callback dispatch is scheduled with <span class="extype" name="Scheduler">Scheduler</span>.</p><p>Waiters (i.e., continuations) are stored in a <span class="extype" name="Promise.WaitQueue">Promise.WaitQueue</span> and
+throughout. Callback dispatch is scheduled with <a href="../concurrent/Scheduler.html" class="extype" name="com.twitter.concurrent.Scheduler">com.twitter.concurrent.Scheduler</a>.</p><p>Waiters (i.e., continuations) are stored in a <code>Promise.WaitQueue</code> and
 executed in the LIFO order.</p><p><code>Promise.become</code> merges two promises: they are declared equivalent.
 <code>become</code> merges the states of the two promises, and links one to the
 other. Thus promises support the analog to tail-call elimination: no
@@ -2584,7 +2584,7 @@ to be taking longer than the specified maximum runtime.
         <a title="Representation of storage units." href="StorageUnit.html"><span class="name">StorageUnit</span></a><span class="result"> extends <a href="../../../scala/index.html#Ordered[T]=scala.math.Ordered[T]" class="extmbr" name="scala.Ordered">Ordered</a>[<a href="StorageUnit.html" class="extype" name="com.twitter.util.StorageUnit">StorageUnit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Representation of storage units.</p><div class="fullcomment"><div class="comment cmt"><p>Representation of storage units.</p><p>Use either <code>StorageUnit.fromX</code> or <span class="extype" name="com.twitter.conversions.storage">implicit conversions</span>
+      <p class="shortcomment cmt">Representation of storage units.</p><div class="fullcomment"><div class="comment cmt"><p>Representation of storage units.</p><p>Use either <code>StorageUnit.fromX</code> or <code>com.twitter.conversions.storage</code> <code>implicit conversions</code>
 from <code>Long</code> and <code>Int</code> to construct instances.</p><pre><span class="kw">import</span> com.twitter.conversions.StorageUnitOps._
 <span class="kw">import</span> com.twitter.util.StorageUnit
 
@@ -3513,7 +3513,7 @@ utilities.</p><p>Java users should use the <code>Monitors</code> class.
       
       <p class="shortcomment cmt">A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for use as a null
 object.</p><div class="fullcomment"><div class="comment cmt"><p>A trivial implementation of <a href="Stopwatch.html" class="extype" name="com.twitter.util.Stopwatch">Stopwatch</a> for use as a null
-object.</p><p>All calls to <span class="extype" name="Stopwatch.start()">Stopwatch.start()</span> return an <a href="Stopwatch$.html#Elapsed=()=&gt;com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Stopwatch.Elapsed">Stopwatch.Elapsed</a>
+object.</p><p>All calls to <a href="Stopwatch$.html#start():com.twitter.util.Stopwatch.Elapsed" class="extmbr" name="com.twitter.util.Stopwatch#start">Stopwatch.start</a> return an <a href="Stopwatch$.html#Elapsed=()=&gt;com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Stopwatch.Elapsed">Stopwatch.Elapsed</a>
 instance that always returns <a href="Duration$.html#Bottom:com.twitter.util.Duration" class="extmbr" name="com.twitter.util.Duration#Bottom">Duration.Bottom</a> for its elapsed time.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><code>NilStopwatch.get</code> for accessing this instance from Java.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.NullMonitor" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -3566,7 +3566,7 @@ removing NullMonitor from the chain.
         <a title="" href="Promise$.html"><span class="name">Promise</span></a>
       </span>
       
-      
+      <p class="shortcomment cmt"></p>
     </li><li name="com.twitter.util.RandomSocket" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RandomSocket"></a><a id="RandomSocket:RandomSocket"></a>
       <span class="permalink">
@@ -3582,7 +3582,7 @@ removing NullMonitor from the chain.
         <a title="A generator of random local java.net.InetSocketAddress objects with ephemeral ports." href="RandomSocket$.html"><span class="name">RandomSocket</span></a>
       </span>
       
-      <p class="shortcomment cmt">A generator of random local <span class="extype" name="java.net.InetSocketAddress">java.net.InetSocketAddress</span> objects with
+      <p class="shortcomment cmt">A generator of random local <code>java.net.InetSocketAddress</code> objects with
 ephemeral ports.</p>
     </li><li name="com.twitter.util.Return" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Return"></a><a id="Return:Return"></a>

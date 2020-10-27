@@ -319,7 +319,7 @@
       </span>
       
       <p class="shortcomment cmt">Returns a <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> for the given <code>key.id</code> in the <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> for the given <code>key.id</code> in the <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. If the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a> is not
-of type <code>T</code> or a subclass of type <code>T</code>, throws a <span class="extype" name="ClassCastException">ClassCastException</span>
+of type <code>T</code> or a subclass of type <code>T</code>, throws a <code>ClassCastException</code>
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.util.tunable.NullTunableMap">NullTunableMap</a> → <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -574,8 +574,8 @@ TunableMap(id1 -&gt; value1, id2 -&gt; value2)</p><p>Entries are sorted alphabet
         <span class="name">orElse</span><span class="params">(<span name="that">that: <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></span>)</span><span class="result">: <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></span>
       </span>
       
-      <p class="shortcomment cmt">Compose this <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> with another <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Compose this <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> with another <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. <span class="extype" name="Tunables">Tunables</span> retrieved from
-the composed map prioritize the values of <span class="extype" name="Tunables">Tunables</span> in the this map over the other
+      <p class="shortcomment cmt">Compose this <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> with another <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Compose this <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a> with another <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s retrieved from
+the composed map prioritize the values of <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s in the this map over the other
 <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">

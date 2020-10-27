@@ -244,8 +244,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An asynchronous FIFO queue. In addition to providing <a href="#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
-and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
-pollers.
+and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be failed, flushing current pollers.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>thread safety is enforced via the intrinsic lock on <code>this</code> which must
       be acquired for any subclasses which want to serialize operations.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
@@ -313,8 +312,7 @@ pollers.
       </span>
       
       <p class="shortcomment cmt">An asynchronous, unbounded, FIFO queue.</p><div class="fullcomment"><div class="comment cmt"><p>An asynchronous, unbounded, FIFO queue. In addition to providing <a href="#offer(elem:T):Boolean" class="extmbr" name="com.twitter.concurrent.AsyncQueue#offer">offer</a>
-and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be <a href="#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">&quot;failed&quot;</a>, flushing current
-pollers.
+and <a href="#poll():com.twitter.util.Future[T]" class="extmbr" name="com.twitter.concurrent.AsyncQueue#poll">poll</a>, the queue can be failed, flushing current pollers.
 </p></div></div>
     </li><li name="com.twitter.concurrent.AsyncQueue#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(maxPendingOffers:Int):com.twitter.concurrent.AsyncQueue[T]"></a><a id="&lt;init&gt;:AsyncQueue[T]"></a>
@@ -447,7 +445,7 @@ the max queue size. Note that <code>Int.MaxValue</code> is used to denote unboun
         <span class="name">drain</span><span class="params">()</span><span class="result">: <a href="../util/Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/collection/immutable/Queue.html#scala.collection.immutable.Queue" class="extype" name="scala.collection.immutable.Queue">Queue</a>[<span class="extype" name="com.twitter.concurrent.AsyncQueue.T">T</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Drains any pending elements into a <code>Try[Queue]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Drains any pending elements into a <code>Try[Queue]</code>.</p><p>If the queue has been <a href="#fail(exc:Throwable,discard:Boolean):Unit" class="extmbr" name="com.twitter.concurrent.AsyncQueue#fail">failed</a> and is now empty,
+      <p class="shortcomment cmt">Drains any pending elements into a <code>Try[Queue]</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Drains any pending elements into a <code>Try[Queue]</code>.</p><p>If the queue has been failed and is now empty,
 a <code>Throw</code> of the exception used to fail will be returned.
 Otherwise, return a <code>Return(Queue)</code> of the pending elements.
 </p></div></div>

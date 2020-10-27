@@ -355,7 +355,7 @@
       </span>
       
       <p class="shortcomment cmt">Discard this stream as its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this stream as its output is no longer required. This could be used to signal the
-producer of this stream similarly how <span class="extype" name="Future.raise">Future.raise</span> used to propagate interrupts across
+producer of this stream similarly how <a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">com.twitter.util.Future.raise</a> used to propagate interrupts across
 future chains.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>Although unnecessary, it's always safe to discard a fully-consumed stream.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -373,7 +373,9 @@ future chains.
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
 until the end of the stream nor by discarding. This is useful for any extra resource cleanup
 that you must do once the stream is no longer being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
@@ -392,8 +394,10 @@ that you must do once the stream is no longer being used.
         <span class="name">read</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.AbstractReader.A">A</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <span class="extype" name="Future">Future</span> will resolve into
-<code>Some(e)</code> when the element is available or into <code>None</code> when stream is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed <span class="extype" name="Future">Future</span>s.
+      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+will resolve into <code>Some(e)</code> when the element is available or into <code>None</code> when stream
+is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li></ol>
             </div>
@@ -576,7 +580,13 @@ that you must do once the stream is no longer being used.
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.io.AbstractReader.A">A</span>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with the outermost Reader. Discarding
+      one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+      Reader's onClose will be resolved immediately with the same value.
+      The subsequent readers are unmanaged, the caller is responsible for discarding those
+      when abandoned.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">

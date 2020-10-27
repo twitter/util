@@ -1743,7 +1743,7 @@ f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Illegal
 <span class="kw">val</span> f2: Future[<span class="std">Int</span>] = p.mask {
   <span class="kw">case</span> _: IllegalArgumentException <span class="kw">=&gt;</span> <span class="kw">true</span>
 }
-f2.raise(<span class="kw">new</span> Exception(<span class="lit">"fire!"</span>)) <span class="cmt">// will print "interrupt handler for class java.lang.Exception"</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span><span class="cmt"><p><a href="Future.html#masked:com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#masked">masked</a></p></span><span class="cmt"><p><span class="extype" name="interruptible()">interruptible()</span></p></span></dd></dl></div>
+f2.raise(<span class="kw">new</span> Exception(<span class="lit">"fire!"</span>)) <span class="cmt">// will print "interrupt handler for class java.lang.Exception"</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span><span class="cmt"><p><a href="Future.html#masked:com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#masked">masked</a></p></span><span class="cmt"><p><a href="Future.html#interruptible():com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#interruptible">interruptible</a></p></span></dd></dl></div>
     </li><li name="com.twitter.util.Future#masked" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="masked:com.twitter.util.Future[A]"></a><a id="masked:Future[A]"></a>
       <span class="permalink">
@@ -1767,7 +1767,7 @@ p.setInterruptHandler { <span class="kw">case</span> _ <span class="kw">=&gt;</s
 
 <span class="kw">val</span> f: Future[<span class="std">Int</span>] = p.masked
 f.raise(<span class="kw">new</span> Exception(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span>
-f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Exception(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span><span class="cmt"><p><a href="Future.html#mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#mask">mask</a></p></span><span class="cmt"><p><span class="extype" name="interruptible()">interruptible()</span></p></span></dd></dl></div>
+f1.map(_ + <span class="num">1</span>).raise(<span class="kw">new</span> Exception(<span class="lit">"ignored!"</span>)) <span class="cmt">// nothing will be printed</span></pre></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Future.html" class="extype" name="com.twitter.util.Future">Future</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">raise</a></p></span><span class="cmt"><p><a href="Future.html#mask(pred:PartialFunction[Throwable,Boolean]):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#mask">mask</a></p></span><span class="cmt"><p><a href="Future.html#interruptible():com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#interruptible">interruptible</a></p></span></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -2218,7 +2218,7 @@ Future[Unit] are used for signalling.
       </span>
       
       <p class="shortcomment cmt">Populate the Promise with the given exception.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given exception.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="ImmutableResult"><code>ImmutableResult</code></span> if the Promise is already populated</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Promise$$ImmutableResult.html" class="extype" name="com.twitter.util.Promise.ImmutableResult"><code>Promise.ImmutableResult</code></a> if the Promise is already populated</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#setInterruptHandler" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setInterruptHandler(f:PartialFunction[Throwable,Unit]):Unit"></a><a id="setInterruptHandler(PartialFunction[Throwable,Unit]):Unit"></a>
       <span class="permalink">
@@ -2256,7 +2256,7 @@ one active interrupt handler.
       </span>
       
       <p class="shortcomment cmt">Populate the Promise with the given result.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given result.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="ImmutableResult"><code>ImmutableResult</code></span> if the Promise is already populated</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Promise$$ImmutableResult.html" class="extype" name="com.twitter.util.Promise.ImmutableResult"><code>Promise.ImmutableResult</code></a> if the Promise is already populated</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -2439,7 +2439,7 @@ implement a method will result in a run-time error (<code>AbstractMethodError</c
       <p class="shortcomment cmt">Populate the Promise with the given Try.</p><div class="fullcomment"><div class="comment cmt"><p>Populate the Promise with the given Try. The try can either be a
 value or an exception. setValue and setException are generally
 more readable methods to use.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="ImmutableResult"><code>ImmutableResult</code></span> if the Promise is already populated</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> → <a href="Updatable.html" class="extype" name="com.twitter.util.Updatable">Updatable</a></dd><dt>Exceptions thrown</dt><dd><span class="cmt"><p><a href="Promise$$ImmutableResult.html" class="extype" name="com.twitter.util.Promise.ImmutableResult"><code>Promise.ImmutableResult</code></a> if the Promise is already populated</p></span></dd></dl></div>
     </li><li name="com.twitter.util.Promise#updateIfEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="updateIfEmpty(result:com.twitter.util.Try[A]):Boolean"></a><a id="updateIfEmpty(Try[A]):Boolean"></a>
       <span class="permalink">

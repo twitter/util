@@ -275,8 +275,8 @@ typical code pattern to consume a reader is to use a read-loop:</p><pre><span cl
   }</pre><p>One way to reason about the read-loop idiom is to view it as a subscription to a publisher
 (reader) in the Pub/Sub terminology. Perhaps the major difference between readers and traditional
 publishers, is readers only allow one subscriber (read-loop). It's generally safer to assume the
-reader is fully consumed (stream is exhausted) once its read-loop is run.</p><h4> Error Handling </h4><p>Given the read-loop above, its returned <span class="extype" name="Future">Future</span> could be used to observe both successful and
-unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
+reader is fully consumed (stream is exhausted) once its read-loop is run.</p><h4> Error Handling </h4><p>Given the read-loop above, its returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> could be used to observe both
+successful and unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
   <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Consumed an entire stream successfully."</span>)
   <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Encountered an error while consuming a stream: $e"</span>)
 }</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]</dd><dt>Note</dt><dd><span class="cmt"><p>Once failed, a stream can not be restarted such that all future reads will resolve into a
@@ -284,11 +284,11 @@ unsuccessful outcomes.</p><pre>consume(stream)(processor).respond {
 resource leaks unless fully consumed or discarded (failed). Specifically, readers backed by
 network connections MUST be discarded unless already consumed (EOF observed) to prevent
 connection leaks.</p></span>, <span class="cmt"><p>The read-loop above, for example, exhausts the stream (observes EOF) hence does not have to
-      discard it (stream).</p><h4> Back Pressure </h4><p>The pattern above leverages <span class="extype" name="Future">Future</span> recursion to exert back-pressure via allowing only one
-outstanding read. It's usually a good idea to structure consumers this way (i.e., the next read
-isn't issued until the previous read finishes). This would always ensure a finer grained
-back-pressure in network systems allowing the consumers to artificially slow down the producers
-and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple outstanding reads are allowed on a <code>Reader</code> type is an undefined
+      discard it (stream).</p><h4> Back Pressure </h4><p>The pattern above leverages <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> recursion to exert back-pressure via
+allowing only one outstanding read. It's usually a good idea to structure consumers this way
+(i.e., the next read isn't issued until the previous read finishes). This would always ensure a
+finer grained back-pressure in network systems allowing the consumers to artificially slow down
+the producers and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple outstanding reads are allowed on a <code>Reader</code> type is an undefined
       behaviour but could be changed in a refinement.</p><h4> Cancellations </h4><p>If a consumer is no longer interested in the stream, it can discard it. Note a discarded reader
 (or stream) can not be restarted.</p><pre><span class="kw">def</span> consumeN[A](r: Reader[A], n: <span class="std">Int</span>)(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
   <span class="kw">if</span> (n == <span class="num">0</span>) Future(r.discard())
@@ -370,7 +370,7 @@ and not rely solely on transport and IO buffering.</p></span>, <span class="cmt"
       </span>
       
       <p class="shortcomment cmt">Discard this stream as its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this stream as its output is no longer required. This could be used to signal the
-producer of this stream similarly how <span class="extype" name="Future.raise">Future.raise</span> used to propagate interrupts across
+producer of this stream similarly how <a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">com.twitter.util.Future.raise</a> used to propagate interrupts across
 future chains.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Although unnecessary, it's always safe to discard a fully-consumed stream.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Reader#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -388,7 +388,9 @@ future chains.
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
 until the end of the stream nor by discarding. This is useful for any extra resource cleanup
 that you must do once the stream is no longer being used.
 </p></div></div>
@@ -407,8 +409,10 @@ that you must do once the stream is no longer being used.
         <span class="name">read</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.Reader.A">A</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <span class="extype" name="Future">Future</span> will resolve into
-<code>Some(e)</code> when the element is available or into <code>None</code> when stream is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed <span class="extype" name="Future">Future</span>s.
+      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+will resolve into <code>Some(e)</code> when the element is available or into <code>None</code> when stream
+is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s.
 </p></div></div>
     </li></ol>
             </div>
@@ -576,7 +580,7 @@ that you must do once the stream is no longer being used.
       <p class="shortcomment cmt">Construct a new Reader by applying <code>f</code> to every item read from this Reader</p><div class="fullcomment"><div class="comment cmt"><p>Construct a new Reader by applying <code>f</code> to every item read from this Reader</p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the function constructs a new Reader[B] from the value of this Reader.read</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader
       will discard the other Reader. When one Reader's onClose resolves, the other Reader's
       onClose will be resolved immediately with the same value.</p></span></dd></dl></div>
-    </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.twitter.io.Reader#flatten" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]"></a><a id="flatten[B](&lt;:&lt;[A,Reader[B]]):Reader[B]"></a>
       <span class="permalink">
       <a href="../../../com/twitter/io/Reader.html#flatten[B](implicitev:A&lt;:&lt;com.twitter.io.Reader[B]):com.twitter.io.Reader[B]" title="Permalink">
@@ -591,7 +595,13 @@ that you must do once the stream is no longer being used.
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.io.Reader.A">A</span>, <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with the outermost Reader. Discarding
+      one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+      Reader's onClose will be resolved immediately with the same value.
+      The subsequent readers are unmanaged, the caller is responsible for discarding those
+      when abandoned.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">

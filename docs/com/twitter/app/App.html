@@ -214,8 +214,7 @@ in the premain or later, after they have been parsed.</p><pre><span class="kw">i
     <span class="kw">for</span> (i <span class="kw">&lt;-</span> <span class="num">0</span> until n()) process(i)
   }
 }</pre><p>Note that a missing <code>main</code> is OK: mixins may provide behavior that
-does not require defining a custom <code>main</code> method.
-</p></div><div class="toggleContainer block">
+does not require defining a custom <code>main</code> method.</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -481,8 +480,8 @@ the resource has been fully relinquished.
         <span class="name">closeFuture</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">The <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <span class="extype" name="close()">close()</span>.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../util/CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <span class="extype" name="closePromise">Promise</span>, because
+      <p class="shortcomment cmt">The <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <a href="../util/CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a> satisfied upon completion of <a href="../util/CloseOnce.html#close(deadline:com.twitter.util.Time):com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.CloseOnce#close">close</a>.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../util/CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a></dd><dt>Note</dt><dd><span class="cmt"><p>we do not expose direct access to the underlying <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">closePromise</a>, because
       the <a href="../util/Promise.html" class="extype" name="com.twitter.util.Promise">Promise</a> state is mutable - we only want mutation to occur within this
       <a href="../util/CloseOnce.html" class="extype" name="com.twitter.util.CloseOnce">CloseOnce</a> trait.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#closeOnExit" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -832,8 +831,7 @@ breaking existing users, it was introduced using <code>false</code>.
         <span class="name">loadServiceBindings</span><span class="result">: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="LoadService$$Binding.html" class="extype" name="com.twitter.app.LoadService.Binding">Binding</a>[_]]</span>
       </span>
       
-      <p class="shortcomment cmt">Programmatically specify which implementations to use in <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
-for the given interfaces.</p><div class="fullcomment"><div class="comment cmt"><p>Programmatically specify which implementations to use in <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
+      <p class="shortcomment cmt">Programmatically specify which implementations to use in</p><div class="fullcomment"><div class="comment cmt"><p>Programmatically specify which implementations to use in</p><p><a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
 for the given interfaces. This allows applications to circumvent
 the standard service loading mechanism when needed. It may be useful
 if the application has a broad and/or rapidly changing set of dependencies.</p><p>For example, to require <code>SuperCoolMetrics</code> be used as the
@@ -853,14 +851,17 @@ if the application has a broad and/or rapidly changing set of dependencies.</p><
     <span class="kw">val</span> loaded = LoadService[StatsReceiver]()
     assert(<span class="std">Seq</span>(implementationToUse) == loaded)
   }
-}</pre><p>If this is called for a <code>Class[T]</code> after <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
+}</pre><p>If this is called for a <code>Class[T]</code> after
+<a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a>
 has been called for that same interface, an <code>IllegalStateException</code>
 will be thrown. For this reason, bindings are done as early
 as possible in the application lifecycle, before even <code>inits</code>
 and flag parsing.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a mapping from <code>Class</code> to the 1 or more implementations to
-        be used by <a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a> for that interface.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Note</dt><dd><span class="cmt"><p>this should not generally be used by &quot;libraries&quot; as it forces
-      their user's implementation choice.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a></p></span></dd></dl></div>
+        be used by
+<a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a> for that interface.</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Note</dt><dd><span class="cmt"><p>this should not generally be used by &quot;libraries&quot; as it forces
+      their user's implementation choice.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>
+<a href="LoadService$.html#apply[T]()(implicitevidence$1:scala.reflect.ClassTag[T]):Seq[T]" class="extmbr" name="com.twitter.app.LoadService#apply">LoadService.apply</a></p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#main" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="main(args:Array[String]):Unit"></a><a id="main(Array[String]):Unit"></a>
       <span class="permalink">
@@ -978,8 +979,7 @@ and flag parsing.
         <span class="name">observe</span><span class="params">(<span name="event">event: <span class="extype" name="com.twitter.app.lifecycle.Event">Event</span></span>)</span><span class="params">(<span name="f">f: ⇒ <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
       </span>
       
-      <p class="shortcomment cmt">Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
-</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+      <p class="shortcomment cmt">Notifies <code>Observer</code>s of <code>Event</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <code>Observer</code>s of <code>Event</code>s.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Lifecycle</dd></dl></div>
     </li><li name="com.twitter.app.Lifecycle#observeFuture" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="observeFuture(event:com.twitter.app.lifecycle.Event)(f:com.twitter.util.Future[Unit]):com.twitter.util.Future[Unit]"></a><a id="observeFuture(Event)(Future[Unit]):Future[Unit]"></a>
@@ -996,8 +996,7 @@ and flag parsing.
         <span class="name">observeFuture</span><span class="params">(<span name="event">event: <span class="extype" name="com.twitter.app.lifecycle.Event">Event</span></span>)</span><span class="params">(<span name="f">f: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="Future">Future</span> <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
-</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <span class="extype" name="Observer">observers</span> of <span class="extype" name="Future">Future</span> <span class="extype" name="com.twitter.app.lifecycle.Event">events</span>
+      <p class="shortcomment cmt">Notifies <code>Observer</code>s of <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> <code>Event</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>Notifies <code>Observer</code>s of <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> <code>Event</code>s.
 </p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>Lifecycle</dd></dl></div>
     </li><li name="com.twitter.app.App#onExit" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onExit(f:=&gt;Unit):Unit"></a><a id="onExit(⇒Unit):Unit"></a>

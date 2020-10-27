@@ -360,8 +360,8 @@
       </span>
       
       <p class="shortcomment cmt">Helper for Mockito Scala sugar with <a href="https://github.com/mockito/mockito-scala#idiomatic-mockito" target="_blank">idiomatic stubbing</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Helper for Mockito Scala sugar with <a href="https://github.com/mockito/mockito-scala#idiomatic-mockito" target="_blank">idiomatic stubbing</a>.
-Java users are encouraged to use <span class="extype" name="org.mockito.Mockito">org.mockito.Mockito</span> directly.</p><p>Note that the Specs2 <code>smartMock[]</code> or <code>mock[].smart</code> is the default behavior
-for <a href="https://github.com/mockito/mockito-scala" target="_blank">Mockito Scala</a>.</p><h3>Usage</h3><p>This trait uses <span class="extype" name="org.mockito.IdiomaticMockito">org.mockito.IdiomaticMockito</span> which is heavily influenced by ScalaTest Matchers.</p><p>To use, mix in the <a href="Mockito.html" class="extype" name="com.twitter.util.mock.Mockito">com.twitter.util.mock.Mockito</a> trait where desired.</p><h4>Create a new mock</h4><pre><span class="kw">trait</span> Foo {
+Java users are encouraged to use <code>org.mockito.Mockito</code> directly.</p><p>Note that the Specs2 <code>smartMock[]</code> or <code>mock[].smart</code> is the default behavior
+for <a href="https://github.com/mockito/mockito-scala" target="_blank">Mockito Scala</a>.</p><h3>Usage</h3><p>This trait uses <code>org.mockito.IdiomaticMockito</code> which is heavily influenced by ScalaTest Matchers.</p><p>To use, mix in the <a href="Mockito.html" class="extype" name="com.twitter.util.mock.Mockito">com.twitter.util.mock.Mockito</a> trait where desired.</p><h4>Create a new mock</h4><pre><span class="kw">trait</span> Foo {
   <span class="kw">def</span> bar: <span class="std">String</span>
   <span class="kw">def</span> bar(v: <span class="std">Int</span>): <span class="std">Int</span>
 }
@@ -457,8 +457,9 @@ aMock.method(n &lt;= <span class="num">5</span>) was called</pre><p>See <a href=
 apply it to all the arguments as one (not individually).</p><p>See <a href="https://github.com/mockito/mockito-scala#varargs" target="_blank">Varargs</a>.</p><h4>More Information</h4><p>See the <a href="https://github.com/mockito/mockito-scala#idiomatic-mockito" target="_blank">IdiomaticMockito</a> documentation
 for more specific information and the <a href="https://github.com/mockito/mockito-scala" target="_blank">Mockito Scala</a>
 <a href="https://github.com/mockito/mockito-scala#getting-started" target="_blank">Getting Started</a> documentation for general
-information.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="org.mockito.IdiomaticMockito">org.mockito.IdiomaticMockito</span></p></span><span class="cmt"><p><span class="extype" name="org.mockito.ArgumentMatchersSugar">org.mockito.ArgumentMatchersSugar</span></p></span></dd></dl></div>
+information.</p><p>see <code>org.mockito.IdiomaticMockito</code>
+see <code>org.mockito.ArgumentMatchersSugar</code>
+</p></div></div>
     </li></ol>
             </div>
 

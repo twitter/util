@@ -268,7 +268,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides the <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API for an <code>InputStream</code>.</p><p>The given <code>InputStream</code> will be closed when <a href="Reader.html#read():com.twitter.util.Future[Option[A]]" class="extmbr" name="com.twitter.io.Reader#read">Reader.read</a>
-reaches the EOF or a call to <span class="extype" name="discard()">discard()</span> or <span class="extype" name="close()">close()</span>.
+reaches the EOF or a call to <a href="#discard():Unit" class="extmbr" name="com.twitter.io.InputStreamReader#discard">discard</a> or <code>close</code>.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -613,7 +613,13 @@ the resource has been fully relinquished.
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with the outermost Reader. Discarding
+      one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+      Reader's onClose will be resolved immediately with the same value.
+      The subsequent readers are unmanaged, the caller is responsible for discarding those
+      when abandoned.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -775,7 +781,9 @@ the resource has been fully relinquished.
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this reader is closed upon reading of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this reader is closed upon reading
+of end-of-stream.</p><p>If the result is a failed future, this indicates that it was not closed either by reading
 until the end of the stream nor by discarding. This is useful for any extra resource cleanup
 that you must do once the stream is no longer being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
@@ -796,7 +804,7 @@ that you must do once the stream is no longer being used.
       
       <p class="shortcomment cmt">Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
 the <code>InputStream</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read at most min(<code>n</code>, <code>maxBufferSize</code>) bytes from
-the <code>InputStream</code>. The returned <span class="extype" name="Future">Future</span> represents the results of
+the <code>InputStream</code>. The returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> represents the results of
 the read operation.  Any failure indicates an error; an empty buffer
 indicates that the stream has completed.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.InputStreamReader">InputStreamReader</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>the underlying <code>InputStream</code> is closed on read of EOF.</p></span></dd></dl></div>

@@ -199,24 +199,22 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. The expected format is:</p><p>{
-   &quot;tunables&quot;:
-     [
-        {
-          &quot;id&quot; : &quot;$id1&quot;,
-          &quot;value&quot; : $value,
-          &quot;type&quot; : &quot;$class&quot;
-        },
-        {
-          &quot;id&quot; : &quot;$id2&quot;,
-          &quot;value&quot; : $value,
-          &quot;type&quot; : &quot;$class&quot;,
-          &quot;comment&quot;: &quot;optional comment&quot;
-        }
-    ]
-}</p><p>Where $id1 and $id2 are unique identifiers used to access the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>, $value is the value,
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Parses a given JSON string into a <a href="TunableMap.html" class="extype" name="com.twitter.util.tunable.TunableMap">TunableMap</a>. The expected format is:</p><pre><span class="lit">"tunables"</span>:
+  [
+     {
+       <span class="lit">"id"</span> : <span class="lit">"$id1"</span>,
+       <span class="lit">"value"</span> : $value,
+       <span class="lit">"type"</span> : <span class="lit">"$class"</span>
+     },
+     {
+       <span class="lit">"id"</span> : <span class="lit">"$id2"</span>,
+       <span class="lit">"value"</span> : $value,
+       <span class="lit">"type"</span> : <span class="lit">"$class"</span>,
+       <span class="lit">"comment"</span>: <span class="lit">"optional comment"</span>
+     }
+ ]</pre><p>Where $id1 and $id2 are unique identifiers used to access the <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>, $value is the value,
 and $class is the fully-qualified class name (e.g. com.twitter.util.Duration)</p><p>If the JSON is invalid, or contains duplicate ids for <a href="Tunable.html" class="extype" name="com.twitter.util.tunable.Tunable">Tunable</a>s, <code>parse</code> will
-return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>. Otherwise, <code>parse</code> returns <span class="extype" name="Return[TunableMap">Return[TunableMap</span>
+return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Throw</a>. Otherwise, <code>parse</code> returns <a href="../Return.html" class="extype" name="com.twitter.util.Return">Return[TunableMap</a>
 </p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -505,8 +503,8 @@ return a <a href="../Throw.html" class="extype" name="com.twitter.util.Throw">Th
       </span>
       
       <p class="shortcomment cmt">Load and parse the JSON file located at <code>path</code> in the application's resources.</p><div class="fullcomment"><div class="comment cmt"><p>Load and parse the JSON file located at <code>path</code> in the application's resources.</p><p>If no configuration files exist, return <a href="NullTunableMap$.html" class="extype" name="com.twitter.util.tunable.NullTunableMap">NullTunableMap</a>.
-If multiple configuration files exists, return <span class="extype" name="IllegalArgumentException">IllegalArgumentException</span>
-If the configuration file cannot be parsed, return <span class="extype" name="IllegalArgumentException">IllegalArgumentException</span>
+If multiple configuration files exists, return <code>IllegalArgumentException</code>
+If the configuration file cannot be parsed, return <code>IllegalArgumentException</code>
 </p></div></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>

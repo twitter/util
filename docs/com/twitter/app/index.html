@@ -455,8 +455,7 @@ in the premain or later, after they have been parsed.</p><pre><span class="kw">i
     <span class="kw">for</span> (i <span class="kw">&lt;-</span> <span class="num">0</span> until n()) process(i)
   }
 }</pre><p>Note that a missing <code>main</code> is OK: mixins may provide behavior that
-does not require defining a custom <code>main</code> method.
-</p></div></div>
+does not require defining a custom <code>main</code> method.</p></div></div>
     </li><li name="com.twitter.app.CloseException" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="CloseExceptionextendsExceptionwithNoStackTrace"></a><a id="CloseException:CloseException"></a>
       <span class="permalink">
@@ -493,7 +492,7 @@ does not require defining a custom <code>main</code> method.
       
       <p class="shortcomment cmt">A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
 instance.</p><div class="fullcomment"><div class="comment cmt"><p>A single command-line flag, instantiated by a <a href="Flags.html" class="extype" name="com.twitter.app.Flags">com.twitter.app.Flags</a>
-instance.</p><p>The current value can be extracted via <span class="extype" name="apply()">apply()</span>, <a href="Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">get</a>, and
+instance.</p><p>The current value can be extracted via <a href="Flag.html#apply():T" class="extmbr" name="com.twitter.app.Flag#apply">apply</a>, <a href="Flag.html#get:Option[T]" class="extmbr" name="com.twitter.app.Flag#get">get</a>, and
 <a href="Flag.html#getWithDefault:Option[T]" class="extmbr" name="com.twitter.app.Flag#getWithDefault">getWithDefault</a>. <a href="../util/Local.html" class="extype" name="com.twitter.util.Local">Local</a>-scoped modifications
 of their values, which can be useful for tests, can be done by calls to
 <a href="Flag.html#let[R](t:T)(f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#let">let</a> and <a href="Flag.html#letClear[R](f:=&gt;R):R" class="extmbr" name="com.twitter.app.Flag#letClear">letClear</a>.</p><p>Using a <code>String</code>-typed <a href="Flag.html" class="extype" name="com.twitter.app.Flag">Flag</a>, <code>myFlag</code>, which is unset and has a default
@@ -534,7 +533,7 @@ myFlag.let(<span class="lit">"a value"</span>) {
       <p class="shortcomment cmt">Exception thrown upon flag-parsing failure.</p><div class="fullcomment"><div class="comment cmt"><p>Exception thrown upon flag-parsing failure. Should typically lead to process
 death, since continued execution would run the risk of unexpected behavior on
 account of incorrectly-interpreted or malformed flag values.
-</p></div><dl class="paramcmts block"><dt class="param">message</dt><dd class="cmt"><p>A string name of the flag for which parsing failed.</p></dd><dt class="param">cause</dt><dd class="cmt"><p>The underlying <span class="extype" name="java.lang.Throwable">java.lang.Throwable</span> that caused this exception.</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">message</dt><dd class="cmt"><p>A string name of the flag for which parsing failed.</p></dd><dt class="param">cause</dt><dd class="cmt"><p>The underlying <code>java.lang.Throwable</code> that caused this exception.</p></dd></dl></div>
     </li><li name="com.twitter.app.FlagUndefinedException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FlagUndefinedExceptionextendsException"></a><a id="FlagUndefinedException:FlagUndefinedException"></a>
       <span class="permalink">
@@ -833,9 +832,9 @@ public <span class="kw">final</span> <span class="kw">class</span> exampleJavaGl
         <a title="Load classes in the manner of java.util.ServiceLoader." href="LoadService$.html"><span class="name">LoadService</span></a>
       </span>
       
-      <p class="shortcomment cmt">Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Load classes in the manner of <span class="extype" name="java.util.ServiceLoader">java.util.ServiceLoader</span>. It is
+      <p class="shortcomment cmt">Load classes in the manner of <code>java.util.ServiceLoader</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Load classes in the manner of <code>java.util.ServiceLoader</code>. It is
 more resilient to varying Java packaging configurations than ServiceLoader.</p><p>For further control, see <a href="App.html#loadServiceBindings:Seq[com.twitter.app.LoadService.Binding[_]]" class="extmbr" name="com.twitter.app.App#loadServiceBindings">App.loadServiceBindings</a> and the
-<span class="extype" name="loadServiceDenied">loadServiceDenied</span> flag.
+<code>loadServiceDenied</code> flag.
 </p></div></div>
     </li>
               </ol>

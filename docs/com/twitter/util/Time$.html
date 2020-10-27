@@ -1010,7 +1010,7 @@ representing a time infinitely far into the future.
         <span class="name">apply</span><span class="params">(<span name="date">date: <span class="extype" name="java.util.Date">Date</span></span>)</span><span class="result">: <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a></span>
       </span>
       
-      <p class="shortcomment cmt">Creates a <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> instance of the given <span class="extype" name="Date">Date</span>.</p>
+      <p class="shortcomment cmt">Creates a <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> instance of the given <code>Date</code>.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -1440,7 +1440,7 @@ values.</p></div></div>
       
       <p class="shortcomment cmt">Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> with, at best, nanosecond precision.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the current <a href="Time.html" class="extype" name="com.twitter.util.Time">Time</a> with, at best, nanosecond precision.</p><p>Note that nanosecond precision is only available in JDK versions
 greater than JDK8. In JDK8 this API has the same precision as
-<a href="#now:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#now">Time#now</a> and <span class="extype" name="System#currentTimeMillis">System#currentTimeMillis</span>. In JDK9+ this will
+<a href="#now:com.twitter.util.Time" class="extmbr" name="com.twitter.util.Time#now">Time#now</a> and <code>System#currentTimeMillis</code>. In JDK9+ this will
 change and all timestamps taken from this API will have nanosecond
 resolution.</p><p>Note that returned values are <b>not</b> monotonic. This
 means it is not suitable for measuring durations where

@@ -273,18 +273,19 @@ as a write-loop:</p><pre><span class="kw">def</span> produce[A](w: Writer[A])(ge
   generate <span class="kw">match</span> {
     <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> w.write(a).before(produce(w)(generate))
     <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> w.close() <span class="cmt">// signal EOF and quit producing</span>
-  }</pre><h4> Closures and Failures </h4><p>Writers are <span class="extype" name="Closable">Closable</span> and the producer MUST <code>close</code> the stream when it finishes or <code>fail</code> the
-stream when it encounters a failure and can no longer continue. Streams backed by network
-connections are particularly prone to resource leaks when they aren't cleaned up properly.</p><p>Observing stream failures in the producer could be done via a <span class="extype" name="Future">Future</span> returned form
-a write-loop:</p><pre>produce(writer)(generator).respond {
+  }</pre><h4> Closures and Failures </h4><p>Writers are <a href="../util/Closable.html" class="extype" name="com.twitter.util.Closable">com.twitter.util.Closable</a> and the producer MUST <code>close</code> the stream when it
+finishes or <code>fail</code> the stream when it encounters a failure and can no longer continue. Streams
+backed by network connections are particularly prone to resource leaks when they aren't
+cleaned up properly.</p><p>Observing stream failures in the producer could be done via a <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+returned form a write-loop:</p><pre>produce(writer)(generator).respond {
   <span class="kw">case</span> Return(()) <span class="kw">=&gt;</span> println(<span class="lit">"Produced a stream successfully."</span>)
   <span class="kw">case</span> Throw(e) <span class="kw">=&gt;</span> println(s<span class="lit">"Could not produce a stream because of a failure: $e"</span>)
-}</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.A">A</span>]</dd><dt>Note</dt><dd><span class="cmt"><p>Encountering a stream failure would terminate the write-loop given the <span class="extype" name="Future">Future</span>
-      recursion semantics.</p></span>, <span class="cmt"><p>Once failed or closed, a stream can not be restarted such that all future writes will
-      resolve into a failure.</p></span>, <span class="cmt"><p>Closing an already failed stream does not have an effect.</p><h4> Back Pressure </h4><p>By analogy with read-loops (see <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API), write-loops leverage <span class="extype" name="Future">Future</span> recursion to
-exert back-pressure: the next write isn't issued until the previous write finishes. This will
-always ensure a finer grained back-pressure in network systems allowing the producers to
-adjust the flow rate based on consumer's speed and not on IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple pending writes are allowed on a <code>Writer</code> type is an undefined
+}</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="com.twitter.io.Writer">Writer</a>[<span class="extype" name="com.twitter.io.Writer.A">A</span>]</dd><dt>Note</dt><dd><span class="cmt"><p>Encountering a stream failure would terminate the write-loop given the
+      <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> recursion semantics.</p></span>, <span class="cmt"><p>Once failed or closed, a stream can not be restarted such that all future writes will
+      resolve into a failure.</p></span>, <span class="cmt"><p>Closing an already failed stream does not have an effect.</p><h4> Back Pressure </h4><p>By analogy with read-loops (see <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> API), write-loops leverage<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+recursion to exert back-pressure: the next write isn't issued until the previous write finishes.
+This will always ensure a finer grained back-pressure in network systems allowing the producers
+to adjust the flow rate based on consumer's speed and not on IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple pending writes are allowed on a <code>Writer</code> type is an undefined
       behaviour but could be changed in a refinement.</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
@@ -379,7 +380,7 @@ up other tasks.
       </span>
       
       <p class="shortcomment cmt">Fail this stream with a given <code>cause</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Fail this stream with a given <code>cause</code>. No further writes are allowed, but if happen, will
-resolve into a <span class="extype" name="Future">Future</span> failed with <code>cause</code>.
+resolve into a <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> failed with <code>cause</code>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Failing an already closed stream does not have an effect.</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writer#onClose" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="onClose:com.twitter.util.Future[com.twitter.io.StreamTermination]"></a><a id="onClose:Future[StreamTermination]"></a>
@@ -396,7 +397,7 @@ resolve into a <span class="extype" name="Future">Future</span> failed with <cod
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
 being used.
 </p></div></div>
     </li><li name="com.twitter.io.Writer#write" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -415,8 +416,8 @@ being used.
       </span>
       
       <p class="shortcomment cmt">Write an <code>element</code> into this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Write an <code>element</code> into this stream. Although undefined by this contract, a trustworthy
-implementation (such as <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned <span class="extype" name="Future">Future</span> only
-when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <span class="extype" name="Future">Future</span>).
+implementation (such as <a href="Pipe.html" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> only when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>).
 </p></div></div>
     </li></ol>
             </div>

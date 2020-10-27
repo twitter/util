@@ -163,16 +163,16 @@
                         <a href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file.">Pkcs8EncodedKeySpecFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="Pkcs8KeyManagerFactory.html" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
-                        <a href="Pkcs8KeyManagerFactory.html" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
+                        <a class="class" href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
+                        <a href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format."></a>
                         <a href="" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format.">PrivateKeyFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="X500PrincipalInfo.html" title="Parses an X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name."></a>
-                        <a href="X500PrincipalInfo.html" title="Parses an X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name.">X500PrincipalInfo</a>
+                        <a class="class" href="X500PrincipalInfo.html" title="Parses an javax.security.auth.x500.X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name."></a>
+                        <a href="X500PrincipalInfo.html" title="Parses an javax.security.auth.x500.X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name.">X500PrincipalInfo</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="X509CertificateFile.html" title="A representation of an X.509 Certificate PEM-encoded and stored in a file."></a>
@@ -183,8 +183,8 @@
                         <a href="X509CrlFile.html" title="A representation of an X.509 Certificate Revocation List (CRL) PEM-encoded and stored in a file.">X509CrlFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="X509TrustManagerFactory.html" title="A factory which can create a TrustManager which contains a collection of X.509 certificates."></a>
-                        <a href="X509TrustManagerFactory.html" title="A factory which can create a TrustManager which contains a collection of X.509 certificates.">X509TrustManagerFactory</a>
+                        <a class="class" href="X509TrustManagerFactory.html" title="A factory which can create a javax.net.ssl.TrustManager which contains a collection of X.509 certificates."></a>
+                        <a href="X509TrustManagerFactory.html" title="A factory which can create a javax.net.ssl.TrustManager which contains a collection of X.509 certificates.">X509TrustManagerFactory</a>
                       </li>
               </ul>
             </div>
@@ -562,9 +562,8 @@ base64encodedbytes
       </span>
       
       <p class="shortcomment cmt">Attemps to read the contents of an unencrypted PrivateKey file.</p><div class="fullcomment"><div class="comment cmt"><p>Attemps to read the contents of an unencrypted PrivateKey file.
-</p></div><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt"><p><span class="extype" name="InvalidKeySpecException"><code>InvalidKeySpecException</code></span> if the file cannot be loaded as an
-RSA, DSA, or EC PrivateKey.</p></span><span class="cmt"><p><a href="InvalidPemFormatException.html" class="extype" name="com.twitter.util.security.InvalidPemFormatException"><code>InvalidPemFormatException</code></a> if the file is not a PEM format
-file.</p></span></dd><dt>Note</dt><dd><span class="cmt"><p>This method will attempt to load the key first as an RSA key, then
+</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Throws <code>InvalidPemFormatException</code> if the file is not a PEM format file.</p></span>, <span class="cmt"><p>Throws <code>InvalidKeySpecException</code> if the file cannot be loaded as an
+RSA, DSA, or EC PrivateKey.</p></span>, <span class="cmt"><p>This method will attempt to load the key first as an RSA key, then
 as a DSA key, and then as an EC (Elliptic Curve) key.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>

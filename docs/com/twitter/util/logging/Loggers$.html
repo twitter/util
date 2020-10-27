@@ -172,13 +172,16 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">Loggers</span>
+        <span class="name deprecated" title="Deprecated: (Since version 2020-09-30) Use com.twitter.util.logging.Logger">Loggers</span>
       </span>
       </h4>
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>For Java usability.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Scala users see <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a></p></span></dd></dl><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-09-30)</i> Use com.twitter.util.logging.Logger</p></dd><dt>Note</dt><dd><span class="cmt"><p>Scala users see <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">com.twitter.util.logging.Logger</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -396,59 +399,6 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger"></a><a id="getLogger(org.slf4j.Logger):Logger"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getLogger</span><span class="params">(<span name="underlying">underlying: <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
-<span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
-<span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span>.
-</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>an <code>org.slf4j.Logger</code></p><pre><span class="kw">val</span> logger = Logger(LoggerFactory.getLogger(<span class="lit">"name"</span>))</pre></dd></dl></div>
-    </li><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getLogger(clazz:Class[_]):com.twitter.util.logging.Logger"></a><a id="getLogger(Class[_]):Logger"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(clazz:Class[_]):com.twitter.util.logging.Logger" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getLogger</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.
-</p></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>class to use for naming the underlying slf4j.Logger.</p><pre><span class="kw">val</span> logger = Logger(classOf[MyClass])</pre></dd></dl></div>
-    </li><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getLogger(name:String):com.twitter.util.logging.Logger"></a><a id="getLogger(String):Logger"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(name:String):com.twitter.util.logging.Logger" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getLogger</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.
-</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>name of the underlying <code>slf4j.Logger</code>.</p><pre><span class="kw">val</span> logger = Logger(<span class="lit">"name"</span>)</pre></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
@@ -644,7 +594,72 @@
 
         
 
-        
+        <div class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger"></a><a id="getLogger(org.slf4j.Logger):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(underlying:org.slf4j.Logger):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2020-09-30) Use com.twitter.util.logging.Logger">getLogger</span><span class="params">(<span name="underlying">underlying: <span class="extype" name="org.slf4j.Logger">org.slf4j.Logger</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
+<code>org.slf4j.Logger</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> wrapping the given underlying
+<code>org.slf4j.Logger</code>.
+</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>an <code>org.slf4j.Logger</code></p><pre>Logger logger = Logger.getLogger(LoggerFactory.getLogger(<span class="lit">"name"</span>));</pre></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-09-30)</i> Use com.twitter.util.logging.Logger</p></dd></dl></div>
+    </li><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(clazz:Class[_]):com.twitter.util.logging.Logger"></a><a id="getLogger(Class[_]):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(clazz:Class[_]):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2020-09-30) Use com.twitter.util.logging.Logger">getLogger</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> named for the given class.
+</p></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>class to use for naming the underlying slf4j.Logger.</p><pre>Logger logger = Logger.getLogger(classOf[MyClass]);</pre></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-09-30)</i> Use com.twitter.util.logging.Logger</p></dd></dl></div>
+    </li><li name="com.twitter.util.logging.Loggers#getLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getLogger(name:String):com.twitter.util.logging.Logger"></a><a id="getLogger(String):Logger"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/logging/Loggers$.html#getLogger(name:String):com.twitter.util.logging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 2020-09-30) Use com.twitter.util.logging.Logger">getLogger</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.</p><div class="fullcomment"><div class="comment cmt"><p>Create a <a href="Logger.html" class="extype" name="com.twitter.util.logging.Logger">Logger</a> for the given name.
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>name of the underlying <code>slf4j.Logger</code>.</p><pre>Logger logger = Logger.getLogger(<span class="lit">"name"</span>);</pre></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2020-09-30)</i> Use com.twitter.util.logging.Logger</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

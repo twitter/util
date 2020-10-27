@@ -277,8 +277,8 @@ be passed directly to a consumer or a producer.</p><pre><span class="kw">def</sp
 consumer(p)
 producer(p)</pre><p>Reads and writes on the pipe are matched one to one and only one outstanding <code>read</code>
 or <code>write</code> is permitted in the current implementation (multiple pending writes or reads
-resolve into <span class="extype" name="IllegalStateException">IllegalStateException</span> while leaving the pipe healthy). That is, the <code>write</code>
-(its returned <span class="extype" name="Future">Future</span>) is resolved when the <code>read</code> consumes the written data.</p><p>Here is, for example, a very typical write-loop that writes into a pipe-backed <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>:</p><pre><span class="kw">def</span> writeLoop(w: Writer[Buf], data: <span class="std">List</span>[Buf]): Future[<span class="std">Unit</span>] = data <span class="kw">match</span> {
+resolve into <code>IllegalStateException</code> while leaving the pipe healthy). That is, the <code>write</code>
+(its returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>) is resolved when the <code>read</code> consumes the written data.</p><p>Here is, for example, a very typical write-loop that writes into a pipe-backed <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a>:</p><pre><span class="kw">def</span> writeLoop(w: Writer[Buf], data: <span class="std">List</span>[Buf]): Future[<span class="std">Unit</span>] = data <span class="kw">match</span> {
   <span class="kw">case</span> h :: t <span class="kw">=&gt;</span> p.write(h).before(writeLoop(w, t))
   <span class="kw">case</span> Nil <span class="kw">=&gt;</span> w.close()
 }</pre><p>Reading from a pipe-backed <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> is no different from working with any other reader:</p><pre><span class="kw">def</span> readLoop(r: Reader[Buf], process: Buf <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] = r.read().flatMap {
@@ -287,10 +287,11 @@ resolve into <span class="extype" name="IllegalStateException">IllegalStateExcep
 }</pre><h4> Thread Safety </h4><p>It is safe to call <code>read</code>, <code>write</code>, <code>fail</code>, <code>discard</code>, and <code>close</code> concurrently. The individual
 calls are synchronized on the given <a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a>.</p><h4> Closing or Failing Pipes </h4><p>Besides expecting a write or a read, a pipe can be closed or failed. A writer can do both <code>close</code>
 and <code>fail</code> the pipe, while reader can only fail the pipe via <code>discard</code>.</p><p>The following behavior is expected with regards to reading from or writing into a closed or a
-failed pipe:</p><ul><li>Writing into a closed pipe yields <span class="extype" name="IllegalStateException">IllegalStateException</span></li><li>Reading from a closed pipe yields EOF (<span class="extype" name="Future.None">Future.None</span>)</li><li>Reading from or writing into a failed pipe yields a failure it was failed with</li></ul><p>It's also worth discussing how pipes are being closed. As closure is always initiated by a
+failed pipe:</p><ul><li>Writing into a closed pipe yields <code>IllegalStateException</code></li><li>Reading from a closed pipe yields EOF (<a href="../util/Future$.html#None:com.twitter.util.Future[Option[Nothing]]" class="extmbr" name="com.twitter.util.Future#None">com.twitter.util.Future.None</a>)</li><li>Reading from or writing into a failed pipe yields a failure it was failed with</li></ul><p>It's also worth discussing how pipes are being closed. As closure is always initiated by a
 producer (writer), there is a machinery allowing it to be notified when said closure is observed
-by a consumer (reader).</p><p>The following rules should help reasoning about closure signals in pipes:</p><p>- Closing a pipe with a pending read resolves said read into EOF and returns a <span class="extype" name="Future.Unit">Future.Unit</span>
-- Closing a pipe with a pending write by default fails said write with <span class="extype" name="IllegalStateException">IllegalStateException</span> and
+by a consumer (reader).</p><p>The following rules should help reasoning about closure signals in pipes:</p><p>- Closing a pipe with a pending read resolves said read into EOF and returns a
+  <a href="../util/Future$.html#Unit:com.twitter.util.Future[Unit]" class="extmbr" name="com.twitter.util.Future#Unit">com.twitter.util.Future.Unit</a>
+- Closing a pipe with a pending write by default fails said write with <code>IllegalStateException</code> and
   returns a future that will be satisfied when a consumer observes the closure (EOF) via read. If
   a timer is provided, the pipe will wait until the provided deadline for a successful read before
   failing the write.
@@ -567,7 +568,7 @@ are equivalent to Writer[A]'s. Writer[B]'s <code>write</code> function is equiva
       </span>
       
       <p class="shortcomment cmt">Discard this stream as its output is no longer required.</p><div class="fullcomment"><div class="comment cmt"><p>Discard this stream as its output is no longer required. This could be used to signal the
-producer of this stream similarly how <span class="extype" name="Future.raise">Future.raise</span> used to propagate interrupts across
+producer of this stream similarly how <a href="../util/Future.html#raise(interrupt:Throwable):Unit" class="extmbr" name="com.twitter.util.Future#raise">com.twitter.util.Future.raise</a> used to propagate interrupts across
 future chains.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>Although unnecessary, it's always safe to discard a fully-consumed stream.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -618,7 +619,7 @@ future chains.
       </span>
       
       <p class="shortcomment cmt">Fail this stream with a given <code>cause</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Fail this stream with a given <code>cause</code>. No further writes are allowed, but if happen, will
-resolve into a <span class="extype" name="Future">Future</span> failed with <code>cause</code>.
+resolve into a <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> failed with <code>cause</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a> → <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd><dt>Note</dt><dd><span class="cmt"><p>Failing an already closed stream does not have an effect.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -675,7 +676,13 @@ resolve into a <span class="extype" name="Future">Future</span> failed with <cod
         <span class="name">flatten</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span class="implicit">implicit </span><span name="ev">ev: <span class="extype" name="scala.Predef.&lt;:&lt;">&lt;:&lt;</span>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>, <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.flatten.B">B</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
+      <p class="shortcomment cmt">Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Converts a <code>Reader[Reader[B]]</code> into a <code>Reader[B]</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd><dt>Note</dt><dd><span class="cmt"><p>All operations of the new Reader will be in sync with the outermost Reader. Discarding
+      one Reader will discard the other Reader. When one Reader's onClose resolves, the other
+      Reader's onClose will be resolved immediately with the same value.
+      The subsequent readers are unmanaged, the caller is responsible for discarding those
+      when abandoned.</p></span></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -817,7 +824,7 @@ resolve into a <span class="extype" name="Future">Future</span> failed with <cod
         <span class="name">onClose</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="StreamTermination.html" class="extype" name="com.twitter.io.StreamTermination">StreamTermination</a>]</span>
       </span>
       
-      <p class="shortcomment cmt">A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <span class="extype" name="Future">Future</span> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
+      <p class="shortcomment cmt">A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> that resolves once this writer is closed and flushed.</p><p>It may contain an error if the writer is failed.</p><p>This is useful for any extra resource cleanup that you must do once the stream is no longer
 being used.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a> → <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="com.twitter.io.Pipe#read" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -835,8 +842,10 @@ being used.
         <span class="name">read</span><span class="params">()</span><span class="result">: <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">Future</a>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.io.Pipe.A">A</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <span class="extype" name="Future">Future</span> will resolve into
-<code>Some(e)</code> when the element is available or into <code>None</code> when stream is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed <span class="extype" name="Future">Future</span>s.
+      <p class="shortcomment cmt">Asynchronously read the next element of this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Asynchronously read the next element of this stream. Returned <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>
+will resolve into <code>Some(e)</code> when the element is available or into <code>None</code> when stream
+is exhausted.</p><p>Stream failures are terminal such that all subsequent reads will resolve in failed
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>s.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a> → <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
@@ -954,8 +963,8 @@ being used.
       </span>
       
       <p class="shortcomment cmt">Write an <code>element</code> into this stream.</p><div class="fullcomment"><div class="comment cmt"><p>Write an <code>element</code> into this stream. Although undefined by this contract, a trustworthy
-implementation (such as <a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned <span class="extype" name="Future">Future</span> only
-when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <span class="extype" name="Future">Future</span>).
+implementation (such as <a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a>) would do its best to resolve the returned
+<a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a> only when a consumer observes a written <code>element</code>.</p><p>The write can also resolve into a failure (failed <a href="../util/Future.html" class="extype" name="com.twitter.util.Future">com.twitter.util.Future</a>).
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.twitter.io.Pipe">Pipe</a> → <a href="Writer.html" class="extype" name="com.twitter.io.Writer">Writer</a></dd></dl></div>
     </li>
               </ol>

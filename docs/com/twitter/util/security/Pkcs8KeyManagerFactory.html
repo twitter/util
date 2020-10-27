@@ -163,16 +163,16 @@
                         <a href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file.">Pkcs8EncodedKeySpecFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
-                        <a href="" title="A factory which can create a KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
+                        <a class="class" href="" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
+                        <a href="" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format."></a>
                         <a href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format.">PrivateKeyFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="X500PrincipalInfo.html" title="Parses an X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name."></a>
-                        <a href="X500PrincipalInfo.html" title="Parses an X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name.">X500PrincipalInfo</a>
+                        <a class="class" href="X500PrincipalInfo.html" title="Parses an javax.security.auth.x500.X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name."></a>
+                        <a href="X500PrincipalInfo.html" title="Parses an javax.security.auth.x500.X500Principal into its individual pieces for easily extracting widely used items like an X.509 certificate's Common Name.">X500PrincipalInfo</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="X509CertificateFile.html" title="A representation of an X.509 Certificate PEM-encoded and stored in a file."></a>
@@ -183,8 +183,8 @@
                         <a href="X509CrlFile.html" title="A representation of an X.509 Certificate Revocation List (CRL) PEM-encoded and stored in a file.">X509CrlFile</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="X509TrustManagerFactory.html" title="A factory which can create a TrustManager which contains a collection of X.509 certificates."></a>
-                        <a href="X509TrustManagerFactory.html" title="A factory which can create a TrustManager which contains a collection of X.509 certificates.">X509TrustManagerFactory</a>
+                        <a class="class" href="X509TrustManagerFactory.html" title="A factory which can create a javax.net.ssl.TrustManager which contains a collection of X.509 certificates."></a>
+                        <a href="X509TrustManagerFactory.html" title="A factory which can create a javax.net.ssl.TrustManager which contains a collection of X.509 certificates.">X509TrustManagerFactory</a>
                       </li>
               </ul>
             </div>
@@ -213,7 +213,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A factory which can create a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span> which contains
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A factory which can create a <code>javax.net.ssl.KeyManager</code> which contains
 an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
 </p></div><div class="toggleContainer block">
           <span class="toggle">
@@ -452,7 +452,7 @@ an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.security.Pkcs8KeyManagerFactory#getKeyManagers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.twitter.util.security.Pkcs8KeyManagerFactory#getKeyManagers" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="getKeyManagers():com.twitter.util.Try[Array[javax.net.ssl.KeyManager]]"></a><a id="getKeyManagers():Try[Array[KeyManager]]"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/security/Pkcs8KeyManagerFactory.html#getKeyManagers():com.twitter.util.Try[Array[javax.net.ssl.KeyManager]]" title="Permalink">
@@ -468,11 +468,9 @@ an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.
       </span>
       
       <p class="shortcomment cmt">Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
-Private Key file and combine the contents into a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
-Private Key file and combine the contents into a <span class="extype" name="javax.net.ssl.KeyManager">KeyManager</span>.
+Private Key file and combine the contents into a <code>javax.net.ssl.KeyManager</code>
 The singular value is returned in an Array for ease of use with
-<span class="extype" name="javax.net.ssl.SSLContext">SSLContext's</span> init method.
-</p></div></div>
+<code>javax.net.ssl.SSLContext</code> init method.</p>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">

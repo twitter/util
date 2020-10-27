@@ -235,8 +235,8 @@
                         <a href="AbstractRouter.html" title="Java-friendly version of Router">AbstractRouter</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router."></a>
-                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router.">ClosedRouterException</a>
+                        <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router."></a>
+                        <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router.">ClosedRouterException</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="Generator$.html" title=""></a>
                         <a class="class" href="Generator.html" title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated."></a>
@@ -251,8 +251,8 @@
                         <a href="RouterBuilder.html" title="Utility for building and creating routers.">RouterBuilder</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder."></a>
-                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouteBuilder.">ValidationError</a>
+                        <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder."></a>
+                        <a href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder.">ValidationError</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="ValidationException.html" title="Exception thrown when a RouterBuilder observes any routes that are not valid for the Router type it is building."></a>
@@ -402,13 +402,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Exception thrown when an attempt to route an Input to a Router where close() has been initiated on the Router." href="ClosedRouterException.html"><span class="name">ClosedRouterException</span></a><span class="params">(<span name="router">router: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[_, _]</span>)</span><span class="result"> extends <a href="../../../../scala/index.html#RuntimeException=RuntimeException" class="extmbr" name="scala.RuntimeException">RuntimeException</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/util/control/NoStackTrace.html#scala.util.control.NoStackTrace" class="extype" name="scala.util.control.NoStackTrace">NoStackTrace</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router." href="ClosedRouterException.html"><span class="name">ClosedRouterException</span></a><span class="params">(<span name="router">router: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[_, _]</span>)</span><span class="result"> extends <a href="../../../../scala/index.html#RuntimeException=RuntimeException" class="extmbr" name="scala.RuntimeException">RuntimeException</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/util/control/NoStackTrace.html#scala.util.control.NoStackTrace" class="extype" name="scala.util.control.NoStackTrace">NoStackTrace</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
-      <p class="shortcomment cmt">Exception thrown when an attempt to route an <code>Input</code> to a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <span class="extype" name="close()">close()</span> has been
-initiated on the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Exception thrown when an attempt to route an <code>Input</code> to a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <span class="extype" name="close()">close()</span> has been
+      <p class="shortcomment cmt">Exception thrown when an attempt to route an <code>Input</code> to a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <code>close</code> has been
+initiated on the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Exception thrown when an attempt to route an <code>Input</code> to a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <code>close</code> has been
 initiated on the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>.
-</p></div><dl class="paramcmts block"><dt class="param">router</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <span class="extype" name="close()">close()</span> has already been initiated.</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">router</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> where <code>close</code> has already been initiated.</p></dd></dl></div>
     </li><li name="com.twitter.util.routing.Generator" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Generator[Input,Route,+RouterType&lt;:com.twitter.util.routing.Router[Input,Route]]extends(String,Iterable[Route])=&gt;RouterType"></a><a id="Generator[Input,Route,+RouterType&lt;:Router[Input,Route]]:Generator[Input,Route,RouterType]"></a>
       <span class="permalink">
@@ -424,8 +424,8 @@ initiated on the <a href="Router.html" class="extype" name="com.twitter.util.rou
         <a title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated." href="Generator.html"><span class="name">Generator</span></a><span class="tparams">[<span name="Input">Input</span>, <span name="Route">Route</span>, <span name="RouterType">+RouterType &lt;: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[<span class="extype" name="com.twitter.util.routing.Generator.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>]</span><span class="result"> extends (<span class="extype" name="scala.Predef.String">String</span>, <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
       </span>
       
-      <p class="shortcomment cmt">Functional alias for creating a <span class="extype" name="RouterType">router</span> given a <span class="extype" name="String">label</span> and
-all of the defined <span class="extype" name="Route">routes</span> for the router to be generated.</p>
+      <p class="shortcomment cmt">Functional alias for creating a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a> given a label and
+all of the defined routes for the router to be generated.</p>
     </li><li name="com.twitter.util.routing.Router" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Router[Input,+Route]extendsInput=&gt;Option[Route]withClosableOncewithLogging"></a><a id="Router[Input,+Route]:Router[Input,Route]"></a>
       <span class="permalink">
@@ -442,21 +442,21 @@ all of the defined <span class="extype" name="Route">routes</span> for the route
       </span>
       
       <p class="shortcomment cmt">A generic interface for routing an input to an optional matching route.</p><div class="fullcomment"><div class="comment cmt"><p>A generic interface for routing an input to an optional matching route.
-</p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The Input type used when determining a route destination</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The resulting route type. A <span class="extype" name="Route">Route</span> may have dynamic
-              properties and may be found to satisfy multiple <span class="extype" name="Input">Input</span>
+</p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The Input type used when determining a route destination</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The resulting route type. A <code>Route</code> may have dynamic
+              properties and may be found to satisfy multiple <code>Input</code>
               instances. As there may not be a 1-to-1 mapping of
-              <span class="extype" name="Input">Input</span> to <span class="extype" name="Route">Route</span>, it is encouraged that a <span class="extype" name="Route">Route</span>
-              encapsulates its relationship to an <span class="extype" name="Input">Input</span>.
+              <code>Input</code> to <code>Route</code>, it is encouraged that a <code>Route</code>
+              encapsulates its relationship to an <code>Input</code>.
               An example to consider would be an HTTP <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>.
               An HTTP request contains a Method (i.e. GET, POST) and
               a URI. A <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> for a REST API may match &quot;GET /users/{id}&quot;
               for multiple HTTP requests (i.e. &quot;GET /users/123&quot; AND &quot;GET /users/456&quot; would map
-              to the same destination <span class="extype" name="Route">Route</span>). As a result, the <span class="extype" name="Route">Route</span> in this example
+              to the same destination <code>Route</code>). As a result, the <code>Route</code> in this example
               should be aware of the method, path, and and the destination/logic responsible
-              for handling an <span class="extype" name="Input">Input</span> that matches.
-              Another property to consider for a <span class="extype" name="Route">Route</span> is &quot;uniqueness&quot;. It may or may not
+              for handling an <code>Input</code> that matches.
+              Another property to consider for a <code>Route</code> is &quot;uniqueness&quot;. It may or may not
               be desirable for a <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> to contain multiple routes that correspond to
-              the same <span class="extype" name="Input">Input</span>.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>A <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> should be considered immutable unless explicitly noted.</p></span></dd></dl></div>
+              the same <code>Input</code>.</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>A <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> should be considered immutable unless explicitly noted.</p></span></dd></dl></div>
     </li><li name="com.twitter.util.routing.RouterBuilder" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="RouterBuilder[Input,Route,+RouterType&lt;:com.twitter.util.routing.Router[Input,Route]]extendsProductwithSerializable"></a><a id="RouterBuilder[Input,Route,+RouterType&lt;:Router[Input,Route]]:RouterBuilder[Input,Route,RouterType]"></a>
       <span class="permalink">
@@ -472,12 +472,12 @@ all of the defined <span class="extype" name="Route">routes</span> for the route
         <a title="Utility for building and creating routers." href="RouterBuilder.html"><span class="name">RouterBuilder</span></a><span class="tparams">[<span name="Input">Input</span>, <span name="Route">Route</span>, <span name="RouterType">+RouterType &lt;: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[<span class="extype" name="com.twitter.util.routing.RouterBuilder.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.RouterBuilder.Route">Route</span>]</span>]</span><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
-      <p class="shortcomment cmt">Utility for building and creating <span class="extype" name="RouterType">routers</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Utility for building and creating <span class="extype" name="RouterType">routers</span>. The resulting <span class="extype" name="RouterType">router</span>
-should be considered immutable, unless the <span class="extype" name="RouterType">router's</span> implementation
+      <p class="shortcomment cmt">Utility for building and creating <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">routers</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Utility for building and creating <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">routers</a>. The resulting <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router</a>
+should be considered immutable, unless the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> implementation
 explicitly states otherwise.
 </p></div><dl class="paramcmts block"><dt class="tparam">Input</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> <code>Input</code> type.</p></dd><dt class="tparam">Route</dt><dd class="cmt"><p>The <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">router's</a> destination <code>Route</code> type. It is recommended that the <code>Route</code>
               is a self-contained/self-describing type for the purpose of validation via
-              the <span class="extype" name="validator">validator</span>. Put differently, the <code>Route</code> should know of the
+              the <a href="Validator.html" class="extype" name="com.twitter.util.routing.Validator">Validator</a>. Put differently, the <code>Route</code> should know of the
               <code>Input</code> that maps to itself.</p></dd><dt class="tparam">RouterType</dt><dd class="cmt"><p>The type of <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> to build.</p></dd></dl></div>
     </li><li name="com.twitter.util.routing.ValidationError" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ValidationErrorextendsProductwithSerializable"></a><a id="ValidationError:ValidationError"></a>
@@ -491,12 +491,12 @@ explicitly states otherwise.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Container class for an error that is encountered as part of validating routes via a RouteBuilder." href="ValidationError.html"><span class="name">ValidationError</span></a><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+        <a title="Container class for an error that is encountered as part of validating routes via a RouterBuilder." href="ValidationError.html"><span class="name">ValidationError</span></a><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       <p class="shortcomment cmt">Container class for an error that is encountered as part of validating routes via
-a <span class="extype" name="RouteBuilder">RouteBuilder</span>.</p><div class="fullcomment"><div class="comment cmt"><p>Container class for an error that is encountered as part of validating routes via
-a <span class="extype" name="RouteBuilder">RouteBuilder</span>.
+a <a href="RouterBuilder.html" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Container class for an error that is encountered as part of validating routes via
+a <a href="RouterBuilder.html" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a>.
 </p></div><dl class="paramcmts block"><dt class="param">msg</dt><dd class="cmt"><p>The message that explains the error.</p></dd></dl></div>
     </li><li name="com.twitter.util.routing.ValidationException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ValidationExceptionextendsExceptionwithProductwithSerializable"></a><a id="ValidationException:ValidationException"></a>
@@ -513,7 +513,7 @@ a <span class="extype" name="RouteBuilder">RouteBuilder</span>.
         <a title="Exception thrown when a RouterBuilder observes any routes that are not valid for the Router type it is building." href="ValidationException.html"><span class="name">ValidationException</span></a><span class="result"> extends <a href="../../../../scala/index.html#Exception=Exception" class="extmbr" name="scala.Exception">Exception</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.11/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
-      <p class="shortcomment cmt">Exception thrown when a <a href="RouterBuilder.html" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a> observes any <span class="extype" name="Route">routes</span> that are not valid for
+      <p class="shortcomment cmt">Exception thrown when a <a href="RouterBuilder.html" class="extype" name="com.twitter.util.routing.RouterBuilder">RouterBuilder</a> observes any routes that are not valid for
 the <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a> type it is building.</p>
     </li><li name="com.twitter.util.routing.Validator" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="Validator[-Route]extendsIterable[Route]=&gt;Iterable[com.twitter.util.routing.ValidationError]"></a><a id="Validator[-Route]:Validator[Route]"></a>
