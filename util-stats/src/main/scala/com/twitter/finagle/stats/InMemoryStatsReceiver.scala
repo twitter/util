@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import java.io.PrintStream
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.{SortedMap, mutable}
 import scala.jdk.CollectionConverters._
@@ -185,14 +186,15 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       p.println("\nGauges:")
       p.println("-------")
     }
-    for ((k, g) <- sortedGauges)
-      p.print(f"$k%s ${g()}%f\n")
+    for ((k, g) <- sortedGauges) {
+      p.println("%s %f".formatLocal(Locale.US, k, g()))
+    }
     if (includeHeaders && sortedStats.nonEmpty) {
       p.println("\nStats:")
       p.println("------")
     }
     for ((k, s) <- sortedStats if s.nonEmpty) {
-      p.print(f"$k%s ${s.sum / s.size}%f ${statValuesToStr(s)}\n")
+      p.println("%s %f %s".formatLocal(Locale.US, k, s.sum / s.size, statValuesToStr(s)))
     }
   }
 
