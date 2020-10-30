@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: `c.t.util.Duration` now includes `fromJava` and `asJava` conversions to `java.time.Duration` types. ``PHAB_ID=D571885``
+
 20.10.0
 -------
 

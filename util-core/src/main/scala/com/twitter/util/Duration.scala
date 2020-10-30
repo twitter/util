@@ -39,6 +39,11 @@ object Duration extends TimeLikeOps[Duration] {
     fromNanoseconds(ns)
   }
 
+  /**
+   * Create a duration from a [[java.time.Duration]].
+   */
+  def fromJava(value: java.time.Duration): Duration = fromNanoseconds(value.toNanos)
+
   // This is needed for Java compatibility.
   override val Zero: Duration = new Duration(0)
 
@@ -321,6 +326,12 @@ sealed class Duration private[util] (protected val nanos: Long)
    */
   def inUnit(unit: TimeUnit): Long =
     unit.convert(inNanoseconds, TimeUnit.NANOSECONDS)
+
+  /**
+   * Converts this value to a [[java.time.Duration]].
+   */
+  def asJava: java.time.Duration =
+    java.time.Duration.ofNanos(inNanoseconds)
 
   /**
    * toString produces a representation that

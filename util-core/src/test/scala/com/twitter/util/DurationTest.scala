@@ -207,6 +207,20 @@ class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSp
       assert((-9999999.seconds).toString == "-115.days-17.hours-46.minutes-39.seconds")
     }
 
+    "convert java.time.Duration" in {
+      val javaD = java.time.Duration.ofDays(365)
+      val twitterD = Duration.fromJava(javaD)
+      assert(twitterD.inDays == 365)
+
+      assert(Duration.fromJava(javaD) == Duration.fromJava(javaD))
+    }
+
+    "asJavaDuration" in {
+      val t0 = Duration.fromDays(10)
+      val t1 = t0 + 100.nanosecond
+      assert(t1.asJava.getNano - t0.asJava.getNano == 100)
+    }
+
     "parse the format from toString" in {
       Seq(
         -10.minutes,
