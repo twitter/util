@@ -12,6 +12,10 @@ New Features
 
 * util-core: `c.t.util.Duration` now includes `fromJava` and `asJava` conversions to `java.time.Duration` types. ``PHAB_ID=D571885``
 
+* util-stats: `c.t.finagle.stats.DenylistStatsReceiver` now includes methods for creating
+  `DenyListStatsReceiver` from partial functions. ``PHAB_ID=D576833``
+
+
 20.10.0
 -------
 

@@ -60,5 +60,41 @@ class DenylistStatsReceiverTest extends AnyFunSuite {
     assert(inmemory.gauges(Seq("foo", "foo", "baz"))() == 3.0)
     assert(inmemory.stats.isEmpty)
   }
+
+  test("Denylist.orElseDenied") {
+    val inmemory = new InMemoryStatsReceiver()
+    val pf: PartialFunction[Seq[String], Boolean] = {
+      case s if s.contains("foo") => false
+    }
+    val bsr = DenylistStatsReceiver.orElseDenied(inmemory, pf)
+
+    val ctr = bsr.counter("foo", "bar")
+    ctr.incr()
+    val gauge = bsr.addGauge("foo", "baz") { 3.0f }
+    val stat = bsr.stat("qux")
+    stat.add(3)
+
+    assert(inmemory.counters.nonEmpty)
+    assert(inmemory.gauges.nonEmpty)
+    assert(inmemory.stats.isEmpty)
+  }
+
+  test("Denylist.orElseAdmitted") {
+    val inmemory = new InMemoryStatsReceiver()
+    val pf: PartialFunction[Seq[String], Boolean] = {
+      case s if s.contains("foo") => true
+    }
+    val bsr = DenylistStatsReceiver.orElseAdmitted(inmemory, pf)
+
+    val ctr = bsr.counter("foo", "bar")
+    ctr.incr()
+    val gauge = bsr.addGauge("baz") { 3.0f }
+    val stat = bsr.stat("qux")
+    stat.add(3)
+
+    assert(inmemory.counters.isEmpty)
+    assert(inmemory.gauges.nonEmpty)
+    assert(inmemory.stats.nonEmpty)
+  }
   // scalafix:on StoreGaugesAsMemberVariables
 }

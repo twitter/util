@@ -1,5 +1,38 @@
 package com.twitter.finagle.stats
 
+object DenylistStatsReceiver {
+
+  /**
+   * Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].
+   *
+   * @param underlying a base [[StatsReceiver]].
+   * @param pf a PartialFunction that returns true for metrics which should be denylisted,
+   *           and false for metrics which should be recorded.
+   *           If pf is undefined for a given metric name,
+   *           then the metric will NOT be recorded.
+   */
+  def orElseDenied(
+    underlying: StatsReceiver,
+    pf: PartialFunction[Seq[String], Boolean]
+  ): StatsReceiver =
+    new DenylistStatsReceiver(underlying, pf.orElse { case _ => true })
+
+  /**
+   * Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].
+   *
+   * @param underlying a base [[StatsReceiver]].
+   * @param pf a PartialFunction that returns true for metrics which should be denylisted,
+   *           and false for metrics which should be recorded.
+   *           If pf is undefined for a given metric name,
+   *           then the metric WILL be recorded.
+   */
+  def orElseAdmitted(
+    underlying: StatsReceiver,
+    pf: PartialFunction[Seq[String], Boolean]
+  ): StatsReceiver =
+    new DenylistStatsReceiver(underlying, pf.orElse { case _ => false })
+}
+
 /**
  * A denylisting [[StatsReceiver]].  If the name for a metric is found to be
  * denylisted, nothing is recorded.
