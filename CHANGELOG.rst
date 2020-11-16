@@ -65,8 +65,8 @@ New Features
 
 * util-app: Add support for flags of Java Enum types. ``PHAB_ID=D530205``
 
-20.8.0
-------
+20.8.0 (DO NOT USE)
+-------------------
 
 New Features
 ~~~~~~~~~~~~
@@ -135,8 +135,8 @@ Runtime Behavior Changes
 
 * util: Bump jackson version to 2.11.0. ``PHAB_ID=D457496``
 
-20.4.0
-------
+20.4.0 (DO NOT USE)
+-------------------
 
 New Features
 ~~~~~~~~~~~~
