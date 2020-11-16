@@ -1,5 +1,6 @@
 package com.twitter.util
 
+import com.twitter.conversions.DurationOps._
 import java.util.concurrent.atomic.AtomicReference
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -110,7 +111,7 @@ class ActivityTest extends AnyFunSuite {
   ) {
     val p = new Promise[Unit]
     val obs = Activity.future(p).run.changes.register(Witness((_: Any) => ()))
-    Await.ready(obs.close())
+    Await.result(obs.close(), 5.seconds)
     assert(!p.isDefined)
   }
 
@@ -197,47 +198,180 @@ class ActivityTest extends AnyFunSuite {
     )
   }
 
-  test("Activity.stabilize") {
+  test("Activity#stabilize will update until an Ok event") {
     val ex = new Exception
     val v = Var[Activity.State[Int]](Activity.Pending)
+
     val a = Activity(v)
-    val w = Witness(v)
 
     val ref = new AtomicReference[Seq[Activity.State[Int]]]
     a.stabilize.states.build.register(Witness(ref))
 
     assert(ref.get == Seq(Activity.Pending))
 
-    w.notify(Activity.Failed(ex))
+    v() = Activity.Failed(ex)
     assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex)))
 
-    w.notify(Activity.Ok(1))
+    v() = Activity.Ok(1)
     assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1)))
+  }
 
-    w.notify(Activity.Failed(ex))
-    assert(ref.get == Seq(Activity.Pending, Activity.Failed(ex), Activity.Ok(1), Activity.Ok(1)))
+  test("Activity#stabilize will stop updating on non-Oks after an Ok event") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Pending)
 
-    w.notify(Activity.Pending)
-    assert(
-      ref.get == Seq(
-        Activity.Pending,
-        Activity.Failed(ex),
-        Activity.Ok(1),
-        Activity.Ok(1),
-        Activity.Ok(1)
-      )
-    )
+    val a = Activity(v)
 
-    w.notify(Activity.Ok(2))
-    assert(
-      ref.get == Seq(
-        Activity.Pending,
-        Activity.Failed(ex),
-        Activity.Ok(1),
-        Activity.Ok(1),
-        Activity.Ok(1),
-        Activity.Ok(2)
-      )
-    )
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    a.stabilize.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Pending))
+
+    v() = Activity.Ok(1)
+    assert(ref.get == Seq(Activity.Pending, Activity.Ok(1)))
+
+    v() = Activity.Failed(ex)
+    assert(ref.get == Seq(Activity.Pending, Activity.Ok(1), Activity.Ok(1)))
+
+    v() = Activity.Pending
+    assert(ref.get == Seq(Activity.Pending, Activity.Ok(1), Activity.Ok(1), Activity.Ok(1)))
+  }
+
+  test("Activity#stabilize will also keep the old event on non-Ok after it starts in Ok") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Ok(1))
+
+    val a = Activity(v)
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    a.stabilize.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Ok(1)))
+
+    v() = Activity.Failed(ex)
+    assert(ref.get == Seq(Activity.Ok(1), Activity.Ok(1)))
+  }
+
+  test("Activity#stabilize can still transition to a different Ok") {
+    val v = Var[Activity.State[Int]](Activity.Ok(1))
+    val a = Activity(v)
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    a.stabilize.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Ok(1)))
+
+    v() = Activity.Ok(2)
+    assert(ref.get == Seq(Activity.Ok(1), Activity.Ok(2)))
+  }
+
+  test("Activity#stabilize will keep the old stable value when not observed") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Ok(1))
+    val a = Activity(v).stabilize
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    val c = a.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Ok(1)))
+    Await.result(c.close(), 5.seconds)
+
+    assert(a.sample() == 1)
+  }
+
+  test("Activity#stabilize will ignore new values until it is observed again after deregistration") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Ok(1))
+    val a = Activity(v).stabilize
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    val c = a.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Ok(1)))
+    Await.result(c.close(), 5.seconds)
+
+    assert(a.sample() == 1)
+
+    // this value does not get cached
+    v() = Activity.Ok(2)
+
+    // this is the true value of the underlying item
+    v() = Activity.Pending
+
+    // uses the cached value
+    assert(a.sample() == 1)
+  }
+
+  test("Activity#stabilize will see new valid values immediately on observation after deregistration") {
+    val ex = new Exception
+    val v = Var[Activity.State[Int]](Activity.Ok(1))
+    val a = Activity(v).stabilize
+
+    val ref = new AtomicReference[Seq[Activity.State[Int]]]
+    val c = a.states.build.register(Witness(ref))
+
+    assert(ref.get == Seq(Activity.Ok(1)))
+    Await.result(c.close(), 5.seconds)
+
+    assert(a.sample() == 1)
+
+    v() = Activity.Ok(2)
+    assert(a.sample() == 2)
+  }
+
+  class FakeEvent extends Event[Activity.State[Int]] {
+    var count = 0
+    var w: Witness[Activity.State[Int]] = null
+
+    def register(witness: Witness[Activity.State[Int]]): Closable = {
+      count += 1
+      w = witness
+      Closable.make { deadline: Time =>
+        count -= 1
+        w = null
+        Future.Done
+      }
+    }
+  }
+
+  test("Activity.apply(Event) doesn't leak when sampled") {
+    val evt = new FakeEvent
+    val activity = Activity(evt)
+    assert(evt.count == 0)
+
+    assert(activity.run.sample() == Activity.Pending)
+    assert(evt.count == 0)
+  }
+
+  test("Activity.apply(Event) doesn't leak with derived events") {
+    val evt = new FakeEvent
+    val activity = Activity(evt)
+    assert(evt.count == 0)
+
+    val derivedEvt = activity.run.changes
+    assert(evt.count == 0)
+    val ref = new AtomicReference[Activity.State[Int]]()
+    val closable = derivedEvt.register(Witness(ref))
+    assert(evt.count == 1)
+    assert(ref.get == Activity.Pending)
+    evt.w.notify(Activity.Ok(1))
+    assert(Activity.sample(activity) == 1)
+    assert(evt.count == 1)
+    Await.result(closable.close(), 5.seconds)
+    assert(evt.count == 0)
+  }
+
+  test("Activity.apply(Event) doesn't preserve events after it stops watching") {
+    val evt = new FakeEvent
+    val activity = Activity(evt)
+
+    val derivedEvt = activity.run.changes
+    val ref = new AtomicReference[Activity.State[Int]]()
+    val closable = derivedEvt.register(Witness(ref))
+    evt.w.notify(Activity.Ok(1))
+    assert(Activity.sample(activity) == 1)
+    Await.result(closable.close(), 5.seconds)
+
+    assert(activity.run.sample() == Activity.Pending)
   }
 }

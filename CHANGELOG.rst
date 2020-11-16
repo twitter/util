@@ -10,7 +10,24 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
-* util-core: `c.t.util.Duration` now includes `fromJava` and `asJava` conversions to `java.time.Duration` types. ``PHAB_ID=D571885``
+* util-core: `c.t.util.Duration` now includes `fromJava` and `asJava` conversions to
+  `java.time.Duration` types. ``PHAB_ID=D571885``
+
+  Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `Activity.apply(Event)` will now propagate registry events to the underlying
+  `Event` instead of registering once and deregistering on garbage collection.  This means
+  that if the underlying `Event` is "notified" while the derived `Activity` is not actively
+  being observed, it will not pick up the notification.  Furthermore, the derived `Activity`
+  will revert to the `Activity.Pending` state while it is not under observation. ``PHAB_ID=D574843``
+
+* util-core: `Activity#stabilize` will now propagate registry events to the underlying
+  `Activity` instead of registering once and deregistering on garbage collection.  This means
+  that if the underlying `Activity` is changed to a new state while the derived `Activity` is not actively
+  being observed, it will not update its own state.  The derived `Activity` will maintain its last
+  "stable" state when it's next observed, unless the underlying `Activity` was updated to a new "stable"
+  state, in which case it will pick that up instead. ``PHAB_ID=D574843``
 
 * util-stats: `c.t.finagle.stats.DenylistStatsReceiver` now includes methods for creating
   `DenyListStatsReceiver` from partial functions. ``PHAB_ID=D576833``

@@ -147,12 +147,17 @@ case class Activity[+T](run: Var[Activity.State[T]]) {
    * once an [[com.twitter.util.Activity.Ok Ok]] value has been returned
    * it stops error propagation and instead returns the last Ok value.
    */
-  def stabilize: Activity[T] =
-    Activity(states.foldLeft[Activity.State[T]](Activity.Pending) {
-      case (_, next @ Activity.Ok(_)) => next
-      case (prev @ Activity.Ok(_), _) => prev
-      case (_, next) => next
+  def stabilize: Activity[T] = {
+    @volatile var stable: Activity.State[T] = Activity.Pending
+    Activity(run.map {
+      case next @ Activity.Ok(_) => {
+        stable = next
+        next
+      }
+      case other if stable == Activity.Pending => other
+      case other => stable
     })
+  }
 }
 
 /**
@@ -178,7 +183,11 @@ object Activity {
    * Constructs an Activity from a state Event.
    */
   def apply[T](states: Event[State[T]]): Activity[T] =
-    Activity(Var(Pending, states))
+    Activity(Var.async[State[T]](Pending) { updatable =>
+      states.respond { state =>
+        updatable() = state
+      }
+    })
 
   /**
    * Collect a collection of activities into an activity of a collection
