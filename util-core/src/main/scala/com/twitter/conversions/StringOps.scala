@@ -157,6 +157,20 @@ object StringOps {
      * will return the String `"hello_world"`.
      */
     def toSnakeCase: String = StringOps.toSnakeCase(string)
+
+    /**
+     * Wrap the string in an Option, returning None when it is null or empty.
+     */
+    def toOption: Option[String] = StringOps.toOption(string)
+
+    /**
+     * Return the string unless it is null or empty, in which
+     * case return the default.
+     *
+     * @param default the string to return if inputString is null or empty
+     * @return either the inputString or the default
+     */
+    def getOrElse(default: => String): String = StringOps.getOrElse(string, default)
   }
 
   def hexlify(array: Array[Byte], from: Int, to: Int): String = {
@@ -259,6 +273,34 @@ object StringOps {
     } else {
       tmp.substring(0, 1).toLowerCase + tmp.substring(1)
     }
+  }
+
+  /**
+   * Wrap the string in an Option, returning None when it is null or empty.
+   *
+   * @param inputString the string to wrap in an Option
+   * @return an Option of the given string
+   */
+  def toOption(inputString: String): Option[String] = {
+    if (inputString == null || inputString.isEmpty)
+      None
+    else
+      Some(inputString)
+  }
+
+  /**
+   * Return the string unless it is null or empty, in which
+   * case return the default.
+   *
+   * @param inputString the string to "get"
+   * @param default the string to return if inputString is null or empty
+   * @return either the inputString or the default
+   */
+  def getOrElse(inputString: String, default: => String): String = {
+    if (inputString == null || inputString.isEmpty)
+      default
+    else
+      inputString
   }
 
   implicit final class RichByteArray(val bytes: Array[Byte]) extends AnyVal {

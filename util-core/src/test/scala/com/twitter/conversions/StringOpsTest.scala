@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.twitter.util
+package com.twitter.conversions
 
 import com.twitter.conversions.StringOps._
 import org.scalatest.funsuite.AnyFunSuite
 
-class StringConversionsTest extends AnyFunSuite {
+class StringOpsTest extends AnyFunSuite {
 
   test("string#quoteC") {
     assert("nothing".quoteC == "nothing")
@@ -143,5 +143,23 @@ class StringConversionsTest extends AnyFunSuite {
     assert(toSnakeCase("HTML5Editor") == "html5_editor")
     assert(toSnakeCase("Editor2TOC") == "editor2_toc")
     assert(toSnakeCase("HTML5Editor2TOC") == "html5_editor2_toc")
+  }
+
+  test("string#toOption when nonEmpty") {
+    assert(toOption("foo") == Some("foo"))
+  }
+
+  test("string#toOption when empty") {
+    assert(toOption("") == None)
+    assert(toOption(null) == None)
+  }
+
+  test("string#getOrElse when nonEmpty") {
+    assert(getOrElse("foo", "purple") == "foo")
+  }
+
+  test("string#getOrElse when empty") {
+    assert(getOrElse("", "purple") == "purple")
+    assert(getOrElse(null, "purple") == "purple")
   }
 }
