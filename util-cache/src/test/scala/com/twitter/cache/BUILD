@@ -5,6 +5,7 @@ junit_tests(
         "*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["non-exclusive"],
     dependencies = [
         ":abstract_tests",
         "3rdparty/jvm/com/github/ben-manes/caffeine",

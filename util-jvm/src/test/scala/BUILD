@@ -15,6 +15,7 @@ junit_tests(
         "**/*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["non-exclusive"],
     dependencies = COMMON_DEPS + ["3rdparty/jvm/org/scalatestplus:junit"],
 )
 

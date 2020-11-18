@@ -14,6 +14,7 @@ junit_tests(
         "*.java",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["non-exclusive"],
     dependencies = [
         ":object_size_calculator",
         "3rdparty/jvm/com/github/ben-manes/caffeine",

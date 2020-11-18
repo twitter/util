@@ -21,6 +21,7 @@ scala_library(
 
 junit_tests(
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["non-exclusive"],
     dependencies = [
         ":testutil",
         "3rdparty/jvm/org/mockito:mockito-scala",
