@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: `c.t.conversions` now includes conversion methods for tuples (under `TupleOps`)
+  that were moved from Finatra. ``PHAB_ID=D578804``
+
 * util-core: `c.t.conversions` now includes conversion methods for seqs (under `SeqOps`)
   that were moved from Finatra. ``PHAB_ID=D578605``
 
