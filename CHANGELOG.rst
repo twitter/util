@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: `c.t.conversions` now includes conversion methods for maps (under `MapOps`)
+  that were moved from Finatra. ``PHAB_ID=D578819``
+
 * util-core: `c.t.conversions` now includes conversion methods for tuples (under `TupleOps`)
   that were moved from Finatra. ``PHAB_ID=D578804``
 
