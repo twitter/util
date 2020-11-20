@@ -7,6 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+* util-core: removed `com.twitter.util.Config.` ``PHAB_ID=D580444``
+
 New Features
 ~~~~~~~~~~~~
 
