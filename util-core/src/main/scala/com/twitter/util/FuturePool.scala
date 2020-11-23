@@ -39,6 +39,13 @@ trait FuturePool {
    * @return -1 if this [[FuturePool]] implementation doesn't support this statistic.
    */
   def numCompletedTasks: Long = -1L
+
+  /**
+   * The approximate number of tasks that are pending (typically waiting in the queue).
+   *
+   * @return -1 if this [[FuturePool]] implementation doesn't support this statistic.
+   */
+  def numPendingTasks: Long = -1
 }
 
 /**
@@ -189,4 +196,8 @@ class ExecutorServiceFuturePool protected[this] (
     case _ => super.numCompletedTasks
   }
 
+  override def numPendingTasks: Long = executor match {
+    case tpe: ThreadPoolExecutor => tpe.getQueue.size()
+    case _ => super.numPendingTasks
+  }
 }

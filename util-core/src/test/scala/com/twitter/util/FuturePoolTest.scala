@@ -200,12 +200,13 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
     // But we want to make sure it will have the correct behavior.
     // We compromise by roughly creating an ExecutorService/FuturePool
     // that behaves the same.
-    val executor = Executors.newCachedThreadPool()
+    val executor = Executors.newFixedThreadPool(1)
     val pool = new ExecutorServiceFuturePool(executor)
     // verify the initial state
     assert(pool.poolSize == 0)
     assert(pool.numActiveTasks == 0)
     assert(pool.numCompletedTasks == 0)
+    assert(pool.numPendingTasks == 0)
 
     // execute a task we can control
     val latch = new CountDownLatch(1)
@@ -213,16 +214,20 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
       latch.await(10, TimeUnit.SECONDS)
       true
     }
+    pool(()) // pending task
+
     eventually { assert(pool.poolSize == 1) }
     eventually { assert(pool.numActiveTasks == 1) }
     eventually { assert(pool.numCompletedTasks == 0) }
+    eventually { assert(pool.numPendingTasks == 1) }
 
     // let the task complete
     latch.countDown()
     Await.ready(future, 5.seconds)
     eventually { assert(pool.poolSize == 1) }
     eventually { assert(pool.numActiveTasks == 0) }
-    eventually { assert(pool.numCompletedTasks == 1) }
+    eventually { assert(pool.numCompletedTasks == 2) }
+    eventually { assert(pool.numPendingTasks == 0) }
 
     // cleanup.
     executor.shutdown()
