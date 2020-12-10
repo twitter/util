@@ -117,10 +117,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter">twitter</a></dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="StringOps"></a><a id="StringOps:StringOps"></a>
+    </li><li name="com.twitter.conversions.SeqOps" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SeqOps"></a><a id="SeqOps:SeqOps"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$.html" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -129,18 +129,27 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="StringOps$.html"><span class="name">StringOps</span></a>
+        <a title="Implicits for converting Seqs." href="SeqOps$.html"><span class="name">SeqOps</span></a>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.conversions">conversions</a></dd></dl></div>
+      <p class="shortcomment cmt">Implicits for converting <span class="extype" name="Seq">Seq</span>s.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for converting <span class="extype" name="Seq">Seq</span>s.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="com.twitter.conversions">conversions</a></dd><div class="block">Example:
+               <ol><li class="cmt"><p></p><pre><span class="kw">import</span> com.twitter.conversions.SeqOps._
+
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).createMap(_.size, _)
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).groupBySingleValue(_.size)
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).findItemAfter(<span class="lit">"a"</span>)
+
+<span class="kw">var</span> numStrings = <span class="num">0</span>
+<span class="std">Seq</span>(<span class="num">1</span>, <span class="num">2</span>) foreachPartial {
+  <span class="kw">case</span> e: <span class="std">Int</span> <span class="kw">=&gt;</span>
+    numStrings += <span class="num">1</span>
+}</pre></li></ol>
+            </div></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="StringOps$$RichByteArray.html" title=""></a>
-                        <a href="StringOps$$RichByteArray.html" title="">RichByteArray</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
                         <a class="class" href="" title=""></a>
-                        <a href="" title="">RichString</a>
+                        <a href="" title="">RichSeq</a>
                       </li>
               </ul>
             </div>
@@ -149,9 +158,9 @@
             <body class="class type">
       <div id="definition">
         <div class="big-circle class">c</div>
-        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.conversions">conversions</a>.<a href="StringOps$.html" class="extype" name="com.twitter.conversions.StringOps">StringOps</a></p>
-        <h1>RichString<span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html" title="Permalink">
+        <p id="owner"><a href="../../index.html" class="extype" name="com">com</a>.<a href="../index.html" class="extype" name="com.twitter">twitter</a>.<a href="index.html" class="extype" name="com.twitter.conversions">conversions</a>.<a href="SeqOps$.html" class="extype" name="com.twitter.conversions.SeqOps">SeqOps</a></p>
+        <h1>RichSeq<span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -164,7 +173,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">RichString</span><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
+        <span class="name">RichSeq</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="https://www.scala-lang.org/api/2.12.11/scala/AnyVal.html#scala.AnyVal" class="extype" name="scala.AnyVal">AnyVal</a></span>
       </span>
       </h4>
 
@@ -199,7 +208,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.conversions.StringOps.RichString"><span>RichString</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.conversions.SeqOps.RichSeq"><span>RichSeq</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -219,10 +228,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.conversions.StringOps.RichString#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(string:String):com.twitter.conversions.StringOps.RichString"></a><a id="&lt;init&gt;:RichString"></a>
+              <ol><li name="com.twitter.conversions.SeqOps.RichSeq#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(self:Seq[A]):com.twitter.conversions.SeqOps.RichSeq[A]"></a><a id="&lt;init&gt;:RichSeq[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#&lt;init&gt;(string:String):com.twitter.conversions.StringOps.RichString" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#&lt;init&gt;(self:Seq[A]):com.twitter.conversions.SeqOps.RichSeq[A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -231,7 +240,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RichString</span><span class="params">(<span name="string">string: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
+        <span class="name">RichSeq</span><span class="params">(<span name="self">self: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>]</span>)</span>
       </span>
       
       
@@ -248,7 +257,7 @@
                 <li name="scala.Any#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -264,7 +273,7 @@
     </li><li name="scala.Any###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html###():Int" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -280,7 +289,7 @@
     </li><li name="scala.Any#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -296,7 +305,7 @@
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -309,10 +318,74 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#createMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="createMap[K,V](values:A=&gt;V):Map[A,V]"></a><a id="createMap[K,V]((A)⇒V):Map[A,V]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#createMap[K,V](values:A=&gt;V):Map[A,V]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="values">values: (<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>) ⇒ <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.V">V</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>, <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.V">V</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#createMap" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="createMap[K,V](keys:A=&gt;K,values:A=&gt;V):Map[K,V]"></a><a id="createMap[K,V]((A)⇒K,(A)⇒V):Map[K,V]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#createMap[K,V](keys:A=&gt;K,values:A=&gt;V):Map[K,V]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createMap</span><span class="tparams">[<span name="K">K</span>, <span name="V">V</span>]</span><span class="params">(<span name="keys">keys: (<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>) ⇒ <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.K">K</span></span>, <span name="values">values: (<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>) ⇒ <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.V">V</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.K">K</span>, <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.createMap.V">V</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#findItemAfter" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="findItemAfter(itemToFind:A):Option[A]"></a><a id="findItemAfter(A):Option[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#findItemAfter(itemToFind:A):Option[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">findItemAfter</span><span class="params">(<span name="itemToFind">itemToFind: <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#foreachPartial" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="foreachPartial(pf:PartialFunction[A,Unit]):Unit"></a><a id="foreachPartial(PartialFunction[A,Unit]):Unit"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#foreachPartial(pf:PartialFunction[A,Unit]):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">foreachPartial</span><span class="params">(<span name="pf">pf: <a href="https://www.scala-lang.org/api/2.12.11/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a>]</span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyVal#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#getClass():Class[_&lt;:AnyVal]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -325,10 +398,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyVal → Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#getOrElse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getOrElse(default:=&gt;String):String"></a><a id="getOrElse(⇒String):String"></a>
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#groupBySingleValue" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="groupBySingleValue[B](keys:A=&gt;B):Map[B,A]"></a><a id="groupBySingleValue[B]((A)⇒B):Map[B,A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#getOrElse(default:=&gt;String):String" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#groupBySingleValue[B](keys:A=&gt;B):Map[B,A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -337,17 +410,20 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getOrElse</span><span class="params">(<span name="default">default: ⇒ <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">groupBySingleValue</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="keys">keys: (<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>) ⇒ <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.groupBySingleValue.B">B</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.groupBySingleValue.B">B</span>, <span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Return the string unless it is null or empty, in which
-case return the default.</p><div class="fullcomment"><div class="comment cmt"><p>Return the string unless it is null or empty, in which
-case return the default.
-</p></div><dl class="paramcmts block"><dt class="param">default</dt><dd class="cmt"><p>the string to return if inputString is null or empty</p></dd><dt>returns</dt><dd class="cmt"><p>either the inputString or the default</p></dd></dl></div>
+      <p class="shortcomment cmt">Creates a map from the given sequence by mapping each transformed
+element (the key) by applying the function <code>keys</code> to the sequence and
+using the element in the sequence as the value.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a map from the given sequence by mapping each transformed
+element (the key) by applying the function <code>keys</code> to the sequence and
+using the element in the sequence as the value. Chooses the last
+element in the seq when a key collision occurs.
+</p></div><dl class="paramcmts block"><dt class="param">keys</dt><dd class="cmt"><p>the function that transforms a given element in the seq to a key</p></dd><dt>returns</dt><dd class="cmt"><p>a map of the given sequence</p></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -360,59 +436,10 @@ case return the default.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#quoteC" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="quoteC():String"></a>
+    </li><li name="com.twitter.conversions.SeqOps.RichSeq#self" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="self:Seq[A]"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#quoteC():String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">quoteC</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Quote a string so that unprintable chars (in ASCII) are represented by
-C-style backslash expressions.</p><div class="fullcomment"><div class="comment cmt"><p>Quote a string so that unprintable chars (in ASCII) are represented by
-C-style backslash expressions. For example, a raw linefeed will be
-translated into <code>&quot;\n&quot;</code>. Control codes (anything below 0x20)
-and unprintables (anything above 0x7E) are turned into either
-<code>&quot;\xHH&quot;</code> or <code>&quot;\\uHHHH&quot;</code> expressions, depending on
-their range. Embedded backslashes and double-quotes are also quoted.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a quoted string, suitable for ASCII display</p></dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#regexSub" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="regexSub(re:scala.util.matching.Regex)(replace:scala.util.matching.Regex.MatchData=&gt;String):String"></a><a id="regexSub(Regex)((MatchData)⇒String):String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#regexSub(re:scala.util.matching.Regex)(replace:scala.util.matching.Regex.MatchData=&gt;String):String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">regexSub</span><span class="params">(<span name="re">re: <a href="https://www.scala-lang.org/api/2.12.11/scala/util/matching/Regex.html#scala.util.matching.Regex" class="extype" name="scala.util.matching.Regex">Regex</a></span>)</span><span class="params">(<span name="replace">replace: (<span class="extype" name="scala.util.matching.Regex.MatchData">MatchData</span>) ⇒ <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">For every section of a string that matches a regular expression, call
-a function to determine a replacement (as in python's
-<code>re.sub</code>).</p><div class="fullcomment"><div class="comment cmt"><p>For every section of a string that matches a regular expression, call
-a function to determine a replacement (as in python's
-<code>re.sub</code>). The function will be passed the Matcher object
-corresponding to the substring that matches the pattern, and that
-substring will be replaced by the function's result.</p><p>For example, this call:</p><pre><span class="lit">"ohio"</span>.regexSub(<span class="lit">""</span><span class="lit">"h."</span><span class="lit">""</span>.r) { m <span class="kw">=&gt;</span> <span class="lit">"n"</span> }</pre><p>will return the string <code>&quot;ono&quot;</code>.</p><p>The matches are found using <code>Matcher.find()</code> and so
-will obey all the normal java rules (the matches will not overlap,
-etc).
-</p></div><dl class="paramcmts block"><dt class="param">re</dt><dd class="cmt"><p>the regex pattern to replace</p></dd><dt class="param">replace</dt><dd class="cmt"><p>a function that takes Regex.MatchData objects and
-    returns a string to substitute</p></dd><dt>returns</dt><dd class="cmt"><p>the resulting string with replacements made</p></dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#string" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="string:String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#string:String" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#self:Seq[A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -421,81 +448,14 @@ etc).
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">string</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">self</span><span class="result">: <a href="../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="com.twitter.conversions.SeqOps.RichSeq.A">A</span>]</span>
       </span>
       
       
-    </li><li name="com.twitter.conversions.StringOps.RichString#toCamelCase" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toCamelCase:String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#toCamelCase:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toCamelCase</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Converts foo_bar to fooBar (first letter lowercased)</p><div class="fullcomment"><div class="comment cmt"><p>Converts foo_bar to fooBar (first letter lowercased)</p><p>For example:</p><pre><span class="lit">"hello_world"</span>.toCamelCase</pre><p>will return the String <code>&quot;helloWorld&quot;</code>.
-</p></div></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#toOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="toOption:Option[String]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#toOption:Option[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toOption</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Wrap the string in an Option, returning None when it is null or empty.</p>
-    </li><li name="com.twitter.conversions.StringOps.RichString#toPascalCase" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toPascalCase:String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#toPascalCase:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toPascalCase</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Converts foo_bar to FooBar (first letter uppercased)</p><div class="fullcomment"><div class="comment cmt"><p>Converts foo_bar to FooBar (first letter uppercased)</p><p>For example:</p><pre><span class="lit">"hello_world"</span>.toPascalCase</pre><p>will return the String <code>&quot;HelloWorld&quot;</code>.
-</p></div></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#toSnakeCase" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="toSnakeCase:String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#toSnakeCase:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toSnakeCase</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Converts FooBar to foo_bar (all lowercase)</p><div class="fullcomment"><div class="comment cmt"><p>Converts FooBar to foo_bar (all lowercase)</p><p>For example:</p><pre><span class="lit">"HelloWorld"</span>.toSnakeCase</pre><p>will return the String <code>&quot;hello_world&quot;</code>.
-</p></div></div>
     </li><li name="scala.Any#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#toString():String" title="Permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$$RichSeq.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -508,46 +468,6 @@ etc).
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#unhexlify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unhexlify():Array[Byte]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#unhexlify():Array[Byte]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unhexlify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="https://www.scala-lang.org/api/2.12.11/scala/Byte.html#scala.Byte" class="extype" name="scala.Byte">Byte</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Turn a string of hex digits into a byte array.</p><div class="fullcomment"><div class="comment cmt"><p>Turn a string of hex digits into a byte array. This does the exact
-opposite of <code>Array[Byte]#hexlify</code>.
-</p></div></div>
-    </li><li name="com.twitter.conversions.StringOps.RichString#unquoteC" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="unquoteC():String"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/conversions/StringOps$$RichString.html#unquoteC():String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">unquoteC</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Unquote an ASCII string that has been quoted in a style like
-<code>quoteC</code> and convert it into a standard unicode string.</p><div class="fullcomment"><div class="comment cmt"><p>Unquote an ASCII string that has been quoted in a style like
-<code>quoteC</code> and convert it into a standard unicode string.
-<code>&quot;\\uHHHH&quot;</code> and <code>&quot;\xHH&quot;</code> expressions are unpacked
-into unicode characters, as well as <code>&quot;\r&quot;</code>, <code>&quot;\n&quot;</code>,
-<code>&quot;\t&quot;</code>, <code>&quot;\\&quot;</code>, and <code>'\&quot;'</code>.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>an unquoted unicode string</p></dd></dl></div>
     </li>
               </ol>
             </div>

@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Changelog &#8212; Util 20.10.0 documentation</title>
+    <title>Changelog &#8212; Util 20.12.0 documentation</title>
     <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '20.10.0',
+        VERSION:     '20.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -70,7 +70,55 @@
 <h2>Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="id1">
-<h2>20.10.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>20.12.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="breaking-api-changes">
+<h3>Breaking API Changes<a class="headerlink" href="#breaking-api-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>util-core: removed <cite>com.twitter.util.Config.</cite> <code class="docutils literal"><span class="pre">PHAB_ID=D580444</span></code></li>
+</ul>
+</div>
+<div class="section" id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">util-core: <cite>c.t.conversions</cite> now includes conversion methods for maps (under <cite>MapOps</cite>)
+that were moved from Finatra. <code class="docutils literal"><span class="pre">PHAB_ID=D578819</span></code></p>
+</li>
+<li><p class="first">util-core: <cite>c.t.conversions</cite> now includes conversion methods for tuples (under <cite>TupleOps</cite>)
+that were moved from Finatra. <code class="docutils literal"><span class="pre">PHAB_ID=D578804</span></code></p>
+</li>
+<li><p class="first">util-core: <cite>c.t.conversions</cite> now includes conversion methods for seqs (under <cite>SeqOps</cite>)
+that were moved from Finatra. <code class="docutils literal"><span class="pre">PHAB_ID=D578605</span></code></p>
+</li>
+<li><p class="first">util-core: <cite>c.t.conversions</cite> now includes conversion methods <cite>toOption</cite>, and <cite>getOrElse</cite>
+under <cite>StringOps</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D578549</span></code></p>
+</li>
+<li><p class="first">util-core: <cite>c.t.util.Duration</cite> now includes <cite>fromJava</cite> and <cite>asJava</cite> conversions to
+<cite>java.time.Duration</cite> types. <code class="docutils literal"><span class="pre">PHAB_ID=D571885</span></code></p>
+<p>Runtime Behavior Changes</p>
+</li>
+</ul>
+<hr class="docutils" />
+<ul class="simple">
+<li>util-core: <cite>Activity.apply(Event)</cite> will now propagate registry events to the underlying
+<cite>Event</cite> instead of registering once and deregistering on garbage collection.  This means
+that if the underlying <cite>Event</cite> is “notified” while the derived <cite>Activity</cite> is not actively
+being observed, it will not pick up the notification.  Furthermore, the derived <cite>Activity</cite>
+will revert to the <cite>Activity.Pending</cite> state while it is not under observation. <code class="docutils literal"><span class="pre">PHAB_ID=D574843</span></code></li>
+<li>util-core: <cite>Activity#stabilize</cite> will now propagate registry events to the underlying
+<cite>Activity</cite> instead of registering once and deregistering on garbage collection.  This means
+that if the underlying <cite>Activity</cite> is changed to a new state while the derived <cite>Activity</cite> is not actively
+being observed, it will not update its own state.  The derived <cite>Activity</cite> will maintain its last
+“stable” state when it’s next observed, unless the underlying <cite>Activity</cite> was updated to a new “stable”
+state, in which case it will pick that up instead. <code class="docutils literal"><span class="pre">PHAB_ID=D574843</span></code></li>
+<li>util-stats: <cite>c.t.finagle.stats.DenylistStatsReceiver</cite> now includes methods for creating
+<cite>DenyListStatsReceiver</cite> from partial functions. <code class="docutils literal"><span class="pre">PHAB_ID=D576833</span></code></li>
+<li>util-core: <cite>c.t.util.FuturePool</cite> now supports exporting the number of its pending tasks via
+<cite>numPendingTasks</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D582979</span></code></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>20.10.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bug-fixes">
 <h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -84,18 +132,18 @@ able to use the <cite>c.t.util.logging.Logger</cite> companion object with less 
 </ul>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>20.9.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="new-features">
-<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h2>20.9.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>New Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: <cite>Seq</cite>/<cite>Tuple2</cite>/<cite>Map</cite> flags can now operate on booleans. For example,
 <cite>Flag[Seq[Boolean]]</cite> now works as expected instead of throwing an assert exception (previous
 behaviour). <code class="docutils literal"><span class="pre">PHAB_ID=D549196</span></code></li>
 </ul>
 </div>
-<div class="section" id="breaking-api-changes">
-<h3>Breaking API Changes<a class="headerlink" href="#breaking-api-changes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Breaking API Changes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: <cite>Flaggable.mandatory</cite> now takes implicit <cite>ClassTag[T]</cite> as an argument. This is change is
 source-compatible in Scala but requires Java users to pass argument explicitly via
@@ -109,10 +157,10 @@ source-compatible in Scala but requires Java users to pass argument explicitly v
 </ul>
 </div>
 </div>
-<div class="section" id="id3">
-<h2>20.8.1<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>New Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h2>20.8.1<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>New Features<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-mock: Introduce <a class="reference external" href="https://github.com/mockito/mockito-scala">mockito-scala</a> based mocking
 integration. Fix up and update mockito testing dependencies:
@@ -122,10 +170,10 @@ integration. Fix up and update mockito testing dependencies:
 </ul>
 </div>
 </div>
-<div class="section" id="id5">
-<h2>20.8.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id6">
-<h3>New Features<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="do-not-use">
+<h2>20.8.0 (DO NOT USE)<a class="headerlink" href="#do-not-use" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>New Features<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-stats: Store MetricSchemas in InMemoryStatsReceiver to enable further testing. <code class="docutils literal"><span class="pre">PHAB_ID=D518195</span></code></li>
 <li>util-core: c.t.u.Var.Observer is now public. This allows scala users to extend the Var trait
@@ -133,8 +181,8 @@ as has been the case for Java users. <code class="docutils literal"><span class=
 <li>util-core: Added two new methods to c.t.u.Duration and c.t.u.Time: <cite>.fromHours</cite> and <cite>.fromDays</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D522734</span></code></li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Treat empty strings as empty collections in <cite>Flag[Seq[_]]</cite>, <cite>Flag[Set[_]]</cite>,
 <cite>Flag[java.util.List[_]]</cite>, and <cite>Flag[java.util.Set[_]]</cite>. They were treated as collections
@@ -142,19 +190,19 @@ with single element, empty string, before. <code class="docutils literal"><span 
 </ul>
 </div>
 </div>
-<div class="section" id="id8">
-<h2>20.7.0<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id9">
-<h3>New Features<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h2>20.7.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h3>New Features<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Add ability to observe App lifecycle events. <code class="docutils literal"><span class="pre">PHAB_ID=D508145</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id10">
-<h2>20.6.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id11">
-<h3>New Features<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h2>20.6.0<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>New Features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-stats: Add two new Java-friendly methods to <cite>StatsReceiver</cite> (<cite>addGauge</cite> and <cite>provideGauge</cite>)
 that take java.util.function.Supplier as well as list vararg argument last to enable better
@@ -165,10 +213,10 @@ and <cite>Flag.getWithDefaultUnparsed</cite>. <code class="docutils literal"><sp
 </ul>
 </div>
 </div>
-<div class="section" id="id12">
-<h2>20.5.0<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id13">
-<h3>New Features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h2>20.5.0<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h3>New Features<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><dl class="first docutils">
 <dt>util-security: Moved Credentials from util-core</dt>
@@ -179,8 +227,8 @@ and <cite>Flag.getWithDefaultUnparsed</cite>. <code class="docutils literal"><sp
 </li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>Breaking API Changes<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Breaking API Changes<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><dl class="first docutils">
 <dt>util-core: Move Credentials to util-security</dt>
@@ -196,25 +244,25 @@ changed minimally in the past 5 years. <code class="docutils literal"><span clas
 </ul>
 </div>
 </div>
-<div class="section" id="id15">
-<h2>20.4.1<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id16">
-<h3>New Features<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h2>20.4.1<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id18">
+<h3>New Features<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-tunable: ConfigurationLinter accepts a relative path. <code class="docutils literal"><span class="pre">PHAB_ID=D468528</span></code></li>
 </ul>
 </div>
-<div class="section" id="id17">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Bump jackson version to 2.11.0. <code class="docutils literal"><span class="pre">PHAB_ID=D457496</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id18">
-<h2>20.4.0<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id19">
-<h3>New Features<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h2>20.4.0 (DO NOT USE)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id21">
+<h3>New Features<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: When looking to add idempotent close behavior, users should mix in <cite>CloseOnce</cite> to
 classes which already extend (or implement) <cite>Closable</cite>, as mixing in <cite>ClosableOnce</cite> leads to
@@ -223,8 +271,8 @@ already instantiated <cite>Closable</cite>. Classes which do not extend <cite>Cl
 mix in <cite>ClosableOnce</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D455819</span></code></li>
 </ul>
 </div>
-<div class="section" id="id20">
-<h3>Breaking API Changes<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Breaking API Changes<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><dl class="first docutils">
 <dt>util-hashing: Rename</dt>
@@ -236,8 +284,8 @@ mix in <cite>ClosableOnce</cite>. <code class="docutils literal"><span class="pr
 </li>
 </ul>
 </div>
-<div class="section" id="id21">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-stats: Provide CachedRegex, a function that filters a
 Map[String, Number] =&gt; Map[String, Number] and caches which keys to filter on
@@ -246,28 +294,28 @@ typically recommends <code class="docutils literal"><span class="pre">PHAB_ID=D4
 </ul>
 </div>
 </div>
-<div class="section" id="id22">
-<h2>20.3.0<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id23">
-<h3>Breaking API Changes<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h2>20.3.0<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id25">
+<h3>Breaking API Changes<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: The system property <cite>com.twitter.util.UseLocalInInterruptible</cite> no longer
 can be used to modulate which Local state is present when a Promise is interrupted.
 <code class="docutils literal"><span class="pre">PHAB_ID=D442444</span></code></li>
 </ul>
 </div>
-<div class="section" id="id24">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Promises now exclusively use the state local to setting the interrupt
 handler when raising on a Promise. <code class="docutils literal"><span class="pre">PHAB_ID=D442444</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id25">
-<h2>20.2.1<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id26">
-<h3>New Features<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h2>20.2.1<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id28">
+<h3>New Features<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Add <cite>c.t.util.app.App#onExitLast</cite> to be able to provide better Java
 ergonomics for designating a final exit function. <code class="docutils literal"><span class="pre">PHAB_ID=D433874</span></code></li>
@@ -275,29 +323,29 @@ ergonomics for designating a final exit function. <code class="docutils literal"
 of Reader to a single Reader. <code class="docutils literal"><span class="pre">PHAB_ID=D434448</span></code></li>
 </ul>
 </div>
-<div class="section" id="id27">
-<h3>Breaking API Changes<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id29">
+<h3>Breaking API Changes<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Future.unapply</cite> has been removed. Use <cite>Future.poll</cite> to retrieve Future’s
 state. <code class="docutils literal"><span class="pre">PHAB_ID=D427429</span></code></li>
 </ul>
 </div>
-<div class="section" id="id28">
-<h3>Bug Fixes<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id30">
+<h3>Bug Fixes<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-logging: Add a missing <cite>_*</cite> that could result in exceptions when using the
 <cite>Logger.apply(Level, Throwable, String, Any*)</cite> signature. <code class="docutils literal"><span class="pre">PHAB_ID=D430122</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id29">
-<h2>20.1.0<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id31">
+<h2>20.1.0<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
 <p>No Changes</p>
 </div>
-<div class="section" id="id30">
-<h2>19.12.0<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id31">
-<h3>New Features<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id32">
+<h2>19.12.0<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id33">
+<h3>New Features<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-stats: Introduces <cite>c.t.f.stats.LazyStatsReceiver</cite> which ensures that counters and histograms
 don’t export metrics until after they have been <cite>incr`ed or `add`ed at least once. ``PHAB_ID=D398898`</cite></li>
@@ -307,14 +355,14 @@ or later. <code class="docutils literal"><span class="pre">PHAB_ID=D400661</span
 a <cite>com.twitter.util.Future</cite> to make integrating with Java APIs simpler. <code class="docutils literal"><span class="pre">PHAB_ID=D408656</span></code></li>
 </ul>
 </div>
-<div class="section" id="id32">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Upgrade to jackson 2.9.10 and jackson-databind 2.9.10.1 <code class="docutils literal"><span class="pre">PHAB_ID=D410846</span></code></li>
 </ul>
 </div>
-<div class="section" id="id33">
-<h3>Breaking API Changes<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id35">
+<h3>Breaking API Changes<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: The lightly used <cite>com.twitter.util.JavaSingleton</cite> trait has been removed. It
 did not work as intended. Users should provide Java friendly objects, classes, and methods
@@ -329,8 +377,8 @@ move to slf4j for logging and minimize dependencies on <cite>com.twitter.logging
 it is intended to be replaced entirely by slf4j. <code class="docutils literal"><span class="pre">PHAB_ID=D403574</span></code></li>
 </ul>
 </div>
-<div class="section" id="id34">
-<h3>Bug Fixes<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id36">
+<h3>Bug Fixes<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Future#toJavaFuture</cite> incorrectly threw the exception responsible for failing it,
 instead of a <cite>j.u.c.ExecutionException</cite> wrapping the exception responsible for failing it.
@@ -338,10 +386,10 @@ instead of a <cite>j.u.c.ExecutionException</cite> wrapping the exception respon
 </ul>
 </div>
 </div>
-<div class="section" id="id35">
-<h2>19.11.0<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id36">
-<h3>New Features<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h2>19.11.0<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id38">
+<h3>New Features<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Add initial support for JDK 11 compatibility. <code class="docutils literal"><span class="pre">PHAB_ID=D365075</span></code></li>
 <li>util-core: Created public method Closable.stopCollectClosablesThread that stops CollectClosables</li>
@@ -354,16 +402,16 @@ instead of a <cite>j.u.c.ExecutionException</cite> wrapping the exception respon
 behavior of <cite>Reader.read()</cite> because it will skip the value returned from <cite>iterator.next</cite>.
 <code class="docutils literal"><span class="pre">PHAB_ID=D391769</span></code></p>
 </div>
-<div class="section" id="id37">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id39">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Upgrade to caffeine 2.8.0 <code class="docutils literal"><span class="pre">PHAB_ID=D384592</span></code></li>
 <li>util-jvm: Stop double-exporting <cite>postGC</cite> stats under both <cite>jvm</cite> and <cite>jvm/mem</cite>. These are now
 only exported under <cite>jvm/mem/postGC</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D392230</span></code></li>
 </ul>
 </div>
-<div class="section" id="id38">
-<h3>Breaking API Changes<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id40">
+<h3>Breaking API Changes<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-stats: abstract methods of StatsReceiver now take Schemas. The old APIs
 are now final and cannot be overriden. For custom implementations, define
@@ -381,8 +429,8 @@ and return a Seq of items. <code class="docutils literal"><span class="pre">PHAB
 <cite>Pipe.copyMany</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D393650</span></code></li>
 </ul>
 </div>
-<div class="section" id="id39">
-<h3>Deprecations<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id41">
+<h3>Deprecations<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Mark <cite>c.t.io.BufReaders</cite>, <cite>c.t.io.Bufs</cite>, <cite>c.t.io.Readers</cite>, and <cite>c.t.io.Writers</cite> as
 Deprecated. These classes will no longer be needed, and will be removed, after 2.11 support is
@@ -391,10 +439,10 @@ dropped. <code class="docutils literal"><span class="pre">PHAB_ID=D393913</span>
 </ul>
 </div>
 </div>
-<div class="section" id="id40">
-<h2>19.10.0<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id41">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id42">
+<h2>19.10.0<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id43">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: When a computation from FuturePool is interrupted, its promise is
 set to the interrupt, wrapped in a j.u.c.CancellationException. This wrapper
@@ -406,8 +454,8 @@ promise directly with the raised exception. This will affect users that
 explicitly handle CancellationException. <code class="docutils literal"><span class="pre">PHAB_ID=D371872</span></code></li>
 </ul>
 </div>
-<div class="section" id="id42">
-<h3>Bug Fixes<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id44">
+<h3>Bug Fixes<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fixed bug in <cite>c.t.io.Reader.framed</cite> where if the <cite>framer</cite> didn’t emit a <cite>List</cite> the
 emitted frames were skipped. <code class="docutils literal"><span class="pre">PHAB_ID=D378048</span></code></li>
@@ -416,10 +464,10 @@ emitted frames were skipped. <code class="docutils literal"><span class="pre">PH
 </ul>
 </div>
 </div>
-<div class="section" id="id43">
-<h2>19.9.0<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id44">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id45">
+<h2>19.9.0<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id46">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Better handling of exceptions when awaiting on the <cite>c.t.app.App</cite> to close at
 the end of the main function. We <cite>Await.ready</cite> on <cite>this</cite> as the last step of
@@ -429,8 +477,8 @@ unhandled. We have updated the logic to ensure that <cite>TimeoutException`s are
 <li>util: Upgrade to Scala Collections Compat 2.1.2. <code class="docutils literal"><span class="pre">PHAB_ID=D364013</span></code></li>
 </ul>
 </div>
-<div class="section" id="id45">
-<h3>Breaking API Changes<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id47">
+<h3>Breaking API Changes<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core:  BoundedStack is unused and really old code. Delete it. <code class="docutils literal"><span class="pre">PHAB_ID=D357338</span></code></li>
 <li>util-logging: <cite>com.twitter.logging.ScribeHandler</cite> and <cite>com.twitter.logging.ScribeHandlers</cite> have
@@ -441,10 +489,10 @@ implementation directly into their code. <code class="docutils literal"><span cl
 </ul>
 </div>
 </div>
-<div class="section" id="id46">
-<h2>19.8.1<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id47">
-<h3>New Features<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id48">
+<h2>19.8.1<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id49">
+<h3>New Features<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Enables cross-build for 2.13.0. <code class="docutils literal"><span class="pre">PHAB_ID=D333021</span></code></li>
 </ul>
@@ -471,8 +519,8 @@ passing varags. <code class="docutils literal"><span class="pre">PHAB_ID=D333021
 </li>
 </ul>
 </div>
-<div class="section" id="id48">
-<h3>Breaking API Changes<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id50">
+<h3>Breaking API Changes<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: (not breaking) <cite>c.t.util.Future.join</cite> and <cite>c.t.util.Future.collect</cite> now take
 <cite>Iterable[Future[A]]</cite> other than Seq. <code class="docutils literal"><span class="pre">PHAB_ID=D333021</span></code></li>
@@ -483,10 +531,10 @@ against any collection of events. <code class="docutils literal"><span class="pr
 </ul>
 </div>
 </div>
-<div class="section" id="id49">
-<h2>19.8.0<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id50">
-<h3>Breaking API Changes<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id51">
+<h2>19.8.0<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id52">
+<h3>Breaking API Changes<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-logging: The namespace forwarders for <cite>Level</cite> and <cite>Policy</cite> in <cite>com.twitter.logging.config</cite>
 have been removed. Code should be updated to use <cite>com.twitter.logging.Level</cite> and
@@ -498,18 +546,18 @@ to use <cite>com.twitter.logging.LoggerFactory</cite> where necessary. Users are
 ‘util-slf4j-api’ though where possible. <code class="docutils literal"><span class="pre">PHAB_ID=D345381</span></code></li>
 </ul>
 </div>
-<div class="section" id="id51">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id53">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Upgrade to Jackson 2.9.9. <code class="docutils literal"><span class="pre">PHAB_ID=D345969</span></code></li>
 <li>util-app: It is now illegal to define GlobalFlags enclosed in package objects. <code class="docutils literal"><span class="pre">PHAB_ID=D353045</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id52">
-<h2>19.7.0<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id53">
-<h3>Breaking API Changes<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id54">
+<h2>19.7.0<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id55">
+<h3>Breaking API Changes<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Removed deprecated <cite>c.t.concurrent.Scheduler</cite> methods <cite>usrTime</cite>,
 <cite>cpuTime</cite>, and <cite>wallTime</cite>. These were deprecated in 2015 and have no
@@ -519,8 +567,8 @@ replacement. <code class="docutils literal"><span class="pre">PHAB_ID=D330386</s
 no replacement. Users are encouraged to use ‘util-slf4j-api’ where possible. <code class="docutils literal"><span class="pre">PHAB_ID=D339563</span></code></li>
 </ul>
 </div>
-<div class="section" id="id54">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id56">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Remove experimental toggle <cite>com.twitter.util.BypassScheduler</cite> used
 for speeding up <cite>ConstFuture.map</cite> (<cite>transformTry</cite>). Now, we always run map
@@ -529,17 +577,17 @@ and potentially reordered. <code class="docutils literal"><span class="pre">PHAB
 </ul>
 </div>
 </div>
-<div class="section" id="id55">
-<h2>19.6.0<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id56">
-<h3>Bug Fixes<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id57">
+<h2>19.6.0<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id58">
+<h3>Bug Fixes<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fixed the behavior in <cite>c.t.io.Reader</cite> where reading from <cite>Reader#empty</cite> fails to return
 a <cite>ReaderDiscardedException</cite> after it’s discarded. <code class="docutils literal"><span class="pre">PHAB_ID=D325465</span></code></li>
 </ul>
 </div>
-<div class="section" id="id57">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id59">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Use Local at callback creation for Future’s interrupt handler rather than
 raiser’s locals so that it is consistent with other callbacks. This functionality is
@@ -548,14 +596,14 @@ by setting it to 1.0 if you would like to try it out. <code class="docutils lite
 </ul>
 </div>
 </div>
-<div class="section" id="id58">
-<h2>19.5.1<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id60">
+<h2>19.5.1<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h2>
 <p>No Changes</p>
 </div>
-<div class="section" id="id59">
-<h2>19.5.0<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id60">
-<h3>New Features<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id61">
+<h2>19.5.0<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id62">
+<h3>New Features<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Track the registration of duplicated Flag names. Currently, we print a warning to
 <cite>stderr</cite> but do not track the duplicated Flag names. Tracking them allows us to inspect and
@@ -563,20 +611,20 @@ warn over the entire set. <code class="docutils literal"><span class="pre">PHAB_
 </ul>
 </div>
 </div>
-<div class="section" id="id61">
-<h2>19.4.0<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id62">
-<h3>New Features<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id63">
+<h2>19.4.0<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id64">
+<h3>New Features<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Improve usage of <cite>Flag.let</cite> by providing a <cite>Flag.letParse</cite> method
 <code class="docutils literal"><span class="pre">PHAB_ID=D288549</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id63">
-<h2>19.3.0<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id64">
-<h3>New Features<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id65">
+<h2>19.3.0<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id66">
+<h3>New Features<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Discard parent reader from <cite>Reader.flatten</cite> when child reader encounters an exception.
 <code class="docutils literal"><span class="pre">PHAB_ID=D281830</span></code></li>
@@ -585,10 +633,10 @@ warn over the entire set. <code class="docutils literal"><span class="pre">PHAB_
 </ul>
 </div>
 </div>
-<div class="section" id="id65">
-<h2>19.2.0<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id66">
-<h3>New Features<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id67">
+<h2>19.2.0<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id68">
+<h3>New Features<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: updated <cite>Reader#fromFuture</cite> to resolve its <cite>onClose</cite> when reading of end-of-stream.
 <code class="docutils literal"><span class="pre">PHAB_ID=D269413</span></code></li>
@@ -610,23 +658,23 @@ where it would have printed <cite>1 3 2</cite>. <code class="docutils literal"><
 certificates that are part of the same certificate chain. <code class="docutils literal"><span class="pre">PHAB_ID=D263190</span></code></li>
 </ul>
 </div>
-<div class="section" id="id67">
-<h3>Bug Fixes<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id69">
+<h3>Bug Fixes<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fixed the behavior in <cite>c.t.io.Reader</cite> where <cite>Reader#flatMap</cite> fails to propagate
 parent reader’s <cite>onClose</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D269413</span></code></li>
 </ul>
 </div>
-<div class="section" id="id68">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id70">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Closing a <cite>c.t.io.Pipe</cite> will notify <cite>onClose</cite> when the deadline has passed whereas
 before the pipe would wait indefinitely for a read before transitioning to the Closed state.
 <code class="docutils literal"><span class="pre">PHAB_ID=D229728</span></code></li>
 </ul>
 </div>
-<div class="section" id="id69">
-<h3>Breaking API Changes<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id71">
+<h3>Breaking API Changes<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Remove <cite>c.t.u.CountDownLatch</cite> which is an extremely thin shim around
 <cite>j.u.c.CountDownLatch</cite> that provides pretty limited value.  To migrate to <cite>j.u.c.CountDownLatch</cite>,
@@ -657,17 +705,17 @@ basically only used for HTTP messages, so its new package name is <cite>c.t.f.ht
 </ul>
 </div>
 </div>
-<div class="section" id="id70">
-<h2>19.1.0<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id71">
-<h3>New Features<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id72">
+<h2>19.1.0<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id73">
+<h3>New Features<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Added Reader.map/flatMap to transform Reader[A] to Reader[B]. Added <cite>fromFuture()</cite>
 and <cite>value()</cite> in the Reader object to construct a new Reader. <code class="docutils literal"><span class="pre">PHAB_ID=D252165</span></code></li>
 </ul>
 </div>
-<div class="section" id="id72">
-<h3>Breaking API Changes<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id74">
+<h3>Breaking API Changes<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: The implicit conversions classes in <cite>c.t.conversions.SomethingOps</cite> have been
 renamed to have unique names. This allows them to be used together with wildcard imports.
@@ -677,10 +725,10 @@ own instance should you need to.  <code class="docutils literal"><span class="pr
 </ul>
 </div>
 </div>
-<div class="section" id="id73">
-<h2>18.12.0<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id74">
-<h3>New Features<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id75">
+<h2>18.12.0<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id76">
+<h3>New Features<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Provide a way to listen for stream termination to <cite>c.t.util.Reader</cite>, <cite>Reader#onClose</cite>
 which is satisfied when the stream is discarded or read until the end. <code class="docutils literal"><span class="pre">PHAB_ID=D236311</span></code></li>
@@ -698,15 +746,15 @@ are <cite>AnyVal</cite> based avoiding allocations for the common usage pattern.
 </li>
 </ul>
 </div>
-<div class="section" id="id75">
-<h3>Bug Fixes<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id77">
+<h3>Bug Fixes<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fixed a bug where tail would sometimes return Some empty AsyncStream instead of None.
 <code class="docutils literal"><span class="pre">PHAB_ID=D241513</span></code></li>
 </ul>
 </div>
-<div class="section" id="id76">
-<h3>Deprecations<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id78">
+<h3>Deprecations<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Conversions in <cite>c.t.conversions</cite> have been deprecated in favor of <cite>SomethingOps</cite>
 versions. Where possible the implementations are <cite>AnyVal</cite> based and use implicit classes
@@ -721,8 +769,8 @@ instead of implicit conversions. <code class="docutils literal"><span class="pre
 </li>
 </ul>
 </div>
-<div class="section" id="id77">
-<h3>Breaking API Changes<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id79">
+<h3>Breaking API Changes<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Experimental <cite>c.t.io.exp.MinThroughput</cite> utilities were removed.  <code class="docutils literal"><span class="pre">PHAB_ID=D240944</span></code></li>
 <li>util-core: Deleted <cite>c.t.io.Reader.Null</cite>, which was incompatible with <cite>Reader#onClose</cite> semantics.
@@ -731,10 +779,10 @@ instead of implicit conversions. <code class="docutils literal"><span class="pre
 </ul>
 </div>
 </div>
-<div class="section" id="id78">
-<h2>18.11.0<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id79">
-<h3>Breaking API Changes<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id80">
+<h2>18.11.0<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id81">
+<h3>Breaking API Changes<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.u.Future.raiseWithin</cite> methods now take the timeout exception as a call-by-name
 parameter instead of a strict exception. While Scala programs should compile as usual, Java
@@ -744,17 +792,17 @@ users will need to use a <cite>scala.Function0</cite> as the second parameter. T
 <code class="docutils literal"><span class="pre">PHAB_ID=D231969</span></code></li>
 </ul>
 </div>
-<div class="section" id="id80">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id82">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Made Stopwatch.timeNanos monotone. <code class="docutils literal"><span class="pre">PHAB_ID=D236629</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id81">
-<h2>18.10.0<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id82">
-<h3>Breaking API Changes<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id83">
+<h2>18.10.0<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id84">
+<h3>Breaking API Changes<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.io.Reader.Writable</cite> and <cite>c.t.Reader.writable()</cite> are removed. Use <cite>c.t.io.Pipe</cite>
 instead. <code class="docutils literal"><span class="pre">PHAB_ID=D226603</span></code></li>
@@ -768,8 +816,8 @@ instead. <code class="docutils literal"><span class="pre">PHAB_ID=D226603</span>
 stream.  <code class="docutils literal"><span class="pre">PHAB_ID=D228385</span></code></li>
 </ul>
 </div>
-<div class="section" id="id83">
-<h3>New Features<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id85">
+<h3>New Features<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.io.Reader.fromBuf</cite> (<cite>BufReader</cite>), <cite>c.t.io.Reader.fromFile</cite>,
 <cite>c.t.io.Reader.fromInputStream</cite> (<cite>InputStreamReader</cite>) now take an additional parameter,
@@ -777,18 +825,18 @@ stream.  <code class="docutils literal"><span class="pre">PHAB_ID=D228385</span>
 <code class="docutils literal"><span class="pre">PHAB_ID=D203154</span></code></li>
 </ul>
 </div>
-<div class="section" id="id84">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id86">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.u.Duration.inTimeUnit</cite> can now return
 <cite>j.u.c.TimeUnit.MINUTES</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D225115</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id85">
-<h2>18.9.1<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id86">
-<h3>Breaking API Changes<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id87">
+<h2>18.9.1<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id88">
+<h3>Breaking API Changes<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.io.Writer</cite> now extends <cite>c.t.util.Closable</cite>. <cite>c.t.io.Writer.ClosableWriter</cite>
 is no longer exist. <code class="docutils literal"><span class="pre">PHAB_ID=D218453</span></code></li>
@@ -796,25 +844,25 @@ is no longer exist. <code class="docutils literal"><span class="pre">PHAB_ID=D21
 the stream is closed. <code class="docutils literal"><span class="pre">PHAB_ID=D226319</span></code></li>
 </ul>
 </div>
-<div class="section" id="id87">
-<h3>Bug Fixes<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id89">
+<h3>Bug Fixes<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-slf4j-api: Moved slf4j-simple dependency to be a ‘test’ dependency, instead of a
 compile dependency, which was inaccurate. <code class="docutils literal"><span class="pre">PHAB_ID=D220718</span></code></li>
 </ul>
 </div>
-<div class="section" id="id88">
-<h3>New Features<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id90">
+<h3>New Features<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Added a <cite>contramap</cite> function into <cite>c.t.io.Writer</cite>, <cite>Writer</cite> is now a contravariant
 functor. Added the <cite>AbstractWriter</cite> for Java compatibility <code class="docutils literal"><span class="pre">PHAB_ID=D225686</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id89">
-<h2>18.9.0<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id90">
-<h3>New Features<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id91">
+<h2>18.9.0<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id92">
+<h3>New Features<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-logging: New way to construct <cite>ScribeHandler</cite> for java interoperability.
 <code class="docutils literal"><span class="pre">PHAB_ID=D208928</span></code></li>
@@ -830,8 +878,8 @@ functor. Added the <cite>AbstractWriter</cite> for Java compatibility <code clas
 <code class="docutils literal"><span class="pre">PHAB_ID=D211622</span></code></li>
 </ul>
 </div>
-<div class="section" id="id91">
-<h3>Breaking API Changes<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id93">
+<h3>Breaking API Changes<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-core: <cite>c.t.io.Reader</cite> and <cite>c.t.io.Writer</cite> are now abstracted over the type
 they produce/consume (<cite>Reader[A]</cite> and <cite>Writer[A]</cite>) and are no longer fixed to <cite>Buf</cite>.
@@ -856,10 +904,10 @@ configuring the the underlying logger of the Logging trait.</p>
 </ul>
 </div>
 </div>
-<div class="section" id="id92">
-<h2>18.8.0<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id93">
-<h3>Bug Fixes<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id94">
+<h2>18.8.0<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id95">
+<h3>Bug Fixes<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fixed an issue with Future.joinWith where it waits for
 completion of both futures even if one has failed. This also affects
@@ -867,20 +915,20 @@ the join method, which is implemented in terms of joinWith. <code class="docutil
 </ul>
 </div>
 </div>
-<div class="section" id="id94">
-<h2>18.7.0<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id95">
-<h3>Breaking API Changes<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id96">
+<h2>18.7.0<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id97">
+<h3>Breaking API Changes<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Local.Context used to be a type alias for Array[Option[_]], now it is
 a new key-value liked structure. <code class="docutils literal"><span class="pre">PHAB_ID=D182478</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id96">
-<h2>18.6.0<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id97">
-<h3>Breaking API Changes<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id98">
+<h2>18.6.0<a class="headerlink" href="#id98" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id99">
+<h3>Breaking API Changes<a class="headerlink" href="#id99" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Allow users a way to override the argument parsing behavior in
 <cite>c.t.app.App#nonExitingMain</cite> which was inlined. Users can override <cite>parseArgs</cite>
@@ -891,8 +939,8 @@ instead. <code class="docutils literal"><span class="pre">PHAB_ID=D181918</span>
 no longer recommend that people do this. <code class="docutils literal"><span class="pre">PHAB_ID=D174250</span></code></li>
 </ul>
 </div>
-<div class="section" id="id98">
-<h3>Bug Fixes<a class="headerlink" href="#id98" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id100">
+<h3>Bug Fixes<a class="headerlink" href="#id100" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Fix issue where in some environments, <cite>URLClassLoader#getURLs</cite> can
 return null, failing LoadService from initializing properly
@@ -902,26 +950,26 @@ at least one application server, the default returned is null, thus we should be
 resilient against this possibility. Fixes Finagle #695. <code class="docutils literal"><span class="pre">PHAB_ID=D181152</span></code></li>
 </ul>
 </div>
-<div class="section" id="id99">
-<h3>Deprecations<a class="headerlink" href="#id99" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id101">
+<h3>Deprecations<a class="headerlink" href="#id101" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-reflect: This library has been deprecated since it is legacy code and shouldn’t
 be used for new services. We no longer think this facility is the right way to do it
 and encourage you to provide your own forwarders. <code class="docutils literal"><span class="pre">PHAB_ID=D174250</span></code></li>
 </ul>
 </div>
-<div class="section" id="id100">
-<h3>New Features<a class="headerlink" href="#id100" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id102">
+<h3>New Features<a class="headerlink" href="#id102" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: added #suppressGracefulShutdownErrors method to optionally suppress exceptions
 during graceful shutdown from bubbling up. <code class="docutils literal"><span class="pre">PHAB_ID=D176970</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id101">
-<h2>18.5.0<a class="headerlink" href="#id101" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id102">
-<h3>Bug Fixes<a class="headerlink" href="#id102" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id103">
+<h2>18.5.0<a class="headerlink" href="#id103" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id104">
+<h3>Bug Fixes<a class="headerlink" href="#id104" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.concurrent.AsyncSemaphore</cite> no longer completes promises while holding
 its intrinsic lock. <code class="docutils literal"><span class="pre">PHAB_ID=D167434</span></code></li>
@@ -934,10 +982,10 @@ is missing from hashing.
 </ul>
 </div>
 </div>
-<div class="section" id="id103">
-<h2>18.4.0<a class="headerlink" href="#id103" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id104">
-<h3>New Features<a class="headerlink" href="#id104" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id105">
+<h2>18.4.0<a class="headerlink" href="#id105" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id106">
+<h3>New Features<a class="headerlink" href="#id106" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Add the ability to bind specific implementations for <cite>LoadService.apply</cite>
 via <cite>App.loadServiceBindings</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D146554</span></code></li>
@@ -945,8 +993,8 @@ via <cite>App.loadServiceBindings</cite>. <code class="docutils literal"><span c
 <cite>Closable</cite> to include idempotency of the <cite>close</cite> method. <code class="docutils literal"><span class="pre">PHAB_ID=D152000</span></code></li>
 </ul>
 </div>
-<div class="section" id="id105">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id105" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id107">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-app: Add visibility for NonFatal exceptions during exiting of <cite>c.t.app.App</cite>.
 Added visibility into any NonFatal exceptions which occur during the closing of
@@ -969,10 +1017,10 @@ types of stats being printedm, set <cite>includeHeaders</cite> to true. E.g.,
 </ul>
 </div>
 </div>
-<div class="section" id="id106">
-<h2>18.3.0<a class="headerlink" href="#id106" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id107">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id108">
+<h2>18.3.0<a class="headerlink" href="#id108" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id109">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id109" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Ensure that any flag parsing error reason is written to <cite>System.err</cite>
 before attempting to print flag usage. In the event that collecting flags for
@@ -984,8 +1032,8 @@ as to why flag parsing failed. <code class="docutils literal"><span class="pre">
 a <cite>Future.exception</cite> over any NonFatal exception. <code class="docutils literal"><span class="pre">PHAB_ID=D142086</span></code></li>
 </ul>
 </div>
-<div class="section" id="id108">
-<h3>Deprecations<a class="headerlink" href="#id108" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id110">
+<h3>Deprecations<a class="headerlink" href="#id110" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: RichU64* APIs are deprecated. Use Java 8 Unsigned Long API instead:
 <code class="docutils literal"><span class="pre">PHAB_ID=D137893</span></code><ul>
@@ -996,10 +1044,10 @@ a <cite>Future.exception</cite> over any NonFatal exception. <code class="docuti
 </ul>
 </div>
 </div>
-<div class="section" id="id109">
-<h2>18.2.0<a class="headerlink" href="#id109" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id110">
-<h3>New Features<a class="headerlink" href="#id110" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id111">
+<h2>18.2.0<a class="headerlink" href="#id111" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id112">
+<h3>New Features<a class="headerlink" href="#id112" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Added implicit conversion for percentage specified as “x.percent”
 to a fractional Double in <cite>c.t.conversions.percent</cite>. <code class="docutils literal"><span class="pre">PHAB_ID=D128792</span></code></li>
@@ -1007,8 +1055,8 @@ to a fractional Double in <cite>c.t.conversions.percent</cite>. <code class="doc
 <code class="docutils literal"><span class="pre">PHAB_ID=D132368</span></code></li>
 </ul>
 </div>
-<div class="section" id="id111">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id111" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id113">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id113" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: When <cite>c.t.a.App.exitOnError</cite> is called, it now gives <cite>close</cite>
 an opportunity to clean up resources before exiting with an error.
@@ -1016,10 +1064,10 @@ an opportunity to clean up resources before exiting with an error.
 </ul>
 </div>
 </div>
-<div class="section" id="id112">
-<h2>18.1.0<a class="headerlink" href="#id112" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id113">
-<h3>New Features<a class="headerlink" href="#id113" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id114">
+<h2>18.1.0<a class="headerlink" href="#id114" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id115">
+<h3>New Features<a class="headerlink" href="#id115" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-security: Added <cite>c.t.util.security.X509CrlFile</cite> for reading
 Certificate Revocation List PEM formatted <cite>X509CRL</cite> files.
@@ -1027,18 +1075,18 @@ Certificate Revocation List PEM formatted <cite>X509CRL</cite> files.
 </ul>
 </div>
 </div>
-<div class="section" id="id114">
-<h2>17.12.0<a class="headerlink" href="#id114" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id115">
-<h3>Breaking API Changes<a class="headerlink" href="#id115" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id116">
+<h2>17.12.0<a class="headerlink" href="#id116" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id117">
+<h3>Breaking API Changes<a class="headerlink" href="#id117" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-collection: <cite>c.t.util.SetMaker</cite> has been removed.
 Direct usage of Guava is recommended if needed. <code class="docutils literal"><span class="pre">PHAB_ID=D116852</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id116">
-<h2>17.11.0<a class="headerlink" href="#id116" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id118">
+<h2>17.11.0<a class="headerlink" href="#id118" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="dependencies">
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -1046,23 +1094,23 @@ Direct usage of Guava is recommended if needed. <code class="docutils literal"><
 ‘util-cache-guava’ module. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
 </ul>
 </div>
-<div class="section" id="id117">
-<h3>New Features<a class="headerlink" href="#id117" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id119">
+<h3>New Features<a class="headerlink" href="#id119" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-security: Added <cite>c.t.util.security.PrivateKeyFile</cite> for reading PKCS#8
 PEM formatted <cite>PrivateKey</cite> files. <code class="docutils literal"><span class="pre">PHAB_ID=D105266</span></code></li>
 </ul>
 </div>
-<div class="section" id="id118">
-<h3>Bug Fixes<a class="headerlink" href="#id118" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id120">
+<h3>Bug Fixes<a class="headerlink" href="#id120" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.io.BufByteWriter.fixed(size).owned()</cite> will only represent bytes
 explicitly written instead of the full size of the backing array, <cite>size</cite>.
 <code class="docutils literal"><span class="pre">PHAB_ID=D112938</span></code></li>
 </ul>
 </div>
-<div class="section" id="id119">
-<h3>Breaking API Changes<a class="headerlink" href="#id119" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id121">
+<h3>Breaking API Changes<a class="headerlink" href="#id121" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-cache: The Guava dependency and its associated implementations have been
 moved to a new module, ‘util-cache-guava’. <code class="docutils literal"><span class="pre">PHAB_ID=D117039</span></code></li>
@@ -1071,8 +1119,8 @@ instead of an implementation specific cache. <code class="docutils literal"><spa
 </ul>
 </div>
 </div>
-<div class="section" id="id120">
-<h2>17.10.0<a class="headerlink" href="#id120" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id122">
+<h2>17.10.0<a class="headerlink" href="#id122" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="release-version-changes">
 <h3>Release Version Changes:<a class="headerlink" href="#release-version-changes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -1080,30 +1128,30 @@ instead of an implementation specific cache. <code class="docutils literal"><spa
 YY.MM.x where x is a patch number. <code class="docutils literal"><span class="pre">PHAB_ID=D101244</span></code></li>
 </ul>
 </div>
-<div class="section" id="id121">
-<h3>New Features<a class="headerlink" href="#id121" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id123">
+<h3>New Features<a class="headerlink" href="#id123" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-intellij: Create util-intellij project and publish IntelliJ capture
 points plugin for debugging asynchronous stack traces of code using Twitter
 Futures in Scala 2.11.11. <code class="docutils literal"><span class="pre">PHAB_ID=D96782</span></code></li>
 </ul>
 </div>
-<div class="section" id="id122">
-<h3>Breaking API Changes<a class="headerlink" href="#id122" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id124">
+<h3>Breaking API Changes<a class="headerlink" href="#id124" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: c.t.app.Flag.let and letClear are now generic in their return type.
 <code class="docutils literal"><span class="pre">PHAB_ID=D93951</span></code></li>
 </ul>
 </div>
-<div class="section" id="id123">
-<h3>Bug Fixes<a class="headerlink" href="#id123" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id125">
+<h3>Bug Fixes<a class="headerlink" href="#id125" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fix Buf.ByteArray.Shared.apply(bytes,begin,end) constructor function.
 <code class="docutils literal"><span class="pre">PHAB_ID=D100648</span></code></li>
 </ul>
 </div>
-<div class="section" id="id124">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id124" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id126">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id126" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: c.t.io.Buf.ByteArray.[Owned.Shared](Array[Byte], begin, end) now
 validates its input arguments. <code class="docutils literal"><span class="pre">PHAB_ID=D100648</span></code></li>
@@ -1117,10 +1165,10 @@ the validity period given in the certificate. <code class="docutils literal"><sp
 </ul>
 </div>
 </div>
-<div class="section" id="id125">
-<h2>7.1.0  2017-09-06<a class="headerlink" href="#id125" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id126">
-<h3>Breaking API Changes<a class="headerlink" href="#id126" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id127">
+<h2>7.1.0  2017-09-06<a class="headerlink" href="#id127" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id128">
+<h3>Breaking API Changes<a class="headerlink" href="#id128" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-events: Module has been removed. <code class="docutils literal"><span class="pre">PHAB_ID=D82346</span></code></li>
 <li>util-lint: Add GlobalRules#withRules for testing. Allow for the ability to
@@ -1128,10 +1176,10 @@ specify a global rules set for use in testing. <code class="docutils literal"><s
 </ul>
 </div>
 </div>
-<div class="section" id="id127">
-<h2>7.0.0  2017-08-15<a class="headerlink" href="#id127" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id128">
-<h3>New Features<a class="headerlink" href="#id128" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id129">
+<h2>7.0.0  2017-08-15<a class="headerlink" href="#id129" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id130">
+<h3>New Features<a class="headerlink" href="#id130" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Added <cite>c.t.util.SlowProbeProxyTimer</cite> for monitoring the duration
 of execution for timer tasks. <code class="docutils literal"><span class="pre">PHAB_ID=D70279</span></code></li>
@@ -1149,8 +1197,8 @@ configured values. See <a class="reference external" href="https://twitter.githu
 for details on how these can be used in Finagle. <code class="docutils literal"><span class="pre">PHAB_ID=D80751</span></code>.</li>
 </ul>
 </div>
-<div class="section" id="id129">
-<h3>Bug Fixes<a class="headerlink" href="#id129" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id131">
+<h3>Bug Fixes<a class="headerlink" href="#id131" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fix some consistency issues with <cite>c.t.util.ByteReaderImpl</cite>. Advance its
 cursor by the number of bytes consumed via <cite>readBytes(Int)</cite>, not the number specified
@@ -1159,8 +1207,8 @@ of bytes specified exceeds the remaining buffer length instead of silently makin
 with the rest of the buffer’s contents. <code class="docutils literal"><span class="pre">PHAB_ID=D78301</span></code></li>
 </ul>
 </div>
-<div class="section" id="id130">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id130" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id132">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id132" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.util.Closable.sequence</cite> now continues processing
 the <cite>Closables</cite> should any of their closes result in a failed <cite>Future</cite>
@@ -1170,8 +1218,8 @@ handled by lifting them into failed <cite>Futures</cite>. <code class="docutils 
 in preparation for removal in an upcoming release. <code class="docutils literal"><span class="pre">PHAB_ID=D64437</span></code></li>
 </ul>
 </div>
-<div class="section" id="id131">
-<h3>Breaking API Changes<a class="headerlink" href="#id131" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id133">
+<h3>Breaking API Changes<a class="headerlink" href="#id133" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: ByteWriter has been transformed into a true trait which can now
 be implemented outside of the com.twitter.io package. <code class="docutils literal"><span class="pre">PHAB_ID=D59996</span></code></li>
@@ -1194,8 +1242,8 @@ writer methods in order to make it easier to target different buffer representat
 now may optionally take <cite>c.t.f.stats.Verbosity</cite> as a first argument. <code class="docutils literal"><span class="pre">PHAB_ID=D70112</span></code></li>
 </ul>
 </div>
-<div class="section" id="id132">
-<h3>Deprecations<a class="headerlink" href="#id132" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id134">
+<h3>Deprecations<a class="headerlink" href="#id134" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-events: This module is deprecated and will be removed in an upcoming
 release. <code class="docutils literal"><span class="pre">PHAB_ID=D64437</span></code></li>
@@ -1207,10 +1255,10 @@ release. <code class="docutils literal"><span class="pre">PHAB_ID=D64437</span><
 </ul>
 </div>
 </div>
-<div class="section" id="id133">
-<h2>6.45.0  2017-06-06<a class="headerlink" href="#id133" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id134">
-<h3>New Features<a class="headerlink" href="#id134" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id135">
+<h2>6.45.0  2017-06-06<a class="headerlink" href="#id135" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id136">
+<h3>New Features<a class="headerlink" href="#id136" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Optional resource shutdown sequencing for registered closables
 via <cite>c.t.app.App#closeOnExitLast</cite>. See longer note there for usage.
@@ -1224,8 +1272,8 @@ encoding and decoding. <code class="docutils literal"><span class="pre">PHAB_ID=
 <code class="docutils literal"><span class="pre">RB_ID=917289</span></code></li>
 </ul>
 </div>
-<div class="section" id="id135">
-<h3>Breaking API Changes<a class="headerlink" href="#id135" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id137">
+<h3>Breaking API Changes<a class="headerlink" href="#id137" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-collection: Removed deprecated <cite>c.t.u.JMapWrapper</cite>. Use
 <cite>scala.collection.JavaConverters</cite> instead. <code class="docutils literal"><span class="pre">RB_ID=915544</span></code></p>
@@ -1263,18 +1311,18 @@ Remove deprecated <cite>flatten</cite> method on <cite>c.t.u.Future</cite>; use 
 </li>
 </ul>
 </div>
-<div class="section" id="id136">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id136" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id138">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id138" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: All <cite>Timers</cite> now handle negative or undefined times/durations in uniform way:
 treat them as zeros (i.e., <cite>Time.epoch</cite>, <cite>Duration.Zero</cite>). <code class="docutils literal"><span class="pre">RB_ID=916008</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id137">
-<h2>6.43.0  2017-04-20<a class="headerlink" href="#id137" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id138">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id138" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id139">
+<h2>6.43.0  2017-04-20<a class="headerlink" href="#id139" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id140">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id140" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Closable.all(..)</cite> will now catch synchronous exceptions thrown
 by any <cite>Closable.close(..)</cite> invocations, and wrap them in a failed Future.
@@ -1284,8 +1332,8 @@ concurrent iteration but now holds strong references to gauge instances.
 <code class="docutils literal"><span class="pre">RB_ID=911951</span></code></li>
 </ul>
 </div>
-<div class="section" id="id139">
-<h3>New Features<a class="headerlink" href="#id139" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id141">
+<h3>New Features<a class="headerlink" href="#id141" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.f.u.BufReader</cite> and <cite>c.t.f.u.BufWriter</cite> have been
 moved from finagle-core to util-core and renamed to
@@ -1293,8 +1341,8 @@ moved from finagle-core to util-core and renamed to
 are now also exposed publicly. <code class="docutils literal"><span class="pre">RB_ID=911639</span></code></li>
 </ul>
 </div>
-<div class="section" id="id140">
-<h3>Breaking API Changes<a class="headerlink" href="#id140" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id142">
+<h3>Breaking API Changes<a class="headerlink" href="#id142" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: util-zk-commons was removed, since it was only a connector between
 util and commons, which was not widely used.  <code class="docutils literal"><span class="pre">RB_ID=910721</span></code></li>
@@ -1303,18 +1351,18 @@ are no longer final. <code class="docutils literal"><span class="pre">RB_ID=9141
 </ul>
 </div>
 </div>
-<div class="section" id="id141">
-<h2>6.42.0  2017-03-10<a class="headerlink" href="#id141" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id142">
-<h3>New Features<a class="headerlink" href="#id142" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id143">
+<h2>6.42.0  2017-03-10<a class="headerlink" href="#id143" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id144">
+<h3>New Features<a class="headerlink" href="#id144" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Promoted the positional <cite>Buf.Indexed</cite> API to be a first-class
 part of <cite>c.t.io.Buf</cite>. If you have a custom implementation of <cite>Buf</cite> it
 will require some effort to become compatible. <code class="docutils literal"><span class="pre">RB_ID=907231</span></code></li>
 </ul>
 </div>
-<div class="section" id="id143">
-<h3>Breaking API Changes<a class="headerlink" href="#id143" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id145">
+<h3>Breaking API Changes<a class="headerlink" href="#id145" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Set failFastUntilParsed on created flag added to <cite>c.t.app.Flags</cite>
 via <cite>c.t.app.Flags#add</cite>. <code class="docutils literal"><span class="pre">RB_ID=908804</span></code></li>
@@ -1328,17 +1376,17 @@ Finagle’s <cite>c.t.f.pool.BufferingPool</cite>. <code class="docutils literal
 Guava’s Multimap. <code class="docutils literal"><span class="pre">RB_ID=907516</span></code></li>
 </ul>
 </div>
-<div class="section" id="id144">
-<h3>Dependencies<a class="headerlink" href="#id144" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id146">
+<h3>Dependencies<a class="headerlink" href="#id146" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: Bump guava to 19.0. <code class="docutils literal"><span class="pre">RB_ID=907807</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id145">
-<h2>6.41.0  2017-02-03<a class="headerlink" href="#id145" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id146">
-<h3>New Features<a class="headerlink" href="#id146" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id147">
+<h2>6.41.0  2017-02-03<a class="headerlink" href="#id147" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id148">
+<h3>New Features<a class="headerlink" href="#id148" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: App now exposes <cite>closeOnExit</cite> publicly. <code class="docutils literal"><span class="pre">RB_ID=906890</span></code></li>
 <li>util-core: Add method to <cite>Buf</cite> to efficiently write to a nio <cite>ByteBuffer</cite>.
@@ -1358,8 +1406,8 @@ is a library that provides a utility to “smartly” install the
 Slf4jBridgeHandler. <code class="docutils literal"><span class="pre">RB_ID=900815</span></code></li>
 </ul>
 </div>
-<div class="section" id="id147">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id147" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id149">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id149" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Improved performance and allocation rates of some “random access”
 <cite>Buf</cite> operations. <code class="docutils literal"><span class="pre">RB_ID=905253</span></code></li>
@@ -1367,25 +1415,25 @@ Slf4jBridgeHandler. <code class="docutils literal"><span class="pre">RB_ID=90081
 <cite>c.t.io.Buf.write</cite> and <cite>c.t.io.Buf.slice</cite>. <code class="docutils literal"><span class="pre">RB_ID=899935</span></code></li>
 </ul>
 </div>
-<div class="section" id="id148">
-<h3>Breaking API Changes<a class="headerlink" href="#id148" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id150">
+<h3>Breaking API Changes<a class="headerlink" href="#id150" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Deprecated <cite>c.t.io.ConcatBuf</cite> which is replaced by
 <cite>c.t.io.Buf.apply(Iterable[Buf])</cite>. <code class="docutils literal"><span class="pre">RB_ID=899623</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id149">
-<h2>6.40.0  2016-12-20<a class="headerlink" href="#id149" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id150">
-<h3>Bug Fixes<a class="headerlink" href="#id150" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id151">
+<h2>6.40.0  2016-12-20<a class="headerlink" href="#id151" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id152">
+<h3>Bug Fixes<a class="headerlink" href="#id152" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fix issue with c.t.concurrent.AsyncStream.mapConcurrent which
 will cause the stream head to be held for life of operation. <code class="docutils literal"><span class="pre">RB_ID=896168</span></code></li>
 </ul>
 </div>
-<div class="section" id="id151">
-<h3>Breaking API Changes<a class="headerlink" href="#id151" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id153">
+<h3>Breaking API Changes<a class="headerlink" href="#id153" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Deprecated charset constants in <cite>c.t.io.Charsets</cite> have been
 removed. Use java.nio.charset.StandardCharsets instead. <code class="docutils literal"><span class="pre">RB_ID=893542</span></code></li>
@@ -1399,14 +1447,14 @@ abstract class: <cite>AbstractBuf</cite>. <code class="docutils literal"><span c
 </ul>
 </div>
 </div>
-<div class="section" id="id152">
-<h2>6.39.0  2016-11-22<a class="headerlink" href="#id152" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id154">
+<h2>6.39.0  2016-11-22<a class="headerlink" href="#id154" title="Permalink to this headline">¶</a></h2>
 <p>No Changes</p>
 </div>
-<div class="section" id="id153">
-<h2>6.38.0  2016-10-10<a class="headerlink" href="#id153" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id154">
-<h3>New Features<a class="headerlink" href="#id154" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id155">
+<h2>6.38.0  2016-10-10<a class="headerlink" href="#id155" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id156">
+<h3>New Features<a class="headerlink" href="#id156" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Java developers can now declare instances of <cite>GlobalFlag</cite>
 from Java. See <cite>c.t.app.JavaGlobalFlag</cite> for details. <code class="docutils literal"><span class="pre">RB_ID=874073</span></code></li>
@@ -1421,8 +1469,8 @@ making it easier to work with SLF4J bridges. <code class="docutils literal"><spa
 <code class="docutils literal"><span class="pre">RB_ID=878967</span></code></li>
 </ul>
 </div>
-<div class="section" id="id155">
-<h3>Bug Fixes<a class="headerlink" href="#id155" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id157">
+<h3>Bug Fixes<a class="headerlink" href="#id157" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.io.InputStreamReader</cite> and <cite>Readers</cite> created by
 <cite>c.t.io.Reader.fromFile</cite> and <cite>fromStream</cite> now close the underlying
@@ -1430,28 +1478,28 @@ making it easier to work with SLF4J bridges. <code class="docutils literal"><spa
 <code class="docutils literal"><span class="pre">RB_ID=873319</span></code></li>
 </ul>
 </div>
-<div class="section" id="id156">
-<h3>Breaking API Changes<a class="headerlink" href="#id156" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id158">
+<h3>Breaking API Changes<a class="headerlink" href="#id158" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.app.GlobalFlag</cite> is now <cite>abstract</cite> to reflect how the class
 is intended to be used. <code class="docutils literal"><span class="pre">RB_ID=875409</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id157">
-<h2>6.37.0  2016-09-07<a class="headerlink" href="#id157" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id158">
-<h3>New Features<a class="headerlink" href="#id158" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id159">
+<h2>6.37.0  2016-09-07<a class="headerlink" href="#id159" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id160">
+<h3>New Features<a class="headerlink" href="#id160" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Introduce <cite>c.t.app.Flag.letClear</cite> allowing flags to be unset.
 <code class="docutils literal"><span class="pre">RB_ID=868177</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id159">
-<h2>6.36.0  2016-08-25<a class="headerlink" href="#id159" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id160">
-<h3>New Features<a class="headerlink" href="#id160" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id161">
+<h2>6.36.0  2016-08-25<a class="headerlink" href="#id161" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id162">
+<h3>New Features<a class="headerlink" href="#id162" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>c.t.util.FuturePool</cite> now optionally exposes metrics on
 their internal state such as active tasks, and completed tasks.
@@ -1465,8 +1513,8 @@ the calls. <code class="docutils literal"><span class="pre">RB_ID=861892</span><
 and <cite>StorageUnit.{times, plus, minus, divide}</cite> methods. <code class="docutils literal"><span class="pre">RB_ID=864546</span></code></li>
 </ul>
 </div>
-<div class="section" id="id161">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id161" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id163">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id163" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-eval: The compiler reporter is now reset between code check invocations.
 This means that when there is a failure that it is no longer required to reset
@@ -1475,10 +1523,10 @@ be used. <code class="docutils literal"><span class="pre">RB_ID=859878</span></c
 </ul>
 </div>
 </div>
-<div class="section" id="id162">
-<h2>6.35.0  2016-07-07<a class="headerlink" href="#id162" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id163">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id163" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id164">
+<h2>6.35.0  2016-07-07<a class="headerlink" href="#id164" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id165">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id165" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-codec: StringEncoder no longer depends on apache commons-codec, and
 decode will now throw an exception when it fails to decode a byte, instead
@@ -1492,8 +1540,8 @@ collections LRUMap. <code class="docutils literal"><span class="pre">RB_ID=83351
 <code class="docutils literal"><span class="pre">RB_ID=835671</span></code></li>
 </ul>
 </div>
-<div class="section" id="id164">
-<h3>New Features<a class="headerlink" href="#id164" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id166">
+<h3>New Features<a class="headerlink" href="#id166" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: <cite>com.twitter.finagle.util.LoadService</cite> has been moved to
 <cite>c.t.app.LoadService</cite> and can now be used without needing a finagle-core
@@ -1516,8 +1564,8 @@ a joined result. <code class="docutils literal"><span class="pre">RB_ID=838169</
 <li>util-security: Added new project. <code class="docutils literal"><span class="pre">RB_ID=843070</span></code></li>
 </ul>
 </div>
-<div class="section" id="id165">
-<h3>Breaking API Changes<a class="headerlink" href="#id165" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id167">
+<h3>Breaking API Changes<a class="headerlink" href="#id167" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Builds are now only for Java 8 and Scala 2.11. See the
 <a class="reference external" href="https://finagle.github.io/blog/2016/04/20/scala-210-and-java7/">blog post</a>
@@ -1540,8 +1588,8 @@ to remove a <cite>com.twitter.util.lint.Rule</cite> from the <cite>com.twitter.u
 set. <code class="docutils literal"><span class="pre">RB_ID=840753</span></code></li>
 </ul>
 </div>
-<div class="section" id="id166">
-<h3>Bug Fixes<a class="headerlink" href="#id166" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id168">
+<h3>Bug Fixes<a class="headerlink" href="#id168" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: AsyncMeter had a bug where if the burst size was smaller than
 the number of disbursed tokens, it would discard all of the tokens over
@@ -1559,10 +1607,10 @@ re-enters with identical input parameters instead of deadlocking.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id167">
-<h2>6.34.0  2016-04-26<a class="headerlink" href="#id167" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id168">
-<h3>New Features<a class="headerlink" href="#id168" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id169">
+<h2>6.34.0  2016-04-26<a class="headerlink" href="#id169" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id170">
+<h3>New Features<a class="headerlink" href="#id170" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Add <cite>Throwables.unchecked</cite> to help Java users deal with checked
 exceptions. <code class="docutils literal"><span class="pre">RB_ID=811441</span></code></li>
@@ -1571,8 +1619,8 @@ StatsReceivers that don’t delegate to another StatsReceiver with
 <cite>com.twitter.finagle.stats.DelegatingStatsReceiver.all</cite>.  <code class="docutils literal"><span class="pre">RB_ID=819519</span></code></li>
 </ul>
 </div>
-<div class="section" id="id169">
-<h3>Breaking API Changes<a class="headerlink" href="#id169" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id171">
+<h3>Breaking API Changes<a class="headerlink" href="#id171" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Removed deprecated methods from Buf.scala <code class="docutils literal"><span class="pre">RB_ID=809948</span></code>
 - Removed <cite>c.t.io.Buf.ByteArray.apply</cite>, replace usage with <cite>Buf.ByteArray.Owned.apply</cite>.
@@ -1587,56 +1635,56 @@ only delegate to a single <cite>com.twitter.finagle.stats.StatsReceiver</cite>. 
 finagle-serversets project. <code class="docutils literal"><span class="pre">RB_ID=821355</span></code></li>
 </ul>
 </div>
-<div class="section" id="id170">
-<h3>Bug Fixes<a class="headerlink" href="#id170" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id172">
+<h3>Bug Fixes<a class="headerlink" href="#id172" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fix memory leak in <cite>Var.apply(T, Event[T])</cite> and <cite>Var.patch</cite>.
 <code class="docutils literal"><span class="pre">RB_ID=809100</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id171">
-<h2>6.33.0  2016-03-10<a class="headerlink" href="#id171" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id172">
-<h3>New Features<a class="headerlink" href="#id172" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id173">
+<h2>6.33.0  2016-03-10<a class="headerlink" href="#id173" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id174">
+<h3>New Features<a class="headerlink" href="#id174" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: AsyncSemaphore supports closing and draining of waiters via <cite>fail</cite>. <code class="docutils literal"><span class="pre">RB_ID=807590</span></code></li>
 <li>util-core: Add convenience methods <cite>force</cite>, <cite>size</cite>, <cite>sum</cite>, and <cite>withEffect</cite> to <cite>AsyncStream</cite>.
 <code class="docutils literal"><span class="pre">RB_ID=808411</span></code></li>
 </ul>
 </div>
-<div class="section" id="id173">
-<h3>Bug Fixes<a class="headerlink" href="#id173" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id175">
+<h3>Bug Fixes<a class="headerlink" href="#id175" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Fix nested functions <cite>AsyncStream.++</cite> to avoid stack overflow. <code class="docutils literal"><span class="pre">RB_ID=804408</span></code></li>
 </ul>
 </div>
-<div class="section" id="id174">
-<h3>Deprecations<a class="headerlink" href="#id174" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id176">
+<h3>Deprecations<a class="headerlink" href="#id176" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Future.rawException</cite> is deprecated in favor of <cite>Future.exception</cite>.
 <code class="docutils literal"><span class="pre">RB_ID=798223</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id175">
-<h2>6.32.0  2016-02-03<a class="headerlink" href="#id175" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id176">
-<h3>New Features<a class="headerlink" href="#id176" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id177">
+<h2>6.32.0  2016-02-03<a class="headerlink" href="#id177" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id178">
+<h3>New Features<a class="headerlink" href="#id178" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Add <cite>Future.traverseSequentially</cite>. Take a sequence and sequentially apply a function
 A =&gt; Future[B] to each item. <code class="docutils literal"><span class="pre">RB_ID=785091</span></code></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id177">
-<h2>6.31.0  2016-02-02<a class="headerlink" href="#id177" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id179">
+<h2>6.31.0  2016-02-02<a class="headerlink" href="#id179" title="Permalink to this headline">¶</a></h2>
 <p>NOT RELEASED</p>
 </div>
-<div class="section" id="id178">
-<h2>6.30.0  2015-12-03<a class="headerlink" href="#id178" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id179">
-<h3>New Features<a class="headerlink" href="#id179" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id180">
+<h2>6.30.0  2015-12-03<a class="headerlink" href="#id180" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id181">
+<h3>New Features<a class="headerlink" href="#id181" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Introduce an <cite>AsyncMeter</cite> for asynchronously rate limiting to a fixed rate over time.
 It can be used for smoothing out bursty traffic, or for slowing down access to a
@@ -1645,8 +1693,8 @@ resource. <code class="docutils literal"><span class="pre">RB_ID=756333</span></
 or for smoothing out the rate of a single process. <code class="docutils literal"><span class="pre">RB_ID=756333</span></code></li>
 </ul>
 </div>
-<div class="section" id="id180">
-<h3>Breaking API Changes<a class="headerlink" href="#id180" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id182">
+<h3>Breaking API Changes<a class="headerlink" href="#id182" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Timer</cite> now has final implementations for <cite>schedule</cite> which delegate
 to new protected <cite>scheduleOnce</cite> and <cite>schedulePeriodically</cite> methods. This is
@@ -1673,18 +1721,18 @@ reschedules themselves). <code class="docutils literal"><span class="pre">RB_ID=
 </ul>
 </div>
 </div>
-<div class="section" id="id181">
-<h2>6.29.0  2015-10-15<a class="headerlink" href="#id181" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id182">
-<h3>New Features<a class="headerlink" href="#id182" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id183">
+<h2>6.29.0  2015-10-15<a class="headerlink" href="#id183" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id184">
+<h3>New Features<a class="headerlink" href="#id184" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Introduce an optional max capacity to <cite>AsyncQueue</cite>.
 Modified <cite>AsyncQueue.offer</cite> to return a boolean indicating whether or not the
 item was accepted. Added <cite>AsyncQueue.drain(): Try[Queue]</cite>. <code class="docutils literal"><span class="pre">RB_ID=745567</span></code></li>
 </ul>
 </div>
-<div class="section" id="id183">
-<h3>Breaking API Changes<a class="headerlink" href="#id183" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id185">
+<h3>Breaking API Changes<a class="headerlink" href="#id185" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Remove deprecated methods from <cite>com.twitter.util.Time</cite> and
 <cite>com.twitter.util.Duration</cite>. <code class="docutils literal"><span class="pre">RB_ID=751771</span></code></li>
@@ -1693,8 +1741,8 @@ item was accepted. Added <cite>AsyncQueue.drain(): Try[Queue]</cite>. <code clas
 time. <code class="docutils literal"><span class="pre">RB_ID=75268</span></code></li>
 </ul>
 </div>
-<div class="section" id="id184">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id184" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id186">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id186" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: The Scheduler clock stats were decommissioned as they only make sense
 relative to <cite>wallTime</cite> and the tracking error we have experienced <cite>wallTime</cite> and
@@ -1708,10 +1756,10 @@ is run. <code class="docutils literal"><span class="pre">RB_ID=755387</span></co
 </ul>
 </div>
 </div>
-<div class="section" id="id185">
-<h2>6.28.0  2015-09-25<a class="headerlink" href="#id185" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id186">
-<h3>Breaking API Changes<a class="headerlink" href="#id186" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id187">
+<h2>6.28.0  2015-09-25<a class="headerlink" href="#id187" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id188">
+<h3>Breaking API Changes<a class="headerlink" href="#id188" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-core: Remove deprecated methods from <cite>com.twitter.util.Var</cite>.</p>
 <p>To migrate <cite>observe</cite> and <cite>foreach</cite>, given <cite>aVar.observe { t =&gt; somethingWith(t) }</cite>
@@ -1725,20 +1773,20 @@ you would write <cite>aVar.changes.register(Witness(anAtomicReference))</cite>.<
 </ul>
 </div>
 </div>
-<div class="section" id="id187">
-<h2>6.27.0  2015-08-28<a class="headerlink" href="#id187" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id188">
-<h3>Breaking API Changes<a class="headerlink" href="#id188" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id189">
+<h2>6.27.0  2015-08-28<a class="headerlink" href="#id189" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id190">
+<h3>Breaking API Changes<a class="headerlink" href="#id190" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>TimeFormat</cite> optionally takes a <cite>TimeZone</cite> in the constructor.
 If not provided, it uses UTC.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id189">
-<h2>6.26.0  2015-07-27<a class="headerlink" href="#id189" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id190">
-<h3>Breaking API Changes<a class="headerlink" href="#id190" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id191">
+<h2>6.26.0  2015-07-27<a class="headerlink" href="#id191" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id192">
+<h3>Breaking API Changes<a class="headerlink" href="#id192" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: <cite>Activity</cite>, <cite>BoundedStack</cite>, <cite>RingBuffer</cite> and <cite>Var</cite> migrated
 off of deprecated <cite>ClassManifest</cite> to <cite>ClassTag</cite>. <code class="docutils literal"><span class="pre">RB_ID=720455</span></code></li>
@@ -1747,8 +1795,8 @@ off of deprecated <cite>ClassManifest</cite> to <cite>ClassTag</cite>. <code cla
 Use <cite>Future.voided</cite> and <cite>Future$.Void</cite> instead. <code class="docutils literal"><span class="pre">RB_ID=720427</span></code></li>
 </ul>
 </div>
-<div class="section" id="id191">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id191" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id193">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id193" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: <cite>Promise.forwardInterruptsTo(other)</cite> is a no-op if the</dt>
@@ -1764,25 +1812,25 @@ Use <cite>Future.voided</cite> and <cite>Future$.Void</cite> instead. <code clas
 </ul>
 </div>
 </div>
-<div class="section" id="id192">
-<h2>6.25.0  2015-06-22<a class="headerlink" href="#id192" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id193">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id193" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id194">
+<h2>6.25.0  2015-06-22<a class="headerlink" href="#id194" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id195">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id195" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-events: Enable event sink by default.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id194">
-<h2>6.24.0  2015-04-12<a class="headerlink" href="#id194" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id195">
-<h3>New Features<a class="headerlink" href="#id195" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id196">
+<h2>6.24.0  2015-04-12<a class="headerlink" href="#id196" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id197">
+<h3>New Features<a class="headerlink" href="#id197" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Introduce AsyncStream, an experimental replacement for Spool.</li>
 </ul>
 </div>
-<div class="section" id="id196">
-<h3>Breaking API Changes<a class="headerlink" href="#id196" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id198">
+<h3>Breaking API Changes<a class="headerlink" href="#id198" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: <cite>Future.willEqual()</cite> now returns <cite>Future[Boolean]</cite> instead of</dt>
@@ -1819,8 +1867,8 @@ simply force the argument before passing it to ++.</dd>
 </li>
 </ul>
 </div>
-<div class="section" id="id197">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id197" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id199">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id199" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: Futures still rethrow on fatals, but now also Monitor.handle on</dt>
@@ -1841,10 +1889,10 @@ simply force the argument before passing it to ++.</dd>
 </ul>
 </div>
 </div>
-<div class="section" id="id198">
-<h2>6.23.0 2014-12-12<a class="headerlink" href="#id198" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id199">
-<h3>New Features<a class="headerlink" href="#id199" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id200">
+<h2>6.23.0 2014-12-12<a class="headerlink" href="#id200" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id201">
+<h3>New Features<a class="headerlink" href="#id201" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="first docutils">
 <dt>util-core: Add method .flushBatch() to batched future returned by Future.batched()</dt>
@@ -1870,8 +1918,8 @@ from java.</dd>
 </li>
 </ul>
 </div>
-<div class="section" id="id200">
-<h3>Breaking API Changes<a class="headerlink" href="#id200" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id202">
+<h3>Breaking API Changes<a class="headerlink" href="#id202" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-cache: Remove unused com.twitter.cache.Mod trait and object</li>
 <li>util-core: Rename Buf._.Unsafe to Buf._.Owned and Buf._.Copied to Buf._.Shared</li>
@@ -1879,8 +1927,8 @@ from java.</dd>
 <li>util-core: Change return type of Future.batched() to com.twitter.util.Batcher</li>
 </ul>
 </div>
-<div class="section" id="id201">
-<h3>Java Compatibility<a class="headerlink" href="#id201" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id203">
+<h3>Java Compatibility<a class="headerlink" href="#id203" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Flaggable is now an abstract class for Java compatibility</li>
 <li><dl class="first docutils">
@@ -1892,10 +1940,10 @@ from java.</dd>
 </ul>
 </div>
 </div>
-<div class="section" id="id202">
-<h2>6.22.2  2014-10-29<a class="headerlink" href="#id202" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id203">
-<h3>Breaking API Changes<a class="headerlink" href="#id203" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id204">
+<h2>6.22.2  2014-10-29<a class="headerlink" href="#id204" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id205">
+<h3>Breaking API Changes<a class="headerlink" href="#id205" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Removed <cite>Sieve</cite> example.</li>
 <li><dl class="first docutils">
@@ -1910,8 +1958,8 @@ been added.</dd>
 </li>
 </ul>
 </div>
-<div class="section" id="id204">
-<h3>New Features<a class="headerlink" href="#id204" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id206">
+<h3>New Features<a class="headerlink" href="#id206" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><dl class="first docutils">
 <dt>util-app: add an option so that we can let apps fail fast if reading</dt>
@@ -1920,8 +1968,8 @@ been added.</dd>
 </li>
 </ul>
 </div>
-<div class="section" id="id205">
-<h3>Bug Fixes<a class="headerlink" href="#id205" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id207">
+<h3>Bug Fixes<a class="headerlink" href="#id207" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util: add missing &#64;RunWith annotation</li>
 <li>util-core: Java tests for Duration, Time and Timer</li>
@@ -1935,10 +1983,10 @@ been added.</dd>
 </ul>
 </div>
 </div>
-<div class="section" id="id206">
-<h2>6.22.1  2014-10-23<a class="headerlink" href="#id206" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id207">
-<h3>Bug Fixes<a class="headerlink" href="#id207" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id208">
+<h2>6.22.1  2014-10-23<a class="headerlink" href="#id208" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id209">
+<h3>Bug Fixes<a class="headerlink" href="#id209" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util and finagle: fix compiler warnings</li>
 </ul>
@@ -1956,8 +2004,8 @@ been added.</dd>
 <li>util-io: Better names for Buf.slice() paramters.</li>
 </ul>
 </div>
-<div class="section" id="id208">
-<h3>New Features<a class="headerlink" href="#id208" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id210">
+<h3>New Features<a class="headerlink" href="#id210" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-app: Add App registration</li>
 <li>util-cache Add asynchronous cache with TTL</li>
@@ -1971,8 +2019,8 @@ been added.</dd>
 </ul>
 </div>
 </div>
-<div class="section" id="id209">
-<h2>6.22.0  2014-10-13<a class="headerlink" href="#id209" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id211">
+<h2>6.22.0  2014-10-13<a class="headerlink" href="#id211" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="system-requirements">
 <h3>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -1980,8 +2028,8 @@ been added.</dd>
 <li>c.t.util.Time: Scope Locals with <cite>Local.let</cite> instead of <cite>save`+`restore</cite></li>
 </ul>
 </div>
-<div class="section" id="id210">
-<h3>Runtime Behavior Changes<a class="headerlink" href="#id210" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id212">
+<h3>Runtime Behavior Changes<a class="headerlink" href="#id212" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">util-logging:
 * Logging’s default handler is now async by default via <cite>com.twitter.logging.QueueingHandler</cite>.
@@ -2003,57 +2051,57 @@ been added.</dd>
 </li>
 </ul>
 </div>
-<div class="section" id="id211">
-<h3>New Features<a class="headerlink" href="#id211" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id213">
+<h3>New Features<a class="headerlink" href="#id213" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: introduce Memoize.snappable</li>
 <li>util-app: add Flaggable.ofSet</li>
 <li>util-app: introduce Flag.let</li>
 </ul>
 </div>
-<div class="section" id="id212">
-<h3>Optimizations<a class="headerlink" href="#id212" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id214">
+<h3>Optimizations<a class="headerlink" href="#id214" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Perf improvement to ConcatBuf#slice</li>
 <li>util-core: Avoid accumulation of listeners in Future.select</li>
 <li>util-core: Event.filter only 1 call to filter predicate</li>
 </ul>
 </div>
-<div class="section" id="id213">
-<h3>Bug Fixes<a class="headerlink" href="#id213" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id215">
+<h3>Bug Fixes<a class="headerlink" href="#id215" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-jvm: Fix logging in Jvm.foreachGc</li>
 <li>util-core: document StorageUnit can overflow</li>
 <li>util-core: check Future.proxyTo and Promise.become preconditions</li>
 </ul>
 </div>
-<div class="section" id="id214">
-<h3>Breaking API Changes<a class="headerlink" href="#id214" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id216">
+<h3>Breaking API Changes<a class="headerlink" href="#id216" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: remove Leaky and FutureBenchmark</li>
 </ul>
 </div>
-<div class="section" id="id215">
-<h3>Documentation<a class="headerlink" href="#id215" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id217">
+<h3>Documentation<a class="headerlink" href="#id217" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util, ostrich, finagle, twitter-server: Remove all trailing spaces</li>
 </ul>
 </div>
-<div class="section" id="id216">
-<h3>Package factoring<a class="headerlink" href="#id216" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id218">
+<h3>Package factoring<a class="headerlink" href="#id218" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Test classes from util-logging were factored into its own package, util-test.</li>
 </ul>
 </div>
-<div class="section" id="id217">
-<h3>Breaking API Changes<a class="headerlink" href="#id217" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id219">
+<h3>Breaking API Changes<a class="headerlink" href="#id219" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>util-core: Deprecate <cite>RingBuffer</cite> in favor of Guava’s <cite>com.google.common.collect.EvictingQueue</cite>.</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id218">
-<h2>6.21.2  2014-09-08<a class="headerlink" href="#id218" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id220">
+<h2>6.21.2  2014-09-08<a class="headerlink" href="#id220" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-cache: Adds a Guava-backed asynchronous cache</li>
 <li>util-core: Fixed FuturePool for NLRCK</li>
@@ -2065,8 +2113,8 @@ been added.</dd>
 <li>util: Upgrade to scala_2.10</li>
 </ul>
 </div>
-<div class="section" id="id219">
-<h2>6.20.0  2014-08-22<a class="headerlink" href="#id219" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id221">
+<h2>6.20.0  2014-08-22<a class="headerlink" href="#id221" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: Enables cross-publishing for 2.11</li>
 <li>util-app: Log severely if a flag is read at the wrong time</li>
@@ -2078,22 +2126,22 @@ been added.</dd>
 <li>util-doc: Fix updatedocs.bash to update new util docs</li>
 </ul>
 </div>
-<div class="section" id="id220">
-<h2>6.19.0  2014-08-05<a class="headerlink" href="#id220" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id222">
+<h2>6.19.0  2014-08-05<a class="headerlink" href="#id222" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: smattering of minor cleanups in util and finagle</li>
 <li>util-core: Reader and getContent symmetry</li>
 </ul>
 </div>
-<div class="section" id="id221">
-<h2>6.18.4  2014-07-31<a class="headerlink" href="#id221" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id223">
+<h2>6.18.4  2014-07-31<a class="headerlink" href="#id223" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Remove confusing NOOP 0.until(5) in Future.collect().</li>
 <li>util-app: Fix a bug in global flag parsing</li>
 </ul>
 </div>
-<div class="section" id="id222">
-<h2>6.18.2  2014-07-23<a class="headerlink" href="#id222" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id224">
+<h2>6.18.2  2014-07-23<a class="headerlink" href="#id224" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Fixes a broken sbt test</li>
 <li>util-core: Log exceptions caught by ChannelStatsHandler</li>
@@ -2102,8 +2150,8 @@ been added.</dd>
 <li>util-logging: java-friendly LoggerFactory API</li>
 </ul>
 </div>
-<div class="section" id="id223">
-<h2>6.18.1  2014-07-08<a class="headerlink" href="#id223" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id225">
+<h2>6.18.1  2014-07-08<a class="headerlink" href="#id225" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: Update README to reflect correct storage units.</li>
 <li>util: Convert all tests in util to scalatest</li>
@@ -2112,8 +2160,8 @@ been added.</dd>
 <li>util-io: Create Buf.ByteBuffer to wrap java.nio.ByteBuffer</li>
 </ul>
 </div>
-<div class="section" id="id224">
-<h2>6.18.0  2014-06-23<a class="headerlink" href="#id224" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id226">
+<h2>6.18.0  2014-06-23<a class="headerlink" href="#id226" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: Don’t kill the JVM on flag-parsing failure</li>
 <li>util-app: Improve the Scaladocs for com.twitter.app.Flag and friends</li>
@@ -2127,8 +2175,8 @@ been added.</dd>
 <li>util-logging: Add additional handlers to Logging trait</li>
 </ul>
 </div>
-<div class="section" id="id225">
-<h2>6.17.0  2014-06-04<a class="headerlink" href="#id225" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id227">
+<h2>6.17.0  2014-06-04<a class="headerlink" href="#id227" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: Upgrade dependency versions</li>
 <li>util-core: Scheduler productivity = cpuTime/wallTime</li>
@@ -2137,16 +2185,16 @@ been added.</dd>
 <li>util-core: add <cite>Spool.collectFuture</cite></li>
 </ul>
 </div>
-<div class="section" id="id226">
-<h2>6.16.0  2014-05-13<a class="headerlink" href="#id226" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id228">
+<h2>6.16.0  2014-05-13<a class="headerlink" href="#id228" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: Add flag for configuring acceptance of undefined flags</li>
 <li>util-app: Minor c.t.app.ClassPath/c.t.f.util.LoadService cleanup</li>
 <li>util-core: Adds Time.sleep for testing sleeping code</li>
 </ul>
 </div>
-<div class="section" id="id227">
-<h2>6.15.0  2014-04-29<a class="headerlink" href="#id227" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id229">
+<h2>6.15.0  2014-04-29<a class="headerlink" href="#id229" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: enforce close grace period</li>
 <li>util-core: special case buf.slice(0, buf.length)</li>
@@ -2157,8 +2205,8 @@ been added.</dd>
 <li>util-core: make LocalScheduler non-private for custom schedulers</li>
 </ul>
 </div>
-<div class="section" id="id228">
-<h2>6.14.0  2014-04-09<a class="headerlink" href="#id228" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id230">
+<h2>6.14.0  2014-04-09<a class="headerlink" href="#id230" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-benchmark: Fix caliper failures due to new guava</li>
 <li>util-core: Add Local.let</li>
@@ -2172,8 +2220,8 @@ been added.</dd>
 <li>util-core: Short-circuit <cite>within</cite> and <cite>raiseWithin</cite> if Future is already satisfied</li>
 </ul>
 </div>
-<div class="section" id="id229">
-<h2>6.13.2  2014-03-24<a class="headerlink" href="#id229" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id231">
+<h2>6.13.2  2014-03-24<a class="headerlink" href="#id231" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add <cite>StorageUnit.hashCode</cite></li>
 <li>util-core: Event.mergeMap: fix Closable</li>
@@ -2181,14 +2229,14 @@ been added.</dd>
 <li>util: Upgrade to guava 16</li>
 </ul>
 </div>
-<div class="section" id="id230">
-<h2>6.13.1  2014-03-20<a class="headerlink" href="#id230" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id232">
+<h2>6.13.1  2014-03-20<a class="headerlink" href="#id232" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: Update zk libraries</li>
 </ul>
 </div>
-<div class="section" id="id231">
-<h2>6.13.0  2014-03-14<a class="headerlink" href="#id231" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id233">
+<h2>6.13.0  2014-03-14<a class="headerlink" href="#id233" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: add usage string, printed before flags</li>
 <li>util-app: Handle comma-separated values in <cite>Flaggable.ofMap</cite></li>
@@ -2207,14 +2255,14 @@ been added.</dd>
 <li>util: ForkJoin scheduler: first draft</li>
 </ul>
 </div>
-<div class="section" id="id232">
-<h2>6.12.1  2014-02-18<a class="headerlink" href="#id232" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id234">
+<h2>6.12.1  2014-02-18<a class="headerlink" href="#id234" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Upgrade everyone to the new c.t.common.server-set</li>
 </ul>
 </div>
-<div class="section" id="id233">
-<h2>6.12.0  2014-02-14<a class="headerlink" href="#id233" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id235">
+<h2>6.12.0  2014-02-14<a class="headerlink" href="#id235" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>LocalScheduler: improve concurrency by sampling less</li>
 <li>Option to enable thread pool scheduler in finagle, and fix the shutting down RejectedExecutionException’s.</li>
@@ -2232,8 +2280,8 @@ been added.</dd>
 <li>Var: fix an iatrogenic concurrency bug</li>
 </ul>
 </div>
-<div class="section" id="id234">
-<h2>6.11.1  2014-01-16<a class="headerlink" href="#id234" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id236">
+<h2>6.11.1  2014-01-16<a class="headerlink" href="#id236" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-collection: Depend on jsr305.</li>
 <li>util-core: Add <cite>Promise.attached</cite> and Detachable.</li>
@@ -2241,8 +2289,8 @@ been added.</dd>
 <li>util-common: Fix a race condition in ExecutorServiceFuturePool.</li>
 </ul>
 </div>
-<div class="section" id="id235">
-<h2>6.11.0  2014-01-14<a class="headerlink" href="#id235" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id237">
+<h2>6.11.0  2014-01-14<a class="headerlink" href="#id237" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add BridgedThreadPoolScheduler.</li>
 <li>util-core: Add Events, discrete-time values.</li>
@@ -2258,8 +2306,8 @@ been added.</dd>
 <li>util-zk-common: Fix finagle-serversets dependencies discrepancy.</li>
 </ul>
 </div>
-<div class="section" id="id236">
-<h2>6.10.0  2013-12-12<a class="headerlink" href="#id236" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id238">
+<h2>6.10.0  2013-12-12<a class="headerlink" href="#id238" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><cite>util-core</cite>: Add functionality to AsyncSemaphore for executing functions as permits become available.</li>
 <li><cite>util-core</cite>: Fine-grained locking to prevent deadlocks in Var.</li>
@@ -2267,8 +2315,8 @@ been added.</dd>
 <li><cite>util-core</cite>: Introduce com.twitter.util.Memoize - thread-safe memoization of a function.</li>
 </ul>
 </div>
-<div class="section" id="id237">
-<h2>6.9.0  2013-12-02<a class="headerlink" href="#id237" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id239">
+<h2>6.9.0  2013-12-02<a class="headerlink" href="#id239" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: 2.10 pattern matching strictness</li>
 <li>util-core: Gives Var single-owner semantics</li>
@@ -2278,14 +2326,14 @@ been added.</dd>
 <li>util: sbt version in <cite>build.properties</cite></li>
 </ul>
 </div>
-<div class="section" id="id238">
-<h2>6.8.1  2013-11-15<a class="headerlink" href="#id238" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id240">
+<h2>6.8.1  2013-11-15<a class="headerlink" href="#id240" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Break apart interruptible FuturePool for java backcompat</li>
 </ul>
 </div>
-<div class="section" id="id239">
-<h2>6.8.0  2013-11-12<a class="headerlink" href="#id239" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id241">
+<h2>6.8.0  2013-11-12<a class="headerlink" href="#id241" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: Fix null error for Flaggable[InetSocketAddress].</li>
 <li>util-app: Flag, easier usage of default.</li>
@@ -2300,8 +2348,8 @@ been added.</dd>
 <li>util: scaladoc warning cleanup.</li>
 </ul>
 </div>
-<div class="section" id="id240">
-<h2>6.7.0  2013-10-18<a class="headerlink" href="#id240" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id242">
+<h2>6.7.0  2013-10-18<a class="headerlink" href="#id242" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Introduce Try.collect(), analagous to Future.collect</li>
 <li>util-core: Add some empirically useful add-ons to Var</li>
@@ -2310,8 +2358,8 @@ been added.</dd>
 <li>util-core: Improve gc profile around Var</li>
 </ul>
 </div>
-<div class="section" id="id241">
-<h2>6.6.0  2013-10-09<a class="headerlink" href="#id241" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id243">
+<h2>6.6.0  2013-10-09<a class="headerlink" href="#id243" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: Properly propagate underlying exceptions.</li>
 <li>util-core: Add a <cite>Var.value</cite> function. (835a043)</li>
@@ -2328,8 +2376,8 @@ been added.</dd>
 <li>util-zk: Add ShardCoordinator and ZkAsyncSemaphore classes. (c57b2a9)</li>
 </ul>
 </div>
-<div class="section" id="id242">
-<h2>6.5.0  2013-09-10<a class="headerlink" href="#id242" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id244">
+<h2>6.5.0  2013-09-10<a class="headerlink" href="#id244" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-hashing: removed dependency on util-core</li>
 <li>util-core: Introduce swappable schedulers, ThreadPool scheduler.</li>
@@ -2339,8 +2387,8 @@ been added.</dd>
 <li>util-core: adding short note on Future ‘within’</li>
 </ul>
 </div>
-<div class="section" id="id243">
-<h2>6.4.0  2013-08-28<a class="headerlink" href="#id243" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id245">
+<h2>6.4.0  2013-08-28<a class="headerlink" href="#id245" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add Return constants</li>
 <li>util-core: Make ConstFuture.transform consistent with Promise.transform</li>
@@ -2351,16 +2399,16 @@ been added.</dd>
 <li>util-core: Introduce Buf, Reader, and Writer: Zerocopy, buffered I/O</li>
 </ul>
 </div>
-<div class="section" id="id244">
-<h2>6.3.8  2013-07-22<a class="headerlink" href="#id244" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id246">
+<h2>6.3.8  2013-07-22<a class="headerlink" href="#id246" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add Future.True and Future.False constants</li>
 <li>util-app: Treat ‘–’ as end of flags indicator</li>
 <li>util-app: Add support for long flags</li>
 </ul>
 </div>
-<div class="section" id="id245">
-<h2>6.3.7  2013-06-24<a class="headerlink" href="#id245" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id247">
+<h2>6.3.7  2013-06-24<a class="headerlink" href="#id247" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-app: flags use by-name default values</li>
 <li>util-app: Make the global flag test idempotent</li>
@@ -2369,8 +2417,8 @@ been added.</dd>
 <li>util: update version in README</li>
 </ul>
 </div>
-<div class="section" id="id246">
-<h2>6.3.6  2013-06-11<a class="headerlink" href="#id246" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id248">
+<h2>6.3.6  2013-06-11<a class="headerlink" href="#id248" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util: Update owners files</li>
 <li>util-jvm: CpuProfile: sleep the right amount of time for the recording thread</li>
@@ -2379,8 +2427,8 @@ been added.</dd>
 <li>util-eval: Gizzard: Some followup deps alignment to fix deployment classpath issues</li>
 </ul>
 </div>
-<div class="section" id="id247">
-<h2>6.3.5  2013-05-31<a class="headerlink" href="#id247" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id249">
+<h2>6.3.5  2013-05-31<a class="headerlink" href="#id249" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: add Time.fromMicroseconds to util.Time</li>
 <li>util-core: NullMonitor takes itself out when composed</li>
@@ -2391,15 +2439,15 @@ been added.</dd>
 <li>util: Update sbt project for (util, ostrich, finagle)</li>
 </ul>
 </div>
-<div class="section" id="id248">
-<h2>6.3.4  2013-05-16<a class="headerlink" href="#id248" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id250">
+<h2>6.3.4  2013-05-16<a class="headerlink" href="#id250" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Convenience method to await all</li>
 <li>util-core: RootMonitor never propagates non fatal exception</li>
 </ul>
 </div>
-<div class="section" id="id249">
-<h2>6.3.3  2013-05-13<a class="headerlink" href="#id249" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id251">
+<h2>6.3.3  2013-05-13<a class="headerlink" href="#id251" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-collection: When growing chain only grow the chain. This addresses a NoSuchElementException.</li>
 <li>util-eval: fix for when class files are on the classpath directly</li>
@@ -2410,8 +2458,8 @@ been added.</dd>
 <li>util: Remove zookeeper dependency ivyXML and replace with ExclusionRules</li>
 </ul>
 </div>
-<div class="section" id="id250">
-<h2>6.3.2  2013-04-18<a class="headerlink" href="#id250" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id252">
+<h2>6.3.2  2013-04-18<a class="headerlink" href="#id252" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: create less garbage in AsyncSemaphore.acquire()</li>
 <li>util-core: deprecate com.twitter.util.concurrent.Concurrent{Pool, MultiMap}</li>
@@ -2422,8 +2470,8 @@ been added.</dd>
 <li>util-zk: ZNode(“/path”).parentPath should be “/”, not an empty string</li>
 </ul>
 </div>
-<div class="section" id="id251">
-<h2>6.3.0  2013-04-05<a class="headerlink" href="#id251" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id253">
+<h2>6.3.0  2013-04-05<a class="headerlink" href="#id253" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: flag a bug with U64 truncation</li>
 <li>util-core: Future.get: include fatal exceptions</li>
@@ -2431,16 +2479,16 @@ been added.</dd>
 <li>util-core: special-case Duration.Zero to avoid allocation</li>
 </ul>
 </div>
-<div class="section" id="id252">
-<h2>6.2.5  2013-03-27<a class="headerlink" href="#id252" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id254">
+<h2>6.2.5  2013-03-27<a class="headerlink" href="#id254" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-zk: Improvements to util-zk NativeConnector</li>
 <li>util: Update sbt project definition</li>
 <li>util: launching test in all scala version of the project</li>
 </ul>
 </div>
-<div class="section" id="id253">
-<h2>6.2.4  2013-03-21<a class="headerlink" href="#id253" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id255">
+<h2>6.2.4  2013-03-21<a class="headerlink" href="#id255" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Add Future.Nil, it can be used anytime you need a Future[Seq[_]] with an empty sequence.</li>
 <li>util-core: fix VM test error by ensuring reset</li>
@@ -2449,21 +2497,21 @@ been added.</dd>
 <li>util: upgrade com.twitter.common.objectsize to 0.0.7</li>
 </ul>
 </div>
-<div class="section" id="id254">
-<h2>6.2.3  2013-03-08<a class="headerlink" href="#id254" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id256">
+<h2>6.2.3  2013-03-08<a class="headerlink" href="#id256" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: Remove StreamHelper</li>
 <li>Flag: create Map flag type</li>
 </ul>
 </div>
-<div class="section" id="id255">
-<h2>6.2.2  2013-02-25<a class="headerlink" href="#id255" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id257">
+<h2>6.2.2  2013-02-25<a class="headerlink" href="#id257" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Flag: introduce global flags</li>
 </ul>
 </div>
-<div class="section" id="id256">
-<h2>6.2.1  2013-02-20<a class="headerlink" href="#id256" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id258">
+<h2>6.2.1  2013-02-20<a class="headerlink" href="#id258" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>HttpMux: provide visibility into available handlers</li>
 <li>Flag: add Time type</li>
@@ -2476,16 +2524,16 @@ been added.</dd>
 <li>Future: use .nonEmpty instead of != Nil</li>
 </ul>
 </div>
-<div class="section" id="id257">
-<h2>6.1.0  2013-01-30<a class="headerlink" href="#id257" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id259">
+<h2>6.1.0  2013-01-30<a class="headerlink" href="#id259" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>preliminary 2.10 port/build</li>
 <li>Add Closable trait</li>
 <li>Add contention snapshot</li>
 </ul>
 </div>
-<div class="section" id="id258">
-<h2>6.0.6  2013-01-22<a class="headerlink" href="#id258" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id260">
+<h2>6.0.6  2013-01-22<a class="headerlink" href="#id260" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-core: concurrent.SpoolSource utility for creating Spools</li>
 <li>util-core: Spool.flatMap, Spool.++</li>
@@ -2494,8 +2542,8 @@ been added.</dd>
 mixed Scala/Java</li>
 </ul>
 </div>
-<div class="section" id="id259">
-<h2>6.0.4  2012-12-18<a class="headerlink" href="#id259" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id261">
+<h2>6.0.4  2012-12-18<a class="headerlink" href="#id261" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Broker: more efficient dequeueing of offers</li>
 <li>Duration: parse all output of Duration.toString</li>
@@ -2505,8 +2553,8 @@ to avoid space leak</li>
 <li>util-hashing: add Hashable type class</li>
 </ul>
 </div>
-<div class="section" id="id260">
-<h2>6.0.3  2012-12-11<a class="headerlink" href="#id260" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id262">
+<h2>6.0.3  2012-12-11<a class="headerlink" href="#id262" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Promise: remove future tracing, add explicit transforming state to
 avoid extraneous allocation</li>
@@ -2514,15 +2562,15 @@ avoid extraneous allocation</li>
 <li>com.twitter.app: composable apps &amp; flags</li>
 </ul>
 </div>
-<div class="section" id="id261">
-<h2>6.0.1  2012-11-26<a class="headerlink" href="#id261" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id263">
+<h2>6.0.1  2012-11-26<a class="headerlink" href="#id263" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Use java.util.ArrayDeque in place of mutable.Queue due to
 <a class="reference external" href="https://issues.scala-lang.org/browse/SI-6690">https://issues.scala-lang.org/browse/SI-6690</a></li>
 </ul>
 </div>
-<div class="section" id="id262">
-<h2>6.0.0  2012-11-26<a class="headerlink" href="#id262" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id264">
+<h2>6.0.0  2012-11-26<a class="headerlink" href="#id264" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Removed future cancellation, which is now replaced with one-shot
 interrupts. These also carry a <code class="docutils literal"><span class="pre">cause</span></code> which will be used
@@ -2533,8 +2581,8 @@ profitably in finagle.</li>
 exceptions</li>
 </ul>
 </div>
-<div class="section" id="id263">
-<h2>5.3.14  2012-11-20<a class="headerlink" href="#id263" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id265">
+<h2>5.3.14  2012-11-20<a class="headerlink" href="#id265" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>fix compiler warnings</li>
 <li>Future.join: support up to 22-tupled futures</li>
@@ -2542,8 +2590,8 @@ exceptions</li>
 <li>util-logging: concurrent enqueue support for ScribeHandler, add stats</li>
 </ul>
 </div>
-<div class="section" id="id264">
-<h2>5.3.13  2012-10-16<a class="headerlink" href="#id264" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id266">
+<h2>5.3.13  2012-10-16<a class="headerlink" href="#id266" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>AsyncSemaphore: Use volatile vars for the active number and the waiters</li>
 <li>util-logging: fix ThrottledHandler to not leak memory</li>
@@ -2555,8 +2603,8 @@ exceptions</li>
 <li>util-logging: Correctly handle files with a shared prefix.</li>
 </ul>
 </div>
-<div class="section" id="id265">
-<h2>5.3.10  2012-09-06<a class="headerlink" href="#id265" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id267">
+<h2>5.3.10  2012-09-06<a class="headerlink" href="#id267" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Improve ZNode.name and ZNode.parentPath to not use Regexes</li>
 <li>Fix ScheduledThreadPoolTimer.schedule(…).cancel()</li>
@@ -2567,8 +2615,8 @@ exceptions</li>
 <li>Clean up equals and hashCode for Time and Duration</li>
 </ul>
 </div>
-<div class="section" id="id266">
-<h2>5.3.7  2012-08-21<a class="headerlink" href="#id266" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id268">
+<h2>5.3.7  2012-08-21<a class="headerlink" href="#id268" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Disable log handler purging</li>
 <li>Added ThriftCodec</li>
@@ -2577,42 +2625,42 @@ exceptions</li>
 <li>patch public release of OSS libraries; catch up sbt</li>
 </ul>
 </div>
-<div class="section" id="id267">
-<h2>5.3.6  2012-07-26<a class="headerlink" href="#id267" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id269">
+<h2>5.3.6  2012-07-26<a class="headerlink" href="#id269" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fix temporary file name generation</li>
 </ul>
 </div>
-<div class="section" id="id268">
-<h2>5.3.0  2012-06-25<a class="headerlink" href="#id268" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id270">
+<h2>5.3.0  2012-06-25<a class="headerlink" href="#id270" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-jvm: start timer thread in ‘daemon’ mode</li>
 </ul>
 </div>
-<div class="section" id="id269">
-<h2>5.2.0  2012-06-14<a class="headerlink" href="#id269" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id271">
+<h2>5.2.0  2012-06-14<a class="headerlink" href="#id271" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>JVM CPU profiler</li>
 <li>util-jvm: fix for JDK 7</li>
 </ul>
 </div>
-<div class="section" id="id270">
-<h2>5.1.2  2012-06-07<a class="headerlink" href="#id270" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id272">
+<h2>5.1.2  2012-06-07<a class="headerlink" href="#id272" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>fix documentation</li>
 <li>util-jvm: gc monitoring</li>
 <li>Kill com.twitter.concurrent.Channel</li>
 </ul>
 </div>
-<div class="section" id="id271">
-<h2>5.0.4  2012-06-01<a class="headerlink" href="#id271" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id273">
+<h2>5.0.4  2012-06-01<a class="headerlink" href="#id273" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Upgrade scala to 2.9.2</li>
 <li>Java compatibility: void -&gt; voided</li>
 </ul>
 </div>
-<div class="section" id="id272">
-<h2>4.0.1<a class="headerlink" href="#id272" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id274">
+<h2>4.0.1<a class="headerlink" href="#id274" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>added AsyncQueue</li>
 <li>config:validate optional subconfigs</li>
@@ -2633,8 +2681,8 @@ exception handling, misc fixes</li>
 <li>Time: Treat MaxValue specially in TimeMod.{add,sub}</li>
 </ul>
 </div>
-<div class="section" id="id273">
-<h2>3.0.0  2012-03-14<a class="headerlink" href="#id273" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id275">
+<h2>3.0.0  2012-03-14<a class="headerlink" href="#id275" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>AsyncSemaphore: allow parameterizing maximum queue size</li>
 <li>Logging: scribe handlers may now be named “scribe”</li>
@@ -2644,15 +2692,15 @@ able to refer to Logger.</li>
 <li>Config: Config.optional results in lazy evaluation</li>
 </ul>
 </div>
-<div class="section" id="id274">
-<h2>2.0.0  2012-02-27<a class="headerlink" href="#id274" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id276">
+<h2>2.0.0  2012-02-27<a class="headerlink" href="#id276" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>NetUtil: optimize ipv4 address parsing</li>
 <li>upgrade to Guava r11</li>
 </ul>
 </div>
-<div class="section" id="id275">
-<h2>1.12.13  2012-02-13<a class="headerlink" href="#id275" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id277">
+<h2>1.12.13  2012-02-13<a class="headerlink" href="#id277" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>NetUtil: Add inetAddressToInt, isInetAddressInBlock, isInetAddressInBlocks</li>
 <li>Future tracer: fix bug where double proxied exceptions fail</li>
@@ -2661,8 +2709,8 @@ able to refer to Logger.</li>
 and restoring contexts</li>
 </ul>
 </div>
-<div class="section" id="id276">
-<h2>1.12.12  2012-01-24<a class="headerlink" href="#id276" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id278">
+<h2>1.12.12  2012-01-24<a class="headerlink" href="#id278" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util-zk-common: Asynchronous wrappers for common ServerSets.</li>
 <li>IVar.unget: only remove closures by object equality</li>
@@ -2670,29 +2718,29 @@ and restoring contexts</li>
 <li>Future.const - builds a constant Future from an existing Try</li>
 </ul>
 </div>
-<div class="section" id="id277">
-<h2>1.12.9  2012-01-05<a class="headerlink" href="#id277" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id279">
+<h2>1.12.9  2012-01-05<a class="headerlink" href="#id279" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>ThreadPoolFactories are named by default</li>
 <li>Offer: ensure ObjectOrder is independent of Object#hashCode</li>
 <li>new package: util-zk: asynchronous bindings to ZooKeeper</li>
 </ul>
 </div>
-<div class="section" id="id278">
-<h2>1.12.7  2011-12-02<a class="headerlink" href="#id278" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id280">
+<h2>1.12.7  2011-12-02<a class="headerlink" href="#id280" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Future: temporarily disabling default usage of the AsmTracer</li>
 </ul>
 </div>
-<div class="section" id="id279">
-<h2>1.12.6  2011-12-01<a class="headerlink" href="#id279" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id281">
+<h2>1.12.6  2011-12-01<a class="headerlink" href="#id281" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Future: all helper methods now have Java-friendly equivalents
 that take Lists.</li>
 </ul>
 </div>
-<div class="section" id="id280">
-<h2>1.12.5  2011-11-29<a class="headerlink" href="#id280" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id282">
+<h2>1.12.5  2011-11-29<a class="headerlink" href="#id282" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Config: recompile configs based on hash instead of timestamp, add
 memoization</li>
@@ -2707,8 +2755,8 @@ more imperative control flow when used from Java.</li>
 <li>Monitors: composable widgets for handling exceptions</li>
 </ul>
 </div>
-<div class="section" id="id281">
-<h2>1.12.4  2011-11-09<a class="headerlink" href="#id281" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id283">
+<h2>1.12.4  2011-11-09<a class="headerlink" href="#id283" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Files.delete has to follow symlinks because jdk6 support
 for symlinks is weaksauce</li>
@@ -2716,24 +2764,24 @@ for symlinks is weaksauce</li>
 <li>Locals: ensure <code class="docutils literal"><span class="pre">Local</span></code> is fully initialized before registering</li>
 </ul>
 </div>
-<div class="section" id="id282">
-<h2>1.12.3  2011-11-08<a class="headerlink" href="#id282" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id284">
+<h2>1.12.3  2011-11-08<a class="headerlink" href="#id284" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>add some docs to Offer, Time</li>
 <li>util.io.Files: file utilities, documentation for TempFile</li>
 <li>Offer/Broker: explicit return types for Java compat.</li>
 </ul>
 </div>
-<div class="section" id="id283">
-<h2>1.12.2  2011-10-28<a class="headerlink" href="#id283" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id285">
+<h2>1.12.2  2011-10-28<a class="headerlink" href="#id285" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Json thrift deserializer</li>
 <li>Finagle: count pending timeouts</li>
 <li>Fix eval precompile bug</li>
 </ul>
 </div>
-<div class="section" id="id284">
-<h2>1.12.0  2011-10-21<a class="headerlink" href="#id284" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id286">
+<h2>1.12.0  2011-10-21<a class="headerlink" href="#id286" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>util.Config.Specified now delays evaluation of specified value, to
 ensure evaluation happens in correct dependency order, rather than
@@ -2741,8 +2789,8 @@ in class-hierarchy order.  This change is mostly source compatible,
 unless you have directly used the Specified class.</li>
 </ul>
 </div>
-<div class="section" id="id285">
-<h2>1.11.9  2011-10-14<a class="headerlink" href="#id285" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id287">
+<h2>1.11.9  2011-10-14<a class="headerlink" href="#id287" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>ivar/future: provide “TCE”, per-thread scheduling, and
 promise squashing</li>
@@ -2753,8 +2801,8 @@ promise squashing</li>
 <li>base64 encoder: make it threadsafe</li>
 </ul>
 </div>
-<div class="section" id="id286">
-<h2>1.11.8  2011-10-04<a class="headerlink" href="#id286" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id288">
+<h2>1.11.8  2011-10-04<a class="headerlink" href="#id288" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Back out TCE for ivar/futures. This introduced a space
 leak and will be fixed momentarily.</li>
@@ -2762,8 +2810,8 @@ leak and will be fixed momentarily.</li>
 and return as a Future.exception</li>
 </ul>
 </div>
-<div class="section" id="id287">
-<h2>1.11.7  2011-09-28<a class="headerlink" href="#id287" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id289">
+<h2>1.11.7  2011-09-28<a class="headerlink" href="#id289" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>ivar/future: provide “TCE”, per-thread scheduling, and
 promise squashing</li>
@@ -2774,8 +2822,8 @@ instead of millisecond.</li>
 that are cancelled</li>
 </ul>
 </div>
-<div class="section" id="id288">
-<h2>1.11.2  2011-08-12<a class="headerlink" href="#id288" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id290">
+<h2>1.11.2  2011-08-12<a class="headerlink" href="#id290" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>offer: use Int.compare instead of subtraction to avoid
 integer overflow in ObjectOrder</li>
@@ -2783,8 +2831,8 @@ integer overflow in ObjectOrder</li>
 <li>Eval: persistent compilation targets</li>
 </ul>
 </div>
-<div class="section" id="id289">
-<h2>1.11.1  2011-08-05<a class="headerlink" href="#id289" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id291">
+<h2>1.11.1  2011-08-05<a class="headerlink" href="#id291" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>offer/broker: fixes, simplifications - gets rid of thunked
 values on sends.  removing the infrastructure required to
@@ -2796,29 +2844,29 @@ identical objects in lock order.</li>
 functions; tests</li>
 </ul>
 </div>
-<div class="section" id="id290">
-<h2>1.11.0  2011-08-02<a class="headerlink" href="#id290" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id292">
+<h2>1.11.0  2011-08-02<a class="headerlink" href="#id292" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Introduce new util-codec module to contain various codecs.
 Primarily so that it can depend on apache commons-codec 1.5
 for base64 improvements over the sun one.</li>
 </ul>
 </div>
-<div class="section" id="id291">
-<h2>1.10.4  2011-07-29<a class="headerlink" href="#id291" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id293">
+<h2>1.10.4  2011-07-29<a class="headerlink" href="#id293" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Added TestLogging specs helper to util-logging.</li>
 <li>Spools: like scala streams, but with deferred tails.</li>
 </ul>
 </div>
-<div class="section" id="id292">
-<h2>1.10.3  2011-07-27<a class="headerlink" href="#id292" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id294">
+<h2>1.10.3  2011-07-27<a class="headerlink" href="#id294" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>add GZip string encoder</li>
 </ul>
 </div>
-<div class="section" id="id293">
-<h2>1.10.2  2011-07-18<a class="headerlink" href="#id293" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id295">
+<h2>1.10.2  2011-07-18<a class="headerlink" href="#id295" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Maintain a map of already visited objects incase someone
 creates a circular of config objects.</li>
@@ -2847,441 +2895,446 @@ creates a circular of config objects.</li>
   <ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
 <li><a class="reference internal" href="#unreleased">Unreleased</a></li>
-<li><a class="reference internal" href="#id1">20.10.0</a><ul>
+<li><a class="reference internal" href="#id1">20.12.0</a><ul>
+<li><a class="reference internal" href="#breaking-api-changes">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#new-features">New Features</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">20.10.0</a><ul>
 <li><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id2">20.9.0</a><ul>
-<li><a class="reference internal" href="#new-features">New Features</a></li>
-<li><a class="reference internal" href="#breaking-api-changes">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id3">20.9.0</a><ul>
+<li><a class="reference internal" href="#id4">New Features</a></li>
+<li><a class="reference internal" href="#id5">Breaking API Changes</a></li>
 <li><a class="reference internal" href="#runtime-behavior-changes">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id3">20.8.1</a><ul>
-<li><a class="reference internal" href="#id4">New Features</a></li>
+<li><a class="reference internal" href="#id6">20.8.1</a><ul>
+<li><a class="reference internal" href="#id7">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id5">20.8.0</a><ul>
-<li><a class="reference internal" href="#id6">New Features</a></li>
-<li><a class="reference internal" href="#id7">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#do-not-use">20.8.0 (DO NOT USE)</a><ul>
+<li><a class="reference internal" href="#id8">New Features</a></li>
+<li><a class="reference internal" href="#id9">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id8">20.7.0</a><ul>
-<li><a class="reference internal" href="#id9">New Features</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id10">20.6.0</a><ul>
+<li><a class="reference internal" href="#id10">20.7.0</a><ul>
 <li><a class="reference internal" href="#id11">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id12">20.5.0</a><ul>
+<li><a class="reference internal" href="#id12">20.6.0</a><ul>
 <li><a class="reference internal" href="#id13">New Features</a></li>
-<li><a class="reference internal" href="#id14">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id15">20.4.1</a><ul>
-<li><a class="reference internal" href="#id16">New Features</a></li>
-<li><a class="reference internal" href="#id17">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id14">20.5.0</a><ul>
+<li><a class="reference internal" href="#id15">New Features</a></li>
+<li><a class="reference internal" href="#id16">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id18">20.4.0</a><ul>
-<li><a class="reference internal" href="#id19">New Features</a></li>
-<li><a class="reference internal" href="#id20">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id21">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id17">20.4.1</a><ul>
+<li><a class="reference internal" href="#id18">New Features</a></li>
+<li><a class="reference internal" href="#id19">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id22">20.3.0</a><ul>
-<li><a class="reference internal" href="#id23">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id24">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id20">20.4.0 (DO NOT USE)</a><ul>
+<li><a class="reference internal" href="#id21">New Features</a></li>
+<li><a class="reference internal" href="#id22">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id23">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id25">20.2.1</a><ul>
-<li><a class="reference internal" href="#id26">New Features</a></li>
-<li><a class="reference internal" href="#id27">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id28">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id24">20.3.0</a><ul>
+<li><a class="reference internal" href="#id25">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id26">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id29">20.1.0</a></li>
-<li><a class="reference internal" href="#id30">19.12.0</a><ul>
-<li><a class="reference internal" href="#id31">New Features</a></li>
-<li><a class="reference internal" href="#id32">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id33">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id27">20.2.1</a><ul>
+<li><a class="reference internal" href="#id28">New Features</a></li>
+<li><a class="reference internal" href="#id29">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id30">Bug Fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id31">20.1.0</a></li>
+<li><a class="reference internal" href="#id32">19.12.0</a><ul>
+<li><a class="reference internal" href="#id33">New Features</a></li>
+<li><a class="reference internal" href="#id34">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id35">Breaking API Changes</a></li>
 <li><a class="reference internal" href="#deprecations">Deprecations</a></li>
-<li><a class="reference internal" href="#id34">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id36">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id35">19.11.0</a><ul>
-<li><a class="reference internal" href="#id36">New Features</a></li>
-<li><a class="reference internal" href="#id37">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id38">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id39">Deprecations</a></li>
+<li><a class="reference internal" href="#id37">19.11.0</a><ul>
+<li><a class="reference internal" href="#id38">New Features</a></li>
+<li><a class="reference internal" href="#id39">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id40">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id41">Deprecations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id40">19.10.0</a><ul>
-<li><a class="reference internal" href="#id41">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id42">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id42">19.10.0</a><ul>
+<li><a class="reference internal" href="#id43">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id44">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id43">19.9.0</a><ul>
-<li><a class="reference internal" href="#id44">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id45">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id45">19.9.0</a><ul>
+<li><a class="reference internal" href="#id46">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id47">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id46">19.8.1</a><ul>
-<li><a class="reference internal" href="#id47">New Features</a></li>
+<li><a class="reference internal" href="#id48">19.8.1</a><ul>
+<li><a class="reference internal" href="#id49">New Features</a></li>
 <li><a class="reference internal" href="#java-compatibility">Java Compatibility</a></li>
-<li><a class="reference internal" href="#id48">Breaking API Changes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id49">19.8.0</a><ul>
 <li><a class="reference internal" href="#id50">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id51">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id52">19.7.0</a><ul>
-<li><a class="reference internal" href="#id53">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id54">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id51">19.8.0</a><ul>
+<li><a class="reference internal" href="#id52">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id53">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id55">19.6.0</a><ul>
-<li><a class="reference internal" href="#id56">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id57">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id54">19.7.0</a><ul>
+<li><a class="reference internal" href="#id55">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id56">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id58">19.5.1</a></li>
-<li><a class="reference internal" href="#id59">19.5.0</a><ul>
-<li><a class="reference internal" href="#id60">New Features</a></li>
+<li><a class="reference internal" href="#id57">19.6.0</a><ul>
+<li><a class="reference internal" href="#id58">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id59">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id61">19.4.0</a><ul>
+<li><a class="reference internal" href="#id60">19.5.1</a></li>
+<li><a class="reference internal" href="#id61">19.5.0</a><ul>
 <li><a class="reference internal" href="#id62">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id63">19.3.0</a><ul>
+<li><a class="reference internal" href="#id63">19.4.0</a><ul>
 <li><a class="reference internal" href="#id64">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id65">19.2.0</a><ul>
+<li><a class="reference internal" href="#id65">19.3.0</a><ul>
 <li><a class="reference internal" href="#id66">New Features</a></li>
-<li><a class="reference internal" href="#id67">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id68">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id69">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id70">19.1.0</a><ul>
-<li><a class="reference internal" href="#id71">New Features</a></li>
-<li><a class="reference internal" href="#id72">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id67">19.2.0</a><ul>
+<li><a class="reference internal" href="#id68">New Features</a></li>
+<li><a class="reference internal" href="#id69">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id70">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id71">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id73">18.12.0</a><ul>
-<li><a class="reference internal" href="#id74">New Features</a></li>
-<li><a class="reference internal" href="#id75">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id76">Deprecations</a></li>
-<li><a class="reference internal" href="#id77">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id72">19.1.0</a><ul>
+<li><a class="reference internal" href="#id73">New Features</a></li>
+<li><a class="reference internal" href="#id74">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id78">18.11.0</a><ul>
+<li><a class="reference internal" href="#id75">18.12.0</a><ul>
+<li><a class="reference internal" href="#id76">New Features</a></li>
+<li><a class="reference internal" href="#id77">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id78">Deprecations</a></li>
 <li><a class="reference internal" href="#id79">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id80">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id81">18.10.0</a><ul>
-<li><a class="reference internal" href="#id82">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id83">New Features</a></li>
-<li><a class="reference internal" href="#id84">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id80">18.11.0</a><ul>
+<li><a class="reference internal" href="#id81">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id82">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id85">18.9.1</a><ul>
-<li><a class="reference internal" href="#id86">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id87">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id88">New Features</a></li>
+<li><a class="reference internal" href="#id83">18.10.0</a><ul>
+<li><a class="reference internal" href="#id84">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id85">New Features</a></li>
+<li><a class="reference internal" href="#id86">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id89">18.9.0</a><ul>
+<li><a class="reference internal" href="#id87">18.9.1</a><ul>
+<li><a class="reference internal" href="#id88">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id89">Bug Fixes</a></li>
 <li><a class="reference internal" href="#id90">New Features</a></li>
-<li><a class="reference internal" href="#id91">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id92">18.8.0</a><ul>
-<li><a class="reference internal" href="#id93">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id91">18.9.0</a><ul>
+<li><a class="reference internal" href="#id92">New Features</a></li>
+<li><a class="reference internal" href="#id93">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id94">18.7.0</a><ul>
-<li><a class="reference internal" href="#id95">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id94">18.8.0</a><ul>
+<li><a class="reference internal" href="#id95">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id96">18.6.0</a><ul>
+<li><a class="reference internal" href="#id96">18.7.0</a><ul>
 <li><a class="reference internal" href="#id97">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id98">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id99">Deprecations</a></li>
-<li><a class="reference internal" href="#id100">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id101">18.5.0</a><ul>
-<li><a class="reference internal" href="#id102">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id98">18.6.0</a><ul>
+<li><a class="reference internal" href="#id99">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id100">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id101">Deprecations</a></li>
+<li><a class="reference internal" href="#id102">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id103">18.4.0</a><ul>
-<li><a class="reference internal" href="#id104">New Features</a></li>
-<li><a class="reference internal" href="#id105">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id103">18.5.0</a><ul>
+<li><a class="reference internal" href="#id104">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id106">18.3.0</a><ul>
+<li><a class="reference internal" href="#id105">18.4.0</a><ul>
+<li><a class="reference internal" href="#id106">New Features</a></li>
 <li><a class="reference internal" href="#id107">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id108">Deprecations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id109">18.2.0</a><ul>
-<li><a class="reference internal" href="#id110">New Features</a></li>
-<li><a class="reference internal" href="#id111">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id108">18.3.0</a><ul>
+<li><a class="reference internal" href="#id109">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id110">Deprecations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id112">18.1.0</a><ul>
-<li><a class="reference internal" href="#id113">New Features</a></li>
+<li><a class="reference internal" href="#id111">18.2.0</a><ul>
+<li><a class="reference internal" href="#id112">New Features</a></li>
+<li><a class="reference internal" href="#id113">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id114">17.12.0</a><ul>
-<li><a class="reference internal" href="#id115">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id114">18.1.0</a><ul>
+<li><a class="reference internal" href="#id115">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id116">17.11.0</a><ul>
+<li><a class="reference internal" href="#id116">17.12.0</a><ul>
+<li><a class="reference internal" href="#id117">Breaking API Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id118">17.11.0</a><ul>
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li><a class="reference internal" href="#id117">New Features</a></li>
-<li><a class="reference internal" href="#id118">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id119">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id119">New Features</a></li>
+<li><a class="reference internal" href="#id120">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id121">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id120">17.10.0</a><ul>
+<li><a class="reference internal" href="#id122">17.10.0</a><ul>
 <li><a class="reference internal" href="#release-version-changes">Release Version Changes:</a></li>
-<li><a class="reference internal" href="#id121">New Features</a></li>
-<li><a class="reference internal" href="#id122">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id123">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id124">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id123">New Features</a></li>
+<li><a class="reference internal" href="#id124">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id125">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id126">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id125">7.1.0  2017-09-06</a><ul>
-<li><a class="reference internal" href="#id126">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id127">7.1.0  2017-09-06</a><ul>
+<li><a class="reference internal" href="#id128">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id127">7.0.0  2017-08-15</a><ul>
-<li><a class="reference internal" href="#id128">New Features</a></li>
-<li><a class="reference internal" href="#id129">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id130">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id131">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id132">Deprecations</a></li>
+<li><a class="reference internal" href="#id129">7.0.0  2017-08-15</a><ul>
+<li><a class="reference internal" href="#id130">New Features</a></li>
+<li><a class="reference internal" href="#id131">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id132">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id133">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id134">Deprecations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id133">6.45.0  2017-06-06</a><ul>
-<li><a class="reference internal" href="#id134">New Features</a></li>
-<li><a class="reference internal" href="#id135">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id136">Runtime Behavior Changes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id137">6.43.0  2017-04-20</a><ul>
+<li><a class="reference internal" href="#id135">6.45.0  2017-06-06</a><ul>
+<li><a class="reference internal" href="#id136">New Features</a></li>
+<li><a class="reference internal" href="#id137">Breaking API Changes</a></li>
 <li><a class="reference internal" href="#id138">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id139">New Features</a></li>
-<li><a class="reference internal" href="#id140">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id141">6.42.0  2017-03-10</a><ul>
-<li><a class="reference internal" href="#id142">New Features</a></li>
-<li><a class="reference internal" href="#id143">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id144">Dependencies</a></li>
+<li><a class="reference internal" href="#id139">6.43.0  2017-04-20</a><ul>
+<li><a class="reference internal" href="#id140">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id141">New Features</a></li>
+<li><a class="reference internal" href="#id142">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id145">6.41.0  2017-02-03</a><ul>
-<li><a class="reference internal" href="#id146">New Features</a></li>
-<li><a class="reference internal" href="#id147">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id148">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id143">6.42.0  2017-03-10</a><ul>
+<li><a class="reference internal" href="#id144">New Features</a></li>
+<li><a class="reference internal" href="#id145">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id146">Dependencies</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id149">6.40.0  2016-12-20</a><ul>
-<li><a class="reference internal" href="#id150">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id151">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id147">6.41.0  2017-02-03</a><ul>
+<li><a class="reference internal" href="#id148">New Features</a></li>
+<li><a class="reference internal" href="#id149">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id150">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id152">6.39.0  2016-11-22</a></li>
-<li><a class="reference internal" href="#id153">6.38.0  2016-10-10</a><ul>
-<li><a class="reference internal" href="#id154">New Features</a></li>
-<li><a class="reference internal" href="#id155">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id156">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id151">6.40.0  2016-12-20</a><ul>
+<li><a class="reference internal" href="#id152">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id153">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id157">6.37.0  2016-09-07</a><ul>
-<li><a class="reference internal" href="#id158">New Features</a></li>
+<li><a class="reference internal" href="#id154">6.39.0  2016-11-22</a></li>
+<li><a class="reference internal" href="#id155">6.38.0  2016-10-10</a><ul>
+<li><a class="reference internal" href="#id156">New Features</a></li>
+<li><a class="reference internal" href="#id157">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id158">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id159">6.36.0  2016-08-25</a><ul>
+<li><a class="reference internal" href="#id159">6.37.0  2016-09-07</a><ul>
 <li><a class="reference internal" href="#id160">New Features</a></li>
-<li><a class="reference internal" href="#id161">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id162">6.35.0  2016-07-07</a><ul>
+<li><a class="reference internal" href="#id161">6.36.0  2016-08-25</a><ul>
+<li><a class="reference internal" href="#id162">New Features</a></li>
 <li><a class="reference internal" href="#id163">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id164">New Features</a></li>
-<li><a class="reference internal" href="#id165">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id166">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id167">6.34.0  2016-04-26</a><ul>
-<li><a class="reference internal" href="#id168">New Features</a></li>
-<li><a class="reference internal" href="#id169">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id170">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id164">6.35.0  2016-07-07</a><ul>
+<li><a class="reference internal" href="#id165">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id166">New Features</a></li>
+<li><a class="reference internal" href="#id167">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id168">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id171">6.33.0  2016-03-10</a><ul>
-<li><a class="reference internal" href="#id172">New Features</a></li>
-<li><a class="reference internal" href="#id173">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id174">Deprecations</a></li>
+<li><a class="reference internal" href="#id169">6.34.0  2016-04-26</a><ul>
+<li><a class="reference internal" href="#id170">New Features</a></li>
+<li><a class="reference internal" href="#id171">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id172">Bug Fixes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id175">6.32.0  2016-02-03</a><ul>
-<li><a class="reference internal" href="#id176">New Features</a></li>
+<li><a class="reference internal" href="#id173">6.33.0  2016-03-10</a><ul>
+<li><a class="reference internal" href="#id174">New Features</a></li>
+<li><a class="reference internal" href="#id175">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id176">Deprecations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id177">6.31.0  2016-02-02</a></li>
-<li><a class="reference internal" href="#id178">6.30.0  2015-12-03</a><ul>
-<li><a class="reference internal" href="#id179">New Features</a></li>
-<li><a class="reference internal" href="#id180">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id177">6.32.0  2016-02-03</a><ul>
+<li><a class="reference internal" href="#id178">New Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id181">6.29.0  2015-10-15</a><ul>
-<li><a class="reference internal" href="#id182">New Features</a></li>
-<li><a class="reference internal" href="#id183">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id184">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id179">6.31.0  2016-02-02</a></li>
+<li><a class="reference internal" href="#id180">6.30.0  2015-12-03</a><ul>
+<li><a class="reference internal" href="#id181">New Features</a></li>
+<li><a class="reference internal" href="#id182">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id185">6.28.0  2015-09-25</a><ul>
-<li><a class="reference internal" href="#id186">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id183">6.29.0  2015-10-15</a><ul>
+<li><a class="reference internal" href="#id184">New Features</a></li>
+<li><a class="reference internal" href="#id185">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id186">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id187">6.27.0  2015-08-28</a><ul>
+<li><a class="reference internal" href="#id187">6.28.0  2015-09-25</a><ul>
 <li><a class="reference internal" href="#id188">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id189">6.26.0  2015-07-27</a><ul>
+<li><a class="reference internal" href="#id189">6.27.0  2015-08-28</a><ul>
 <li><a class="reference internal" href="#id190">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id191">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id192">6.25.0  2015-06-22</a><ul>
+<li><a class="reference internal" href="#id191">6.26.0  2015-07-27</a><ul>
+<li><a class="reference internal" href="#id192">Breaking API Changes</a></li>
 <li><a class="reference internal" href="#id193">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id194">6.24.0  2015-04-12</a><ul>
-<li><a class="reference internal" href="#id195">New Features</a></li>
-<li><a class="reference internal" href="#id196">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id197">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id194">6.25.0  2015-06-22</a><ul>
+<li><a class="reference internal" href="#id195">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id198">6.23.0 2014-12-12</a><ul>
-<li><a class="reference internal" href="#id199">New Features</a></li>
-<li><a class="reference internal" href="#id200">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id201">Java Compatibility</a></li>
+<li><a class="reference internal" href="#id196">6.24.0  2015-04-12</a><ul>
+<li><a class="reference internal" href="#id197">New Features</a></li>
+<li><a class="reference internal" href="#id198">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id199">Runtime Behavior Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id202">6.22.2  2014-10-29</a><ul>
-<li><a class="reference internal" href="#id203">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id204">New Features</a></li>
-<li><a class="reference internal" href="#id205">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id200">6.23.0 2014-12-12</a><ul>
+<li><a class="reference internal" href="#id201">New Features</a></li>
+<li><a class="reference internal" href="#id202">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id203">Java Compatibility</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id204">6.22.2  2014-10-29</a><ul>
+<li><a class="reference internal" href="#id205">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id206">New Features</a></li>
+<li><a class="reference internal" href="#id207">Bug Fixes</a></li>
 <li><a class="reference internal" href="#optimizations">Optimizations</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id206">6.22.1  2014-10-23</a><ul>
-<li><a class="reference internal" href="#id207">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id208">6.22.1  2014-10-23</a><ul>
+<li><a class="reference internal" href="#id209">Bug Fixes</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
-<li><a class="reference internal" href="#id208">New Features</a></li>
+<li><a class="reference internal" href="#id210">New Features</a></li>
 <li><a class="reference internal" href="#package-factoring">Package factoring</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id209">6.22.0  2014-10-13</a><ul>
+<li><a class="reference internal" href="#id211">6.22.0  2014-10-13</a><ul>
 <li><a class="reference internal" href="#system-requirements">System Requirements</a></li>
-<li><a class="reference internal" href="#id210">Runtime Behavior Changes</a></li>
-<li><a class="reference internal" href="#id211">New Features</a></li>
-<li><a class="reference internal" href="#id212">Optimizations</a></li>
-<li><a class="reference internal" href="#id213">Bug Fixes</a></li>
-<li><a class="reference internal" href="#id214">Breaking API Changes</a></li>
-<li><a class="reference internal" href="#id215">Documentation</a></li>
-<li><a class="reference internal" href="#id216">Package factoring</a></li>
-<li><a class="reference internal" href="#id217">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id212">Runtime Behavior Changes</a></li>
+<li><a class="reference internal" href="#id213">New Features</a></li>
+<li><a class="reference internal" href="#id214">Optimizations</a></li>
+<li><a class="reference internal" href="#id215">Bug Fixes</a></li>
+<li><a class="reference internal" href="#id216">Breaking API Changes</a></li>
+<li><a class="reference internal" href="#id217">Documentation</a></li>
+<li><a class="reference internal" href="#id218">Package factoring</a></li>
+<li><a class="reference internal" href="#id219">Breaking API Changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id218">6.21.2  2014-09-08</a></li>
-<li><a class="reference internal" href="#id219">6.20.0  2014-08-22</a></li>
-<li><a class="reference internal" href="#id220">6.19.0  2014-08-05</a></li>
-<li><a class="reference internal" href="#id221">6.18.4  2014-07-31</a></li>
-<li><a class="reference internal" href="#id222">6.18.2  2014-07-23</a></li>
-<li><a class="reference internal" href="#id223">6.18.1  2014-07-08</a></li>
-<li><a class="reference internal" href="#id224">6.18.0  2014-06-23</a></li>
-<li><a class="reference internal" href="#id225">6.17.0  2014-06-04</a></li>
-<li><a class="reference internal" href="#id226">6.16.0  2014-05-13</a></li>
-<li><a class="reference internal" href="#id227">6.15.0  2014-04-29</a></li>
-<li><a class="reference internal" href="#id228">6.14.0  2014-04-09</a></li>
-<li><a class="reference internal" href="#id229">6.13.2  2014-03-24</a></li>
-<li><a class="reference internal" href="#id230">6.13.1  2014-03-20</a></li>
-<li><a class="reference internal" href="#id231">6.13.0  2014-03-14</a></li>
-<li><a class="reference internal" href="#id232">6.12.1  2014-02-18</a></li>
-<li><a class="reference internal" href="#id233">6.12.0  2014-02-14</a></li>
-<li><a class="reference internal" href="#id234">6.11.1  2014-01-16</a></li>
-<li><a class="reference internal" href="#id235">6.11.0  2014-01-14</a></li>
-<li><a class="reference internal" href="#id236">6.10.0  2013-12-12</a></li>
-<li><a class="reference internal" href="#id237">6.9.0  2013-12-02</a></li>
-<li><a class="reference internal" href="#id238">6.8.1  2013-11-15</a></li>
-<li><a class="reference internal" href="#id239">6.8.0  2013-11-12</a></li>
-<li><a class="reference internal" href="#id240">6.7.0  2013-10-18</a></li>
-<li><a class="reference internal" href="#id241">6.6.0  2013-10-09</a></li>
-<li><a class="reference internal" href="#id242">6.5.0  2013-09-10</a></li>
-<li><a class="reference internal" href="#id243">6.4.0  2013-08-28</a></li>
-<li><a class="reference internal" href="#id244">6.3.8  2013-07-22</a></li>
-<li><a class="reference internal" href="#id245">6.3.7  2013-06-24</a></li>
-<li><a class="reference internal" href="#id246">6.3.6  2013-06-11</a></li>
-<li><a class="reference internal" href="#id247">6.3.5  2013-05-31</a></li>
-<li><a class="reference internal" href="#id248">6.3.4  2013-05-16</a></li>
-<li><a class="reference internal" href="#id249">6.3.3  2013-05-13</a></li>
-<li><a class="reference internal" href="#id250">6.3.2  2013-04-18</a></li>
-<li><a class="reference internal" href="#id251">6.3.0  2013-04-05</a></li>
-<li><a class="reference internal" href="#id252">6.2.5  2013-03-27</a></li>
-<li><a class="reference internal" href="#id253">6.2.4  2013-03-21</a></li>
-<li><a class="reference internal" href="#id254">6.2.3  2013-03-08</a></li>
-<li><a class="reference internal" href="#id255">6.2.2  2013-02-25</a></li>
-<li><a class="reference internal" href="#id256">6.2.1  2013-02-20</a></li>
-<li><a class="reference internal" href="#id257">6.1.0  2013-01-30</a></li>
-<li><a class="reference internal" href="#id258">6.0.6  2013-01-22</a></li>
-<li><a class="reference internal" href="#id259">6.0.4  2012-12-18</a></li>
-<li><a class="reference internal" href="#id260">6.0.3  2012-12-11</a></li>
-<li><a class="reference internal" href="#id261">6.0.1  2012-11-26</a></li>
-<li><a class="reference internal" href="#id262">6.0.0  2012-11-26</a></li>
-<li><a class="reference internal" href="#id263">5.3.14  2012-11-20</a></li>
-<li><a class="reference internal" href="#id264">5.3.13  2012-10-16</a></li>
-<li><a class="reference internal" href="#id265">5.3.10  2012-09-06</a></li>
-<li><a class="reference internal" href="#id266">5.3.7  2012-08-21</a></li>
-<li><a class="reference internal" href="#id267">5.3.6  2012-07-26</a></li>
-<li><a class="reference internal" href="#id268">5.3.0  2012-06-25</a></li>
-<li><a class="reference internal" href="#id269">5.2.0  2012-06-14</a></li>
-<li><a class="reference internal" href="#id270">5.1.2  2012-06-07</a></li>
-<li><a class="reference internal" href="#id271">5.0.4  2012-06-01</a></li>
-<li><a class="reference internal" href="#id272">4.0.1</a></li>
-<li><a class="reference internal" href="#id273">3.0.0  2012-03-14</a></li>
-<li><a class="reference internal" href="#id274">2.0.0  2012-02-27</a></li>
-<li><a class="reference internal" href="#id275">1.12.13  2012-02-13</a></li>
-<li><a class="reference internal" href="#id276">1.12.12  2012-01-24</a></li>
-<li><a class="reference internal" href="#id277">1.12.9  2012-01-05</a></li>
-<li><a class="reference internal" href="#id278">1.12.7  2011-12-02</a></li>
-<li><a class="reference internal" href="#id279">1.12.6  2011-12-01</a></li>
-<li><a class="reference internal" href="#id280">1.12.5  2011-11-29</a></li>
-<li><a class="reference internal" href="#id281">1.12.4  2011-11-09</a></li>
-<li><a class="reference internal" href="#id282">1.12.3  2011-11-08</a></li>
-<li><a class="reference internal" href="#id283">1.12.2  2011-10-28</a></li>
-<li><a class="reference internal" href="#id284">1.12.0  2011-10-21</a></li>
-<li><a class="reference internal" href="#id285">1.11.9  2011-10-14</a></li>
-<li><a class="reference internal" href="#id286">1.11.8  2011-10-04</a></li>
-<li><a class="reference internal" href="#id287">1.11.7  2011-09-28</a></li>
-<li><a class="reference internal" href="#id288">1.11.2  2011-08-12</a></li>
-<li><a class="reference internal" href="#id289">1.11.1  2011-08-05</a></li>
-<li><a class="reference internal" href="#id290">1.11.0  2011-08-02</a></li>
-<li><a class="reference internal" href="#id291">1.10.4  2011-07-29</a></li>
-<li><a class="reference internal" href="#id292">1.10.3  2011-07-27</a></li>
-<li><a class="reference internal" href="#id293">1.10.2  2011-07-18</a></li>
+<li><a class="reference internal" href="#id220">6.21.2  2014-09-08</a></li>
+<li><a class="reference internal" href="#id221">6.20.0  2014-08-22</a></li>
+<li><a class="reference internal" href="#id222">6.19.0  2014-08-05</a></li>
+<li><a class="reference internal" href="#id223">6.18.4  2014-07-31</a></li>
+<li><a class="reference internal" href="#id224">6.18.2  2014-07-23</a></li>
+<li><a class="reference internal" href="#id225">6.18.1  2014-07-08</a></li>
+<li><a class="reference internal" href="#id226">6.18.0  2014-06-23</a></li>
+<li><a class="reference internal" href="#id227">6.17.0  2014-06-04</a></li>
+<li><a class="reference internal" href="#id228">6.16.0  2014-05-13</a></li>
+<li><a class="reference internal" href="#id229">6.15.0  2014-04-29</a></li>
+<li><a class="reference internal" href="#id230">6.14.0  2014-04-09</a></li>
+<li><a class="reference internal" href="#id231">6.13.2  2014-03-24</a></li>
+<li><a class="reference internal" href="#id232">6.13.1  2014-03-20</a></li>
+<li><a class="reference internal" href="#id233">6.13.0  2014-03-14</a></li>
+<li><a class="reference internal" href="#id234">6.12.1  2014-02-18</a></li>
+<li><a class="reference internal" href="#id235">6.12.0  2014-02-14</a></li>
+<li><a class="reference internal" href="#id236">6.11.1  2014-01-16</a></li>
+<li><a class="reference internal" href="#id237">6.11.0  2014-01-14</a></li>
+<li><a class="reference internal" href="#id238">6.10.0  2013-12-12</a></li>
+<li><a class="reference internal" href="#id239">6.9.0  2013-12-02</a></li>
+<li><a class="reference internal" href="#id240">6.8.1  2013-11-15</a></li>
+<li><a class="reference internal" href="#id241">6.8.0  2013-11-12</a></li>
+<li><a class="reference internal" href="#id242">6.7.0  2013-10-18</a></li>
+<li><a class="reference internal" href="#id243">6.6.0  2013-10-09</a></li>
+<li><a class="reference internal" href="#id244">6.5.0  2013-09-10</a></li>
+<li><a class="reference internal" href="#id245">6.4.0  2013-08-28</a></li>
+<li><a class="reference internal" href="#id246">6.3.8  2013-07-22</a></li>
+<li><a class="reference internal" href="#id247">6.3.7  2013-06-24</a></li>
+<li><a class="reference internal" href="#id248">6.3.6  2013-06-11</a></li>
+<li><a class="reference internal" href="#id249">6.3.5  2013-05-31</a></li>
+<li><a class="reference internal" href="#id250">6.3.4  2013-05-16</a></li>
+<li><a class="reference internal" href="#id251">6.3.3  2013-05-13</a></li>
+<li><a class="reference internal" href="#id252">6.3.2  2013-04-18</a></li>
+<li><a class="reference internal" href="#id253">6.3.0  2013-04-05</a></li>
+<li><a class="reference internal" href="#id254">6.2.5  2013-03-27</a></li>
+<li><a class="reference internal" href="#id255">6.2.4  2013-03-21</a></li>
+<li><a class="reference internal" href="#id256">6.2.3  2013-03-08</a></li>
+<li><a class="reference internal" href="#id257">6.2.2  2013-02-25</a></li>
+<li><a class="reference internal" href="#id258">6.2.1  2013-02-20</a></li>
+<li><a class="reference internal" href="#id259">6.1.0  2013-01-30</a></li>
+<li><a class="reference internal" href="#id260">6.0.6  2013-01-22</a></li>
+<li><a class="reference internal" href="#id261">6.0.4  2012-12-18</a></li>
+<li><a class="reference internal" href="#id262">6.0.3  2012-12-11</a></li>
+<li><a class="reference internal" href="#id263">6.0.1  2012-11-26</a></li>
+<li><a class="reference internal" href="#id264">6.0.0  2012-11-26</a></li>
+<li><a class="reference internal" href="#id265">5.3.14  2012-11-20</a></li>
+<li><a class="reference internal" href="#id266">5.3.13  2012-10-16</a></li>
+<li><a class="reference internal" href="#id267">5.3.10  2012-09-06</a></li>
+<li><a class="reference internal" href="#id268">5.3.7  2012-08-21</a></li>
+<li><a class="reference internal" href="#id269">5.3.6  2012-07-26</a></li>
+<li><a class="reference internal" href="#id270">5.3.0  2012-06-25</a></li>
+<li><a class="reference internal" href="#id271">5.2.0  2012-06-14</a></li>
+<li><a class="reference internal" href="#id272">5.1.2  2012-06-07</a></li>
+<li><a class="reference internal" href="#id273">5.0.4  2012-06-01</a></li>
+<li><a class="reference internal" href="#id274">4.0.1</a></li>
+<li><a class="reference internal" href="#id275">3.0.0  2012-03-14</a></li>
+<li><a class="reference internal" href="#id276">2.0.0  2012-02-27</a></li>
+<li><a class="reference internal" href="#id277">1.12.13  2012-02-13</a></li>
+<li><a class="reference internal" href="#id278">1.12.12  2012-01-24</a></li>
+<li><a class="reference internal" href="#id279">1.12.9  2012-01-05</a></li>
+<li><a class="reference internal" href="#id280">1.12.7  2011-12-02</a></li>
+<li><a class="reference internal" href="#id281">1.12.6  2011-12-01</a></li>
+<li><a class="reference internal" href="#id282">1.12.5  2011-11-29</a></li>
+<li><a class="reference internal" href="#id283">1.12.4  2011-11-09</a></li>
+<li><a class="reference internal" href="#id284">1.12.3  2011-11-08</a></li>
+<li><a class="reference internal" href="#id285">1.12.2  2011-10-28</a></li>
+<li><a class="reference internal" href="#id286">1.12.0  2011-10-21</a></li>
+<li><a class="reference internal" href="#id287">1.11.9  2011-10-14</a></li>
+<li><a class="reference internal" href="#id288">1.11.8  2011-10-04</a></li>
+<li><a class="reference internal" href="#id289">1.11.7  2011-09-28</a></li>
+<li><a class="reference internal" href="#id290">1.11.2  2011-08-12</a></li>
+<li><a class="reference internal" href="#id291">1.11.1  2011-08-05</a></li>
+<li><a class="reference internal" href="#id292">1.11.0  2011-08-02</a></li>
+<li><a class="reference internal" href="#id293">1.10.4  2011-07-29</a></li>
+<li><a class="reference internal" href="#id294">1.10.3  2011-07-27</a></li>
+<li><a class="reference internal" href="#id295">1.10.2  2011-07-18</a></li>
 </ul>
 </li>
 </ul>

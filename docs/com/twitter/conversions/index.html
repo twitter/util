@@ -171,8 +171,16 @@
                         <a href="DurationOps$.html" title="Implicits for writing readable com.twitter.util.Durations.">DurationOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="object" href="MapOps$.html" title="Implicits for converting Maps."></a>
+                        <a href="MapOps$.html" title="Implicits for converting Maps.">MapOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="PercentOps$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent."></a>
                         <a href="PercentOps$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent.">PercentOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="SeqOps$.html" title="Implicits for converting Seqs."></a>
+                        <a href="SeqOps$.html" title="Implicits for converting Seqs.">SeqOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="StorageUnitOps$.html" title="Implicits for writing readable com.twitter.util.StorageUnits."></a>
@@ -185,6 +193,10 @@
                         <span class="separator"></span>
                         <a class="object" href="ThreadOps$.html" title="Implicits for turning a block of code into a Runnable or Callable."></a>
                         <a href="ThreadOps$.html" title="Implicits for turning a block of code into a Runnable or Callable.">ThreadOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="TupleOps$.html" title="Implicits for converting tuples."></a>
+                        <a href="TupleOps$.html" title="Implicits for converting tuples.">TupleOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="U64Ops$.html" title=""></a>
@@ -426,6 +438,30 @@
 <span class="num">24.</span>hours
 <span class="num">40.</span>days</pre></li></ol>
             </div></dl></div>
+    </li><li name="com.twitter.conversions.MapOps" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MapOps"></a><a id="MapOps:MapOps"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/MapOps$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Implicits for converting Maps." href="MapOps$.html"><span class="name">MapOps</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Implicits for converting <span class="extype" name="Map">Map</span>s.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for converting <span class="extype" name="Map">Map</span>s.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p></p><pre><span class="kw">import</span> com.twitter.conversions.MapOps._
+
+<span class="std">Map</span>(<span class="num">1</span> -&gt; <span class="lit">"a"</span>).mapKeys { _.toString }
+<span class="std">Map</span>(<span class="num">1</span> -&gt; <span class="lit">"a"</span>).invert
+<span class="std">Map</span>(<span class="num">1</span> -&gt; <span class="lit">"a"</span>, <span class="num">2</span> -&gt; <span class="lit">"b"</span>).filterValues { _ == <span class="lit">"b"</span> }
+<span class="std">Map</span>(<span class="num">2</span> -&gt; <span class="lit">"b"</span>, <span class="num">1</span> -&gt; <span class="lit">"a"</span>).toSortedMap</pre></li></ol>
+            </div></dl></div>
     </li><li name="com.twitter.conversions.PercentOps" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="PercentOps"></a><a id="PercentOps:PercentOps"></a>
       <span class="permalink">
@@ -453,6 +489,35 @@ scaled to where 1.0 is 100 percent.
 <span class="num">500.</span>percent == <span class="num">5.0</span>
 -<span class="num">10.</span>percent == -<span class="num">0.1</span></pre></li></ol>
             </div><dt>Note</dt><dd><span class="cmt"><p>Negative values, fractional values, and values greater than 100 are permitted.</p></span></dd></dl></div>
+    </li><li name="com.twitter.conversions.SeqOps" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SeqOps"></a><a id="SeqOps:SeqOps"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/SeqOps$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Implicits for converting Seqs." href="SeqOps$.html"><span class="name">SeqOps</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Implicits for converting <span class="extype" name="Seq">Seq</span>s.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for converting <span class="extype" name="Seq">Seq</span>s.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p></p><pre><span class="kw">import</span> com.twitter.conversions.SeqOps._
+
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).createMap(_.size, _)
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).groupBySingleValue(_.size)
+<span class="std">Seq</span>(<span class="lit">"a"</span>, <span class="lit">"and"</span>).findItemAfter(<span class="lit">"a"</span>)
+
+<span class="kw">var</span> numStrings = <span class="num">0</span>
+<span class="std">Seq</span>(<span class="num">1</span>, <span class="num">2</span>) foreachPartial {
+  <span class="kw">case</span> e: <span class="std">Int</span> <span class="kw">=&gt;</span>
+    numStrings += <span class="num">1</span>
+}</pre></li></ol>
+            </div></dl></div>
     </li><li name="com.twitter.conversions.StorageUnitOps" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="StorageUnitOps"></a><a id="StorageUnitOps:StorageUnitOps"></a>
       <span class="permalink">
@@ -508,6 +573,30 @@ scaled to where 1.0 is 100 percent.
       </span>
       
       <p class="shortcomment cmt">Implicits for turning a block of code into a Runnable or Callable.</p>
+    </li><li name="com.twitter.conversions.TupleOps" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TupleOps"></a><a id="TupleOps:TupleOps"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/TupleOps$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Implicits for converting tuples." href="TupleOps$.html"><span class="name">TupleOps</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Implicits for converting tuples.</p><div class="fullcomment"><div class="comment cmt"><p>Implicits for converting tuples.
+</p></div><dl class="attributes block"> <div class="block">Example:
+               <ol><li class="cmt"><p></p><pre><span class="kw">import</span> com.twitter.conversions.TupleOps._
+
+<span class="std">Seq</span>(<span class="num">1</span> -&gt; <span class="lit">"tada"</span>, <span class="num">2</span> -&gt; <span class="lit">"lala"</span>).toKeys
+<span class="std">Seq</span>(<span class="num">1</span> -&gt; <span class="lit">"tada"</span>, <span class="num">2</span> -&gt; <span class="lit">"lala"</span>).mapValues(_.size)
+<span class="std">Seq</span>(<span class="num">1</span> -&gt; <span class="lit">"tada"</span>, <span class="num">2</span> -&gt; <span class="lit">"lala"</span>).groupByKeyAndReduce(_ + <span class="lit">","</span> + _)
+<span class="std">Seq</span>(<span class="num">1</span> -&gt; <span class="lit">"tada"</span>, <span class="num">2</span> -&gt; <span class="lit">"lala"</span>).sortByKey</pre></li></ol>
+            </div></dl></div>
     </li><li name="com.twitter.conversions.U64Ops" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="U64Ops"></a><a id="U64Ops:U64Ops"></a>
       <span class="permalink">

@@ -123,8 +123,16 @@
                         <a href="DurationOps$.html" title="Implicits for writing readable com.twitter.util.Durations.">DurationOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
+                        <a class="object" href="MapOps$.html" title="Implicits for converting Maps."></a>
+                        <a href="MapOps$.html" title="Implicits for converting Maps.">MapOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
                         <a class="object" href="PercentOps$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent."></a>
                         <a href="PercentOps$.html" title="Implicits for turning x.percent (where x is an Int or Double) into a Double scaled to where 1.0 is 100 percent.">PercentOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="SeqOps$.html" title="Implicits for converting Seqs."></a>
+                        <a href="SeqOps$.html" title="Implicits for converting Seqs.">SeqOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="StorageUnitOps$.html" title="Implicits for writing readable com.twitter.util.StorageUnits."></a>
@@ -137,6 +145,10 @@
                         <span class="separator"></span>
                         <a class="object" href="ThreadOps$.html" title="Implicits for turning a block of code into a Runnable or Callable."></a>
                         <a href="ThreadOps$.html" title="Implicits for turning a block of code into a Runnable or Callable.">ThreadOps</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="TupleOps$.html" title="Implicits for converting tuples."></a>
+                        <a href="TupleOps$.html" title="Implicits for converting tuples.">TupleOps</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="U64Ops$.html" title=""></a>
@@ -422,6 +434,25 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.conversions.StringOps#getOrElse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getOrElse(inputString:String,default:=&gt;String):String"></a><a id="getOrElse(String,⇒String):String"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/StringOps$.html#getOrElse(inputString:String,default:=&gt;String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getOrElse</span><span class="params">(<span name="inputString">inputString: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="default">default: ⇒ <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Return the string unless it is null or empty, in which
+case return the default.</p><div class="fullcomment"><div class="comment cmt"><p>Return the string unless it is null or empty, in which
+case return the default.
+</p></div><dl class="paramcmts block"><dt class="param">inputString</dt><dd class="cmt"><p>the string to &quot;get&quot;</p></dd><dt class="param">default</dt><dd class="cmt"><p>the string to return if inputString is null or empty</p></dd><dt>returns</dt><dd class="cmt"><p>either the inputString or the default</p></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
@@ -568,6 +599,23 @@
 Copied from the Lift Framework and RENAMED:
 https://github.com/lift/framework/blob/master/core/util/src/main/scala/net/liftweb/util/StringHelpers.scala
 Apache 2.0 License: https://github.com/lift/framework/blob/master/LICENSE.txt</p></span></dd></dl></div>
+    </li><li name="com.twitter.conversions.StringOps#toOption" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toOption(inputString:String):Option[String]"></a><a id="toOption(String):Option[String]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/conversions/StringOps$.html#toOption(inputString:String):Option[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toOption</span><span class="params">(<span name="inputString">inputString: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Wrap the string in an Option, returning None when it is null or empty.</p><div class="fullcomment"><div class="comment cmt"><p>Wrap the string in an Option, returning None when it is null or empty.
+</p></div><dl class="paramcmts block"><dt class="param">inputString</dt><dd class="cmt"><p>the string to wrap in an Option</p></dd><dt>returns</dt><dd class="cmt"><p>an Option of the given string</p></dd></dl></div>
     </li><li name="com.twitter.conversions.StringOps#toPascalCase" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toPascalCase(name:String):String"></a><a id="toPascalCase(String):String"></a>
       <span class="permalink">

@@ -398,10 +398,6 @@
                         <a class="class" href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol."></a>
                         <a href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol.">CompactThriftSerializer</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Config$.html" title="You can import Config._ if you want the auto-conversions in a class that does not inherit from trait Config."></a>
-                        <a class="trait" href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method which turns this config into an object of type T."></a>
-                        <a href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method which turns this config into an object of type T.">Config</a>
-                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="ConstFuture.html" title="A Future that is already completed."></a>
                         <a href="ConstFuture.html" title="A Future that is already completed.">ConstFuture</a>
@@ -1165,6 +1161,23 @@ of worker threads.
       </span>
       
       <p class="shortcomment cmt">The approximate number of tasks that have completed execution.</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks that have completed execution.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl></div>
+    </li><li name="com.twitter.util.FuturePool#numPendingTasks" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numPendingTasks:Long"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/util/FuturePool.html#numPendingTasks:Long" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numPendingTasks</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.11/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The approximate number of tasks that are pending (typically waiting in the queue).</p><div class="fullcomment"><div class="comment cmt"><p>The approximate number of tasks that are pending (typically waiting in the queue).
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>-1 if this <a href="" class="extype" name="com.twitter.util.FuturePool">FuturePool</a> implementation doesn't support this statistic.</p></dd></dl></div>
     </li><li name="com.twitter.util.FuturePool#poolSize" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="poolSize:Int"></a>

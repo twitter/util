@@ -574,10 +574,6 @@
                         <a class="class" href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol."></a>
                         <a href="CompactThriftSerializer.html" title="A thread-safe ThriftSerializer that uses TCompactProtocol.">CompactThriftSerializer</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Config$.html" title="You can import Config._ if you want the auto-conversions in a class that does not inherit from trait Config."></a>
-                        <a class="trait" href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method which turns this config into an object of type T."></a>
-                        <a href="Config.html" title="A config object contains vars for configuring an object of type T, and an apply() method which turns this config into an object of type T.">Config</a>
-                      </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="ConstFuture.html" title="A Future that is already completed."></a>
                         <a href="ConstFuture.html" title="A Future that is already completed.">ConstFuture</a>
@@ -2981,36 +2977,6 @@ Note: There is a Java-friendly API for this trait: <a href="AbstractVar.html" cl
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of <code><a href="Witness.html" class="extype" name="com.twitter.util.Witness">com.twitter.util.Witness</a></code> companion object.</p>
-    </li><li name="com.twitter.util.Config" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="Config[T]extends()=&gt;T"></a><a id="Config[T]:Config[T]"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/Config.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">trait</span>
-      </span>
-      <span class="symbol">
-        <a title="A config object contains vars for configuring an object of type T, and an apply() method which turns this config into an object of type T." href="Config.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends () ⇒ <span class="extype" name="com.twitter.util.Config.T">T</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">A config object contains vars for configuring an object of type T, and an apply() method
-which turns this config into an object of type T.</p><div class="fullcomment"><div class="comment cmt"><p>A config object contains vars for configuring an object of type T, and an apply() method
-which turns this config into an object of type T.</p><p>The trait also contains a few useful implicits.</p><p>You can define fields that are required but that don't have a default value with:
-    class BotConfig extends Config[Bot] {
-      var botName = required[String]
-      var botPort = required[Int]
-      ....
-    }</p><p>Optional fields can be defined with:
-   var something = optional[Duration]</p><p>Fields that are dependent on other fields and have a default value computed
-from an expression should be marked as computed:</p><p>   var level = required[Int]
-   var nextLevel = computed { level + 1 }
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> use a Plain Old Scala Object</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -3958,32 +3924,7 @@ One should never use YYYY (week year) unless the format also includes the week o
 
         
 
-        <div class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="com.twitter.util.Config" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Config"></a><a id="Config:Config"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/util/Config$.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="You can import Config._ if you want the auto-conversions in a class that does not inherit from trait Config." href="Config$.html"><span class="name deprecated" title="Deprecated: (Since version ) use a Plain Old Scala Object">Config</span></a>
-      </span>
-      
-      <p class="shortcomment cmt">You can import Config._ if you want the auto-conversions in a class
-that does not inherit from trait Config.</p><div class="fullcomment"><div class="comment cmt"><p>You can import Config._ if you want the auto-conversions in a class
-that does not inherit from trait Config.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version )</i> use a Plain Old Scala Object</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">
