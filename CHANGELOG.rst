@@ -52,7 +52,7 @@ New Features
   `DenyListStatsReceiver` from partial functions. ``PHAB_ID=D576833``
 
 * util-core: `c.t.util.FuturePool` now supports exporting the number of its pending tasks via
-  `numPendingTasks`. ``PHAB_ID=D582979``
+  `numPendingTasks`. ``PHAB_ID=D583030``
 
 20.10.0
 -------
