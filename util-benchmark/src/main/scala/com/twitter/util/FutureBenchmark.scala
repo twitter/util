@@ -13,6 +13,14 @@ class FutureBenchmark extends StdBenchAnnotations {
     new Promise[Unit]
 
   @Benchmark
+  def timeConstUnit(): Future[Unit] =
+    Future.Done.unit
+
+  @Benchmark
+  def timeConstVoid(): Future[Void] =
+    Future.Done.voided
+
+  @Benchmark
   def timeBy(state: ByState): Future[Unit] = {
     import state._
 
@@ -88,6 +96,10 @@ class FutureBenchmark extends StdBenchAnnotations {
   @Benchmark
   def fromConstTransformToConst: Future[Unit] =
     Future.Done.transform(TransformFn)
+
+  @Benchmark
+  def timeConstFilter(): Future[Unit] =
+    Future.Done.filter(FilterFn)
 
   @Benchmark
   def timeSelect(state: SelectState): Future[(Try[Unit], Seq[Future[Unit]])] = {
@@ -218,11 +230,15 @@ class FutureBenchmark extends StdBenchAnnotations {
 
     val fmap = { i: Int => Future.value(i + 1) }
     val respond = { _: Try[Int] => sum += 1 }
+    val map = { i: Int => i + 1 }
+    val filter = { _: Int => true }
 
     while (i < state.depth) {
-      next = i % 2 match {
+      next = i % 4 match {
         case 0 => next.flatMap(fmap)
         case 1 => next.respond(respond)
+        case 2 => next.map(map)
+        case 3 => next.filter(filter)
       }
       i += 1
     }
@@ -260,6 +276,7 @@ object FutureBenchmark {
   private val FlatMapFn: Unit => Future[Unit] = { _: Unit => Future.Unit }
   private val MapFn: Unit => Unit = { _: Unit => () }
   private val TransformFn: Try[Unit] => Future[Unit] = { _: Try[Unit] => Future.Done }
+  private val FilterFn: Unit => Boolean = { _ => true }
 
   @State(Scope.Benchmark)
   class ByState {
