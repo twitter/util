@@ -226,7 +226,7 @@ lazy val utilApp = Project(
     name := "util-app",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
 
@@ -261,7 +261,7 @@ lazy val utilCache = Project(
       caffeineLib,
       jsr305Lib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilCore)
 
@@ -309,7 +309,7 @@ lazy val utilCore = Project(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test",
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     ),
     resourceGenerators in Compile += Def.task {
@@ -398,7 +398,7 @@ lazy val utilJvm = Project(
     name := "util-jvm",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilApp, utilCore, utilStats)
 
@@ -443,7 +443,7 @@ lazy val utilRegistry = Project(
     name := "util-registry",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilCore)
 
@@ -514,7 +514,7 @@ lazy val utilStats = Project(
       jsr305Lib,
       scalacheckLib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test",
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     ) ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
@@ -580,7 +580,7 @@ lazy val utilZk = Project(
     libraryDependencies ++= Seq(
       zkDependency,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-2" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilCore, utilLogging)
 

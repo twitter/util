@@ -8,7 +8,7 @@ junit_tests(
         "3rdparty/jvm/org/scalacheck",
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
-        "3rdparty/jvm/org/scalatestplus:mockito-3-2",
+        "3rdparty/jvm/org/scalatestplus:mockito-3-3",
         "3rdparty/jvm/org/scalatestplus:scalacheck",
         "util/util-core:util-core-util",
         "util/util-core/src/main/scala/com/twitter/conversions",
