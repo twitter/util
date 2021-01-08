@@ -1773,9 +1773,10 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * When this future completes, run `f` on that completed result
    * whether or not this computation was successful.
    *
-   * This method is similar to `transform`, but the transformation is
-   * applied without introducing an intermediate future, which leads
-   * to better performance.
+   * @note This method is similar to `transform`, but the transformation is
+   *       applied without introducing an intermediate future, which leads
+   *       to fewer allocations. The promise is satisfied directly instead
+   *       of wrapping a Future around a Try.
    *
    * The returned `Future` will be satisfied when `this`,
    * the original future, is done.
