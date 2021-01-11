@@ -8,7 +8,7 @@ val jacksonVersion = "2.11.2"
 val mockitoVersion = "3.3.3"
 val mockitoScalaVersion = "1.14.8"
 
-val zkVersion = "3.5.0-alpha"
+val zkVersion = "3.5.6"
 val zkClientVersion = "0.0.81"
 val zkGroupVersion = "0.0.92"
 val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll (
@@ -491,16 +491,16 @@ lazy val utilSecurity = Project(
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     )
-).dependsOn(utilCore, utilLogging, utilSecurityTestCerts % "test")
+  ).dependsOn(utilCore, utilLogging, utilSecurityTestCerts % "test")
 
 lazy val utilSecurityTestCerts = Project(
   id = "util-security-test-certs",
   base = file("util-security-test-certs")
 ).settings(
-  sharedSettings
-).settings(
-  name := "util-security-test-certs"
-)
+    sharedSettings
+  ).settings(
+    name := "util-security-test-certs"
+  )
 
 lazy val utilStats = Project(
   id = "util-stats",
