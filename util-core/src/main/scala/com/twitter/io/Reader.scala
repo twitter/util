@@ -12,7 +12,7 @@ import java.io.{File, FileInputStream, InputStream}
  * typical code pattern to consume a reader is to use a read-loop:
  *
  * {{{
- *   def consume[A](r: Reader[A]))(process: A => Future[Unit]): Future[Unit] =
+ *   def consume[A](r: Reader[A])(process: A => Future[Unit]): Future[Unit] =
  *     r.read().flatMap {
  *       case Some(a) => process(a).before(consume(r)(process))
  *       case None => Future.Done // reached the end of the stream; no need to discard
