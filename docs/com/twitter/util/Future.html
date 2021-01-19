@@ -1109,11 +1109,13 @@ Await.result(transforming(f2)) <span class="cmt">// String = "boom!"</span>
       
       <p class="shortcomment cmt">When this future completes, run <code>f</code> on that completed result
 whether or not this computation was successful.</p><div class="fullcomment"><div class="comment cmt"><p>When this future completes, run <code>f</code> on that completed result
-whether or not this computation was successful.</p><p>This method is similar to <code>transform</code>, but the transformation is
-applied without introducing an intermediate future, which leads
-to better performance.</p><p>The returned <code>Future</code> will be satisfied when <code>this</code>,
-the original future, is done.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>See also</dt><dd><span class="cmt"><p><a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> for purely side-effecting callbacks.</p></span><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> and <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for dealing strictly with successful
+whether or not this computation was successful.
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Note</dt><dd><span class="cmt"><p>This method is similar to <code>transform</code>, but the transformation is
+      applied without introducing an intermediate future, which leads
+      to fewer allocations. The promise is satisfied directly instead
+      of wrapping a Future around a Try.
+The returned <code>Future</code> will be satisfied when <code>this</code>,
+the original future, is done.</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#respond(k:com.twitter.util.Try[A]=&gt;Unit):com.twitter.util.Future[A]" class="extmbr" name="com.twitter.util.Future#respond">respond</a> for purely side-effecting callbacks.</p></span><span class="cmt"><p><a href="#map[B](f:A=&gt;B):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#map">map</a> and <a href="#flatMap[B](f:A=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#flatMap">flatMap</a> for dealing strictly with successful
     computations.</p></span><span class="cmt"><p><a href="#handle[B&gt;:A](rescueException:PartialFunction[Throwable,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#handle">handle</a> and <a href="#rescue[B&gt;:A](rescueException:PartialFunction[Throwable,com.twitter.util.Future[B]]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#rescue">rescue</a> for dealing strictly with exceptional
     computations.</p></span><span class="cmt"><p><a href="#transformedBy[B](transformer:com.twitter.util.FutureTransformer[A,B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transformedBy">transformedBy</a> for a Java friendly API.</p></span><span class="cmt"><p><a href="#transform[B](f:com.twitter.util.Try[A]=&gt;com.twitter.util.Future[B]):com.twitter.util.Future[B]" class="extmbr" name="com.twitter.util.Future#transform">transform</a> for transformations that return <code>Future</code>.</p></span></dd></dl></div>
     </li></ol>
