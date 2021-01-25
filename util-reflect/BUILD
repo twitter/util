@@ -8,7 +8,7 @@ target(
     ],
 )
 
-target(
+test_suite(
     name = "tests",
     dependencies = [
         "util/util-reflect/src/test/scala",

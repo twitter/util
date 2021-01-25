@@ -5,7 +5,7 @@ target(
     ],
 )
 
-target(
+test_suite(
     name = "tests",
     dependencies = [
         "util/util-app/src/test/java",
