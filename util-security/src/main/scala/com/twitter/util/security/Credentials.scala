@@ -39,7 +39,7 @@ object Credentials {
 
     def auth: Parser[Tuple2[String, String]] = key ~ ":" ~ value ^^ {
       case k ~ ":" ~ v => (k, v)
-      case _ => throw new MatchError
+      case _ => throw new MatchError("Failed case matching on auth parser")
     }
     def content: Parser[Map[String, String]] = rep(auth) ^^ { auths => Map(auths: _*) }
 
