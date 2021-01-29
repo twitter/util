@@ -2,11 +2,22 @@ package com.twitter.util.routing
 
 import com.twitter.util.logging.Logging
 import com.twitter.util.{Closable, ClosableOnce, Future, Time}
+import java.lang.{Iterable => JIterable}
+import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
 /**
  * A generic interface for routing an input to an optional matching route.
  *
+ * @param label A label used for identifying this Router (i.e. for distinguishing between [[Router]]
+ *              instances in error messages or for StatsReceiver scope).
+ * @param routes All of the `Route` routes contained within this [[Router]]
+ *
+ *               This property is used to linearly determine the routes when `close()` is called.
+ *               It may also be used as a way to determine what routes are defined within a [[Router]]
+ *               (i.e. for generating meaningful error messages). This property does not imply
+ *               any relationship with [[apply]] or [[find]] or that a [[Router]]'s runtime behavior
+ *               needs to be linear.
  * @tparam Input The Input type used when determining a route destination
  * @tparam Route The resulting route type. A `Route` may have dynamic
  *               properties and may be found to satisfy multiple `Input`
@@ -22,43 +33,34 @@ import scala.util.control.NonFatal
  *               should be aware of the method, path, and and the destination/logic responsible
  *               for handling an `Input` that matches.
  *
- *               Another property to consider for a `Route` is "uniqueness". It may or may not
- *               be desirable for a [[Router]] to contain multiple routes that correspond to
- *               the same `Input`.
+ *               Another property to consider for a `Route` is "uniqueness". A [[Router]] should be
+ *               able to determine either:
+ *                 a) a single `Route` for an `Input`
+ *                 b) no `Route` for an `Input`
+ *               A [[Router]] should NOT be expected to return multiple routes for an `Input`.
  *
  * @note A [[Router]] should be considered immutable unless explicitly noted.
  */
-trait Router[Input, +Route] extends (Input => Option[Route]) with ClosableOnce with Logging {
+abstract class Router[Input, +Route](val label: String, val routes: Iterable[Route])
+    extends (Input => Result)
+    with ClosableOnce
+    with Logging {
 
-  /**
-   * A label used for identifying this Router (i.e. for distinguishing between [[Router]] instances
-   * in error messages or for StatsReceiver scope).
-   */
-  def label: String
-
-  /**
-   * All of the `Route` routes contained within this [[Router]]
-   *
-   * @note This property is used to linearly determine the routes when `close()` is called.
-   *       It may also be used as a way to determine what routes are defined within a [[Router]]
-   *       (i.e. for generating meaningful error messages). This property does not imply
-   *       any relationship with [[apply]] or [[find]] or that a [[Router]]'s runtime behavior
-   *       needs to be linear.
-   */
-  def routes: Iterable[Route]
+  /** Java-friendly constructor */
+  def this(label: String, routes: JIterable[Route]) = this(label, routes.asScala)
 
   /**
    * Attempt to route an `Input` to a `Route` route known by this Router.
    *
    * @param input The `Input` to use for determining an available route
    *
-   * @return `Some(Route)` if a route is found to match, `None` otherwise
-   *
-   * @note A [[ClosedRouterException]] will be thrown if `close()`
-   *       has been initiated on this [[Router]] and subsequent routing attempts are received.
+   * @return [[Found `Found(input: Input, route: Route)`]] if a route is found to match,
+   *         [[NotFound]] if there is no match, or
+   *         [[RouterClosed]] if `close()` has been initiated on this [[Router]] and subsequent
+   *           routing attempts are received.
    */
-  final def apply(input: Input): Option[Route] =
-    if (isClosed) throw ClosedRouterException(this)
+  final def apply(input: Input): Result =
+    if (isClosed) RouterClosed
     else find(input)
 
   /**
@@ -67,19 +69,19 @@ trait Router[Input, +Route] extends (Input => Option[Route]) with ClosableOnce w
    *
    * @param input The `Input` to determine a route for.
    *
-   * @return `Some(Route)` if a matching route is defined, `None` if a route destination is
-   *         not defined for the `Input`.
+   * @return [[Found `Found(input: Input, route: Route)`]] if a matching route is defined,
+   *         [[NotFound]] if a route destination is not defined for the `Input`.
    *
    * @note This method is only meant to be called within the [[Router]]'s `apply`, which
    *       handles lifecycle concerns. It should not be accessed directly.
    */
-  protected def find(input: Input): Option[Route]
+  protected def find(input: Input): Result
 
   /**
    * @note NonFatal exceptions encountered when calling `close()` on a `Route` will be
    *       suppressed and Fatal exceptions will take on the same exception behavior of a `Future.join`.
    */
-  override protected def closeOnce(deadline: Time): Future[Unit] =
+  protected def closeOnce(deadline: Time): Future[Unit] =
     Future.join(routes.map(closeIfClosable(_, deadline)).toSeq)
 
   private[this] def closeIfClosable(route: Route, deadline: Time): Future[Unit] = route match {

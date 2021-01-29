@@ -6,7 +6,7 @@ import com.twitter.util.{ClosableOnce, Future, Time}
 private[routing] case class DynamicRoute(
   method: Method,
   canHandle: Request => Boolean,
-  handle: Request => Future[Result])
+  handle: Request => Future[Response])
     extends ClosableOnce {
-  override protected def closeOnce(deadline: Time): Future[Unit] = Future.Done
+  protected def closeOnce(deadline: Time): Future[Unit] = Future.Done
 }

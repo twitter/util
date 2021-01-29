@@ -53,7 +53,7 @@ case class RouterBuilder[Input, Route, +RouterType <: Router[Input, Route]] priv
     val failures = validator(routes)
 
     if (failures.nonEmpty) throw ValidationException(failures)
-    generator(label, routes)
+    generator(RouterInfo(label, routes))
   }
 
 }

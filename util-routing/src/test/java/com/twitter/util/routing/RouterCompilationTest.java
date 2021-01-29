@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,13 +20,25 @@ public class RouterCompilationTest {
     }
   }
 
-  private static final class StringRouter extends AbstractRouter<String, StringRoute> {
+  private static final class StringRouterGenerator extends Generator<String, StringRoute, StringRouter> {
+    private static final StringRouterGenerator instance = new StringRouterGenerator();
+    static final StringRouterGenerator getInstance() {
+      return instance;
+    }
+
+    private StringRouterGenerator() {}
+
+    @Override
+    public StringRouter apply(RouterInfo<StringRoute> routerInfo) {
+      Map<String, StringRoute> routeMap = new HashMap<>();
+      routerInfo.jRoutes().forEach(r -> routeMap.put(r.input, r));
+      return new StringRouter(routeMap);
+    }
+  }
+
+  private static final class StringRouter extends Router<String, StringRoute> {
     static RouterBuilder<String, StringRoute, StringRouter> newBuilder() {
-      return RouterBuilder.newBuilder(Generator.create((label, routes) -> {
-        Map<String, StringRoute> routeMap = new HashMap<>();
-        routes.forEach(r -> routeMap.put(r.input, r));
-        return new StringRouter(routeMap);
-      }));
+      return RouterBuilder.newBuilder(StringRouterGenerator.getInstance());
     }
 
     private final Map<String, StringRoute> routeMap;
@@ -38,9 +49,10 @@ public class RouterCompilationTest {
     }
 
     @Override
-    public Optional<StringRoute> findAny(String input) {
+    public Result find(String input) {
       StringRoute found = routeMap.get(input);
-      return Optional.ofNullable(found);
+      if (found == null) return NotFound.get();
+      return Found.apply(input, found);
     }
 
   }
@@ -64,10 +76,10 @@ public class RouterCompilationTest {
     routes.put(hello.input, hello);
     routes.put(goodbye.input, goodbye);
 
-    AbstractRouter<String, StringRoute> router = new StringRouter(routes);
-    Assert.assertEquals(router.route("hello"), Optional.of(hello));
-    Assert.assertEquals(router.route("goodbye"), Optional.of(goodbye));
-    Assert.assertEquals(router.route("oh-no"), Optional.empty());
+    Router<String, StringRoute> router = new StringRouter(routes);
+    Assert.assertEquals(router.apply("hello"), Found.apply("hello", hello));
+    Assert.assertEquals(router.apply("goodbye"), Found.apply("goodbye", goodbye));
+    Assert.assertEquals(router.apply("oh-no"), NotFound.get());
   }
 
   @Test
@@ -75,14 +87,14 @@ public class RouterCompilationTest {
     StringRoute hello = new StringRoute("hello", "abc");
     StringRoute goodbye = new StringRoute("goodbye", "123");
 
-    AbstractRouter<String, StringRoute> router = StringRouter.newBuilder()
+    Router<String, StringRoute> router = StringRouter.newBuilder()
         .withRoute(hello)
         .withRoute(goodbye)
         .newRouter();
 
-    Assert.assertEquals(router.route("hello"), Optional.of(hello));
-    Assert.assertEquals(router.route("goodbye"), Optional.of(goodbye));
-    Assert.assertEquals(router.route("oh-no"), Optional.empty());
+    Assert.assertEquals(router.apply("hello"), Found.apply("hello", hello));
+    Assert.assertEquals(router.apply("goodbye"), Found.apply("goodbye", goodbye));
+    Assert.assertEquals(router.apply("oh-no"), NotFound.get());
   }
 
   @Test(expected = ValidationException.class)

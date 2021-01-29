@@ -8,8 +8,8 @@ class RouterBuilderTest extends AnyFunSuite {
   private object TestRouter {
     def newBuilder(): RouterBuilder[String, SimpleRoute, SimpleRouter] =
       RouterBuilder.newBuilder(new Generator[String, SimpleRoute, SimpleRouter] {
-        override def apply(label: String, routes: Iterable[SimpleRoute]): SimpleRouter =
-          new SimpleRouter(routes.map { r => r.in -> r }.toMap)
+        def apply(labelAndRoutes: RouterInfo[SimpleRoute]): SimpleRouter =
+          new SimpleRouter(labelAndRoutes.routes.map { r => r.in -> r }.toMap)
       })
   }
 
@@ -17,7 +17,7 @@ class RouterBuilderTest extends AnyFunSuite {
     def newBuilder(): RouterBuilder[String, SimpleRoute, SimpleRouter] =
       TestRouter.newBuilder.withValidator(
         new Validator[SimpleRoute] {
-          override def apply(routes: Iterable[SimpleRoute]): Iterable[ValidationError] =
+          def apply(routes: Iterable[SimpleRoute]): Iterable[ValidationError] =
             routes.collect {
               case r if r.in == "invalid" => ValidationError(s"INVALID @ $r")
             }
@@ -33,10 +33,10 @@ class RouterBuilderTest extends AnyFunSuite {
       .withRoute(SimpleRoute("z", true))
       .newRouter()
 
-    assert(router("x") == Some(SimpleRoute("x", true)))
-    assert(router("y") == Some(SimpleRoute("y", false)))
-    assert(router("z") == Some(SimpleRoute("z", true)))
-    assert(router("a") == None)
+    assert(router("x") == Found("x", SimpleRoute("x", true)))
+    assert(router("y") == Found("y", SimpleRoute("y", false)))
+    assert(router("z") == Found("z", SimpleRoute("z", true)))
+    assert(router("a") == NotFound)
   }
 
   test("throws when invalid route is passed") {

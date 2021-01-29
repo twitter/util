@@ -8,13 +8,13 @@ object Validator {
 
   /** [[Validator]] that does no validation and always returns empty error results */
   val None: Validator[Any] = new Validator[Any] {
-    override def apply(routes: Iterable[Any]): Iterable[ValidationError] = Iterable.empty
+    def apply(routes: Iterable[Any]): Iterable[ValidationError] = Iterable.empty
   }
 
   /** Java-friendly creation of a [[Validator]] */
   def create[T](fn: Function[JIterable[T], JIterable[ValidationError]]): Validator[T] =
     new Validator[T] {
-      override def apply(routes: Iterable[T]): Iterable[ValidationError] =
+      def apply(routes: Iterable[T]): Iterable[ValidationError] =
         fn(routes.asJava).asScala
     }
 
