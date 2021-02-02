@@ -57,7 +57,6 @@ object Future {
   /** A successfully satisfied constant `Future` of `false` */
   val False: Future[Boolean] = new ConstFuture(Return.False)
 
-  private val SomeReturnUnit = Some(Return.Unit)
   private val NotApplied: Future[Nothing] = new NoFuture
   private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied)
   private val tryToUnit: Try[Any] => Try[Unit] = {
@@ -1539,14 +1538,6 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * Is the result of the Future available yet?
    */
   def isDefined: Boolean = poll.isDefined
-
-  /**
-   * Checks whether a Unit-typed Future is done. By
-   * convention, futures of type Future[Unit] are used
-   * for signalling.
-   */
-  def isDone(implicit ev: this.type <:< Future[Unit]): Boolean =
-    ev(this).poll == Future.SomeReturnUnit
 
   /**
    * Polls for an available result.  If the Future has been

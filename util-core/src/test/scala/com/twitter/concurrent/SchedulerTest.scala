@@ -165,8 +165,7 @@ class ThreadPoolSchedulerTest extends AnyFunSuite with Eventually with Integrati
       def run(): Unit = p.setDone()
     })
 
-    eventually { p.isDone }
-
+    Await.result(p, 5.seconds)
     scheduler.shutdown()
   }
 }

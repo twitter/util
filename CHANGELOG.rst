@@ -19,6 +19,10 @@ Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 * util-core: removed `com.twitter.util.Config.` ``PHAB_ID=D580444``
 
+* util-core: removed `com.twitter.util.Future.isDone` method. The semantics of this method
+  are surprising in that `Future.exception(throwable).isDone == false`. Replace usages with
+  `Future.isDefined` or `Future.poll` ``PHAB_ID=D585700``
+
 New Features
 ~~~~~~~~~~~~
 

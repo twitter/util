@@ -21,7 +21,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
   // an interpolated string. We get around it by evaluating first and passing the result to
   // `assert`.
   private[this] def isDone(f: Future[Unit]): Boolean =
-    f.isDone
+    f.isDefined
 
   private[this] def assertIsDone(f: Future[Unit]): Unit =
     assert(isDone(f))
@@ -98,7 +98,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     assert(
       Future
         .value(1)
-        .map(_ => Closable.all(Closable.nop, Closable.nop).close().isDone)
+        .map(_ => Closable.all(Closable.nop, Closable.nop).close().isDefined)
         .poll
         .contains(Return.True)
     )
@@ -194,7 +194,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     assert(
       Future
         .value(1)
-        .map(_ => Closable.sequence(Closable.nop, Closable.nop).close().isDone)
+        .map(_ => Closable.sequence(Closable.nop, Closable.nop).close().isDefined)
         .poll
         .contains(Return.True)
     )

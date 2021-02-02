@@ -27,14 +27,14 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
   // Passing that directly to `assert` causes problems because the `$conforms` is also seen as
   // an interpolated string. We get around it by evaluating first and passing the result to
   // `assert`.
-  private def isDone(f: Future[Unit]): Boolean =
-    f.isDone
+  private def IsSuccess(f: Future[Unit]): Boolean =
+    f.poll.exists(_.isReturn)
 
-  private def assertIsDone(f: Future[Unit]): Unit =
-    assert(isDone(f))
+  private def assertIsSuccess(f: Future[Unit]): Unit =
+    assert(IsSuccess(f))
 
-  private def assertIsNotDone(f: Future[Unit]): Unit =
-    assert(!isDone(f))
+  private def assertIsNotSuccess(f: Future[Unit]): Unit =
+    assert(!IsSuccess(f))
 
   private def assertRead(r: Reader[Buf], i: Int, j: Int): Unit = {
     val f = r.read()
@@ -70,7 +70,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
 
   private def assertReadEofAndClosed(rw: Pipe[Buf]): Unit = {
     assertReadNone(rw)
-    assertIsDone(rw.close())
+    assertIsSuccess(rw.close())
   }
 
   private def assertReadNone(r: Reader[Buf]): Unit =
@@ -170,10 +170,10 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     val rw = new Pipe[Buf]
     val wf = rw.write(buf(0, 6))
 
-    assertIsNotDone(wf)
+    assertIsNotSuccess(wf)
     assertRead(rw, 0, 6)
-    assertIsDone(wf)
-    assertIsNotDone(rw.close())
+    assertIsSuccess(wf)
+    assertIsNotSuccess(rw.close())
     assertReadEofAndClosed(rw)
   }
 
@@ -185,10 +185,10 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     assert(!rf.isDefined)
 
     val wf = rw.write(buf(0, 6))
-    assertIsDone(wf)
+    assertIsSuccess(wf)
     assertRead(rf, 0, 6)
 
-    assertIsNotDone(rw.close())
+    assertIsNotSuccess(rw.close())
     assertReadEofAndClosed(rw)
   }
 
@@ -198,7 +198,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
 
     assertFailedEx(rw.write(buf(0, 6)))
     val cf = rw.close()
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
 
     assertFailedEx(rw.read())
     assertFailedEx(cf)
@@ -207,9 +207,9 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
   test("write after close") {
     val rw = new Pipe[Buf]
     val cf = rw.close()
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
     assertReadEofAndClosed(rw)
-    assertIsDone(cf)
+    assertIsSuccess(cf)
 
     intercept[IllegalStateException] {
       await(rw.write(buf(0, 1)))
@@ -221,7 +221,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     var closed = false
     rw.onClose.ensure { closed = true }
     val wf = rw.write(buf(0, 1))
-    assertIsNotDone(wf)
+    assertIsNotSuccess(wf)
 
     intercept[IllegalStateException] {
       await(rw.write(buf(0, 1)))
@@ -240,7 +240,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
 
   def readAfterCloseNoPendingReads() = {
     val rw = new Pipe[Buf]
-    assertIsNotDone(rw.close())
+    assertIsNotSuccess(rw.close())
     assertReadEofAndClosed(rw)
   }
   test("read after close with no pending reads") {
@@ -251,10 +251,10 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     val rw = new Pipe[Buf]
 
     val wf = rw.write(buf(0, 1))
-    assertIsNotDone(wf)
+    assertIsNotSuccess(wf)
 
     // close before the write is satisfied wipes the pending write
-    assertIsNotDone(rw.close())
+    assertIsNotSuccess(rw.close())
     intercept[IllegalStateException] {
       await(wf)
     }
@@ -302,10 +302,10 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
   test("close not satisfied until writes are read") {
     val rw = new Pipe[Buf]
     val cf = rw.write(buf(0, 6)).before(rw.close())
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
 
     assertRead(rw, 0, 6)
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
     assertReadEofAndClosed(rw)
   }
 
@@ -314,12 +314,12 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     val rf = rw.read()
     val cf = rf.flatMap { _ => rw.close() }
     assert(!rf.isDefined)
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
 
-    assertIsDone(rw.write(buf(0, 3)))
+    assertIsSuccess(rw.write(buf(0, 3)))
 
     assertRead(rf, 0, 3)
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
     assertReadEofAndClosed(rw)
   }
   test("close not satisfied until reads are fulfilled")(closeNotSatisfiedUntillAllReadsDone())
@@ -329,16 +329,16 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     val rf = rw.read()
     assert(!rf.isDefined)
 
-    assertIsDone(rw.close())
+    assertIsSuccess(rw.close())
     assert(rf.isDefined)
   }
   test("close while read pending")(closeWhileReadPending)
 
   def closeTwice() = {
     val rw = new Pipe[Buf]
-    assertIsNotDone(rw.close())
+    assertIsNotSuccess(rw.close())
     assertReadEofAndClosed(rw)
-    assertIsDone(rw.close())
+    assertIsSuccess(rw.close())
     assertReadEofAndClosed(rw)
   }
   test("close then close")(closeTwice())
@@ -347,7 +347,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     val rw = new Pipe[Buf]
     rw.fail(failedEx)
     val cf = rw.close()
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
 
     assertFailedEx(rw.read())
     assertFailedEx(cf)
@@ -358,7 +358,7 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     Time.withCurrentTimeFrozen { ctrl =>
       val rw = new Pipe[Buf](timer)
       val cf = rw.close(1.second)
-      assertIsNotDone(cf)
+      assertIsNotSuccess(cf)
 
       ctrl.advance(1.second)
       timer.tick()
@@ -374,10 +374,10 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
     Time.withCurrentTimeFrozen { _ =>
       val rw = new Pipe[Buf](timer)
       val cf = rw.close(1.second)
-      assertIsNotDone(cf)
+      assertIsNotSuccess(cf)
 
       rw.fail(failedEx)
-      assertIsNotDone(cf)
+      assertIsNotSuccess(cf)
 
       assertFailedEx(rw.read())
       assertFailedEx(cf)
@@ -387,9 +387,9 @@ class PipeTest extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyCh
   test("close while write pending") {
     val rw = new Pipe[Buf]
     val wf = rw.write(buf(0, 1))
-    assertIsNotDone(wf)
+    assertIsNotSuccess(wf)
     val cf = rw.close()
-    assertIsNotDone(cf)
+    assertIsNotSuccess(cf)
     intercept[IllegalStateException] {
       await(wf)
     }

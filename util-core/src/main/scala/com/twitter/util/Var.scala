@@ -123,7 +123,7 @@ trait Var[+T] { self =>
         // combinators have been modified to evaluate their respective
         // Futures eagerly.
         val done = toClose.close()
-        assert(done.isDone)
+        assert(done.isDefined)
       }
 
       def close(deadline: Time): Future[Unit] = {

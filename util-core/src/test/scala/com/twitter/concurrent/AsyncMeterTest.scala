@@ -22,7 +22,7 @@ class AsyncMeterTest extends AnyFunSuite {
   // an interpolated string. We get around it by evaluating first and passing the result to
   // `assert`.
   private[this] def isDone(f: Future[Unit]): Boolean =
-    f.isDone
+    f.isDefined
 
   private[this] def assertIsDone(f: Future[Unit]): Unit =
     assert(isDone(f))
@@ -85,7 +85,7 @@ class AsyncMeterTest extends AnyFunSuite {
 
       ctl.advance(1.second)
       timer.tick()
-      waiter.isDone
+      assertIsDone(waiter)
     }
   }
 

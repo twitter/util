@@ -73,8 +73,6 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   override def isDefined: Boolean = true
 
-  override def isDone(implicit ev: this.type <:< Future[Unit]): Boolean = result.isReturn
-
   override def toString: String = s"ConstFuture($result)"
 
   // Awaitable

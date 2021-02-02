@@ -22,7 +22,7 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   // an interpolated string. We get around it by evaluating first and passing the result to
   // `assert`.
   private[this] def isDone(f: Future[Unit]): Boolean =
-    f.isDone
+    f.isDefined
 
   private[this] def assertIsDone(f: Future[Unit]): Unit =
     assert(isDone(f))
