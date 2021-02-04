@@ -198,6 +198,6 @@ val duration: Duration = elapsed()
 
 ## License
 
-Copyright 2010-2021 Twitter, Inc.
+Copyright 2010 Twitter, Inc.
 
 Licensed under the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
