@@ -38,8 +38,12 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.scala }}-${{ matrix.java }}
       - name: update cache
         run: |
-          find ~/.ivy2/cache  -name "ivydata-*.properties" -delete
-          find ~/.sbt         -name "*.lock"               -delete
+          if [ -f ~/.ivy2/cache ]; then
+            find ~/.ivy2/cache  -name "ivydata-*.properties" -delete
+          fi 
+          if [ -f ~/.sbt ]; then
+            find ~/.sbt         -name "*.lock"               -delete
+          fi
       - name: test
         run: |
           ${{format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
