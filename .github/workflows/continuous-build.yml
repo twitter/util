@@ -3,6 +3,7 @@ name: continuous integration
 env:
   JAVA_OPTS: "-Dsbt.log.noformat=true"
   TRAVIS: "true" # pretend we're TravisCI
+  UPLOAD_COVERAGE: false
 
 defaults:
   run:
@@ -10,7 +11,7 @@ defaults:
 on: push
 
 jobs:
-  build-deps:
+  build:
     strategy:
       fail-fast: false
       matrix:
@@ -45,14 +46,13 @@ jobs:
             find ~/.sbt         -name "*.lock"               -delete
           fi
       - name: test
-        run: |
-          ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
+        run: ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
       - name: test util-intellij with Scala 2.11
         if: matrix.scala == '2.11.12'
-        run: |
-          ${{ format('./sbt ++{0} "project util-intellij" coverage test coverageReport', matrix.scala) }}
+        run: ${{ format('./sbt ++{0} "project util-intellij" coverage test coverageReport', matrix.scala) }}
       - name: coverage
         if: ${{ success() }}
-        run:  |
-          ${{format('./sbt ++{0} coverageAggregate', matrix.scala) }}
-        #bash <(curl -s https://codecov.io/bash)
+        run: ${{format('./sbt ++{0} coverageAggregate', matrix.scala) }}
+      - name: upload coverage
+        if: ${{ env.UPLOAD_COVERAGE }}  
+        run: bash <(curl -s https://codecov.io/bash)
