@@ -85,7 +85,7 @@ public final class Readers {
    */
   public static <A> Reader<A> fromSeq(Stream<A> stream) {
     return Reader$.MODULE$.fromSeq(JavaConverters.asScalaIteratorConverter(stream.iterator())
-      .asScala().toSeq());
+      .asScala().toStream());
   }
 
   /**
