@@ -46,9 +46,13 @@ jobs:
           fi
       - name: test
         run: |
-          ${{format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
+          ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
+      - name: test util-intellij with Scala 2.11
+        if: matrix.scala == '2.11.12'
+        run: |
+          ${{ format('./sbt ++{0} \"project util-intellij\" coverage test coverageReport', matrix.scala) }}
       - name: coverage
         if: ${{ success() }}
-        run: |
+        run:  |
           ${{format('./sbt ++{0} coverageAggregate', matrix.scala) }}
         #bash <(curl -s https://codecov.io/bash)
