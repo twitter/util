@@ -53,7 +53,7 @@ jobs:
       - name: test
         run: ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
       - name: test util-intellij with scala 2.11
-        if: matrix.scala == '2.11.12'
+        if: ${{ startsWith(matrix.scala, '2.11') }}
         run: ${{ format('./sbt ++{0} "project util-intellij" coverage test coverageReport', matrix.scala) }}
       - name: coverage
         if: ${{ success() }}
