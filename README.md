@@ -1,6 +1,6 @@
 # Twitter Util
 
-[![Build status](https://travis-ci.com/twitter/util.svg?branch=develop)](https://travis-ci.com/twitter/util)
+[![Build status](https://travis-ci.com/twitter/util.svg?branch=release)](https://travis-ci.com/twitter/util)
 [![Codecov](https://codecov.io/gh/twitter/util/branch/develop/graph/badge.svg)](https://codecov.io/gh/twitter/util)
 [![Project status](https://img.shields.io/badge/status-active-brightgreen.svg)](#status)
 [![Gitter](https://badges.gitter.im/twitter/finagle.svg)](https://gitter.im/twitter/finagle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
@@ -35,7 +35,7 @@ for more details about how to contribute.
 An example SBT dependency string for the `util-core` library would look like this:
 
 ```scala
-val utilCore = "com.twitter" %% "util-core" % "21.1.0"
+val utilCore = "com.twitter" %% "util-core" % "21.2.0"
 ```
 
 # Units
