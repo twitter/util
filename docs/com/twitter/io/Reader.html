@@ -268,7 +268,7 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.</p><p>Given the pull-based API, the consumer is responsible for driving the computation. A very
-typical code pattern to consume a reader is to use a read-loop:</p><pre><span class="kw">def</span> consume[A](r: Reader[A]))(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
+typical code pattern to consume a reader is to use a read-loop:</p><pre><span class="kw">def</span> consume[A](r: Reader[A])(process: A <span class="kw">=&gt;</span> Future[<span class="std">Unit</span>]): Future[<span class="std">Unit</span>] =
   r.read().flatMap {
     <span class="kw">case</span> <span class="std">Some</span>(a) <span class="kw">=&gt;</span> process(a).before(consume(r)(process))
     <span class="kw">case</span> <span class="std">None</span> <span class="kw">=&gt;</span> Future.Done <span class="cmt">// reached the end of the stream; no need to discard</span>

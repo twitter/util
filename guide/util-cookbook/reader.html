@@ -4,23 +4,16 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reader &#8212; Util 21.1.0 documentation</title>
+    <title>Reader &#8212; Util 21.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '21.1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -40,8 +33,7 @@
 
   </script>
 
-  </head>
-  <body>
+  </head><body>
   
   
 
@@ -75,7 +67,7 @@ all elements are read in the order as they are fed to the reader.</p>
 <div class="section" id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h2>
 <p>The most frequently used APIs are:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Reader</span> <span class="o">{</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Reader</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">read</span><span class="o">()</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
 
   <span class="k">def</span> <span class="n">discard</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span>
@@ -180,7 +172,7 @@ affect the bahivor of the flat reader.</p>
 <h2>Example Usages<a class="headerlink" href="#example-usages" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="basic-operations-read-discard-onclose">
 <h3>Basic operations: read, discard, onClose<a class="headerlink" href="#basic-operations-read-discard-onclose" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.io._</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.io._</span>
 <span class="k">import</span> <span class="nn">com.twitter.util._</span>
 
 <span class="k">val</span> <span class="n">r1</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// Future(Some(1))</span>
@@ -200,7 +192,7 @@ affect the bahivor of the flat reader.</p>
 <h3>Construct a read-loop to consume a reader<a class="headerlink" href="#construct-a-read-loop-to-consume-a-reader" title="Permalink to this headline">¶</a></h3>
 <p>Given the pull-based API, the consumer is responsible for driving the computation. A very typical
 code pattern to consume a reader is to use a read-loop:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">consume</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">r</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span><span class="o">]))(</span><span class="n">process</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">consume</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">r</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span><span class="o">]))(</span><span class="n">process</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="o">().</span><span class="n">flatMap</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">process</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">before</span><span class="o">(</span><span class="n">consume</span><span class="o">(</span><span class="n">r</span><span class="o">)(</span><span class="n">process</span><span class="o">))</span>
     <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">.</span><span class="nc">Done</span> <span class="c1">// reached the end of the stream; no need to discard</span>
@@ -224,7 +216,7 @@ consumed (stream is exhausted) once its read-loop is run.</p>
 <h3>Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h3>
 <p>Given the read-loop above, its returned <cite>Future</cite> could be used to observe both successful and
 unsuccessful outcomes.</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="n">consume</span><span class="o">(</span><span class="n">stream</span><span class="o">)(</span><span class="n">processor</span><span class="o">).</span><span class="n">respond</span> <span class="o">{</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">consume</span><span class="o">(</span><span class="n">stream</span><span class="o">)(</span><span class="n">processor</span><span class="o">).</span><span class="n">respond</span> <span class="o">{</span>
   <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
   <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
 <span class="o">}</span>
@@ -232,7 +224,7 @@ unsuccessful outcomes.</p>
 </div>
 <p>If an exception is thrown during read, the reader’s onClose will be resolved with the same exception, so
 alternatively, you could handle a stream error like below:</p>
-<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">reader</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">reader</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
 <span class="n">reader</span><span class="o">.</span><span class="n">onClose</span><span class="o">.</span><span class="n">respond</span> <span class="o">{</span>
   <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
   <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
@@ -270,7 +262,7 @@ connection leaks.</p>
   <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
   <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
 </ul>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Reader</a><ul>
 <li><a class="reference internal" href="#interface">Interface</a><ul>

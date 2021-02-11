@@ -135,24 +135,40 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.twitter.util">util</a></dd></dl></div>
     </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="AbstractRouter.html" title="Java-friendly version of Router"></a>
-                        <a href="AbstractRouter.html" title="Java-friendly version of Router">AbstractRouter</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
                         <a class="class" href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router."></a>
                         <a href="ClosedRouterException.html" title="Exception thrown when an attempt to route an Input to a Router where close has been initiated on the Router.">ClosedRouterException</a>
                       </li><li class="current-entities indented4">
-                        <a class="object" href="Generator$.html" title=""></a>
+                        <span class="separator"></span>
+                        <a class="class" href="Found.html" title="A result that represents that the router could determine a defined route for a given input."></a>
+                        <a href="Found.html" title="A result that represents that the router could determine a defined route for a given input.">Found</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="" title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated."></a>
                         <a href="" title="Functional alias for creating a router given a label and all of the defined routes for the router to be generated.">Generator</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="trait" href="Router.html" title="A generic interface for routing an input to an optional matching route."></a>
+                        <a class="object" href="NotFound$.html" title="A result that represents that the router could not determine a defined route for a given input."></a>
+                        <a href="NotFound$.html" title="A result that represents that the router could not determine a defined route for a given input.">NotFound</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="Result.html" title="A result from attempting to find a route via a Router."></a>
+                        <a href="Result.html" title="A result from attempting to find a route via a Router.">Result</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="Router.html" title="A generic interface for routing an input to an optional matching route."></a>
                         <a href="Router.html" title="A generic interface for routing an input to an optional matching route.">Router</a>
                       </li><li class="current-entities indented4">
                         <a class="object" href="RouterBuilder$.html" title=""></a>
                         <a class="class" href="RouterBuilder.html" title="Utility for building and creating routers."></a>
                         <a href="RouterBuilder.html" title="Utility for building and creating routers.">RouterBuilder</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="RouterClosed$.html" title="A result that represents that the router has been closed and will no longer attempt to find routes for any inputs."></a>
+                        <a href="RouterClosed$.html" title="A result that represents that the router has been closed and will no longer attempt to find routes for any inputs.">RouterClosed</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="RouterInfo.html" title="The information needed to generate a Router via a Generator."></a>
+                        <a href="RouterInfo.html" title="The information needed to generate a Router via a Generator.">RouterInfo</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="ValidationError.html" title="Container class for an error that is encountered as part of validating routes via a RouterBuilder."></a>
@@ -172,16 +188,14 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <a href="Generator$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <div class="big-circle class">c</div>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.util">util</a>.<a href="index.html" class="extype" name="com.twitter.util.routing">routing</a></p>
-        <h1><a href="Generator$.html" title="See companion object">Generator</a><span class="permalink">
+        <h1>Generator<span class="permalink">
       <a href="../../../../com/twitter/util/routing/Generator.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"><div>
-            Companion <a href="Generator$.html" title="See companion object">object Generator</a>
-          </div></span></h3>
+        <h3><span class="morelinks"></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -190,7 +204,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Generator</span><span class="tparams">[<span name="Input">Input</span>, <span name="Route">Route</span>, <span name="RouterType">+RouterType &lt;: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[<span class="extype" name="com.twitter.util.routing.Generator.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>]</span><span class="result"> extends (<span class="extype" name="scala.Predef.String">String</span>, <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
+        <span class="name">Generator</span><span class="tparams">[<span name="Input">Input</span>, <span name="Route">Route</span>, <span name="RouterType">+RouterType &lt;: <a href="Router.html" class="extype" name="com.twitter.util.routing.Router">Router</a>[<span class="extype" name="com.twitter.util.routing.Generator.Input">Input</span>, <span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>]</span><span class="result"> extends (<a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
       </span>
       </h4>
 
@@ -201,7 +215,7 @@ all of the defined routes for the router to be generated.
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent">(<span class="extype" name="scala.Predef.String">String</span>, <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span>, <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent">(<a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span>, <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.11/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -227,7 +241,7 @@ all of the defined routes for the router to be generated.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.util.routing.Generator"><span>Generator</span></li><li class="in" name="scala.Function2"><span>Function2</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.util.routing.Generator"><span>Generator</span></li><li class="in" name="scala.Function1"><span>Function1</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -270,10 +284,10 @@ all of the defined routes for the router to be generated.
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="scala.Function2#apply" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="apply(v1:T1,v2:T2):R"></a><a id="apply(String,Iterable[Route]):RouterType"></a>
+              <ol><li name="scala.Function1#apply" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="apply(v1:T1):R"></a><a id="apply(RouterInfo[Route]):RouterType"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/util/routing/Generator.html#apply(v1:T1,v2:T2):R" title="Permalink">
+      <a href="../../../../com/twitter/util/routing/Generator.html#apply(v1:T1):R" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -282,10 +296,10 @@ all of the defined routes for the router to be generated.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="v1">v1: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="v2">v2: <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
+        <span class="name">apply</span><span class="params">(<span name="v1">v1: <a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>)</span><span class="result">: <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd></dl></div>
     </li></ol>
             </div>
 
@@ -340,6 +354,25 @@ all of the defined routes for the router to be generated.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Function1#andThen" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="andThen[A](g:R=&gt;A):T1=&gt;A"></a><a id="andThen[A]((RouterType)⇒A):(RouterInfo[Route])⇒A"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/routing/Generator.html#andThen[A](g:R=&gt;A):T1=&gt;A" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">andThen</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="g">g: (<span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span>) ⇒ <span class="extype" name="scala.Function1.andThen.A">A</span></span>)</span><span class="result">: (<a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="scala.Function1.andThen.A">A</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd><dt>Annotations</dt><dd>
+                <span class="name">@unspecialized</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -380,10 +413,10 @@ all of the defined routes for the router to be generated.
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="scala.Function2#curried" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="curried:T1=&gt;(T2=&gt;R)"></a><a id="curried:(String)⇒(Iterable[Route])⇒RouterType"></a>
+    </li><li name="scala.Function1#compose" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="compose[A](g:A=&gt;T1):A=&gt;R"></a><a id="compose[A]((A)⇒RouterInfo[Route]):(A)⇒RouterType"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/util/routing/Generator.html#curried:T1=&gt;(T2=&gt;R)" title="Permalink">
+      <a href="../../../../com/twitter/util/routing/Generator.html#compose[A](g:A=&gt;T1):A=&gt;R" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -392,10 +425,10 @@ all of the defined routes for the router to be generated.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">curried</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ (<a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
+        <span class="name">compose</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="g">g: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]</span>)</span><span class="result">: (<span class="extype" name="scala.Function1.compose.A">A</span>) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1</dd><dt>Annotations</dt><dd>
                 <span class="name">@unspecialized</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -577,7 +610,7 @@ all of the defined routes for the router to be generated.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Function2#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="scala.Function1#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/util/routing/Generator.html#toString():String" title="Permalink">
@@ -592,26 +625,7 @@ all of the defined routes for the router to be generated.
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2 → AnyRef → Any</dd></dl></div>
-    </li><li name="scala.Function2#tupled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="tupled:((T1,T2))=&gt;R"></a><a id="tupled:((String,Iterable[Route]))⇒RouterType"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/util/routing/Generator.html#tupled:((T1,T2))=&gt;R" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tupled</span><span class="result">: ((<span class="extype" name="scala.Predef.String">String</span>, <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>])) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function2</dd><dt>Annotations</dt><dd>
-                <span class="name">@unspecialized</span><span class="args">()</span>
-              
-        </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Function1 → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -690,8 +704,8 @@ all of the defined routes for the router to be generated.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.Function2">
-              <h3>Inherited from (<span class="extype" name="scala.Predef.String">String</span>, <a href="../../../../scala/index.html#Iterable[+A]=Iterable[A]" class="extmbr" name="scala.Iterable">Iterable</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></h3>
+        <div class="parent" name="scala.Function1">
+              <h3>Inherited from (<a href="RouterInfo.html" class="extype" name="com.twitter.util.routing.RouterInfo">RouterInfo</a>[<span class="extype" name="com.twitter.util.routing.Generator.Route">Route</span>]) ⇒ <span class="extype" name="com.twitter.util.routing.Generator.RouterType">RouterType</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
