@@ -143,22 +143,52 @@ class Formatter(
    */
   def lineTerminator: String = "\n"
 
+  /**
+   * Truncates and formats the message of the given LogRecord. Formatting entails
+   * inserting any LogRecord parameters into the LogRecord message string. Truncation of the
+   * message text is controlled by the [[truncateAt]] parameter. If it is greater than 0,
+   * messages will be truncated at that length and ellipses appended. Messages are then returned
+   * as an array of lines where each entry is the line of text between newlines.
+   *
+   * @param record a [[javalog.LogRecord]]
+   * @return an Array representing the formatted lines of a messages.
+   * @see [[javalog.LogRecord#getParameters]]
+   */
   def formatMessageLines(record: javalog.LogRecord): Array[String] = {
     val message = truncateText(formatText(record))
+    formatMessageLines(message, record.getThrown)
+  }
 
+  /**
+   * Assumes the given message is the processed LogRecord message (see: [[formatText(record: javalog.LogRecord)]]),
+   * that is, any LogRecord parameters have been properly applied to the LogRecord message string as
+   * well as any desired truncation or trimming. The method does not further change the incoming message,
+   * it only splits the message on newlines and handles formatting of any given Throwable.
+   *
+   * The passed Throwable represents the LogRecord captured exception (if any). Processes the inputs
+   * as described in [[formatMessageLines(record: javalog.LogRecord)]].
+   *
+   * @param message a formatted LogRecord message
+   * @param thrown the LogRecord captured exception (if any). Can be null.
+   * @see [[javalog.LogRecord#getThrown]]
+   */
+  private[twitter] def formatMessageLines(
+    message: String,
+    thrown: Throwable
+  ): Array[String] = {
     val containsNewLine = message.indexOf('\n') >= 0
-    if (!containsNewLine && record.getThrown == null) {
+    if (!containsNewLine && thrown == null) {
       Array(message)
     } else {
       val splitOnNewlines = message.split("\n")
-      val numThrowLines = if (record.getThrown == null) 0 else 20
+      val numThrowLines = if (thrown == null) 0 else 20
 
       val lines = new mutable.ArrayBuffer[String](splitOnNewlines.length + numThrowLines)
       lines ++= splitOnNewlines
 
-      if (record.getThrown ne null) {
-        val traceLines = Formatter.formatStackTrace(record.getThrown, truncateStackTracesAt)
-        lines += record.getThrown.toString
+      if (thrown ne null) {
+        val traceLines = Formatter.formatStackTrace(thrown, truncateStackTracesAt)
+        lines += thrown.toString
         if (traceLines.nonEmpty)
           lines ++= traceLines
       }

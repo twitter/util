@@ -95,6 +95,42 @@ class FormatterTest extends AnyWordSpec {
       assert(basicFormatter.formatText(record) == "error 123")
     }
 
+    "format message lines" in {
+      val record = new LogRecord(Level.ERROR, "how now brown cow")
+      assert(basicFormatter.formatMessageLines(record) sameElements Array("how now brown cow"))
+    }
+
+    "format message lines multiple values" in {
+      val record = new LogRecord(Level.ERROR, "how now brown cow\nthe quick brown fox")
+      assert(basicFormatter
+        .formatMessageLines(record) sameElements Array("how now brown cow", "the quick brown fox"))
+    }
+
+    "format message lines with message" in {
+      val record = new LogRecord(Level.ERROR, "how now brown cow")
+      assert(
+        basicFormatter.formatMessageLines("how now brown cow", record.getThrown) sameElements Array(
+          "how now brown cow"))
+    }
+
+    "format message lines with message and multiple values" in {
+      val record = new LogRecord(Level.ERROR, "how now brown cow\nthe quick brown fox")
+      // ignores the message from the record
+      assert(
+        basicFormatter.formatMessageLines("how now brown cow", record.getThrown) sameElements Array(
+          "how now brown cow"))
+    }
+
+    "format message lines with message and multiple values again" in {
+      val record = new LogRecord(Level.ERROR, "how now brown cow\nthe quick brown fox")
+      // ignores the message from the record
+      assert(
+        basicFormatter
+          .formatMessageLines(
+            "how now brown cow\nthe quick brown fox",
+            record.getThrown) sameElements Array("how now brown cow", "the quick brown fox"))
+    }
+
     "format a timestamp" in {
       assert(utcFormatter.format(record1) == "ERR [20080329-05:53:16.722] jobs: boo.\n")
     }
