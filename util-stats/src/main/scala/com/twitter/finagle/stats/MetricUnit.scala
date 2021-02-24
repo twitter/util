@@ -9,7 +9,13 @@ package com.twitter.finagle.stats
  *   Requests (for successes, failures, and requests)
  *   Percentage (for CPU Util, Memory Usage)
  */
-sealed trait MetricUnit
+sealed trait MetricUnit {
+
+  /**
+   * Java-friendly helper for accessing the object itself.
+   */
+  def getInstance(): MetricUnit = this
+}
 case object Unspecified extends MetricUnit
 case object Bytes extends MetricUnit
 case object Kilobytes extends MetricUnit

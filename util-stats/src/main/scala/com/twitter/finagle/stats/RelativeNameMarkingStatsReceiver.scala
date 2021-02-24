@@ -13,7 +13,7 @@ class RelativeNameMarkingStatsReceiver(
   override def counter(counterSchema: CounterSchema): Counter = {
     val schema = CounterSchema(
       counterSchema.metricBuilder
-        .withRelativeName(counterSchema.metricBuilder.name))
+        .withRelativeName(counterSchema.metricBuilder.name: _*))
     self.counter(schema)
   }
 
@@ -21,7 +21,7 @@ class RelativeNameMarkingStatsReceiver(
     val schema =
       HistogramSchema(
         histogramSchema.metricBuilder
-          .withRelativeName(histogramSchema.metricBuilder.name))
+          .withRelativeName(histogramSchema.metricBuilder.name: _*))
     self.stat(schema)
   }
 
@@ -29,7 +29,7 @@ class RelativeNameMarkingStatsReceiver(
     val schema =
       GaugeSchema(
         gaugeSchema.metricBuilder
-          .withRelativeName(gaugeSchema.metricBuilder.name))
+          .withRelativeName(gaugeSchema.metricBuilder.name: _*))
     self.addGauge(schema)(f)
   }
 }

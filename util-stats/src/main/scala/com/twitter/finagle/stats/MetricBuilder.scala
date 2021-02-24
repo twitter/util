@@ -1,5 +1,8 @@
 package com.twitter.finagle.stats
 
+import java.util.function.Supplier
+import scala.annotation.varargs
+
 /**
  * Represents the "role" this service plays with respect to this metric.
  *
@@ -7,7 +10,13 @@ package com.twitter.finagle.stats
  * request to another service). In many cases, there is no relevant role for a metric, in which
  * case NoRole should be used.
  */
-sealed trait SourceRole
+sealed trait SourceRole {
+
+  /**
+   * Java-friendly helper for accessing the object itself.
+   */
+  def getInstance(): SourceRole = this
+}
 case object NoRoleSpecified extends SourceRole
 case object Client extends SourceRole
 case object Server extends SourceRole
@@ -107,12 +116,16 @@ class MetricBuilder(
 
   def withRole(role: SourceRole): MetricBuilder = this.copy(role = role)
 
-  def withName(name: Seq[String]): MetricBuilder = this.copy(name = name)
+  @varargs
+  def withName(name: String*): MetricBuilder = this.copy(name = name)
 
-  def withRelativeName(relativeName: Seq[String]): MetricBuilder =
+  @varargs
+  def withRelativeName(relativeName: String*): MetricBuilder =
     if (this.relativeName == Seq.empty) this.copy(relativeName = relativeName) else this
 
-  def withPercentiles(percentiles: IndexedSeq[Double]) = this.copy(percentiles = percentiles)
+  @varargs
+  def withPercentiles(percentiles: Double*): MetricBuilder =
+    this.copy(percentiles = percentiles.toIndexedSeq)
 
   /**
    * Generates a CounterSchema which can be used to create a counter in a StatsReceiver.
@@ -139,6 +152,7 @@ class MetricBuilder(
    * Produce a counter as described by the builder inside the underlying StatsReceiver.
    * @return the counter created.
    */
+  @varargs
   def counter(name: String*): Counter = {
     val schema = this.copy(name = name).counterSchema
     this.statsReceiver.counter(schema)
@@ -154,9 +168,21 @@ class MetricBuilder(
   }
 
   /**
+   * Produce a gauge as described by the builder inside the underlying StatsReceiver.
+   * This API is for Java compatibility
+   * @return the gauge created.
+   */
+  @varargs
+  def gauge(f: Supplier[Float], name: String*): Gauge = {
+    val schema = this.copy(name = name).gaugeSchema
+    this.statsReceiver.addGauge(schema)(f.get())
+  }
+
+  /**
    * Produce a histogram as described by the builder inside the underlying StatsReceiver.
    * @return the histogram created.
    */
+  @varargs
   def histogram(name: String*): Stat = {
     val schema = this.copy(name = name).histogramSchema
     this.statsReceiver.stat(schema)

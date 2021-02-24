@@ -12,7 +12,7 @@ import scala.Function0;
 import scala.collection.immutable.Seq;
 
 /**
- * Java compatibility layer for {@link com.twitter.finagle.stats.StatsReceiver}.
+ * Java compatibility test for {@link com.twitter.finagle.stats.StatsReceiver}.
  */
 public final class StatsReceiverCompilationTest {
 

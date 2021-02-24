@@ -38,6 +38,14 @@ Breaking API Changes
   are surprising in that `Future.exception(throwable).isDone == false`. Replace usages with
   `Future.isDefined` or `Future.poll` ``PHAB_ID=D585700``
 
+* util-stats: Changed `com.twitter.finagle.stats.MethodBuilder#withName`,
+  `com.twitter.finagle.stats.MethodBuilder#withRelativeName`,
+  `com.twitter.finagle.stats.MethodBuilder#withPercentiles`,
+  `com.twitter.finagle.stats.MethodBuilder#counter`, and
+  `com.twitter.finagle.stats.MethodBuilder#histogram`, to accept varargs as parameters,
+  rather than a `Seq`.  Added a Java-friendly `com.twitter.finagle.stats.MethodBuilder#gauge`.
+  ``PHAB_ID=D620425``
+
 New Features
 ~~~~~~~~~~~~
 
