@@ -3,10 +3,10 @@ package com.twitter.io
 import java.nio.charset.Charset
 
 /**
- * A simple proxy ByteWriter that forwards all calls to another ByteWriter.
- * This is useful if you want to wrap-but-modify an existing ByteWriter.
+ * A proxy [[ByteWriter]] that forwards all calls to another [[ByteWriter]].
+ * This is useful if you want to wrap-but-modify an existing [[ByteWriter]].
  */
-private[twitter] abstract class ProxyByteWriter(underlying: ByteWriter) extends AbstractByteWriter {
+abstract class ProxyByteWriter(underlying: ByteWriter) extends AbstractByteWriter {
 
   def writeString(string: CharSequence, charset: Charset): ProxyByteWriter.this.type = {
     underlying.writeString(string, charset)

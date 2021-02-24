@@ -8,8 +8,14 @@ Unreleased
 ----------
 
 New Features
+~~~~~~~~~~~~
+
 * util-core: `c.t.io` now supports creating and deconstructing unsigned 128-bit buffers
   in Buf. ``PHAB_ID=D606905``
+
+* util-core: `c.t.io.ProxyByteReader` and `c.t.io.ProxyByteWriter` are now public. They are
+  useful for wrapping an existing `ByteReader` or `ByteWriter` and extending its functionality
+  without modifying the underlying instance. ``PHAB_ID=D622705``
 
 21.2.0
 ------
