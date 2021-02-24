@@ -7,6 +7,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+* util-core: `c.t.io` now supports creating and deconstructing unsigned 128-bit buffers
+  in Buf. ``PHAB_ID=D606905``
+
 21.2.0
 ------
 

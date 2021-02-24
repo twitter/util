@@ -872,6 +872,16 @@ class BufTest
     out == in && outByteBuf.getLong == in
   })
 
+  check(Prop.forAll { (in1: Long, in2: Long) =>
+    val buf = Buf.U128BE(in1, in2)
+    val Buf.U128BE(out1, out2, _) = buf
+
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
+    outByteBuf.order(java.nio.ByteOrder.BIG_ENDIAN)
+
+    out1 == in1 && out2 == in2 && outByteBuf.getLong == in1 && outByteBuf.getLong == in2
+  })
+
   check(Prop.forAll { (in: Long) =>
     val buf = Buf.U64LE(in)
     val Buf.U64LE(out, _) = buf
@@ -882,28 +892,57 @@ class BufTest
     out == in && outByteBuf.getLong == in
   })
 
+  check(Prop.forAll { (in1: Long, in2: Long) =>
+    val buf = Buf.U128LE(in1, in2)
+    val Buf.U128LE(out1, out2, _) = buf
+
+    val outByteBuf = java.nio.ByteBuffer.wrap(Buf.ByteArray.Owned.extract(buf))
+    outByteBuf.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+
+    out1 == in1 && out2 == in2 && outByteBuf.getLong == in2 && outByteBuf.getLong == in1
+  })
+
   test("Buf num matching") {
     val hasMatch = Buf.Empty match {
       case Buf.U32BE(_, _) => true
       case Buf.U64BE(_, _) => true
+      case Buf.U128BE(_, _, _) => true
       case Buf.U32LE(_, _) => true
       case Buf.U64LE(_, _) => true
+      case Buf.U128LE(_, _, _) => true
       case _ => false
     }
     assert(!hasMatch)
 
+    // val uBigInt128 = BigInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16)
+
     val buf = Buf.Empty
       .concat(Buf.U32BE(Int.MaxValue))
       .concat(Buf.U64BE(Long.MaxValue))
+      .concat(Buf.U128BE(Long.MaxValue, Long.MaxValue))
       .concat(Buf.U32LE(Int.MinValue))
       .concat(Buf.U64LE(Long.MinValue))
+      .concat(Buf.U128LE(Long.MaxValue, Long.MaxValue))
 
-    val Buf.U32BE(be32, Buf.U64BE(be64, Buf.U32LE(le32, Buf.U64LE(le64, rem)))) = buf
+    val Buf.U32BE(
+      be32,
+      Buf
+        .U64BE(
+          be64,
+          Buf.U128BE(
+            be1281,
+            be1282,
+            Buf.U32LE(le32, Buf.U64LE(le64, Buf.U128LE(le1281, le1282, rem)))))) =
+      buf
 
     assert(be32 == Int.MaxValue)
     assert(be64 == Long.MaxValue)
+    assert(be1281 == Long.MaxValue)
+    assert(be1282 == Long.MaxValue)
     assert(le32 == Int.MinValue)
     assert(le64 == Long.MinValue)
+    assert(le1281 == Long.MaxValue)
+    assert(le1282 == Long.MaxValue)
     assert(rem == Buf.Empty)
   }
 

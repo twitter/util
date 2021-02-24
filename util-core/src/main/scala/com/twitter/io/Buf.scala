@@ -1244,6 +1244,65 @@ object Buf {
   }
 
   /**
+   * Create and deconstruct unsigned 128-bit
+   * big endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U128BE {
+    def apply(highBits: Long, lowBits: Long): Buf = {
+      val arr = new Array[Byte](16)
+      arr(0) = ((highBits >> 56) & 0xff).toByte
+      arr(1) = ((highBits >> 48) & 0xff).toByte
+      arr(2) = ((highBits >> 40) & 0xff).toByte
+      arr(3) = ((highBits >> 32) & 0xff).toByte
+      arr(4) = ((highBits >> 24) & 0xff).toByte
+      arr(5) = ((highBits >> 16) & 0xff).toByte
+      arr(6) = ((highBits >> 8) & 0xff).toByte
+      arr(7) = (highBits & 0xff).toByte
+      arr(8) = ((lowBits >> 56) & 0xff).toByte
+      arr(9) = ((lowBits >> 48) & 0xff).toByte
+      arr(10) = ((lowBits >> 40) & 0xff).toByte
+      arr(11) = ((lowBits >> 32) & 0xff).toByte
+      arr(12) = ((lowBits >> 24) & 0xff).toByte
+      arr(13) = ((lowBits >> 16) & 0xff).toByte
+      arr(14) = ((lowBits >> 8) & 0xff).toByte
+      arr(15) = (lowBits & 0xff).toByte
+      ByteArray.Owned(arr)
+    }
+
+    // returns (highBits, lowBits, Buf)
+    def unapply(buf: Buf): Option[(Long, Long, Buf)] =
+      if (buf.length < 16) None
+      else {
+        val arr = new Array[Byte](16)
+        buf.slice(0, 16).write(arr, 0)
+        val rem = buf.slice(16, buf.length)
+
+        val highBits =
+          ((arr(0) & 0xff).toLong << 56) |
+            ((arr(1) & 0xff).toLong << 48) |
+            ((arr(2) & 0xff).toLong << 40) |
+            ((arr(3) & 0xff).toLong << 32) |
+            ((arr(4) & 0xff).toLong << 24) |
+            ((arr(5) & 0xff).toLong << 16) |
+            ((arr(6) & 0xff).toLong << 8) |
+            (arr(7) & 0xff).toLong
+        val lowBits =
+          ((arr(8) & 0xff).toLong << 56) |
+            ((arr(9) & 0xff).toLong << 48) |
+            ((arr(10) & 0xff).toLong << 40) |
+            ((arr(11) & 0xff).toLong << 32) |
+            ((arr(12) & 0xff).toLong << 24) |
+            ((arr(13) & 0xff).toLong << 16) |
+            ((arr(14) & 0xff).toLong << 8) |
+            (arr(15) & 0xff).toLong
+        Some((highBits, lowBits, rem))
+      }
+  }
+
+  /**
    * Create and deconstruct unsigned 32-bit
    * little endian encoded buffers.
    *
@@ -1314,6 +1373,65 @@ object Buf {
             ((arr(6) & 0xff).toLong << 48) |
             ((arr(7) & 0xff).toLong << 56)
         Some((value, rem))
+      }
+  }
+
+  /**
+   * Create and deconstruct unsigned 128-bit
+   * little endian encoded buffers.
+   *
+   * Deconstructing will return the value
+   * as well as the remaining buffer.
+   */
+  object U128LE {
+    def apply(highBits: Long, lowBits: Long): Buf = {
+      val arr = new Array[Byte](16)
+      arr(0) = (lowBits & 0xff).toByte
+      arr(1) = ((lowBits >> 8) & 0xff).toByte
+      arr(2) = ((lowBits >> 16) & 0xff).toByte
+      arr(3) = ((lowBits >> 24) & 0xff).toByte
+      arr(4) = ((lowBits >> 32) & 0xff).toByte
+      arr(5) = ((lowBits >> 40) & 0xff).toByte
+      arr(6) = ((lowBits >> 48) & 0xff).toByte
+      arr(7) = ((lowBits >> 56) & 0xff).toByte
+      arr(8) = (highBits & 0xff).toByte
+      arr(9) = ((highBits >> 8) & 0xff).toByte
+      arr(10) = ((highBits >> 16) & 0xff).toByte
+      arr(11) = ((highBits >> 24) & 0xff).toByte
+      arr(12) = ((highBits >> 32) & 0xff).toByte
+      arr(13) = ((highBits >> 40) & 0xff).toByte
+      arr(14) = ((highBits >> 48) & 0xff).toByte
+      arr(15) = ((highBits >> 56) & 0xff).toByte
+      ByteArray.Owned(arr)
+    }
+
+    // returns (higherBits, lowerBits, Buf)
+    def unapply(buf: Buf): Option[(Long, Long, Buf)] =
+      if (buf.length < 16) None
+      else {
+        val arr = new Array[Byte](16)
+        buf.slice(0, 16).write(arr, 0)
+        val rem = buf.slice(16, buf.length)
+
+        val lowBits =
+          (arr(0) & 0xff).toLong |
+            ((arr(1) & 0xff).toLong << 8) |
+            ((arr(2) & 0xff).toLong << 16) |
+            ((arr(3) & 0xff).toLong << 24) |
+            ((arr(4) & 0xff).toLong << 32) |
+            ((arr(5) & 0xff).toLong << 40) |
+            ((arr(6) & 0xff).toLong << 48) |
+            ((arr(7) & 0xff).toLong << 56)
+        val highBits =
+          (arr(8) & 0xff).toLong |
+            ((arr(9) & 0xff).toLong << 8) |
+            ((arr(10) & 0xff).toLong << 16) |
+            ((arr(11) & 0xff).toLong << 24) |
+            ((arr(12) & 0xff).toLong << 32) |
+            ((arr(13) & 0xff).toLong << 40) |
+            ((arr(14) & 0xff).toLong << 48) |
+            ((arr(15) & 0xff).toLong << 56)
+        Some((highBits, lowBits, rem))
       }
   }
 
