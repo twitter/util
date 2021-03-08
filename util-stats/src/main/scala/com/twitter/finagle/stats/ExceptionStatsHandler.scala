@@ -10,7 +10,7 @@ import com.twitter.util.Throwables
  * @see [[Null]] for a no-op handler.
  */
 object ExceptionStatsHandler {
-  private[stats] val Failures = "failures"
+  private[finagle] val Failures = "failures"
   private[stats] val SourcedFailures = "sourcedfailures"
 
   /**

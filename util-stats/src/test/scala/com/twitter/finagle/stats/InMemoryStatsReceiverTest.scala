@@ -1,10 +1,11 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema}
 import java.io.{ByteArrayOutputStream, PrintStream}
 import java.nio.charset.StandardCharsets
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import scala.collection.parallel.immutable.ParRange
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.parallel.immutable.ParRange
 
 class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with IntegrationPatience {
 
@@ -117,6 +118,14 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     assert(stats.verbosity(Seq("foo")) == Verbosity.Debug)
     assert(stats.verbosity(Seq("bar")) == Verbosity.Default)
     assert(stats.verbosity(Seq("baz")) == Verbosity.Debug)
+  }
+
+  test("register expressions") {
+    val stats = new InMemoryStatsReceiver()
+    ExpressionSchema(
+      "a",
+      Expression(CounterSchema(new MetricBuilder(name = Seq("counter"), statsReceiver = stats))))
+    stats.expressions.contains("a")
   }
 
   test("print") {

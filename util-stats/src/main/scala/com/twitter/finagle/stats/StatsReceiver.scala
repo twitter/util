@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
 import java.util.function.Supplier
@@ -311,6 +312,8 @@ trait StatsReceiver {
   @varargs
   final def scope(namespaces: String*): StatsReceiver =
     namespaces.foldLeft(this)((statsReceiver, name) => statsReceiver.scope(name))
+
+  protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit = {}
 
   /**
    * Prepend a suffix value to the next scope.

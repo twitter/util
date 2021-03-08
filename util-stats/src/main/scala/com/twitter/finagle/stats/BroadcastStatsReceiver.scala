@@ -1,5 +1,7 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.exp.ExpressionSchema
+
 /**
  * BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
  * StatsReceivers (n).
@@ -36,6 +38,11 @@ object BroadcastStatsReceiver {
       }
     }
 
+    override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit = {
+      first.registerExpression(expressionSchema)
+      second.registerExpression(expressionSchema)
+    }
+
     def underlying: Seq[StatsReceiver] = Seq(first, second)
 
     override def toString: String =
@@ -55,6 +62,9 @@ object BroadcastStatsReceiver {
       val gauges = srs.map { _.addGauge(schema)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
     }
+
+    override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit =
+      srs.map(_.registerExpression(expressionSchema))
 
     def underlying: Seq[StatsReceiver] = srs
 

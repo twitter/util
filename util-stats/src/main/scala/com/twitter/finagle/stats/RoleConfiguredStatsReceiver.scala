@@ -9,7 +9,7 @@ package com.twitter.finagle.stats
  */
 case class RoleConfiguredStatsReceiver(
   protected val self: StatsReceiver,
-  val role: SourceRole)
+  role: SourceRole)
     extends StatsReceiverProxy {
 
   override def counter(counterSchema: CounterSchema): Counter = {
