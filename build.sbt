@@ -357,13 +357,7 @@ lazy val utilReflect = Project(
 ).settings(
     sharedSettings
   ).settings(
-    name := "util-reflect",
-    libraryDependencies ++= Seq(
-      "asm" % "asm" % "3.3.1",
-      "asm" % "asm-util" % "3.3.1",
-      "asm" % "asm-commons" % "3.3.1",
-      "cglib" % "cglib" % "2.2.2"
-    )
+    name := "util-reflect"
   ).dependsOn(utilCore)
 
 lazy val utilHashing = Project(

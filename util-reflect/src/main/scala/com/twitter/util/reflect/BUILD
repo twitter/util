@@ -6,10 +6,6 @@ scala_library(
         repo = artifactory,
     ),
     dependencies = [
-        "3rdparty/jvm/cglib",
         "util/util-core:util-core-util",
-    ],
-    exports = [
-        "3rdparty/jvm/cglib",
     ],
 )

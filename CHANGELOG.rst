@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-reflect: Remove deprecated `c.t.util.reflect.Proxy`. There is no library replacement.
+  ``PHAB_ID=D630143``
+
 New Features
 ~~~~~~~~~~~~
 
@@ -64,7 +70,7 @@ New Features
 * util-core: `c.t.util.Duration` now includes `fromJava` and `asJava` conversions to
   `java.time.Duration` types. ``PHAB_ID=D571885``
 
-  Runtime Behavior Changes
+Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * util-core: `Activity.apply(Event)` will now propagate registry events to the underlying
