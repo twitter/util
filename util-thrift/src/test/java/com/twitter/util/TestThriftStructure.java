@@ -159,7 +159,7 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
     this.aString = null;
   }
 
-  /** Returns true if field aString is set (has been asigned a value) and false otherwise */
+  /** Returns true if field aString is set (has been assigned a value) and false otherwise */
   public boolean isSetAString() {
     return this.aString != null;
   }
@@ -184,7 +184,7 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
     __isset_bit_vector.clear(__ANUMBER_ISSET_ID);
   }
 
-  /** Returns true if field aNumber is set (has been asigned a value) and false otherwise */
+  /** Returns true if field aNumber is set (has been assigned a value) and false otherwise */
   public boolean isSetANumber() {
     return __isset_bit_vector.get(__ANUMBER_ISSET_ID);
   }
@@ -226,7 +226,7 @@ public class TestThriftStructure implements TBase<TestThriftStructure, TestThrif
     throw new IllegalStateException();
   }
 
-  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
   public boolean isSet(_Fields field) {
     if (field == null) {
       throw new IllegalArgumentException();
