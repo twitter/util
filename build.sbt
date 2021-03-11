@@ -373,16 +373,6 @@ lazy val utilHashing = Project(
     )
   ).dependsOn(utilCore % "test")
 
-lazy val utilIntellij = Project(
-  id = "util-intellij",
-  base = file("util-intellij")
-).settings(
-    baseSettings
-  ).settings(
-    name := "util-intellij",
-    scalaVersion := "2.11.12"
-  ).dependsOn(utilCore % "test")
-
 lazy val utilJvm = Project(
   id = "util-jvm",
   base = file("util-jvm")
