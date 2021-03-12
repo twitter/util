@@ -10,6 +10,8 @@ Unreleased
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
+* util: Builds are now only supported for Scala 2.12+ ``PHAB_ID=D631091``
+
 * util-reflect: Remove deprecated `c.t.util.reflect.Proxy`. There is no library replacement.
   ``PHAB_ID=D630143``
 
