@@ -18,6 +18,9 @@ Breaking API Changes
 New Features
 ~~~~~~~~~~~~
 
+* util-reflect: Add `c.t.util.reflect.Types`, a utility for some limited reflection based
+  operations. ``PHAB_ID=D631819``
+
 * util-core: `c.t.io` now supports creating and deconstructing unsigned 128-bit buffers
   in Buf. ``PHAB_ID=D606905``
 
