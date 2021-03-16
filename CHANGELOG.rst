@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Bump scala version to 2.12.13 ``PHAB_ID=D632567``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
