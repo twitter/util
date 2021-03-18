@@ -59,7 +59,5 @@ jobs:
         if: ${{ success() }}
         run: ${{ format('sbt ++{0} coverageAggregate', matrix.scala) }}
       - name: upload coverage
-        if: |
-          (github.head_ref == 'develop' || github.head_ref == 'release') &&
-          ${{ success() }}
+        if: ${{ success() }} && ${{ github.event.name == 'push' }}
         run: unset TRAVIS; bash <(curl -s https://codecov.io/bash)
