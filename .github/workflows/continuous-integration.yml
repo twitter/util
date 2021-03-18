@@ -50,10 +50,10 @@ jobs:
             find ~/.sbt         -name "*.lock"               -delete
           fi
       - name: test
-        run: ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
+        run: ${{ format('sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
       - name: coverage
         if: ${{ success() }}
-        run: ${{ format('./sbt ++{0} coverageAggregate', matrix.scala) }}
+        run: ${{ format('sbt ++{0} coverageAggregate', matrix.scala) }}
       - name: upload coverage
         if: ${{ success() }}
         run: bash <(curl -s https://codecov.io/bash)
