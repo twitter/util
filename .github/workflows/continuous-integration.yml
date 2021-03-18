@@ -57,4 +57,4 @@ jobs:
       - name: upload coverage
         if: |
           ${{ success() }}
-        run: UNSET TRAVIS; bash <(curl -s https://codecov.io/bash)
+        run: unset TRAVIS; bash <(curl -s https://codecov.io/bash)
