@@ -18,6 +18,9 @@ case class ExpressionSchema private (
   private[finagle] def withRole(role: SourceRole): ExpressionSchema =
     copy(labels = labels.copy(role = role))
 
+  private[finagle] def withServiceName(name: Option[String]): ExpressionSchema =
+    copy(labels = labels.copy(serviceName = name))
+
   def register(): Unit = {
     Expression.getStatsReceivers(expr).toSeq match {
       case Seq(sr) => sr.registerExpression(this)

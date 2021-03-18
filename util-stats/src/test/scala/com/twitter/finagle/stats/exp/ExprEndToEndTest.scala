@@ -16,14 +16,20 @@ class ExprEndToEndTest extends FunSuite {
 
   test("Demonstrate an end to end example of using metrics") {
     val sr = new InMemoryStatsReceiver
-    val successMb = CounterSchema(new MetricBuilder(name = Seq("success"), statsReceiver = sr))
+    val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
+
+    val successMb =
+      CounterSchema(new MetricBuilder(name = Seq("success"), statsReceiver = clientSR))
     val failuresMb =
-      CounterSchema(new MetricBuilder(name = Seq("failures"), statsReceiver = sr))
-    val latencyMb = HistogramSchema(new MetricBuilder(name = Seq("latency"), statsReceiver = sr))
+      CounterSchema(new MetricBuilder(name = Seq("failures"), statsReceiver = clientSR))
+    val latencyMb =
+      HistogramSchema(new MetricBuilder(name = Seq("latency"), statsReceiver = clientSR))
+
     val sum = Expression(successMb).plus(Expression(failuresMb))
-    val successCounter = sr.counter(successMb)
-    val failuresCounter = sr.counter(failuresMb)
-    val latencyStat = sr.stat(latencyMb)
+    val successCounter = clientSR.counter(successMb)
+    val failuresCounter = clientSR.counter(failuresMb)
+    val latencyStat = clientSR.stat(latencyMb)
+
     val successRate = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
       .withBounds(MonotoneThreshold(GreaterThan, 99.5, 99.75))
       .withUnit(Percentage)
@@ -53,11 +59,13 @@ class ExprEndToEndTest extends FunSuite {
     runTheQuery(true)
     runTheQuery(false)
 
-    assert(sr.expressions("success_rate") == successRate)
-    assert(sr.expressions("latency") == latency)
+    assert(sr.expressions("success_rate_downstream").expr == successRate.expr)
+    assert(sr.expressions("latency_downstream").expr == latency.expr)
 
     assert(sr.counters(Seq("success")) == 1)
     assert(sr.counters(Seq("failures")) == 1)
     assert(sr.stats(Seq("latency")) == Seq(50, 50))
+
+    assert(sr.expressions("success_rate_downstream").labels.role == Client)
   }
 }

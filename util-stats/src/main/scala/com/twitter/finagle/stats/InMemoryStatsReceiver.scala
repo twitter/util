@@ -246,8 +246,17 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     case (k, v) => (k.mkString("/"), toHistogramDetail(v))
   }
 
-  override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit =
-    expressions(schema.name) = schema
+  /**
+   * Designed to match the behavior of Metrics::registerExpression().
+   */
+  override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
+    val expressionId = schema.labels.serviceName match {
+      case Some(serviceName) => schema.name + "_" + serviceName
+      case None => schema.name
+    }
+    expressions(expressionId) = schema
+  }
+
 }
 
 /**
