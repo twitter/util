@@ -33,5 +33,11 @@ case class ExpressionSchema private (
 // expose for testing in twitter-server
 private[twitter] object ExpressionSchema {
   def apply(name: String, expr: Expression): ExpressionSchema =
-    ExpressionSchema(name, ExpressionLabels.empty, expr, Unbounded, "Unspecified", Unspecified)
+    ExpressionSchema(
+      name = name,
+      labels = ExpressionLabels.empty,
+      expr = expr,
+      bounds = Unbounded.get,
+      description = "Unspecified",
+      unit = Unspecified)
 }

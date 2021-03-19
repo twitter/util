@@ -31,7 +31,7 @@ class ExprEndToEndTest extends FunSuite {
     val latencyStat = clientSR.stat(latencyMb)
 
     val successRate = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-      .withBounds(MonotoneThreshold(GreaterThan, 99.5, 99.75))
+      .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
       .withUnit(Percentage)
       .withDescription("The success rate of the slow query")
 

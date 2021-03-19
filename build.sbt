@@ -497,6 +497,9 @@ lazy val utilStats = Project(
       caffeineLib,
       jsr305Lib,
       scalacheckLib,
+      "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
       "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
