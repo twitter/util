@@ -1,25 +1,19 @@
 package com.twitter.util.reflect
 
+import com.twitter.util.{Awaitable, FuturePool}
+import com.twitter.util.reflect.testclasses._
+import com.twitter.util.reflect.testclasses.has_underscore.ClassB
+import com.twitter.util.reflect.testclasses.number_1.FooNumber
+import com.twitter.util.reflect.testclasses.okNaming.Ok
+import com.twitter.util.reflect.testclasses.ver2_3.{Ext, Response}
 import org.junit.runner.RunWith
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.junit.JUnitRunner
 import scala.reflect.runtime.universe._
 
-object TypesTest {
-  trait TestTraitA
-  trait TestTraitB
-
-  case class Foo[T](data: T)
-  case class Baz[U, T](bar: U, foo: Foo[T])
-  case class Bez[I, J](m: Map[I, J])
-
-  trait TypedTrait[A, B]
-}
-
 @RunWith(classOf[JUnitRunner])
 class TypesTest extends AnyFunSuite with Matchers {
-  import TypesTest._
 
   test("Types#asTypeTag handles classes") {
     typeTagEquals(classOf[String], Types.asTypeTag(classOf[String]))
@@ -67,7 +61,6 @@ class TypesTest extends AnyFunSuite with Matchers {
     classOf[Nothing].isAssignableFrom(Types.runtimeClass[scala.runtime.Nothing$])
     // `Any` is special and can result in a ClassNotFoundException
     //Types.runtimeClass[Any]
-
   }
 
   test("Types#eq") {
@@ -125,6 +118,119 @@ class TypesTest extends AnyFunSuite with Matchers {
       val first = cons.getParameters.head
       Types.parameterizedTypeNames(first.getParameterizedType) should equal(Array("I", "J"))
     }
+  }
+
+  test("Types#isCaseClass") {
+    Types.isCaseClass(classOf[Ext]) should be(true)
+    Types.isCaseClass(classOf[Response]) should be(true)
+
+    Types.isCaseClass(classOf[Ok]) should be(true)
+
+    Types.isCaseClass(classOf[ClassB]) should be(true)
+
+    Types.isCaseClass(classOf[FooNumber]) should be(true)
+
+    Types.isCaseClass(classOf[ClassA]) should be(true)
+    Types.isCaseClass(classOf[Request]) should be(true)
+
+    Types.isCaseClass(classOf[Awaitable[_]]) should be(false)
+    Types.isCaseClass(classOf[FuturePool]) should be(false)
+
+    Types.isCaseClass(classOf[AnyRef]) should be(false)
+    Types.isCaseClass(classOf[AnyVal]) should be(false)
+    Types.isCaseClass(classOf[Unit]) should be(false)
+    Types.isCaseClass(classOf[Byte]) should be(false)
+    Types.isCaseClass(classOf[Short]) should be(false)
+    Types.isCaseClass(classOf[Char]) should be(false)
+    Types.isCaseClass(classOf[Int]) should be(false)
+    Types.isCaseClass(classOf[java.lang.Integer]) should be(false)
+    Types.isCaseClass(classOf[Float]) should be(false)
+    Types.isCaseClass(classOf[Double]) should be(false)
+    Types.isCaseClass(classOf[Boolean]) should be(false)
+    Types.isCaseClass(classOf[java.lang.Object]) should be(false)
+    Types.isCaseClass(classOf[Any]) should be(false)
+    Types.isCaseClass(classOf[Null]) should be(false)
+    Types.isCaseClass(classOf[Nothing]) should be(false)
+    Types.isCaseClass(classOf[String]) should be(false)
+    Types.isCaseClass(classOf[java.lang.String]) should be(false)
+
+    Types.isCaseClass(classOf[Seq[_]]) should be(false)
+    Types.isCaseClass(classOf[Seq[Ext]]) should be(false)
+    Types.isCaseClass(classOf[List[_]]) should be(false)
+    Types.isCaseClass(classOf[List[Ext]]) should be(false)
+    Types.isCaseClass(classOf[Iterable[_]]) should be(false)
+    Types.isCaseClass(classOf[Iterable[Ext]]) should be(false)
+    Types.isCaseClass(classOf[Array[_]]) should be(false)
+    Types.isCaseClass(classOf[Array[Ext]]) should be(false)
+    Types.isCaseClass(classOf[Option[_]]) should be(false)
+    Types.isCaseClass(classOf[Option[ClassB]]) should be(false)
+    Types.isCaseClass(classOf[Either[_, _]]) should be(false)
+    Types.isCaseClass(classOf[Either[Request, Response]]) should be(false)
+    Types.isCaseClass(classOf[Map[_, _]]) should be(false)
+    Types.isCaseClass(classOf[Map[ClassA, FooNumber]]) should be(false)
+    Types.isCaseClass(classOf[Tuple1[_]]) should be(false)
+    Types.isCaseClass(classOf[Tuple2[_, _]]) should be(false)
+    Types.isCaseClass(classOf[(_, _, _)]) should be(false)
+    Types.isCaseClass(classOf[(_, _, _, _)]) should be(false)
+    Types.isCaseClass(classOf[(_, _, _, _, _)]) should be(false)
+    Types.isCaseClass(classOf[(_, _, _, _, _, _)]) should be(false)
+    Types.isCaseClass(classOf[Tuple7[_, _, _, _, _, _, _]]) should be(false)
+    Types.isCaseClass(classOf[Tuple8[_, _, _, _, _, _, _, _]]) should be(false)
+    Types.isCaseClass(classOf[Tuple9[_, _, _, _, _, _, _, _, _]]) should be(false)
+    Types.isCaseClass(classOf[Tuple10[_, _, _, _, _, _, _, _, _, _]]) should be(false)
+  }
+
+  test("Types#notCaseClass") {
+    Types.notCaseClass(classOf[Ext]) should be(false)
+    Types.notCaseClass(classOf[Response]) should be(false)
+
+    Types.notCaseClass(classOf[Ok]) should be(false)
+
+    Types.notCaseClass(classOf[ClassB]) should be(false)
+
+    Types.notCaseClass(classOf[FooNumber]) should be(false)
+
+    Types.notCaseClass(classOf[ClassA]) should be(false)
+    Types.notCaseClass(classOf[Request]) should be(false)
+
+    Types.notCaseClass(classOf[Awaitable[_]]) should be(true)
+    Types.notCaseClass(classOf[FuturePool]) should be(true)
+
+    Types.notCaseClass(classOf[java.lang.String]) should be(true)
+    Types.notCaseClass(classOf[String]) should be(true)
+    Types.notCaseClass(classOf[Int]) should be(true)
+
+    Types.notCaseClass(classOf[String]) should be(true)
+    Types.notCaseClass(classOf[Boolean]) should be(true)
+    Types.notCaseClass(classOf[java.lang.Integer]) should be(true)
+    Types.notCaseClass(classOf[Int]) should be(true)
+    Types.notCaseClass(classOf[Double]) should be(true)
+    Types.notCaseClass(classOf[Float]) should be(true)
+    Types.notCaseClass(classOf[Long]) should be(true)
+    Types.notCaseClass(classOf[Seq[_]]) should be(true)
+    Types.notCaseClass(classOf[Seq[Ext]]) should be(true)
+    Types.notCaseClass(classOf[List[_]]) should be(true)
+    Types.notCaseClass(classOf[List[Ext]]) should be(true)
+    Types.notCaseClass(classOf[Iterable[_]]) should be(true)
+    Types.notCaseClass(classOf[Iterable[Ext]]) should be(true)
+    Types.notCaseClass(classOf[Array[_]]) should be(true)
+    Types.notCaseClass(classOf[Array[Ext]]) should be(true)
+    Types.notCaseClass(classOf[Option[_]]) should be(true)
+    Types.notCaseClass(classOf[Option[ClassB]]) should be(true)
+    Types.notCaseClass(classOf[Either[_, _]]) should be(true)
+    Types.notCaseClass(classOf[Either[Request, Response]]) should be(true)
+    Types.notCaseClass(classOf[Map[_, _]]) should be(true)
+    Types.notCaseClass(classOf[Map[ClassA, FooNumber]]) should be(true)
+    Types.notCaseClass(classOf[Tuple1[_]]) should be(true)
+    Types.notCaseClass(classOf[Tuple2[_, _]]) should be(true)
+    Types.notCaseClass(classOf[(_, _, _)]) should be(true)
+    Types.notCaseClass(classOf[(_, _, _, _)]) should be(true)
+    Types.notCaseClass(classOf[(_, _, _, _, _)]) should be(true)
+    Types.notCaseClass(classOf[(_, _, _, _, _, _)]) should be(true)
+    Types.notCaseClass(classOf[Tuple7[_, _, _, _, _, _, _]]) should be(true)
+    Types.notCaseClass(classOf[Tuple8[_, _, _, _, _, _, _, _]]) should be(true)
+    Types.notCaseClass(classOf[Tuple9[_, _, _, _, _, _, _, _, _]]) should be(true)
+    Types.notCaseClass(classOf[Tuple10[_, _, _, _, _, _, _, _, _, _]]) should be(true)
   }
 
   private[this] def typeTagEquals[T](clazz: Class[T], typeTag: TypeTag[T]): Boolean =

@@ -5,6 +5,35 @@ import scala.reflect.api.TypeCreator
 import scala.reflect.runtime.universe._
 
 object Types {
+  private[this] val PRODUCT: Type = typeOf[Product]
+  private[this] val OPTION: Type = typeOf[Option[_]]
+  private[this] val LIST: Type = typeOf[List[_]]
+
+  /**
+   * Returns  `true` if the given class type is considered a case class.
+   * True if:
+   *  - is assignable from PRODUCT and
+   *  - not assignable from OPTION nor LIST and
+   *  - is not a Tuple and
+   *  - class symbol is case class.
+   *
+   * @param clazz runtime representation of class type.
+   */
+  def isCaseClass[T](clazz: Class[T]): Boolean = {
+    val tpe = asTypeTag(clazz).tpe
+    val classSymbol = tpe.typeSymbol.asClass
+    tpe <:< PRODUCT &&
+    !(tpe <:< OPTION || tpe <:< LIST) &&
+    !clazz.getName.startsWith("scala.Tuple") &&
+    classSymbol.isCaseClass
+  }
+
+  /**
+   * This is the negation of [[Types.isCaseClass]]
+   * Determine if a given class type is not a case class.
+   * Returns `true` if it is NOT considered a case class.
+   */
+  def notCaseClass[T](clazz: Class[T]): Boolean = !isCaseClass(clazz)
 
   /**
    * Convert from the given `Class[T]` to a `TypeTag[T]` in the runtime universe.

@@ -26,6 +26,12 @@ Breaking API Changes
 New Features
 ~~~~~~~~~~~~
 
+* util-reflect: Add `c.t.util.reflect.Annotations` a utility for finding annotations on a class and
+  `c.t.util.reflect.Classes` which has a utility for obtaining the `simpleName` of a given class
+  across JDK versions and while handling mangled names (those with non-supported Java identifier
+  characters). Also add utilities to determine if a given class is a case class in
+  `c.t.util.reflect.Types`. ``PHAB_ID=D638655``
+
 * util-reflect: Add `c.t.util.reflect.Types`, a utility for some limited reflection based
   operations. ``PHAB_ID=D631819``
 
