@@ -18,6 +18,9 @@ Runtime Behavior Changes
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
+* util: Rename `c.t.util.reflect.Annotations#annotationEquals` to `c.t.util.reflect.Annotations#equals`
+  and `c.t.util.reflect.Types.eq` to `c.t.util.reflect.Types.equals`. ``PHAB_ID=D640386``
+
 * util: Builds are now only supported for Scala 2.12+ ``PHAB_ID=D631091``
 
 * util-reflect: Remove deprecated `c.t.util.reflect.Proxy`. There is no library replacement.

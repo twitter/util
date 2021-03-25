@@ -63,33 +63,33 @@ class TypesTest extends AnyFunSuite with Matchers {
     //Types.runtimeClass[Any]
   }
 
-  test("Types#eq") {
-    Types.eq[String](typeTag[String]) should be(true)
-    Types.eq[AnyRef](TypeTag.AnyRef) should be(true)
-    Types.eq[AnyVal](TypeTag.AnyVal) should be(true)
-    Types.eq[Unit](TypeTag.Unit) should be(true)
-    Types.eq[Byte](TypeTag.Byte) should be(true)
-    Types.eq[Short](TypeTag.Short) should be(true)
-    Types.eq[Char](TypeTag.Char) should be(true)
-    Types.eq[Int](TypeTag.Int) should be(true)
-    Types.eq[Long](TypeTag.Long) should be(true)
-    Types.eq[Float](TypeTag.Float) should be(true)
-    Types.eq[Double](TypeTag.Double) should be(true)
-    Types.eq[Boolean](TypeTag.Boolean) should be(true)
-    Types.eq[java.lang.Object](TypeTag.Object) should be(true)
-    Types.eq[Any](TypeTag.Any) should be(true)
-    Types.eq[Null](TypeTag.Null) should be(true)
-    Types.eq[Nothing](TypeTag.Nothing) should be(true)
+  test("Types#equals") {
+    Types.equals[String](typeTag[String]) should be(true)
+    Types.equals[AnyRef](TypeTag.AnyRef) should be(true)
+    Types.equals[AnyVal](TypeTag.AnyVal) should be(true)
+    Types.equals[Unit](TypeTag.Unit) should be(true)
+    Types.equals[Byte](TypeTag.Byte) should be(true)
+    Types.equals[Short](TypeTag.Short) should be(true)
+    Types.equals[Char](TypeTag.Char) should be(true)
+    Types.equals[Int](TypeTag.Int) should be(true)
+    Types.equals[Long](TypeTag.Long) should be(true)
+    Types.equals[Float](TypeTag.Float) should be(true)
+    Types.equals[Double](TypeTag.Double) should be(true)
+    Types.equals[Boolean](TypeTag.Boolean) should be(true)
+    Types.equals[java.lang.Object](TypeTag.Object) should be(true)
+    Types.equals[Any](TypeTag.Any) should be(true)
+    Types.equals[Null](TypeTag.Null) should be(true)
+    Types.equals[Nothing](TypeTag.Nothing) should be(true)
     // generics
-    Types.eq[Baz[_, _]](typeTag[Baz[_, _]]) should be(true)
-    Types.eq[Foo[_]](typeTag[Foo[_]]) should be(true)
-    Types.eq[Bez[_, _]](typeTag[Bez[_, _]]) should be(true)
-    Types.eq[TypedTrait[_, _]](typeTag[TypedTrait[_, _]]) should be(true)
+    Types.equals[Baz[_, _]](typeTag[Baz[_, _]]) should be(true)
+    Types.equals[Foo[_]](typeTag[Foo[_]]) should be(true)
+    Types.equals[Bez[_, _]](typeTag[Bez[_, _]]) should be(true)
+    Types.equals[TypedTrait[_, _]](typeTag[TypedTrait[_, _]]) should be(true)
 
-    Types.eq[Int](TypeTag.Float) should be(false)
-    Types.eq[String](TypeTag.Int) should be(false)
-    Types.eq[java.lang.Object](TypeTag.Int) should be(false)
-    Types.eq[String](TypeTag.Object) should be(false)
+    Types.equals[Int](TypeTag.Float) should be(false)
+    Types.equals[String](TypeTag.Int) should be(false)
+    Types.equals[java.lang.Object](TypeTag.Int) should be(false)
+    Types.equals[String](TypeTag.Object) should be(false)
   }
 
   test("Types#parameterizedTypeNames") {

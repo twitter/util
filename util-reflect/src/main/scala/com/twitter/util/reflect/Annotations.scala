@@ -170,7 +170,7 @@ object Annotations {
    *
    * @return true if the given [[Annotation]] is of type [[A]], false otherwise.
    */
-  def annotationEquals[A <: Annotation: ClassTag](annotation: Annotation): Boolean =
+  def equals[A <: Annotation: ClassTag](annotation: Annotation): Boolean =
     annotation.annotationType() == classTag[A].runtimeClass.asInstanceOf[Class[A]]
 
   /**

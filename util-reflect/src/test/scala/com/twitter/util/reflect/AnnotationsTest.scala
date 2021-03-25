@@ -56,7 +56,7 @@ class AnnotationsTest extends AnyFunSuite with Matchers {
     Annotations.findAnnotation[Annotation4](annotations).isDefined should be(true)
   }
 
-  test("Annotations#annotationEquals") {
+  test("Annotations#equals") {
     val annotationMap: Map[String, Array[Annotation]] =
       Annotations.findAnnotations(classOf[CaseClassOneTwoThreeFour])
     annotationMap.isEmpty should be(false)
@@ -65,7 +65,7 @@ class AnnotationsTest extends AnyFunSuite with Matchers {
     found.isDefined should be(true)
 
     val annotation = found.get
-    Annotations.annotationEquals[Annotation1](annotation) should be(true)
+    Annotations.equals[Annotation1](annotation) should be(true)
   }
 
   test("Annotations#isAnnotationPresent") {

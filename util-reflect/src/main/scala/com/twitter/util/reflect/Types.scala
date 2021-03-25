@@ -98,7 +98,7 @@ object Types {
    * @return true if the TypeSymbols are equivalent.
    * @see [[scala.reflect.api.Symbols]]
    */
-  def eq[T](thatTypeTag: TypeTag[_])(implicit thisTypeTag: TypeTag[T]): Boolean =
+  def equals[T](thatTypeTag: TypeTag[_])(implicit thisTypeTag: TypeTag[T]): Boolean =
     thisTypeTag.tpe.typeSymbol == thatTypeTag.tpe.typeSymbol
 
   /**
