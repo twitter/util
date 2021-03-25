@@ -95,11 +95,7 @@ object MockitoTraitTest {
     def traitMethodWithDefaultArgs(defaultArg: Int = 30, anotherDefault: String = "hola"): Int = -1
   }
 
-  // this is a case class in order to have equals/hashcode properly defined which
-  // is necessary for the eqTo syntax to work properly in Scala 2.11
-  case class ValueClass(v: String) extends AnyVal {
-    override def toString = s"ValueClass($v)"
-  }
+  implicit class ValueClass(val v: String) extends AnyVal
   case class ValueCaseClassInt(v: Int) extends AnyVal
   case class ValueCaseClassString(v: String) extends AnyVal
   case class GenericValue[T](v: Int) extends AnyVal
@@ -666,10 +662,6 @@ class MockitoTraitTest extends AnyFunSuite with Matchers with Mockito {
     Await.result(mockFutureFn(), 2.seconds) should equal(42)
   }
 
-  // Function0 types seem to not play well with Mockito and Future.apply
-  // in Scala 2.11 so we use Future.value here -- this test is perhaps a bit
-  // tautological since mockFn() is called immediately in Future.value but it
-  // did expose a difference between Scala 2.11 and Scala 2.12.
   test("works with Future whenReady 1") {
     val mockFn = mock[() => Boolean]
     mockFn() returns true

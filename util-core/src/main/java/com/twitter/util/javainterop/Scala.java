@@ -31,9 +31,7 @@ public final class Scala {
     if (jList == null) {
       return scala.collection.immutable.Seq$.MODULE$.<E>empty();
     } else {
-      //TODO: After dropping support for 2.11.x, replace with
-      //JavaConverters.asScalaBuffer(jlist).toList();
-      return JavaConverters.asScalaBufferConverter(jList).asScala().toList();
+      return JavaConverters.asScalaBuffer(jList).toList();
     }
   }
 
@@ -52,9 +50,7 @@ public final class Scala {
     if (jSet == null) {
       return scala.collection.immutable.Set$.MODULE$.<E>empty();
     } else {
-      //TODO: After dropping support for 2.11.x, replace with
-      //JavaConverters.asScalaSet(jSet).toSet
-      return JavaConverters.asScalaSetConverter(jSet).asScala().toSet();
+      return JavaConverters.asScalaSet(jSet).toSet();
     }
   }
 
