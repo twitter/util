@@ -21,6 +21,23 @@ class X509TrustManagerFactory(certsFile: File) {
         s"failed to create trust manager: ${ex.getMessage()}."
     )
 
+  /**
+   * Attempts to read the contents of a file containing a collection of X.509 certificates,
+   * and combines them into a `javax.net.ssl.TrustManager`.
+   * The singular value is returned in an Array for ease of use with
+   * `javax.net.ssl.SSLContext`'s init method.
+   */
+  def getTrustManagers(): Try[Array[TrustManager]] = {
+    val tryCerts: Try[Seq[X509Certificate]] =
+      new X509CertificateFile(certsFile).readX509Certificates()
+    tryCerts.flatMap(buildTrustManager).onFailure(logException)
+  }
+
+}
+
+object X509TrustManagerFactory {
+  private val log = Logger.get("com.twitter.util.security")
+
   private[this] def setCertificateEntry(ks: KeyStore)(cert: X509Certificate): Unit = {
     val alias: String = UUID.randomUUID().toString()
     ks.setCertificateEntry(alias, cert)
@@ -46,19 +63,12 @@ class X509TrustManagerFactory(certsFile: File) {
   }
 
   /**
-   * Attempts to read the contents of a file containing a collection of X.509 certificates,
-   * and combines them into a `javax.net.ssl.TrustManager`.
+   * Attempts to combine the passed in X.509 certificates in order to construct a
+   * `javax.net.ssl.TrustManager`.
    * The singular value is returned in an Array for ease of use with
    * `javax.net.ssl.SSLContext`'s init method.
    */
-  def getTrustManagers(): Try[Array[TrustManager]] = {
-    val tryCerts: Try[Seq[X509Certificate]] =
-      new X509CertificateFile(certsFile).readX509Certificates()
-    tryCerts.map(certsToTrustManagers).onFailure(logException)
+  def buildTrustManager(x509Certificates: Seq[X509Certificate]): Try[Array[TrustManager]] = Try {
+    certsToTrustManagers(x509Certificates)
   }
-
-}
-
-private object X509TrustManagerFactory {
-  private val log = Logger.get("com.twitter.util.security")
 }

@@ -5,7 +5,7 @@ import java.io.{File, IOException}
 import org.scalatest.Assertions._
 import scala.reflect.ClassTag
 
-object PemFileTestUtils {
+object PemBytesTestUtils {
 
   def assertException[A <: AnyRef, B](tryValue: Try[B])(implicit classTag: ClassTag[A]): Unit = {
     assert(tryValue.isThrow)

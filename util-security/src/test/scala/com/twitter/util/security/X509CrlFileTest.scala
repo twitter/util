@@ -9,7 +9,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class X509CrlFileTest extends AnyFunSuite {
 
   private[this] def assertCrlException(tryCrl: Try[X509CRL]): Unit =
-    PemFileTestUtils.assertException[CRLException, X509CRL](tryCrl)
+    PemBytesTestUtils.assertException[CRLException, X509CRL](tryCrl)
 
   private[this] val readCrlFromFile: File => Try[X509CRL] =
     (tempFile) => {
@@ -18,15 +18,15 @@ class X509CrlFileTest extends AnyFunSuite {
     }
 
   test("File path doesn't exist") {
-    PemFileTestUtils.testFileDoesntExist("X509Crl", readCrlFromFile)
+    PemBytesTestUtils.testFileDoesntExist("X509Crl", readCrlFromFile)
   }
 
   test("File path isn't a file") {
-    PemFileTestUtils.testFilePathIsntFile("X509Crl", readCrlFromFile)
+    PemBytesTestUtils.testFilePathIsntFile("X509Crl", readCrlFromFile)
   }
 
   test("File isn't a crl") {
-    PemFileTestUtils.testEmptyFile[InvalidPemFormatException, X509CRL](
+    PemBytesTestUtils.testEmptyFile[InvalidPemFormatException, X509CRL](
       "X509Crl",
       readCrlFromFile
     )

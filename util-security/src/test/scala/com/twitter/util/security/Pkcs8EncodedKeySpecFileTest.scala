@@ -15,19 +15,19 @@ class Pkcs8EncodedKeySpecFileTest extends AnyFunSuite {
     }
 
   test("File path doesn't exist") {
-    PemFileTestUtils.testFileDoesntExist("PKCS8EncodedKeySpec", readKeySpecFromFile)
+    PemBytesTestUtils.testFileDoesntExist("PKCS8EncodedKeySpec", readKeySpecFromFile)
   }
 
   test("File path isn't a file") {
-    PemFileTestUtils.testFilePathIsntFile("PKCS8EncodedKeySpec", readKeySpecFromFile)
+    PemBytesTestUtils.testFilePathIsntFile("PKCS8EncodedKeySpec", readKeySpecFromFile)
   }
 
   test("File path isn't readable") {
-    PemFileTestUtils.testFilePathIsntReadable("PKCS8EncodedKeySpec", readKeySpecFromFile)
+    PemBytesTestUtils.testFilePathIsntReadable("PKCS8EncodedKeySpec", readKeySpecFromFile)
   }
 
   test("File isn't a key spec") {
-    PemFileTestUtils.testEmptyFile[InvalidPemFormatException, PKCS8EncodedKeySpec](
+    PemBytesTestUtils.testEmptyFile[InvalidPemFormatException, PKCS8EncodedKeySpec](
       "PKCS8EncodedKeySpec",
       readKeySpecFromFile
     )

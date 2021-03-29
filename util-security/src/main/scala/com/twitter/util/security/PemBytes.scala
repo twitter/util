@@ -1,8 +1,10 @@
 package com.twitter.util.security
 
 import com.twitter.util.Try
-import com.twitter.util.security.PemFile._
-import java.io.{BufferedReader, File, FileReader, IOException}
+import com.twitter.util.security.PemBytes._
+import java.io.{BufferedReader, File, IOException, StringReader}
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.util.Base64
 import scala.collection.mutable.ArrayBuffer
 
@@ -10,8 +12,8 @@ import scala.collection.mutable.ArrayBuffer
  * Signals that the PEM file failed to parse properly due to a
  * missing boundary header or footer.
  */
-class InvalidPemFormatException(file: File, message: String)
-    extends IOException(s"PemFile (${file.getName}) failed to load: $message")
+class InvalidPemFormatException(name: String, message: String)
+    extends IOException(s"PemBytes ($name) failed to load: $message")
 
 /**
  * An abstract representation of a PEM formatted file.
@@ -25,10 +27,9 @@ class InvalidPemFormatException(file: File, message: String)
  * base64encodedbytes
  * -----END CERTIFICATE-----
  */
-class PemFile(file: File) {
-
-  private[this] def openReader(file: File): BufferedReader =
-    new BufferedReader(new FileReader(file))
+class PemBytes(message: String, name: String) {
+  private[this] def openReader(): BufferedReader =
+    new BufferedReader(new StringReader(message))
 
   private[this] def closeReader(bufReader: BufferedReader): Unit =
     Try(bufReader.close())
@@ -48,7 +49,7 @@ class PemFile(file: File) {
   private[this] def readEncodedMessage(bufReader: BufferedReader, messageType: String): String = {
     val contents = readEncodedMessages(bufReader, messageType)
     if (contents.isEmpty)
-      throw new InvalidPemFormatException(file, "Empty input")
+      throw new InvalidPemFormatException(name, "Empty input")
     else contents.head
   }
 
@@ -66,7 +67,7 @@ class PemFile(file: File) {
     var line: String = bufReader.readLine()
 
     if (line == null)
-      throw new InvalidPemFormatException(file, "Empty input")
+      throw new InvalidPemFormatException(name, "Empty input")
 
     while (line != null) {
       if (state == PemState.Begin || state == PemState.End) {
@@ -79,7 +80,7 @@ class PemFile(file: File) {
       } else { // PemState.Content
         if (line == header) {
           // A new matching header, but the previous one had no footer
-          throw new InvalidPemFormatException(file, "Missing " + footer)
+          throw new InvalidPemFormatException(name, "Missing " + footer)
         }
         if (line == footer) {
           // A good message, handle it and move to the end state
@@ -95,10 +96,10 @@ class PemFile(file: File) {
     }
     if (state == PemState.Begin) {
       // We didn't see any matching header
-      throw new InvalidPemFormatException(file, "Missing " + header)
+      throw new InvalidPemFormatException(name, "Missing " + header)
     } else if (state == PemState.Content) {
       // We didn't see a corresponding footer for the current message
-      throw new InvalidPemFormatException(file, "Missing " + footer)
+      throw new InvalidPemFormatException(name, "Missing " + footer)
     }
 
     contents.toSeq
@@ -115,7 +116,7 @@ class PemFile(file: File) {
    * only the first one will be returned.
    */
   def readMessage(messageType: String): Try[Array[Byte]] =
-    Try(openReader(file))
+    Try(openReader())
       .flatMap(reader => Try(readDecodedMessage(reader, messageType)).ensure(closeReader(reader)))
 
   /**
@@ -128,12 +129,12 @@ class PemFile(file: File) {
    * are ignored.
    */
   def readMessages(messageType: String): Try[Seq[Array[Byte]]] =
-    Try(openReader(file))
+    Try(openReader())
       .flatMap(reader => Try(readDecodedMessages(reader, messageType)).ensure(closeReader(reader)))
 
 }
 
-private object PemFile {
+object PemBytes {
 
   private trait PemState
   private object PemState {
@@ -167,4 +168,11 @@ private object PemFile {
     decoder.decode(encoded)
   }
 
+  /**
+   * Reads the given file and constructs a `PemBytes` with the contents.
+   */
+  def fromFile(file: File): Try[PemBytes] = Try {
+    val buffered = new String(Files.readAllBytes(file.toPath), StandardCharsets.UTF_8)
+    new PemBytes(buffered, file.getName)
+  }
 }

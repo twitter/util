@@ -5,28 +5,30 @@ import com.twitter.util.Try
 import java.io.File
 import org.scalatest.funsuite.AnyFunSuite
 
-class PemFileTest extends AnyFunSuite {
+class PemBytesTest extends AnyFunSuite {
 
-  private[this] def readPemFileMessage(messageType: String)(tempFile: File): Try[String] = {
-    val pemFile = new PemFile(tempFile)
-    pemFile.readMessage(messageType).map(new String(_))
-  }
+  private[this] def readPemBytesMessage(messageType: String)(tempFile: File): Try[String] =
+    for {
+      pemBytes <- PemBytes.fromFile(tempFile)
+      item <- pemBytes.readMessage(messageType)
+    } yield new String(item)
 
-  private[this] def readPemFileMessages(messageType: String)(tempFile: File): Try[Seq[String]] = {
-    val pemFile = new PemFile(tempFile)
-    pemFile.readMessages(messageType).map(items => items.map(new String(_)))
-  }
+  private[this] def readPemBytesMessages(messageType: String)(tempFile: File): Try[Seq[String]] =
+    for {
+      pemBytes <- PemBytes.fromFile(tempFile)
+      items <- pemBytes.readMessages(messageType)
+    } yield items.map(new String(_))
 
-  private[this] val readHello = readPemFileMessage("hello") _
-  private[this] val readHellos = readPemFileMessages("hello") _
+  private[this] val readHello = readPemBytesMessage("hello") _
+  private[this] val readHellos = readPemBytesMessages("hello") _
 
   test("no header file") {
     val tempFile = TempFile.fromResourcePath("/pem/test-no-head.txt")
     // deleteOnExit is handled by TempFile
 
     val tryHello = readHello(tempFile)
-    PemFileTestUtils.assertException[InvalidPemFormatException, String](tryHello)
-    PemFileTestUtils.assertExceptionMessageContains("Missing -----BEGIN HELLO-----")(tryHello)
+    PemBytesTestUtils.assertException[InvalidPemFormatException, String](tryHello)
+    PemBytesTestUtils.assertExceptionMessageContains("Missing -----BEGIN HELLO-----")(tryHello)
   }
 
   test("no footer file") {
@@ -34,17 +36,17 @@ class PemFileTest extends AnyFunSuite {
     // deleteOnExit is handled by TempFile
 
     val tryHello = readHello(tempFile)
-    PemFileTestUtils.assertException[InvalidPemFormatException, String](tryHello)
-    PemFileTestUtils.assertExceptionMessageContains("Missing -----END HELLO-----")(tryHello)
+    PemBytesTestUtils.assertException[InvalidPemFormatException, String](tryHello)
+    PemBytesTestUtils.assertExceptionMessageContains("Missing -----END HELLO-----")(tryHello)
   }
 
   test("wrong message type") {
     val tempFile = TempFile.fromResourcePath("/pem/test.txt")
     // deleteOnExit is handled by TempFile
 
-    val tryHello = readPemFileMessage("GOODBYE")(tempFile)
-    PemFileTestUtils.assertException[InvalidPemFormatException, String](tryHello)
-    PemFileTestUtils.assertExceptionMessageContains("Missing -----BEGIN GOODBYE-----")(tryHello)
+    val tryHello = readPemBytesMessage("GOODBYE")(tempFile)
+    PemBytesTestUtils.assertException[InvalidPemFormatException, String](tryHello)
+    PemBytesTestUtils.assertExceptionMessageContains("Missing -----BEGIN GOODBYE-----")(tryHello)
   }
 
   test("good file") {

@@ -26,6 +26,12 @@ Breaking API Changes
 * util-reflect: Remove deprecated `c.t.util.reflect.Proxy`. There is no library replacement.
   ``PHAB_ID=D630143``
 
+* util-security: Renamed `com.twitter.util.security.PemFile` to `c.t.u.security.PemBytes`, and
+  changed its constructor to accept a string and a name.  The main change here is that we assume
+  the PEM-encoded text has been fully buffered.  To migrate, please use the helper method on the
+  companion object, `PemBytes#fromFile`.  Note that unlike before with construction, we read from
+  the file, so it's possible for it to throw.  ``PHAB_ID=D641088``
+
 New Features
 ~~~~~~~~~~~~
 
@@ -44,6 +50,12 @@ New Features
 * util-core: `c.t.io.ProxyByteReader` and `c.t.io.ProxyByteWriter` are now public. They are
   useful for wrapping an existing `ByteReader` or `ByteWriter` and extending its functionality
   without modifying the underlying instance. ``PHAB_ID=D622705``
+
+* util-core: Provided `c.t.u.security.X509CertificateDeserializer` to make it possible to directly
+  deserialize an `X509Certificate` even if you don't have a file on disk. Also provided
+  `c.t.u.security.X509TrustManagerFactory#buildTrustManager` to make it possible to directly
+  construct an `X509TrustManager` with an `X509Certificate` instead of passing in a `File`.
+  ``PHAB_ID=D641088``
 
 21.2.0
 ------

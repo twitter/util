@@ -20,13 +20,13 @@ class X509CrlFile(file: File) {
   private[this] def logException(ex: Throwable): Unit =
     log.warning(s"X509Crl (${file.getName}) failed to load: ${ex.getMessage}.")
 
-  def readX509Crl(): Try[X509CRL] = {
-    val pemFile = new PemFile(file)
-    pemFile
-      .readMessage(MessageType)
-      .map(generateX509Crl)
-      .onFailure(logException)
-  }
+  def readX509Crl(): Try[X509CRL] =
+    PemBytes.fromFile(file).flatMap { pemBytes =>
+      pemBytes
+        .readMessage(MessageType)
+        .map(generateX509Crl)
+        .onFailure(logException)
+    }
 
 }
 

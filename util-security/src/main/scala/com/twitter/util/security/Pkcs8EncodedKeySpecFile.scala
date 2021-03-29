@@ -23,13 +23,13 @@ class Pkcs8EncodedKeySpecFile(file: File) {
   /**
    * Attempts to read the contents of the private key from the file.
    */
-  def readPkcs8EncodedKeySpec(): Try[PKCS8EncodedKeySpec] = {
-    val pemFile = new PemFile(file)
-    pemFile
-      .readMessage(MessageType)
-      .map(new PKCS8EncodedKeySpec(_))
-      .onFailure(logException)
-  }
+  def readPkcs8EncodedKeySpec(): Try[PKCS8EncodedKeySpec] =
+    PemBytes.fromFile(file).flatMap { pemBytes =>
+      pemBytes
+        .readMessage(MessageType)
+        .map(new PKCS8EncodedKeySpec(_))
+        .onFailure(logException)
+    }
 }
 
 private object Pkcs8EncodedKeySpecFile {

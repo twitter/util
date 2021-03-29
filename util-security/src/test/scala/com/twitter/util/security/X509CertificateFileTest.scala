@@ -14,7 +14,7 @@ class X509CertificateFileTest extends AnyFunSuite {
   }
 
   private[this] def assertCertException(tryCert: Try[X509Certificate]): Unit =
-    PemFileTestUtils.assertException[CertificateException, X509Certificate](tryCert)
+    PemBytesTestUtils.assertException[CertificateException, X509Certificate](tryCert)
 
   private[this] val readCertFromFile: File => Try[X509Certificate] =
     (tempFile) => {
@@ -23,19 +23,19 @@ class X509CertificateFileTest extends AnyFunSuite {
     }
 
   test("File path doesn't exist") {
-    PemFileTestUtils.testFileDoesntExist("X509Certificate", readCertFromFile)
+    PemBytesTestUtils.testFileDoesntExist("X509Certificate", readCertFromFile)
   }
 
   test("File path isn't a file") {
-    PemFileTestUtils.testFilePathIsntFile("X509Certificate", readCertFromFile)
+    PemBytesTestUtils.testFilePathIsntFile("X509Certificate", readCertFromFile)
   }
 
   test("File path isn't readable") {
-    PemFileTestUtils.testFilePathIsntReadable("X509Certificate", readCertFromFile)
+    PemBytesTestUtils.testFilePathIsntReadable("X509Certificate", readCertFromFile)
   }
 
   test("File isn't a certificate") {
-    PemFileTestUtils.testEmptyFile[InvalidPemFormatException, X509Certificate](
+    PemBytesTestUtils.testEmptyFile[InvalidPemFormatException, X509Certificate](
       "X509Certificate",
       readCertFromFile
     )
@@ -83,23 +83,4 @@ class X509CertificateFileTest extends AnyFunSuite {
     val root = certs(1)
     assertIsCslCert(root)
   }
-
-  test("X509 Certificate File is not valid: expired") {
-    val tempFile = TempFile.fromResourcePath("/certs/test-rsa-expired.crt")
-    // deleteOnExit is handled by TempFile
-
-    intercept[java.security.cert.CertificateExpiredException] {
-      readCertFromFile(tempFile).get()
-    }
-  }
-
-  test("X509 Certificate File is not valid: not yet ready") {
-    val tempFile = TempFile.fromResourcePath("/certs/test-rsa-future.crt")
-    // deleteOnExit is handled by TempFile
-
-    intercept[java.security.cert.CertificateNotYetValidException] {
-      readCertFromFile(tempFile).get()
-    }
-  }
-
 }
