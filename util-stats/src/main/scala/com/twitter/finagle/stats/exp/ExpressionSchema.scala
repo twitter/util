@@ -2,13 +2,25 @@ package com.twitter.finagle.stats.exp
 
 import com.twitter.finagle.stats.{MetricUnit, SourceRole, StatsReceiver, Unspecified}
 
+/**
+ * ExpressionSchema is builder class that construct an expression with its metadata.
+ *
+ * @param name  this is going to be an important query key when fetching expressions
+ * @param labels  service related information, see [[ExpressionLabels]]
+ * @param expr  class representation of the expression, see [[Expression]]
+ * @param bounds  thresholds for this expression
+ * @param description human-readable description of an expression's significance
+ * @param unit the unit associated with the metrics value (milliseconds, megabytes, requests, etc)
+ * @param exprQuery string representation of the expression
+ */
 case class ExpressionSchema private (
   name: String,
   labels: ExpressionLabels,
   expr: Expression,
   bounds: Bounds,
   description: String,
-  unit: MetricUnit) {
+  unit: MetricUnit,
+  exprQuery: String) {
   def withBounds(bounds: Bounds): ExpressionSchema = copy(bounds = bounds)
 
   def withDescription(description: String): ExpressionSchema = copy(description = description)
@@ -39,5 +51,6 @@ private[twitter] object ExpressionSchema {
       expr = expr,
       bounds = Unbounded.get,
       description = "Unspecified",
-      unit = Unspecified)
+      unit = Unspecified,
+      exprQuery = "")
 }
