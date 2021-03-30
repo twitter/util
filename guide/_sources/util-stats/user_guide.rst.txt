@@ -137,7 +137,6 @@ function **must also** be thread-safe.
 
 Leveraging Verbosity Levels
 ---------------------------
-
 Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
 its operational value and its cost within observability. Verbosity levels for StatsReceivers are
 aiming to reduce the observability cost of Finagle-based services by allowing for a granular control
@@ -151,6 +150,19 @@ Limiting the number of exported metrics via verbosity levels can reduce applicat
 cost. However taking this to extremes may drastically affect operability of your service. We
 recommend using your judgment to make sure denylisting a given metric will not reduce a process'
 visibility.
+
+Custom Histogram Percentiles
+----------------------------
+If you need a custom histogram percentile, you can use the `MetricBuilder` interface, and populate
+it via `MetricBuilder#withPercentiles`.
+
+.. code-block:: scala
+
+    import com.twitter.finagle.stats.{DefaultStatsReceiver, StatsReceiver, MetricBuilder}
+
+    val sr: StatsReceiver = DefaultStatsReceiver
+    val mb: MetricBuilder = sr.metricBuilder().withPercentiles(Seq(0.99, 0.999, 0.9999, 0.90, 0.6))
+    val stat = mb.histogram("my", "cool", "histo")
 
 Access needed to a StatsReceiver in an inconvenient place
 ---------------------------------------------------------

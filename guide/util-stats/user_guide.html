@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>User Guide &#8212; Util 21.2.0 documentation</title>
+    <title>User Guide &#8212; Util 21.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -190,6 +190,18 @@ cost. However taking this to extremes may drastically affect operability of your
 recommend using your judgment to make sure denylisting a given metric will not reduce a process’
 visibility.</p>
 </div>
+<div class="section" id="custom-histogram-percentiles">
+<h2>Custom Histogram Percentiles<a class="headerlink" href="#custom-histogram-percentiles" title="Permalink to this headline">¶</a></h2>
+<p>If you need a custom histogram percentile, you can use the <cite>MetricBuilder</cite> interface, and populate
+it via <cite>MetricBuilder#withPercentiles</cite>.</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.finagle.stats.</span><span class="o">{</span><span class="nc">DefaultStatsReceiver</span><span class="o">,</span> <span class="nc">StatsReceiver</span><span class="o">,</span> <span class="nc">MetricBuilder</span><span class="o">}</span>
+
+<span class="k">val</span> <span class="n">sr</span><span class="k">:</span> <span class="kt">StatsReceiver</span> <span class="o">=</span> <span class="nc">DefaultStatsReceiver</span>
+<span class="k">val</span> <span class="n">mb</span><span class="k">:</span> <span class="kt">MetricBuilder</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">metricBuilder</span><span class="o">().</span><span class="n">withPercentiles</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="mf">0.99</span><span class="o">,</span> <span class="mf">0.999</span><span class="o">,</span> <span class="mf">0.9999</span><span class="o">,</span> <span class="mf">0.90</span><span class="o">,</span> <span class="mf">0.6</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">stat</span> <span class="k">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">histogram</span><span class="o">(</span><span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;cool&quot;</span><span class="o">,</span> <span class="s">&quot;histo&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
 <h2>Access needed to a StatsReceiver in an inconvenient place<a class="headerlink" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place" title="Permalink to this headline">¶</a></h2>
 <p>Ideally classes would be passed a properly scoped <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code> in their constructor but this
@@ -246,6 +258,7 @@ using.</p>
 <li><a class="reference internal" href="#usage-from-java">Usage from Java</a></li>
 <li><a class="reference internal" href="#thread-safety">Thread-safety</a></li>
 <li><a class="reference internal" href="#leveraging-verbosity-levels">Leveraging Verbosity Levels</a></li>
+<li><a class="reference internal" href="#custom-histogram-percentiles">Custom Histogram Percentiles</a></li>
 <li><a class="reference internal" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place">Access needed to a StatsReceiver in an inconvenient place</a></li>
 <li><a class="reference internal" href="#useful-statsreceivers">Useful StatsReceivers</a></li>
 <li><a class="reference internal" href="#viewing-per-node-metrics">Viewing per-node metrics</a></li>

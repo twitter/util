@@ -310,6 +310,14 @@
                         <a class="class" href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer."></a>
                         <a href="Pipe.html" title="A synchronous in-memory pipe that connects Reader and Writer in the sense that a reader's input is the output of a writer.">Pipe</a>
                       </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ProxyByteReader.html" title="A proxy ByteReader that forwards all calls to another ByteReader."></a>
+                        <a href="ProxyByteReader.html" title="A proxy ByteReader that forwards all calls to another ByteReader.">ProxyByteReader</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="class" href="ProxyByteWriter.html" title="A proxy ByteWriter that forwards all calls to another ByteWriter."></a>
+                        <a href="ProxyByteWriter.html" title="A proxy ByteWriter that forwards all calls to another ByteWriter.">ProxyByteWriter</a>
+                      </li><li class="current-entities indented3">
                         <a class="object" href="Reader$.html" title=""></a>
                         <a class="trait" href="Reader.html" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements."></a>
                         <a href="Reader.html" title="A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.">Reader</a>
@@ -771,6 +779,42 @@ by a consumer (reader).</p><p>The following rules should help reasoning about cl
 - Closing an idle pipe returns a future that will be satisfied when a consumer observes the
   closure (EOF) via read when a timer is provided, otherwise the pipe will be closed immedidately.
 </p></div></div>
+    </li><li name="com.twitter.io.ProxyByteReader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ProxyByteReaderextendsByteReader"></a><a id="ProxyByteReader:ProxyByteReader"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ProxyByteReader.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A proxy ByteReader that forwards all calls to another ByteReader." href="ProxyByteReader.html"><span class="name">ProxyByteReader</span></a><span class="result"> extends <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A proxy <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> that forwards all calls to another <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A proxy <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a> that forwards all calls to another <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a>.
+This is useful if you want to wrap-but-modify an existing <a href="ByteReader.html" class="extype" name="com.twitter.io.ByteReader">ByteReader</a>.
+</p></div></div>
+    </li><li name="com.twitter.io.ProxyByteWriter" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ProxyByteWriterextendsAbstractByteWriter"></a><a id="ProxyByteWriter:ProxyByteWriter"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/ProxyByteWriter.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="A proxy ByteWriter that forwards all calls to another ByteWriter." href="ProxyByteWriter.html"><span class="name">ProxyByteWriter</span></a><span class="result"> extends <a href="AbstractByteWriter.html" class="extype" name="com.twitter.io.AbstractByteWriter">AbstractByteWriter</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A proxy <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> that forwards all calls to another <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A proxy <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a> that forwards all calls to another <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.
+This is useful if you want to wrap-but-modify an existing <a href="ByteWriter.html" class="extype" name="com.twitter.io.ByteWriter">ByteWriter</a>.
+</p></div></div>
     </li><li name="com.twitter.io.Reader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Reader[+A]extendsAnyRef"></a><a id="Reader[+A]:Reader[A]"></a>
       <span class="permalink">
@@ -913,12 +957,15 @@ to adjust the flow rate based on consumer's speed and not on IO buffering.</p></
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Better Java APIs of BufReader for Scala 2.11." href="BufReaders.html"><span class="name deprecated" title="Deprecated: This will no longer be necessary when 2.11 support is dropped. 2019-10-04">BufReaders</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Better Java APIs of BufReader for Scala 2.11." href="BufReaders.html"><span class="name deprecated" title="Deprecated: ">BufReaders</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Better Java APIs of BufReader for Scala 2.11.</p><div class="fullcomment"><div class="comment cmt"><p>Better Java APIs of BufReader for Scala 2.11.
 This will be removed when drop Scala 2.11 support.
-</p></div><dl class="attributes block"> <dt>Deprecated</dt><dd class="cmt"><p>This will no longer be necessary when 2.11 support is dropped. 2019-10-04</p></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.BufReader</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.BufReader</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Bufs" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BufsextendsObject"></a><a id="Bufs:Bufs"></a>
       <span class="permalink">
@@ -931,11 +978,14 @@ This will be removed when drop Scala 2.11 support.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name deprecated" title="Deprecated: This will no longer be necessary when 2.11 support is dropped. 2019-10-04">Bufs</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A Java adaptation of the com.twitter.io.Buf companion object." href="Bufs.html"><span class="name deprecated" title="Deprecated: ">Bufs</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.</p><div class="fullcomment"><div class="comment cmt"><p>A Java adaptation of the <code><a href="Buf.html" class="extype" name="com.twitter.io.Buf">com.twitter.io.Buf</a></code> companion object.
-</p></div><dl class="attributes block"> <dt>Deprecated</dt><dd class="cmt"><p>This will no longer be necessary when 2.11 support is dropped. 2019-10-04</p></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd></dl></div>
     </li><li name="com.twitter.io.Readers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ReadersextendsObject"></a><a id="Readers:Readers"></a>
       <span class="permalink">
@@ -948,12 +998,15 @@ This will be removed when drop Scala 2.11 support.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Better Java APIs of Reader for Scala 2.11." href="Readers.html"><span class="name deprecated" title="Deprecated: This will no longer be necessary when 2.11 support is dropped. 2019-10-04">Readers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Better Java APIs of Reader for Scala 2.11." href="Readers.html"><span class="name deprecated" title="Deprecated: ">Readers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Better Java APIs of Reader for Scala 2.11.</p><div class="fullcomment"><div class="comment cmt"><p>Better Java APIs of Reader for Scala 2.11.
 This will be removed when drop Scala 2.11 support.
-</p></div><dl class="attributes block"> <dt>Deprecated</dt><dd class="cmt"><p>This will no longer be necessary when 2.11 support is dropped. 2019-10-04</p></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Writers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="WritersextendsObject"></a><a id="Writers:Writers"></a>
       <span class="permalink">
@@ -966,11 +1019,14 @@ This will be removed when drop Scala 2.11 support.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="Java APIs for Writer." href="Writers.html"><span class="name deprecated" title="Deprecated: This will no longer be necessary when 2.11 support is dropped. 2019-10-04">Writers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="Java APIs for Writer." href="Writers.html"><span class="name deprecated" title="Deprecated: ">Writers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
       </span>
       
       <p class="shortcomment cmt">Java APIs for Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Writer.
-</p></div><dl class="attributes block"> <dt>Deprecated</dt><dd class="cmt"><p>This will no longer be necessary when 2.11 support is dropped. 2019-10-04</p></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Writer</p></span></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Writer</p></span></dd></dl></div>
     </li></ol>
             </div>
 
