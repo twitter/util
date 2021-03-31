@@ -51,6 +51,7 @@ object metadataScopeSeparator {
  * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
  * @param processPath a universal coordinate for the resource
  * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
+ * @param counterLikeGauge used to indicate that a gauge is being used to model something that acts like a counter
  * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
  */
 class MetricBuilder(
@@ -65,6 +66,7 @@ class MetricBuilder(
   val processPath: Option[String] = None,
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double] = IndexedSeq.empty,
+  val isCounterishGauge: Boolean = false,
   val statsReceiver: StatsReceiver) {
 
   /**
@@ -82,6 +84,7 @@ class MetricBuilder(
     name: Seq[String] = this.name,
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
+    isCounterishGauge: Boolean = this.isCounterishGauge,
     percentiles: IndexedSeq[Double] = this.percentiles
   ): MetricBuilder = {
     new MetricBuilder(
@@ -95,6 +98,7 @@ class MetricBuilder(
       relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
+      isCounterishGauge = isCounterishGauge,
       statsReceiver = this.statsReceiver
     )
   }
@@ -126,6 +130,10 @@ class MetricBuilder(
   @varargs
   def withPercentiles(percentiles: Double*): MetricBuilder =
     this.copy(percentiles = percentiles.toIndexedSeq)
+
+  def withCounterishGauge: MetricBuilder = this.copy(isCounterishGauge = true)
+
+  def withNoCounterishGauge: MetricBuilder = this.copy(isCounterishGauge = false)
 
   /**
    * Generates a CounterSchema which can be used to create a counter in a StatsReceiver.

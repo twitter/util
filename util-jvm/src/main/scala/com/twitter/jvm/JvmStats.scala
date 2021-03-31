@@ -125,8 +125,12 @@ object JvmStats {
     val gcStats = stats.scope("gc")
     gcPool.foreach { gc =>
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
-      gauges.add(gcStats.addGauge(name, "cycles") { gc.getCollectionCount })
-      gauges.add(gcStats.addGauge(name, "msec") { gc.getCollectionTime })
+      gauges.add(gcStats.metricBuilder().withCounterishGauge.gauge(name, "cycles") {
+        gc.getCollectionCount
+      })
+      gauges.add(gcStats.metricBuilder().withCounterishGauge.gauge(name, "msec") {
+        gc.getCollectionTime
+      })
     }
 
     // note, these could be -1 if the collector doesn't have support for it.
