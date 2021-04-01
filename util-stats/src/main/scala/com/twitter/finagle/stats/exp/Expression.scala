@@ -21,15 +21,13 @@ private[twitter] object Expression {
       }
     case MetricExpression(schema) => Set(schema.metricBuilder.statsReceiver)
     case HistogramExpression(schema, _) => Set(schema.metricBuilder.statsReceiver)
-    case ConstantExpression(_, statsReceiver) => Set(statsReceiver)
+    case ConstantExpression(_) => Set.empty
   }
 
   /**
    * Create a expression with a constant number in double
-   * @param statsReceiver the statsReceiver to register this expression
    */
-  def apply(num: Double, statsReceiver: StatsReceiver): Expression =
-    ConstantExpression(num.toString, statsReceiver)
+  def apply(num: Double): Expression = ConstantExpression(num.toString)
 
   /**
    * Create a histogram expression
@@ -69,8 +67,7 @@ private[twitter] sealed trait Expression {
 /**
  * Represents a constant double number
  */
-case class ConstantExpression private (repr: String, statsReceiver: StatsReceiver)
-    extends Expression
+case class ConstantExpression private (repr: String) extends Expression
 
 /**
  * Represents compound metrics and their arithmetical(or others) calculations

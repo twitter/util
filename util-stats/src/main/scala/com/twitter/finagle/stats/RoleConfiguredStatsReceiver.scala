@@ -28,6 +28,10 @@ case class RoleConfiguredStatsReceiver(
   }
 
   override def registerExpression(expressionSchema: ExpressionSchema): Unit = {
-    self.registerExpression(expressionSchema.withRole(role = role).withServiceName(name))
+    val configuredExprSchema = name match {
+      case Some(serviceName) => expressionSchema.withRole(role).withServiceName(serviceName)
+      case None => expressionSchema.withRole(role)
+    }
+    self.registerExpression(configuredExprSchema)
   }
 }
