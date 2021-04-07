@@ -124,7 +124,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     val stats = new InMemoryStatsReceiver()
     ExpressionSchema(
       "a",
-      Expression(CounterSchema(new MetricBuilder(name = Seq("counter"), statsReceiver = stats))))
+      Expression(CounterSchema(MetricBuilder(name = Seq("counter"), statsReceiver = stats))))
     stats.expressions.contains("a")
   }
 
@@ -363,5 +363,34 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     } finally {
       ps.close()
     }
+  }
+
+  test("expression are reloaded with fully scoped names") {
+    val sr = new InMemoryStatsReceiver
+
+    val aSchema = CounterSchema(MetricBuilder(name = Seq("a"), statsReceiver = sr).withKernel)
+    val bSchema = HistogramSchema(MetricBuilder(name = Seq("b"), statsReceiver = sr).withKernel)
+    val cSchema = GaugeSchema(MetricBuilder(name = Seq("c"), statsReceiver = sr).withKernel)
+
+    val expression = ExpressionSchema(
+      "test_expression",
+      Expression(aSchema).plus(Expression(bSchema, Left(Expression.Min)).plus(Expression(cSchema))))
+      .register()
+
+    val aCounter = sr.scope("test").counter(aSchema)
+    val bHisto = sr.scope("test").stat(bSchema)
+    val cGauge = sr.scope(("test")).addGauge(cSchema) { 1 }
+
+    // what we expected as hydrated metric builders
+    val aaSchema = CounterSchema(MetricBuilder(name = Seq("test", "a"), statsReceiver = sr))
+    val bbSchema = HistogramSchema(MetricBuilder(name = Seq("test", "b"), statsReceiver = sr))
+    val ccSchema = GaugeSchema(MetricBuilder(name = Seq("test", "c"), statsReceiver = sr))
+
+    val expected_expression = ExpressionSchema(
+      "test_expression",
+      Expression(aaSchema).plus(
+        Expression(bbSchema, Left(Expression.Min)).plus(Expression(ccSchema))))
+
+    assert(sr.expressions.get("test_expression").get.expr == expected_expression.expr)
   }
 }

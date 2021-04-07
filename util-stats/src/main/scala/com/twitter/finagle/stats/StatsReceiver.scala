@@ -108,7 +108,7 @@ trait StatsReceiver {
   /**
    * Get a [[MetricBuilder metricBuilder]] for this StatsReceiver.
    */
-  def metricBuilder(): MetricBuilder = new MetricBuilder(statsReceiver = this)
+  def metricBuilder(): MetricBuilder = MetricBuilder(statsReceiver = this)
 
   /**
    * Get a [[Counter counter]] with the given `name`.

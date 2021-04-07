@@ -1,7 +1,15 @@
 package com.twitter.finagle.stats.exp
 
 import com.twitter.finagle.stats.exp.Expression.HistogramComponent
-import com.twitter.finagle.stats.{HistogramSchema, MetricSchema, StatsReceiver}
+import com.twitter.finagle.stats.{
+  CounterSchema,
+  GaugeSchema,
+  HistogramSchema,
+  MetricBuilder,
+  MetricSchema,
+  StatsReceiver
+}
+import java.util.concurrent.ConcurrentHashMap
 import scala.annotation.varargs
 
 private[twitter] object Expression {
@@ -43,6 +51,35 @@ private[twitter] object Expression {
   def apply(schema: MetricSchema): Expression = {
     require(!schema.isInstanceOf[HistogramSchema], "provide a component for histogram")
     MetricExpression(schema)
+  }
+
+  // utility methods shared by Metrics.scala and InMemoryStatsReceiver
+  private[stats] def replaceExpression(
+    expression: Expression,
+    metricBuilders: ConcurrentHashMap[Int, MetricBuilder]
+  ): Expression = {
+    expression match {
+      case f @ FunctionExpression(_, exprs) =>
+        f.copy(exprs = exprs.map(replaceExpression(_, metricBuilders)))
+      case m @ MetricExpression(schema) if schema.metricBuilder.kernel.isDefined =>
+        val builder = metricBuilders.get(schema.metricBuilder.kernel.get)
+        if (builder != null) m.copy(schema = reformSchema(schema, builder))
+        else m
+      case h @ HistogramExpression(schema, _) if schema.metricBuilder.kernel.isDefined =>
+        val builder = metricBuilders.get(schema.metricBuilder.kernel.get)
+        if (builder != null)
+          h.copy(schema = reformSchema(schema, builder).asInstanceOf[HistogramSchema])
+        else h
+      case otherExpression => otherExpression
+    }
+  }
+
+  private[this] def reformSchema(schema: MetricSchema, builder: MetricBuilder): MetricSchema = {
+    schema match {
+      case CounterSchema(_) => CounterSchema(builder)
+      case HistogramSchema(_) => HistogramSchema(builder)
+      case GaugeSchema(_) => GaugeSchema(builder)
+    }
   }
 }
 

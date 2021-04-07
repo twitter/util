@@ -36,37 +36,76 @@ object metadataScopeSeparator {
   }
 }
 
+object MetricBuilder {
+
+  /**
+   * Construct a MethodBuilder.
+   *
+   * @param keyIndicator indicates whether this metric is crucial to this service (ie, an SLO metric)
+   * @param description human-readable description of a metric's significance
+   * @param units the unit associated with the metrics value (milliseconds, megabytes, requests, etc)
+   * @param role whether the service is playing the part of client or server regarding this metric
+   * @param verbosity see StatsReceiver for details
+   * @param sourceClass the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)
+   * @param name the full metric name
+   * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
+   * @param processPath a universal coordinate for the resource
+   * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
+   * @param isCounterishGauge used to indicate that a gauge is being used to model something that acts like a counter
+   * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
+   */
+  def apply(
+    keyIndicator: Boolean = false,
+    description: String = "No description provided",
+    units: MetricUnit = Unspecified,
+    role: SourceRole = NoRoleSpecified,
+    verbosity: Verbosity = Verbosity.Default,
+    sourceClass: Option[String] = None,
+    name: Seq[String] = Seq.empty,
+    relativeName: Seq[String] = Seq.empty,
+    processPath: Option[String] = None,
+    percentiles: IndexedSeq[Double] = IndexedSeq.empty,
+    isCounterishGauge: Boolean = false,
+    statsReceiver: StatsReceiver
+  ): MetricBuilder = {
+    new MetricBuilder(
+      keyIndicator,
+      description,
+      units,
+      role,
+      verbosity,
+      sourceClass,
+      name,
+      relativeName,
+      processPath,
+      percentiles,
+      isCounterishGauge,
+      kernel = None,
+      statsReceiver
+    )
+  }
+}
+
 /**
  * A builder class used to configure settings and metadata for metrics prior to instantiating them.
  * Calling any of the three build methods (counter, gauge, or histogram) will cause the metric to be
  * instantiated in the underlying StatsReceiver.
- *
- * @param keyIndicator indicates whether this metric is crucial to this service (ie, an SLO metric)
- * @param description human-readable description of a metric's significance
- * @param units the unit associated with the metrics value (milliseconds, megabytes, requests, etc)
- * @param role whether the service is playing the part of client or server regarding this metric
- * @param verbosity see StatsReceiver for details
- * @param sourceClass the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)
- * @param name the full metric name
- * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
- * @param processPath a universal coordinate for the resource
- * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
- * @param counterLikeGauge used to indicate that a gauge is being used to model something that acts like a counter
- * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
  */
-class MetricBuilder(
-  val keyIndicator: Boolean = false,
-  val description: String = "No description provided",
-  val units: MetricUnit = Unspecified,
-  val role: SourceRole = NoRoleSpecified,
-  val verbosity: Verbosity = Verbosity.Default,
-  val sourceClass: Option[String] = None,
-  val name: Seq[String] = Seq.empty,
-  val relativeName: Seq[String] = Seq.empty,
-  val processPath: Option[String] = None,
+class MetricBuilder private (
+  val keyIndicator: Boolean,
+  val description: String,
+  val units: MetricUnit,
+  val role: SourceRole,
+  val verbosity: Verbosity,
+  val sourceClass: Option[String],
+  val name: Seq[String],
+  val relativeName: Seq[String],
+  val processPath: Option[String],
   // Only persisted and relevant when building histograms.
-  val percentiles: IndexedSeq[Double] = IndexedSeq.empty,
-  val isCounterishGauge: Boolean = false,
+  val percentiles: IndexedSeq[Double],
+  val isCounterishGauge: Boolean,
+  // see withKernel
+  val kernel: Option[Int],
   val statsReceiver: StatsReceiver) {
 
   /**
@@ -85,7 +124,8 @@ class MetricBuilder(
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
     isCounterishGauge: Boolean = this.isCounterishGauge,
-    percentiles: IndexedSeq[Double] = this.percentiles
+    percentiles: IndexedSeq[Double] = this.percentiles,
+    kernel: Option[Int] = this.kernel
   ): MetricBuilder = {
     new MetricBuilder(
       keyIndicator = keyIndicator,
@@ -99,8 +139,18 @@ class MetricBuilder(
       processPath = processPath,
       percentiles = percentiles,
       isCounterishGauge = isCounterishGauge,
-      statsReceiver = this.statsReceiver
+      statsReceiver = this.statsReceiver,
+      kernel = kernel
     )
+  }
+
+  // This is a work-around for memoizing this MetricBuilder, it is the object reference
+  // hashCode of `this` MetricBuilder, only explicitly configured for metrics used for expressions.
+  // Metric use it as the hash key to find the fully hydrated MetricBuilder.
+  // Copying the MetricBuilder to configure other metadata must keep the kernel untouched.
+  private[finagle] def withKernel: MetricBuilder = {
+    require(this.kernel.isEmpty, "This MetricBuilder is already hashed")
+    this.copy(kernel = Some(System.identityHashCode(this)))
   }
 
   def withKeyIndicator(isKeyIndicator: Boolean = true): MetricBuilder =

@@ -12,11 +12,11 @@ class ExpressionSchemaTest extends FunSuite {
   val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
 
   val successMb =
-    CounterSchema(new MetricBuilder(name = Seq("success"), statsReceiver = clientSR))
+    CounterSchema(MetricBuilder(name = Seq("success"), statsReceiver = clientSR).withKernel)
   val failuresMb =
-    CounterSchema(new MetricBuilder(name = Seq("failures"), statsReceiver = clientSR))
+    CounterSchema(MetricBuilder(name = Seq("failures"), statsReceiver = clientSR).withKernel)
   val latencyMb =
-    HistogramSchema(new MetricBuilder(name = Seq("latency"), statsReceiver = clientSR))
+    HistogramSchema(MetricBuilder(name = Seq("latency"), statsReceiver = clientSR).withKernel)
   val sum = Expression(successMb).plus(Expression(failuresMb))
 
   val successRate = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
@@ -61,8 +61,10 @@ class ExpressionSchemaTest extends FunSuite {
     runTheQuery(true)
     runTheQuery(false)
 
-    assert(sr.expressions("success_rate_downstream").expr == successRate.expr)
-    assert(sr.expressions("latency_downstream").expr == latency.expr)
+    assert(sr.expressions("success_rate_downstream").name == successRate.name)
+    assert(sr.expressions("success_rate_downstream").expr != successRate.expr)
+    assert(sr.expressions("latency_downstream").name == latency.name)
+    assert(sr.expressions("latency_downstream").expr != latency.expr)
 
     assert(sr.counters(Seq("success")) == 1)
     assert(sr.counters(Seq("failures")) == 1)

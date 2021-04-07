@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.exp.Expression.replaceExpression
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.io.PrintStream
 import java.util.Locale
@@ -70,8 +71,19 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val schemas: mutable.Map[Seq[String], MetricSchema] =
     new ConcurrentHashMap[Seq[String], MetricSchema]().asScala
 
-  val expressions: mutable.Map[String, ExpressionSchema] =
-    new ConcurrentHashMap[String, ExpressionSchema]().asScala
+  private val metricBuilders: ConcurrentHashMap[Int, MetricBuilder] =
+    new ConcurrentHashMap[Int, MetricBuilder]()
+
+  private val preloadExpressions: ConcurrentHashMap[String, ExpressionSchema] =
+    new ConcurrentHashMap[String, ExpressionSchema]()
+
+  def expressions: mutable.Map[String, ExpressionSchema] = {
+    preloadExpressions.replaceAll {
+      case (_, exprSchema) =>
+        exprSchema.copy(expr = replaceExpression(exprSchema.expr, metricBuilders))
+    }
+    preloadExpressions.asScala
+  }
 
   override def counter(name: String*): ReadableCounter =
     counter(CounterSchema(this.metricBuilder().withName(name: _*)))
@@ -89,6 +101,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         if (!counters.contains(schema.metricBuilder.name)) {
           counters(schema.metricBuilder.name) = 0
           schemas(schema.metricBuilder.name) = schema
+          storeMetricBuilder(schema)
         }
       }
 
@@ -119,6 +132,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         if (!stats.contains(schema.metricBuilder.name)) {
           stats(schema.metricBuilder.name) = Nil
           schemas(schema.metricBuilder.name) = schema
+          storeMetricBuilder(schema)
         }
       }
 
@@ -143,9 +157,11 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       gauges += schema.metricBuilder.name -> (() => f)
       schemas += schema.metricBuilder.name -> schema
       verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
+      storeMetricBuilder(schema)
 
       def remove(): Unit = {
         gauges -= schema.metricBuilder.name
+        removeMetricBuilder(schema)
         schemas -= schema.metricBuilder.name
       }
 
@@ -159,6 +175,19 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       }
     }
 
+  private[this] def storeMetricBuilder(schema: MetricSchema): Unit = {
+    schema.metricBuilder.kernel match {
+      case Some(kernel) => metricBuilders.put(kernel, schema.metricBuilder)
+      case None =>
+    }
+  }
+
+  private[this] def removeMetricBuilder(schema: MetricSchema): Unit = {
+    schema.metricBuilder.kernel match {
+      case Some(kernel) => metricBuilders.remove(kernel)
+      case None =>
+    }
+  }
   override def toString: String = "InMemoryStatsReceiver"
 
   /**
@@ -254,7 +283,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       case Some(serviceName) => schema.name + "_" + serviceName
       case None => schema.name
     }
-    expressions(expressionId) = schema
+    preloadExpressions.put(expressionId, schema)
   }
 
 }
