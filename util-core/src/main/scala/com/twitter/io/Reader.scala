@@ -4,6 +4,8 @@ import com.twitter.concurrent.AsyncStream
 import com.twitter.util.Promise.Detachable
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
+import java.util.{Collection => JCollection}
+import scala.collection.JavaConverters
 
 /**
  * A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.
@@ -283,6 +285,14 @@ object Reader {
    * @note Multiple outstanding reads are not allowed on this reader.
    */
   def fromSeq[A](seq: Seq[A]): Reader[A] = fromIterator(seq.iterator)
+
+  /**
+   *  Java-Friendly version of fromSeq
+   *  Create a new [[Reader]] from a given Java `List`
+   */
+  def fromCollection[A](list: JCollection[A]): Reader[A] = fromSeq(
+    JavaConverters.asScalaIteratorConverter(list.iterator).asScala.toSeq
+  )
 
   /**
    * Allow [[com.twitter.concurrent.AsyncStream]] to be consumed as a [[Reader]]
