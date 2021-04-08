@@ -195,7 +195,7 @@ class ReferenceCountingTimer(factory: () => Timer) extends ProxyTimer with Refer
  * If your code has a reasonably high throughput of task scheduling
  * and can trade off some precision of when tasks run,
  * [[https://twitter.github.io/finagle/ Finagle]] has a higher throughput
- * [[https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala
+ * [[https://github.com/twitter/finagle/blob/release/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala
  * hashed-wheel implementation]].
  *
  * @note Due to the implementation using a single `Thread`, be wary of

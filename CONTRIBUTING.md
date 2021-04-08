@@ -178,7 +178,7 @@ metadata will be preserved.
 Please let us know if you have any questions about this process!
 
 [0]: https://github.com/twitter/util/pull/109
-[1]: https://github.com/twitter/util/blob/master/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
+[1]: https://github.com/twitter/util/blob/release/util-core/src/test/java/com/twitter/util/VarCompilationTest.java
 [changes]: https://github.com/twitter/util/blob/develop/CHANGELOG.rst
 [es]: https://twitter.github.io/effectivescala/
 [funsuite]: https://www.scalatest.org/getting_started_with_fun_suite
