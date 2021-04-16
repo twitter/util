@@ -171,8 +171,19 @@ object PemBytes {
   /**
    * Reads the given file and constructs a `PemBytes` with the contents.
    */
-  def fromFile(file: File): Try[PemBytes] = Try {
-    val buffered = new String(Files.readAllBytes(file.toPath), StandardCharsets.UTF_8)
-    new PemBytes(buffered, file.getName)
+  def fromFile(inputFile: File): Try[PemBytes] = {
+    Try {
+      Files.readAllBytes(inputFile.toPath)
+    }.flatMap { file =>
+      fromBytes(file, inputFile.getName)
+    }
+  }
+
+  /**
+   * Reads the given byte array and constructs a `PemBytes` with the contents.
+   */
+  def fromBytes(bytes: Array[Byte], name: String): Try[PemBytes] = Try {
+    val buffered = new String(bytes, StandardCharsets.UTF_8)
+    new PemBytes(buffered, name)
   }
 }

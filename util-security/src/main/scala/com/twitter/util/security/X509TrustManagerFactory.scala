@@ -43,23 +43,25 @@ object X509TrustManagerFactory {
     ks.setCertificateEntry(alias, cert)
   }
 
-  private[this] def certsToKeyStore(certs: Seq[X509Certificate]): KeyStore = {
+  /**
+   * Load passed in X.509 certificates into a `java.security.KeyStore`
+   */
+  def certsToKeyStore(certs: Seq[X509Certificate]): KeyStore = {
     val ks: KeyStore = KeyStore.getInstance("JKS")
     ks.load(null)
     certs.foreach(setCertificateEntry(ks))
     ks
   }
 
-  private[this] def keyStoreToTmf(ks: KeyStore): TrustManagerFactory = {
+  /**
+   * Combine the passed in X.509 certificates in order to construct a
+   * `javax.net.ssl.TrustManagerFactory`.
+   */
+  def certsToTrustManagerFactory(certs: Seq[X509Certificate]): TrustManagerFactory = {
+    val ks: KeyStore = certsToKeyStore(certs)
     val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
     tmf.init(ks)
     tmf
-  }
-
-  private[this] def certsToTrustManagers(certs: Seq[X509Certificate]): Array[TrustManager] = {
-    val ks: KeyStore = certsToKeyStore(certs)
-    val tmf: TrustManagerFactory = keyStoreToTmf(ks)
-    tmf.getTrustManagers()
   }
 
   /**
@@ -69,6 +71,6 @@ object X509TrustManagerFactory {
    * `javax.net.ssl.SSLContext`'s init method.
    */
   def buildTrustManager(x509Certificates: Seq[X509Certificate]): Try[Array[TrustManager]] = Try {
-    certsToTrustManagers(x509Certificates)
+    certsToTrustManagerFactory(x509Certificates).getTrustManagers
   }
 }

@@ -35,6 +35,10 @@ Breaking API Changes
   companion object, `PemBytes#fromFile`.  Note that unlike before with construction, we read from
   the file, so it's possible for it to throw.  ``PHAB_ID=D641088``
 
+* util-security: Make KeyManager, TrustManager Factory helper methods public. The main change here
+  is that we expose util methods that are used to generate  TrustManagerFactory, KeyManagerFactory
+  inside `c.t.u.security` for public usage.  ``PHAB_ID=D644502``
+
 New Features
 ~~~~~~~~~~~~
 

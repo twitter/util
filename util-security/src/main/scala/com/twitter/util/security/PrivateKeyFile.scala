@@ -22,29 +22,6 @@ class PrivateKeyFile(file: File) {
     log.warning(s"PrivateKeyFile (${file.getName()}) failed to load: ${ex.getMessage()}.")
 
   /**
-   * Attempts to convert a `PKCS8EncodedKeySpec` to a `PrivateKey`.
-   *
-   * @note
-   * keeps identical behavior to netty
-   * https://github.com/netty/netty/blob/netty-4.1.11.Final/handler/src/main/java/io/netty/handler/ssl/SslContext.java#L1006
-   */
-  private[this] def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): Try[PrivateKey] =
-    Try {
-      KeyFactory.getInstance("RSA").generatePrivate(keySpec)
-    }.handle {
-        case _: InvalidKeySpecException =>
-          KeyFactory.getInstance("DSA").generatePrivate(keySpec)
-      }
-      .handle {
-        case _: InvalidKeySpecException =>
-          KeyFactory.getInstance("EC").generatePrivate(keySpec)
-      }
-      .rescue {
-        case ex: InvalidKeySpecException =>
-          Throw(new InvalidKeySpecException("None of RSA, DSA, EC worked", ex))
-      }
-
-  /**
    * Attemps to read the contents of an unencrypted PrivateKey file.
    *
    * @note Throws `InvalidPemFormatException` if the file is not a PEM format file.
@@ -63,6 +40,29 @@ class PrivateKeyFile(file: File) {
 
 }
 
-private object PrivateKeyFile {
+object PrivateKeyFile {
   private val log = Logger.get("com.twitter.util.security")
+
+  /**
+   * Attempts to convert a `PKCS8EncodedKeySpec` to a `PrivateKey`.
+   *
+   * @note
+   * keeps identical behavior to netty
+   * https://github.com/netty/netty/blob/netty-4.1.11.Final/handler/src/main/java/io/netty/handler/ssl/SslContext.java#L1006
+   */
+  def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): Try[PrivateKey] =
+    Try {
+      KeyFactory.getInstance("RSA").generatePrivate(keySpec)
+    }.handle {
+        case _: InvalidKeySpecException =>
+          KeyFactory.getInstance("DSA").generatePrivate(keySpec)
+      }
+      .handle {
+        case _: InvalidKeySpecException =>
+          KeyFactory.getInstance("EC").generatePrivate(keySpec)
+      }
+      .rescue {
+        case ex: InvalidKeySpecException =>
+          Throw(new InvalidKeySpecException("None of RSA, DSA, EC worked", ex))
+      }
 }

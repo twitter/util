@@ -32,8 +32,8 @@ class Pkcs8EncodedKeySpecFile(file: File) {
     }
 }
 
-private object Pkcs8EncodedKeySpecFile {
-  private val MessageType: String = "PRIVATE KEY"
+object Pkcs8EncodedKeySpecFile {
+  val MessageType: String = "PRIVATE KEY"
 
   private val log = Logger.get("com.twitter.util.security")
 }

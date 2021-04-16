@@ -22,28 +22,6 @@ class Pkcs8KeyManagerFactory(certsFile: File, keyFile: File) {
         s"failed to create key manager: ${ex.getMessage()}."
     )
 
-  private[this] def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): PrivateKey = {
-    val kf: KeyFactory = KeyFactory.getInstance("RSA")
-    kf.generatePrivate(keySpec)
-  }
-
-  private[this] def createKeyStore(
-    certs: Seq[X509Certificate],
-    privateKey: PrivateKey
-  ): KeyStore = {
-    val alias: String = UUID.randomUUID().toString()
-    val ks: KeyStore = KeyStore.getInstance("JKS")
-    ks.load(null)
-    ks.setKeyEntry(alias, privateKey, "".toCharArray(), certs.toArray)
-    ks
-  }
-
-  private[this] def keyStoreToKeyManagers(keyStore: KeyStore): Array[KeyManager] = {
-    val kmf = KeyManagerFactory.getInstance("SunX509")
-    kmf.init(keyStore, "".toCharArray())
-    kmf.getKeyManagers()
-  }
-
   /**
    * Attempts to read the contents of both the X.509 Certificates file and the PKCS#8
    * Private Key file and combine the contents into a `javax.net.ssl.KeyManager`
@@ -59,12 +37,12 @@ class Pkcs8KeyManagerFactory(certsFile: File, keyFile: File) {
 
     val tryCertsKey: Try[(Seq[X509Certificate], PrivateKey)] = join(tryCerts, tryPrivateKey)
     val tryKeyStore: Try[KeyStore] = tryCertsKey.map((createKeyStore _).tupled)
-    tryKeyStore.map(keyStoreToKeyManagers).onFailure(logException)
+    tryKeyStore.map(keyStoreToKeyManagerFactory(_).getKeyManagers()).onFailure(logException)
   }
 
 }
 
-private object Pkcs8KeyManagerFactory {
+object Pkcs8KeyManagerFactory {
   private val log = Logger.get("com.twitter.util.security")
 
   private def join[A, B](tryA: Try[A], tryB: Try[B]): Try[(A, B)] = {
@@ -73,5 +51,37 @@ private object Pkcs8KeyManagerFactory {
       case (Throw(_), _) => tryA.asInstanceOf[Try[(A, B)]]
       case (_, Throw(_)) => tryB.asInstanceOf[Try[(A, B)]]
     }
+  }
+
+  /**
+   * Convert a `PKCS8EncodedKeySpec` into a `java.security.PrivateKey`
+   */
+  def keySpecToPrivateKey(keySpec: PKCS8EncodedKeySpec): PrivateKey = {
+    val kf: KeyFactory = KeyFactory.getInstance("RSA")
+    kf.generatePrivate(keySpec)
+  }
+
+  /**
+   * Use the loaded `java.security.KeyStore` to construct a
+   * `javax.net.ssl.KeyManagerFactory`.
+   */
+  def keyStoreToKeyManagerFactory(keyStore: KeyStore): KeyManagerFactory = {
+    val kmf = KeyManagerFactory.getInstance("SunX509")
+    kmf.init(keyStore, "".toCharArray())
+    kmf
+  }
+
+  /**
+   * Load passed in X.509 certificates into a `java.security.KeyStore`
+   */
+  def createKeyStore(
+    certs: Seq[X509Certificate],
+    privateKey: PrivateKey
+  ): KeyStore = {
+    val alias: String = UUID.randomUUID().toString()
+    val ks: KeyStore = KeyStore.getInstance("JKS")
+    ks.load(null)
+    ks.setKeyEntry(alias, privateKey, "".toCharArray(), certs.toArray)
+    ks
   }
 }
