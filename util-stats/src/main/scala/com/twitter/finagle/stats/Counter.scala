@@ -7,4 +7,5 @@ package com.twitter.finagle.stats
 trait Counter {
   def incr(delta: Long): Unit
   final def incr(): Unit = { incr(1) }
+  def metadata: Metadata
 }

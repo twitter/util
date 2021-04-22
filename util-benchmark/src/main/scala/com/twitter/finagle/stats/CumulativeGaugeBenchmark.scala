@@ -24,7 +24,7 @@ class CumulativeGaugeBenchmark extends StdBenchAnnotations {
   def setup(): Unit = {
     cg = new CGauge()
     gauges.clear()
-    0.until(num).foreach { _ => gauges.add(cg.addGauge(1)) }
+    0.until(num).foreach { _ => gauges.add(cg.addGauge(1, NoMetadata)) }
   }
 
   @Benchmark
@@ -38,7 +38,7 @@ class CumulativeGaugeBenchmark extends StdBenchAnnotations {
   @OutputTimeUnit(TimeUnit.MICROSECONDS)
   @Fork(5)
   def addGauge(): Gauge = {
-    cg.addGauge(1)
+    cg.addGauge(1, NoMetadata)
   }
 
 }

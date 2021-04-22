@@ -22,10 +22,12 @@ final class LazyStatsReceiver(val self: StatsReceiver) extends StatsReceiverProx
   override def counter(schema: CounterSchema): Counter = new Counter {
     private[this] lazy val underlying = self.counter(schema)
     def incr(delta: Long): Unit = underlying.incr(delta)
+    def metadata: Metadata = schema.metricBuilder
   }
 
   override def stat(schema: HistogramSchema): Stat = new Stat {
     private[this] lazy val underlying = self.stat(schema)
     def add(value: Float): Unit = underlying.add(value)
+    def metadata: Metadata = schema.metricBuilder
   }
 }

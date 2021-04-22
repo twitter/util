@@ -7,6 +7,26 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-stats: Added a methods `c.t.f.stats.Counter#metadata: Metadata`,
+  `c.t.f.stats.Stat#metadata: Metadata`, and `c.t.f.stats.Gauge#metadata:
+  Metadata` to make it easier to introspect the constructed metric.  In
+  particular, this will enable constructing `Expression`s based on the full name
+  of the metric.  If you don't have access to a concrete `Metadata` instance
+  (like `MetricBuilder`) for constructing a Counter, Stat, or Gauge, you can
+  instead supply `NoMetadata`.  ``PHAB_ID=D653751``
+
+New Features
+~~~~~~~~~~~~
+
+* util-stats: Added a `com.twitter.finagle.stats.Metadata` abstraction, that can
+  be either many `com.twitter.finagle.stats.Metadata`, a `MetricBuilder`, or a
+  `NoMetadata`, which is the null `Metadata`.  This enabled constructing
+  metadata for counters that represent multiple counters under the hood.
+  ``PHAB_ID=D653751``
+
 21.3.0
 ------
 

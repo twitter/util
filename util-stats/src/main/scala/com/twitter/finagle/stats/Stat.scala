@@ -19,6 +19,7 @@ import scala.util.control.NonFatal
  */
 trait Stat {
   def add(value: Float): Unit
+  def metadata: Metadata
 }
 
 /**

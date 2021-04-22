@@ -28,6 +28,7 @@ class StatsReceiverTest extends AnyFunSuite {
     class MemCounter extends Counter {
       var c: Long = 0
       def incr(delta: Long): Unit = { c += delta }
+      def metadata: Metadata = NoMetadata
     }
     val c1 = new MemCounter
     val c2 = new MemCounter
@@ -42,6 +43,7 @@ class StatsReceiverTest extends AnyFunSuite {
     class MemStat extends Stat {
       var values: scala.collection.Seq[Float] = ArrayBuffer.empty[Float]
       def add(f: Float): Unit = { values = values :+ f }
+      def metadata: Metadata = NoMetadata
     }
     val s1 = new MemStat
     val s2 = new MemStat

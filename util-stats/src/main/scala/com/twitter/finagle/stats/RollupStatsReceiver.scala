@@ -28,6 +28,7 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
         self.counter(CounterSchema(schema.metricBuilder.withName(n: _*))))
     )
     def incr(delta: Long): Unit = allCounters.incr(delta)
+    def metadata: Metadata = allCounters.metadata
   }
   override def stat(schema: HistogramSchema) = new Stat {
     private[this] val allStats = BroadcastStat(
@@ -35,6 +36,7 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
         self.stat(HistogramSchema(schema.metricBuilder.withName(n: _*))))
     )
     def add(value: Float): Unit = allStats.add(value)
+    def metadata: Metadata = allStats.metadata
   }
 
   override def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
@@ -42,5 +44,6 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
       tails(schema.metricBuilder.name).map(n =>
         self.addGauge(GaugeSchema(schema.metricBuilder.withName(n: _*)))(f))
     def remove(): Unit = underlying.foreach(_.remove())
+    def metadata: Metadata = MultiMetadata(underlying.map(_.metadata))
   }
 }

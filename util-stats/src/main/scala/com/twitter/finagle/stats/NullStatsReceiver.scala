@@ -2,6 +2,21 @@ package com.twitter.finagle.stats
 
 object NullStatsReceiver extends NullStatsReceiver {
   def get(): NullStatsReceiver.type = this
+
+  val NullCounter: Counter = new Counter {
+    def incr(delta: Long): Unit = ()
+    def metadata: Metadata = NoMetadata
+  }
+
+  val NullStat: Stat = new Stat {
+    def add(value: Float): Unit = ()
+    def metadata: Metadata = NoMetadata
+  }
+
+  val NullGauge: Gauge = new Gauge {
+    def remove(): Unit = ()
+    def metadata: Metadata = NoMetadata
+  }
 }
 
 /**
@@ -10,11 +25,9 @@ object NullStatsReceiver extends NullStatsReceiver {
  * required.
  */
 class NullStatsReceiver extends StatsReceiver {
-  def repr: NullStatsReceiver = this
+  import NullStatsReceiver._
 
-  private[this] val NullCounter = new Counter { def incr(delta: Long): Unit = () }
-  private[this] val NullStat = new Stat { def add(value: Float): Unit = () }
-  private[this] val NullGauge = new Gauge { def remove(): Unit = () }
+  def repr: NullStatsReceiver = this
 
   def counter(schema: CounterSchema) = NullCounter
   def stat(schema: HistogramSchema) = NullStat

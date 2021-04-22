@@ -36,6 +36,7 @@ object BroadcastStatsReceiver {
         firstGauge.remove()
         secondGauge.remove()
       }
+      def metadata: Metadata = MultiMetadata(Seq(firstGauge.metadata, secondGauge.metadata))
     }
 
     override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit = {
@@ -61,6 +62,7 @@ object BroadcastStatsReceiver {
     def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
       val gauges = srs.map { _.addGauge(schema)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
+      def metadata: Metadata = MultiMetadata(gauges.map(_.metadata))
     }
 
     override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit =
@@ -90,6 +92,7 @@ object BroadcastCounter {
 
   private object NullCounter extends Counter {
     def incr(delta: Long): Unit = ()
+    def metadata: Metadata = NoMetadata
   }
 
   private[stats] class Two(a: Counter, b: Counter) extends Counter {
@@ -97,6 +100,7 @@ object BroadcastCounter {
       a.incr(delta)
       b.incr(delta)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata))
   }
 
   private class Three(a: Counter, b: Counter, c: Counter) extends Counter {
@@ -105,6 +109,7 @@ object BroadcastCounter {
       b.incr(delta)
       c.incr(delta)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata, c.metadata))
   }
 
   private class Four(a: Counter, b: Counter, c: Counter, d: Counter) extends Counter {
@@ -114,10 +119,12 @@ object BroadcastCounter {
       c.incr(delta)
       d.incr(delta)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata, c.metadata, d.metadata))
   }
 
   private class N(counters: Seq[Counter]) extends Counter {
     def incr(delta: Long): Unit = { counters.foreach(_.incr(delta)) }
+    def metadata: Metadata = MultiMetadata(counters.map(_.metadata))
   }
 }
 
@@ -138,6 +145,7 @@ object BroadcastStat {
 
   private object NullStat extends Stat {
     def add(value: Float): Unit = ()
+    def metadata: Metadata = NoMetadata
   }
 
   private[stats] class Two(a: Stat, b: Stat) extends Stat {
@@ -145,6 +153,7 @@ object BroadcastStat {
       a.add(value)
       b.add(value)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata))
   }
 
   private class Three(a: Stat, b: Stat, c: Stat) extends Stat {
@@ -153,6 +162,7 @@ object BroadcastStat {
       b.add(value)
       c.add(value)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata, c.metadata))
   }
 
   private class Four(a: Stat, b: Stat, c: Stat, d: Stat) extends Stat {
@@ -162,9 +172,11 @@ object BroadcastStat {
       c.add(value)
       d.add(value)
     }
+    def metadata: Metadata = MultiMetadata(Seq(a.metadata, b.metadata, c.metadata, d.metadata))
   }
 
   private class N(stats: Seq[Stat]) extends Stat {
     def add(value: Float): Unit = { stats.foreach(_.add(value)) }
+    def metadata: Metadata = MultiMetadata(stats.map(_.metadata))
   }
 }

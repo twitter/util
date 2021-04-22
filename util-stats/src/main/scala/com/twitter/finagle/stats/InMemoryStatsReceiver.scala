@@ -112,6 +112,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
 
       def apply(): Long = counters.getOrElse(schema.metricBuilder.name, 0)
 
+      def metadata: Metadata = schema.metricBuilder
+
       override def toString: String =
         s"Counter(${schema.metricBuilder.name.mkString("/")}=${apply()})"
     }
@@ -142,6 +144,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       }
       def apply(): Seq[Float] = stats.getOrElse(schema.metricBuilder.name, Seq.empty)
 
+      def metadata: Metadata = schema.metricBuilder
+
       override def toString: String = {
         val vals = apply()
         s"Stat(${schema.metricBuilder.name.mkString("/")}=${statValuesToStr(vals)})"
@@ -164,6 +168,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         removeMetricBuilder(schema)
         schemas -= schema.metricBuilder.name
       }
+
+      def metadata: Metadata = schema.metricBuilder
 
       override def toString: String = {
         // avoid holding a reference to `f`

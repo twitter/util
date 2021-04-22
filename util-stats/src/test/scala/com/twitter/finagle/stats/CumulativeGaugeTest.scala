@@ -28,13 +28,13 @@ class CumulativeGaugeTest extends AnyFunSuite with Eventually with IntegrationPa
     val gauge = new TestGauge()
     assert(0 == gauge.numRegisters.get)
 
-    gauge.addGauge { 0.0f }
+    gauge.addGauge({ 0.0f }, NoMetadata)
     assert(1 == gauge.numRegisters.get)
   }
 
   test("a CumulativeGauge with size = 1 should deregister when all gauges are removed") {
     val gauge = new TestGauge()
-    val added = gauge.addGauge { 1.0f }
+    val added = gauge.addGauge({ 1.0f }, NoMetadata)
     assert(0 == gauge.numDeregisters.get)
 
     added.remove()
@@ -46,7 +46,7 @@ class CumulativeGaugeTest extends AnyFunSuite with Eventually with IntegrationPa
   ) {
     val gauge = new TestGauge()
     assert(0 == gauge.numDeregisters.get)
-    val added = gauge.addGauge { 1.0f }
+    val added = gauge.addGauge({ 1.0f }, NoMetadata)
 
     System.gc()
     gauge.cleanRefs()
@@ -58,7 +58,7 @@ class CumulativeGaugeTest extends AnyFunSuite with Eventually with IntegrationPa
     "a CumulativeGauge with size = 1 should deregister after a System.gc when no references are held onto, after enough gets"
   ) {
     val gauge = new TestGauge()
-    var added = gauge.addGauge { 1.0f }
+    var added = gauge.addGauge({ 1.0f }, NoMetadata)
     assert(0 == gauge.numDeregisters.get)
 
     added = null
@@ -74,14 +74,14 @@ class CumulativeGaugeTest extends AnyFunSuite with Eventually with IntegrationPa
   test("a CumulativeGauge should sum values across all registered gauges") {
     val gauge = new TestGauge()
 
-    val underlying = 0.until(100).map { _ => gauge.addGauge { 10.0f } }
+    val underlying = 0.until(100).map { _ => gauge.addGauge({ 10.0f }, NoMetadata) }
     assert(gauge.getValue == (10.0f * 100))
   }
 
   test("a CumulativeGauge should discount gauges once removed") {
     val gauge = new TestGauge()
 
-    val underlying = Array.fill(100) { gauge.addGauge { 10.0f } }
+    val underlying = Array.fill(100) { gauge.addGauge({ 10.0f }, NoMetadata) }
     assert(gauge.getValue == (10.0f * 100))
     underlying(0).remove()
     assert(gauge.getValue == (10.0f * 99))

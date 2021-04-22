@@ -6,4 +6,5 @@ package com.twitter.finagle.stats
  */
 trait Gauge {
   def remove(): Unit
+  def metadata: Metadata
 }

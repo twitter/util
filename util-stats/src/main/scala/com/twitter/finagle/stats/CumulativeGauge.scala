@@ -22,7 +22,7 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
   // uses the default `Executor` for the cache.
   def this() = this(ForkJoinPool.commonPool())
 
-  private[this] class UnderlyingGauge(val f: () => Float) extends Gauge {
+  private[this] class UnderlyingGauge(val f: () => Float, val metadata: Metadata) extends Gauge {
     def remove(): Unit = self.remove(this)
   }
 
@@ -66,8 +66,8 @@ private[finagle] abstract class CumulativeGauge(executor: Executor) { self =>
   /**
    * Returns a gauge unless it is dead, in which case it returns null.
    */
-  def addGauge(f: => Float): Gauge = {
-    val underlyingGauge = new UnderlyingGauge(() => f)
+  def addGauge(f: => Float, metadata: Metadata): Gauge = {
+    val underlyingGauge = new UnderlyingGauge(() => f, metadata)
     refs.put(underlyingGauge, JBoolean.TRUE)
 
     if (register()) underlyingGauge else null
@@ -172,7 +172,7 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
     while (gauge == null) {
       val cumulativeGauge =
         gauges.computeIfAbsent(schema.metricBuilder.name, getWhenNotPresent(schema))
-      gauge = cumulativeGauge.addGauge(f)
+      gauge = cumulativeGauge.addGauge(f, schema.metricBuilder)
     }
     gauge
   }

@@ -86,6 +86,12 @@ object MetricBuilder {
   }
 }
 
+sealed trait Metadata
+
+case object NoMetadata extends Metadata
+
+case class MultiMetadata(schemas: Seq[Metadata]) extends Metadata
+
 /**
  * A builder class used to configure settings and metadata for metrics prior to instantiating them.
  * Calling any of the three build methods (counter, gauge, or histogram) will cause the metric to be
@@ -106,7 +112,8 @@ class MetricBuilder private (
   val isCounterishGauge: Boolean,
   // see withKernel
   val kernel: Option[Int],
-  val statsReceiver: StatsReceiver) {
+  val statsReceiver: StatsReceiver)
+    extends Metadata {
 
   /**
    * This copy method omits statsReceiver and percentiles as arguments because they should be
@@ -190,29 +197,29 @@ class MetricBuilder private (
    * Used to test that builder class correctly propagates configured metadata.
    * @return a CounterSchema describing a counter.
    */
-  private[MetricBuilder] def counterSchema: CounterSchema = CounterSchema(this)
+  private[MetricBuilder] final def counterSchema: CounterSchema = CounterSchema(this)
 
   /**
    * Generates a GaugeSchema which can be used to create a gauge in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
    * @return a GaugeSchema describing a gauge.
    */
-  private[MetricBuilder] def gaugeSchema: GaugeSchema = GaugeSchema(this)
+  private[MetricBuilder] final def gaugeSchema: GaugeSchema = GaugeSchema(this)
 
   /**
    * Generates a HistogramSchema which can be used to create a histogram in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
    * @return a HistogramSchema describing a histogram.
    */
-  private[MetricBuilder] def histogramSchema: HistogramSchema = HistogramSchema(this)
+  private[MetricBuilder] final def histogramSchema: HistogramSchema = HistogramSchema(this)
 
   /**
    * Produce a counter as described by the builder inside the underlying StatsReceiver.
    * @return the counter created.
    */
   @varargs
-  def counter(name: String*): Counter = {
-    val schema = this.copy(name = name).counterSchema
+  final def counter(name: String*): Counter = {
+    val schema = withName(name: _*).counterSchema
     this.statsReceiver.counter(schema)
   }
 
@@ -220,8 +227,8 @@ class MetricBuilder private (
    * Produce a gauge as described by the builder inside the underlying StatsReceiver.
    * @return the gauge created.
    */
-  def gauge(name: String*)(f: => Float): Gauge = {
-    val schema = this.copy(name = name).gaugeSchema
+  final def gauge(name: String*)(f: => Float): Gauge = {
+    val schema = withName(name: _*).gaugeSchema
     this.statsReceiver.addGauge(schema)(f)
   }
 
@@ -231,8 +238,8 @@ class MetricBuilder private (
    * @return the gauge created.
    */
   @varargs
-  def gauge(f: Supplier[Float], name: String*): Gauge = {
-    val schema = this.copy(name = name).gaugeSchema
+  final def gauge(f: Supplier[Float], name: String*): Gauge = {
+    val schema = withName(name: _*).gaugeSchema
     this.statsReceiver.addGauge(schema)(f.get())
   }
 
@@ -241,8 +248,8 @@ class MetricBuilder private (
    * @return the histogram created.
    */
   @varargs
-  def histogram(name: String*): Stat = {
-    val schema = this.copy(name = name).histogramSchema
+  final def histogram(name: String*): Stat = {
+    val schema = withName(name: _*).histogramSchema
     this.statsReceiver.stat(schema)
   }
 
