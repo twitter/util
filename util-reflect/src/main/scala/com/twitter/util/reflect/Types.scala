@@ -1,5 +1,6 @@
 package com.twitter.util.reflect
 
+import com.twitter.util.Memoize
 import java.lang.reflect.{ParameterizedType, TypeVariable, Type => JavaType}
 import scala.reflect.api.TypeCreator
 import scala.reflect.runtime.universe._
@@ -16,10 +17,8 @@ object Types {
    *  - not assignable from OPTION nor LIST and
    *  - is not a Tuple and
    *  - class symbol is case class.
-   *
-   * @param clazz runtime representation of class type.
    */
-  def isCaseClass[T](clazz: Class[T]): Boolean = {
+  val isCaseClass: Class[_] => Boolean = Memoize { clazz: Class[_] =>
     val tpe = asTypeTag(clazz).tpe
     val classSymbol = tpe.typeSymbol.asClass
     tpe <:< PRODUCT &&

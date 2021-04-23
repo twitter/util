@@ -248,7 +248,7 @@ lazy val utilBenchmark = Project(
     JmhPlugin
   ).settings(
     name := "util-benchmark"
-  ).dependsOn(utilCore, utilHashing, utilJvm, utilStats)
+  ).dependsOn(utilCore, utilHashing, utilJvm, utilReflect, utilStats)
 
 lazy val utilCache = Project(
   id = "util-cache",

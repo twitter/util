@@ -7,6 +7,7 @@ scala_library(
         "3rdparty/jvm/org/scala-lang:scala-library",
         "util/util-core:scala",
         "util/util-hashing/src/main/scala",
+        "util/util-reflect/src/main/scala/com/twitter/util/reflect",
         "util/util-stats/src/main/scala",
     ],
 )

@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-reflect: Memoize `c.t.util.reflect.Types#isCaseClass` computation. ``PHAB_ID=D657748``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
