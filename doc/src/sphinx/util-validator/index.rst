@@ -1753,7 +1753,7 @@ with `@MethodValidation`, optionally specifying validated fields of the case cla
 error-reporting.
 
 .. code:: scala
-   :emphasize-lines: 13,14
+   :emphasize-lines: 11,12
 
     import com.twitter.util.validation.MethodValidation
     import com.twitter.util.validation.engine.MethodValidationResult
@@ -1788,6 +1788,27 @@ Built-in value extractors
 This library provides built-in value extraction for Scala `Iterable[_] <#iterable>`__ types. See the
 `Hibernate documentation <https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#chapter-valueextraction>`__
 for more details on value extraction including how to define and register a new value extractor.
+
+Best Practices
+--------------
+
+- Case classes used for validation should be side-effect free under property access. That is, accessing a
+  case class field should be able to be done eagerly and without side-effects.
+- Case class methods for `@MethodValidation` validation should be side-effect free under method access. That is, accessing a
+  `@MethodValidation`-annotated method should be able to be done eagerly and without side-effects.
+- Case classes with generic type params should be considered **not supported** for validation. E.g.,
+
+  .. code:: scala
+
+      case class GenericCaseClass[T](@NotEmpty @Valid data: T)
+
+  This may appear to work for some category of data but in practice the way the library caches reflection data does not 
+  discriminate on the type binding and thus validation of genericized case classes is not fully guaranteed to be successful for 
+  differing type bindings of a given genericized class.
+- While `Iterable` collections are supported for cascaded validation when annotated with `@Valid`, this does
+  not include `Map` types. Annotated `Map` types will be ignored during validation.
+- More generally, types with multiple type params, e.g. `Either[T, U]`, are not supported for validation
+  of contents when annotated with `@Valid`. Annotated unsupported types will be **ignored** during validation.
 
 More resources
 --------------
