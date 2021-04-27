@@ -1,0 +1,6 @@
+resources(
+    sources = [
+        "**/*.properties",
+        "**/*.xml",
+    ],
+)

@@ -213,6 +213,7 @@ lazy val util = Project(
     utilTest,
     utilThrift,
     utilTunable,
+    utilValidator,
     utilZk,
     utilZkTest
   )
@@ -248,7 +249,7 @@ lazy val utilBenchmark = Project(
     JmhPlugin
   ).settings(
     name := "util-benchmark"
-  ).dependsOn(utilCore, utilHashing, utilJvm, utilReflect, utilStats)
+  ).dependsOn(utilCore, utilHashing, utilJvm, utilReflect, utilStats, utilValidator)
 
 lazy val utilCache = Project(
   id = "util-cache",
@@ -556,6 +557,26 @@ lazy val utilTunable = Project(
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")
     )
   ).dependsOn(utilApp, utilCore)
+
+lazy val utilValidator = Project(
+  id = "util-validator",
+  base = file("util-validator")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-validator",
+    libraryDependencies ++= Seq(
+      caffeineLib,
+      scalacheckLib,
+      "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
+      "org.hibernate.validator" % "hibernate-validator" % "7.0.1.Final",
+      "org.glassfish" % "jakarta.el" % "4.0.0",
+      "org.json4s" %% "json4s-core" % "3.6.7",
+      "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
+      "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
+    )
+  ).dependsOn(utilCore, utilReflect, utilSlf4jApi)
 
 lazy val utilZk = Project(
   id = "util-zk",

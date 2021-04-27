@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+* util-validator: Introduce new library for case class validations (akin to Java bean validation)
+  which follows the Jakarta Bean Validation specification (https://beanvalidation.org/) by wrapping
+  the Hibernate Validator library and thus supports `jakarta.validation.Constraint` annotations and
+  validators for annotating and validating fields of Scala case classes. ``PHAB_ID=D638603``
+
 21.4.0
 ------
 

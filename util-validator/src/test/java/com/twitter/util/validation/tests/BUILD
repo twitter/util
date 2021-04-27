@@ -1,0 +1,24 @@
+junit_tests(
+    sources = ["**/*.java"],
+    dependencies = [
+        "3rdparty/jvm/jakarta/validation:jakarta.validation-api",
+        "3rdparty/jvm/junit",
+        "3rdparty/jvm/org/hibernate/validator:hibernate-validator",
+        "3rdparty/jvm/org/scalatestplus:junit",
+        "3rdparty/jvm/org/slf4j:slf4j-api",
+        scoped(
+            "3rdparty/jvm/org/slf4j:slf4j-simple",
+            scope = "runtime",
+        ),
+        "util/util-slf4j-api/src/main/scala",
+        "util/util-validator/src/main/scala/com/twitter/util/validation",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/cfg",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/conversions",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/engine",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/executable",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/internal",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/internal/validators",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/metadata",
+        "util/util-validator/src/test/java/com/twitter/util/validation",
+    ],
+)
