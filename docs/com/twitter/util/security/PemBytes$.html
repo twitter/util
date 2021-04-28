@@ -158,15 +158,15 @@
                         <a class="class" href="PemBytes.html" title="An abstract representation of a PEM formatted file."></a>
                         <a href="PemBytes.html" title="An abstract representation of a PEM formatted file.">PemBytes</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="Pkcs8EncodedKeySpecFile$.html" title=""></a>
                         <a class="class" href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file."></a>
                         <a href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file.">Pkcs8EncodedKeySpecFile</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="Pkcs8KeyManagerFactory$.html" title=""></a>
                         <a class="class" href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
                         <a href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="PrivateKeyFile$.html" title=""></a>
                         <a class="class" href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format."></a>
                         <a href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format.">PrivateKeyFile</a>
                       </li><li class="current-entities indented4">
@@ -418,10 +418,10 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.util.security.PemBytes#fromFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fromFile(file:java.io.File):com.twitter.util.Try[com.twitter.util.security.PemBytes]"></a><a id="fromFile(File):Try[PemBytes]"></a>
+    </li><li name="com.twitter.util.security.PemBytes#fromBytes" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromBytes(bytes:Array[Byte],name:String):com.twitter.util.Try[com.twitter.util.security.PemBytes]"></a><a id="fromBytes(Array[Byte],String):Try[PemBytes]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/util/security/PemBytes$.html#fromFile(file:java.io.File):com.twitter.util.Try[com.twitter.util.security.PemBytes]" title="Permalink">
+      <a href="../../../../com/twitter/util/security/PemBytes$.html#fromBytes(bytes:Array[Byte],name:String):com.twitter.util.Try[com.twitter.util.security.PemBytes]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -430,7 +430,23 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fromFile</span><span class="params">(<span name="file">file: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="../Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="PemBytes.html" class="extype" name="com.twitter.util.security.PemBytes">PemBytes</a>]</span>
+        <span class="name">fromBytes</span><span class="params">(<span name="bytes">bytes: <a href="https://www.scala-lang.org/api/2.12.12/scala/Array.html#scala.Array" class="extype" name="scala.Array">Array</a>[<a href="https://www.scala-lang.org/api/2.12.12/scala/Byte.html#scala.Byte" class="extype" name="scala.Byte">Byte</a>]</span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="PemBytes.html" class="extype" name="com.twitter.util.security.PemBytes">PemBytes</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Reads the given byte array and constructs a <code>PemBytes</code> with the contents.</p>
+    </li><li name="com.twitter.util.security.PemBytes#fromFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromFile(inputFile:java.io.File):com.twitter.util.Try[com.twitter.util.security.PemBytes]"></a><a id="fromFile(File):Try[PemBytes]"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/security/PemBytes$.html#fromFile(inputFile:java.io.File):com.twitter.util.Try[com.twitter.util.security.PemBytes]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromFile</span><span class="params">(<span name="inputFile">inputFile: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="../Try.html" class="extype" name="com.twitter.util.Try">Try</a>[<a href="PemBytes.html" class="extype" name="com.twitter.util.security.PemBytes">PemBytes</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Reads the given file and constructs a <code>PemBytes</code> with the contents.</p>

@@ -194,14 +194,14 @@ using.
 Via TwitterServer/finagle-stats — the `HTTP admin interface`_ responds with json at
 ``/admin/metrics.json`` and there is a web UI for watching them in real-time at ``/admin/metrics``.
 
-.. _LoadService: https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala
+.. _LoadService: https://github.com/twitter/finagle/blob/release/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala
 .. _finagle-stats: https://github.com/twitter/finagle/tree/master/finagle-stats
-.. _BroadcastStatsReceiver: https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala
+.. _BroadcastStatsReceiver: https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala
 .. _NullStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala
 .. _Futures: https://twitter.github.io/finagle/guide/Futures.html
 .. _Stat.time: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala
 .. _Stat.timeFuture: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala
 .. _java.lang.ref.WeakReference: https://docs.oracle.com/javase/8/docs/api/java/lang/ref/WeakReference.html
-.. _InMemoryStatsReceiver: https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala
+.. _InMemoryStatsReceiver: https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala
 .. _HTTP admin interface: https://twitter.github.io/twitter-server/Features.html#http-admin-interface
 .. _DenylistStatsReceiver: https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala

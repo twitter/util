@@ -206,7 +206,7 @@
                         <a class="trait" href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers."></a>
                         <a href="DelegatingStatsReceiver.html" title="Should be mixed into StatsReceivers that delegate to other StatsReceivers.">DelegatingStatsReceiver</a>
                       </li><li class="current-entities indented4">
-                        <a class="object" href="" title=""></a>
+                        <a class="object" href="DenylistStatsReceiver$.html" title=""></a>
                         <a class="class" href="DenylistStatsReceiver.html" title="A denylisting StatsReceiver."></a>
                         <a href="DenylistStatsReceiver.html" title="A denylisting StatsReceiver.">DenylistStatsReceiver</a>
                       </li><li class="current-entities indented4">
@@ -254,7 +254,7 @@
                         <a class="trait" href="Metadata.html" title=""></a>
                         <a href="Metadata.html" title="">Metadata</a>
                       </li><li class="current-entities indented4">
-                        <a class="object" href="MetricBuilder$.html" title=""></a>
+                        <a class="object" href="" title=""></a>
                         <a class="class" href="MetricBuilder.html" title="A builder class used to configure settings and metadata for metrics prior to instantiating them."></a>
                         <a href="MetricBuilder.html" title="A builder class used to configure settings and metadata for metrics prior to instantiating them.">MetricBuilder</a>
                       </li><li class="current-entities indented4">
@@ -380,15 +380,15 @@
           <div id="content">
             <body class="object value">
       <div id="definition">
-        <a href="DenylistStatsReceiver.html" title="See companion class"><div class="big-circle object-companion-class">o</div></a>
+        <a href="MetricBuilder.html" title="See companion class"><div class="big-circle object-companion-class">o</div></a>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="index.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1><a href="DenylistStatsReceiver.html" title="See companion class">DenylistStatsReceiver</a><span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html" title="Permalink">
+        <h1><a href="MetricBuilder.html" title="See companion class">MetricBuilder</a><span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
         <h3><span class="morelinks"><div>
-            Companion <a href="DenylistStatsReceiver.html" title="See companion class">class DenylistStatsReceiver</a>
+            Companion <a href="MetricBuilder.html" title="See companion class">class MetricBuilder</a>
           </div></span></h3>
       </div>
 
@@ -398,7 +398,7 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">DenylistStatsReceiver</span>
+        <span class="name">MetricBuilder</span>
       </span>
       </h4>
 
@@ -433,7 +433,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.finagle.stats.DenylistStatsReceiver"><span>DenylistStatsReceiver</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.finagle.stats.MetricBuilder"><span>MetricBuilder</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -463,7 +463,7 @@
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -479,7 +479,7 @@
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html###():Int" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -495,7 +495,7 @@
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -508,10 +508,27 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(keyIndicator:Boolean,description:String,units:com.twitter.finagle.stats.MetricUnit,role:com.twitter.finagle.stats.SourceRole,verbosity:com.twitter.finagle.stats.Verbosity,sourceClass:Option[String],name:Seq[String],relativeName:Seq[String],processPath:Option[String],percentiles:IndexedSeq[Double],isCounterishGauge:Boolean,statsReceiver:com.twitter.finagle.stats.StatsReceiver):com.twitter.finagle.stats.MetricBuilder"></a><a id="apply(Boolean,String,MetricUnit,SourceRole,Verbosity,Option[String],Seq[String],Seq[String],Option[String],IndexedSeq[Double],Boolean,StatsReceiver):MetricBuilder"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#apply(keyIndicator:Boolean,description:String,units:com.twitter.finagle.stats.MetricUnit,role:com.twitter.finagle.stats.SourceRole,verbosity:com.twitter.finagle.stats.Verbosity,sourceClass:Option[String],name:Seq[String],relativeName:Seq[String],processPath:Option[String],percentiles:IndexedSeq[Double],isCounterishGauge:Boolean,statsReceiver:com.twitter.finagle.stats.StatsReceiver):com.twitter.finagle.stats.MetricBuilder" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="keyIndicator">keyIndicator: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a> = <span class="symbol">false</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;No description provided&quot;</span></span>, <span name="units">units: <a href="MetricUnit.html" class="extype" name="com.twitter.finagle.stats.MetricUnit">MetricUnit</a> = <span class="symbol"><span class="name"><a href="Unspecified$.html">Unspecified</a></span></span></span>, <span name="role">role: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a> = <span class="symbol"><span class="name"><a href="NoRoleSpecified$.html">NoRoleSpecified</a></span></span></span>, <span name="verbosity">verbosity: <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> = <span class="symbol"><span class="name"><a href="Verbosity$.html">Verbosity.Default</a></span></span></span>, <span name="sourceClass">sourceClass: <a href="https://www.scala-lang.org/api/2.12.12/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">None</a></span></span></span>, <span name="name">name: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">Seq.empty</a></span></span></span>, <span name="relativeName">relativeName: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">Seq.empty</a></span></span></span>, <span name="processPath">processPath: <a href="https://www.scala-lang.org/api/2.12.12/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">None</a></span></span></span>, <span name="percentiles">percentiles: <a href="../../../../scala/index.html#IndexedSeq[+A]=IndexedSeq[A]" class="extmbr" name="scala.IndexedSeq">IndexedSeq</a>[<a href="https://www.scala-lang.org/api/2.12.12/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">IndexedSeq.empty</a></span></span></span>, <span name="isCounterishGauge">isCounterishGauge: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a> = <span class="symbol">false</span></span>, <span name="statsReceiver">statsReceiver: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>)</span><span class="result">: <a href="MetricBuilder.html" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Construct a MethodBuilder.</p><div class="fullcomment"><div class="comment cmt"><p>Construct a MethodBuilder.
+</p></div><dl class="paramcmts block"><dt class="param">keyIndicator</dt><dd class="cmt"><p>indicates whether this metric is crucial to this service (ie, an SLO metric)</p></dd><dt class="param">description</dt><dd class="cmt"><p>human-readable description of a metric's significance</p></dd><dt class="param">units</dt><dd class="cmt"><p>the unit associated with the metrics value (milliseconds, megabytes, requests, etc)</p></dd><dt class="param">role</dt><dd class="cmt"><p>whether the service is playing the part of client or server regarding this metric</p></dd><dt class="param">verbosity</dt><dd class="cmt"><p>see StatsReceiver for details</p></dd><dt class="param">sourceClass</dt><dd class="cmt"><p>the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)</p></dd><dt class="param">name</dt><dd class="cmt"><p>the full metric name</p></dd><dt class="param">relativeName</dt><dd class="cmt"><p>the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage</p></dd><dt class="param">processPath</dt><dd class="cmt"><p>a universal coordinate for the resource</p></dd><dt class="param">percentiles</dt><dd class="cmt"><p>used to indicate buckets for histograms, to be set by the StatsReceiver</p></dd><dt class="param">isCounterishGauge</dt><dd class="cmt"><p>used to indicate that a gauge is being used to model something that acts like a counter</p></dd><dt class="param">statsReceiver</dt><dd class="cmt"><p>used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -527,7 +544,7 @@
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#clone():Object" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -551,7 +568,7 @@
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -567,7 +584,7 @@
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -583,7 +600,7 @@
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#finalize():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -605,7 +622,7 @@
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#getClass():Class[_]" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -624,7 +641,7 @@
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#hashCode():Int" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -643,7 +660,7 @@
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -659,7 +676,7 @@
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -675,7 +692,7 @@
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#notify():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -694,7 +711,7 @@
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#notifyAll():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -710,50 +727,10 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#orElseAdmitted" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="orElseAdmitted(underlying:com.twitter.finagle.stats.StatsReceiver,pf:PartialFunction[Seq[String],Boolean]):com.twitter.finagle.stats.StatsReceiver"></a><a id="orElseAdmitted(StatsReceiver,PartialFunction[Seq[String],Boolean]):StatsReceiver"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#orElseAdmitted(underlying:com.twitter.finagle.stats.StatsReceiver,pf:PartialFunction[Seq[String],Boolean]):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">orElseAdmitted</span><span class="params">(<span name="underlying">underlying: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="pf">pf: <a href="https://www.scala-lang.org/api/2.12.12/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a>]</span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].</p><div class="fullcomment"><div class="comment cmt"><p>Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].
-</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>a base <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p></dd><dt class="param">pf</dt><dd class="cmt"><p>a PartialFunction that returns true for metrics which should be denylisted,
-          and false for metrics which should be recorded.
-          If pf is undefined for a given metric name,
-          then the metric WILL be recorded.</p></dd></dl></div>
-    </li><li name="com.twitter.finagle.stats.DenylistStatsReceiver#orElseDenied" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="orElseDenied(underlying:com.twitter.finagle.stats.StatsReceiver,pf:PartialFunction[Seq[String],Boolean]):com.twitter.finagle.stats.StatsReceiver"></a><a id="orElseDenied(StatsReceiver,PartialFunction[Seq[String],Boolean]):StatsReceiver"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#orElseDenied(underlying:com.twitter.finagle.stats.StatsReceiver,pf:PartialFunction[Seq[String],Boolean]):com.twitter.finagle.stats.StatsReceiver" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">orElseDenied</span><span class="params">(<span name="underlying">underlying: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>, <span name="pf">pf: <a href="https://www.scala-lang.org/api/2.12.12/scala/PartialFunction.html#scala.PartialFunction" class="extype" name="scala.PartialFunction">PartialFunction</a>[<a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>], <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a>]</span>)</span><span class="result">: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].</p><div class="fullcomment"><div class="comment cmt"><p>Creates a DenyListStatsReceiver based on a PartialFunction[Seq[String], Boolean].
-</p></div><dl class="paramcmts block"><dt class="param">underlying</dt><dd class="cmt"><p>a base <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a>.</p></dd><dt class="param">pf</dt><dd class="cmt"><p>a PartialFunction that returns true for metrics which should be denylisted,
-          and false for metrics which should be recorded.
-          If pf is undefined for a given metric name,
-          then the metric will NOT be recorded.</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -769,7 +746,7 @@
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#toString():String" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -785,7 +762,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#wait():Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -807,7 +784,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -829,7 +806,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/DenylistStatsReceiver$.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>

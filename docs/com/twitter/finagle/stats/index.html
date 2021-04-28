@@ -251,6 +251,10 @@
                         <a href="Megabytes$.html" title="">Megabytes</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="trait" href="Metadata.html" title=""></a>
+                        <a href="Metadata.html" title="">Metadata</a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="MetricBuilder$.html" title=""></a>
                         <a class="class" href="MetricBuilder.html" title="A builder class used to configure settings and metadata for metrics prior to instantiating them."></a>
                         <a href="MetricBuilder.html" title="A builder class used to configure settings and metadata for metrics prior to instantiating them.">MetricBuilder</a>
                       </li><li class="current-entities indented4">
@@ -271,8 +275,16 @@
                         <a href="Milliseconds$.html" title="">Milliseconds</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="MultiMetadata.html" title=""></a>
+                        <a href="MultiMetadata.html" title="">MultiMetadata</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="NameTranslatingStatsReceiver.html" title="A StatsReceiver receiver proxy that translates all counter, stat, and gauge names according to a translate function."></a>
                         <a href="NameTranslatingStatsReceiver.html" title="A StatsReceiver receiver proxy that translates all counter, stat, and gauge names according to a translate function.">NameTranslatingStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="NoMetadata$.html" title=""></a>
+                        <a href="NoMetadata$.html" title="">NoMetadata</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="object" href="NoRoleSpecified$.html" title=""></a>
@@ -727,8 +739,24 @@ adds an extra allocation when you construct a new counter or stat, so please
 be judicious when using it.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>does not change the way gauges are used, since there isn't a way of
       modeling whether a gauge is &quot;used&quot; or not.</p></span></dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.Metadata" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MetadataextendsAnyRef"></a><a id="Metadata:Metadata"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/Metadata.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="Metadata.html"><span class="name">Metadata</span></a><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.MetricBuilder" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="MetricBuilderextendsAnyRef"></a><a id="MetricBuilder:MetricBuilder"></a>
+      <a id="MetricBuilderextendsMetadata"></a><a id="MetricBuilder:MetricBuilder"></a>
       <span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html" title="Permalink">
         <i class="material-icons"></i>
@@ -739,7 +767,7 @@ be judicious when using it.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a title="A builder class used to configure settings and metadata for metrics prior to instantiating them." href="MetricBuilder.html"><span class="name">MetricBuilder</span></a><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <a title="A builder class used to configure settings and metadata for metrics prior to instantiating them." href="MetricBuilder.html"><span class="name">MetricBuilder</span></a><span class="result"> extends <a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a></span>
       </span>
       
       <p class="shortcomment cmt">A builder class used to configure settings and metadata for metrics prior to instantiating them.</p><div class="fullcomment"><div class="comment cmt"><p>A builder class used to configure settings and metadata for metrics prior to instantiating them.
@@ -783,6 +811,22 @@ instantiated in the underlying StatsReceiver.
   Requests (for successes, failures, and requests)
   Percentage (for CPU Util, Memory Usage)
 </p></div></div>
+    </li><li name="com.twitter.finagle.stats.MultiMetadata" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MultiMetadataextendsMetadatawithProductwithSerializable"></a><a id="MultiMetadata:MultiMetadata"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MultiMetadata.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="MultiMetadata.html"><span class="name">MultiMetadata</span></a><span class="params">(<span name="schemas">schemas: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a>]</span>)</span><span class="result"> extends <a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.NameTranslatingStatsReceiver" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="NameTranslatingStatsReceiverextendsStatsReceiverProxy"></a><a id="NameTranslatingStatsReceiver:NameTranslatingStatsReceiver"></a>
       <span class="permalink">
@@ -1283,6 +1327,22 @@ errors separately so success rate can from valid non cancelled requests.
       </span>
       
       
+    </li><li name="com.twitter.finagle.stats.MetricBuilder" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MetricBuilder"></a><a id="MetricBuilder:MetricBuilder"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="MetricBuilder$.html"><span class="name">MetricBuilder</span></a>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.Microseconds" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Microseconds"></a><a id="Microseconds:Microseconds"></a>
       <span class="permalink">
@@ -1312,6 +1372,22 @@ errors separately so success rate can from valid non cancelled requests.
       </span>
       <span class="symbol">
         <a title="" href="Milliseconds$.html"><span class="name">Milliseconds</span></a><span class="result"> extends <a href="MetricUnit.html" class="extype" name="com.twitter.finagle.stats.MetricUnit">MetricUnit</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      
+    </li><li name="com.twitter.finagle.stats.NoMetadata" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NoMetadata"></a><a id="NoMetadata:NoMetadata"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/NoMetadata$.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="NoMetadata$.html"><span class="name">NoMetadata</span></a><span class="result"> extends <a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="https://www.scala-lang.org/api/2.12.12/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
       </span>
       
       

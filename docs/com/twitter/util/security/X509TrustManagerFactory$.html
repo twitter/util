@@ -158,15 +158,15 @@
                         <a class="class" href="PemBytes.html" title="An abstract representation of a PEM formatted file."></a>
                         <a href="PemBytes.html" title="An abstract representation of a PEM formatted file.">PemBytes</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="Pkcs8EncodedKeySpecFile$.html" title=""></a>
                         <a class="class" href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file."></a>
                         <a href="Pkcs8EncodedKeySpecFile.html" title="A representation of a PKCS#8 private key which is PEM-encoded and stored in a file.">Pkcs8EncodedKeySpecFile</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="Pkcs8KeyManagerFactory$.html" title=""></a>
                         <a class="class" href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key."></a>
                         <a href="Pkcs8KeyManagerFactory.html" title="A factory which can create a javax.net.ssl.KeyManager which contains an X.509 Certificate (or Certificate chain) and a PKCS#8 private key.">Pkcs8KeyManagerFactory</a>
                       </li><li class="current-entities indented4">
-                        <span class="separator"></span>
+                        <a class="object" href="PrivateKeyFile$.html" title=""></a>
                         <a class="class" href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format."></a>
                         <a href="PrivateKeyFile.html" title="A representation of a PrivateKey that is stored in a file in Pkcs8 PEM format.">PrivateKeyFile</a>
                       </li><li class="current-entities indented4">
@@ -361,6 +361,40 @@
 The singular value is returned in an Array for ease of use with
 <code>javax.net.ssl.SSLContext</code>'s init method.
 </p></div></div>
+    </li><li name="com.twitter.util.security.X509TrustManagerFactory#certsToKeyStore" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="certsToKeyStore(certs:Seq[java.security.cert.X509Certificate]):java.security.KeyStore"></a><a id="certsToKeyStore(Seq[X509Certificate]):KeyStore"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/security/X509TrustManagerFactory$.html#certsToKeyStore(certs:Seq[java.security.cert.X509Certificate]):java.security.KeyStore" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">certsToKeyStore</span><span class="params">(<span name="certs">certs: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="java.security.cert.X509Certificate">X509Certificate</span>]</span>)</span><span class="result">: <span class="extype" name="java.security.KeyStore">KeyStore</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Load passed in X.509 certificates into a <code>java.security.KeyStore</code>
+</p>
+    </li><li name="com.twitter.util.security.X509TrustManagerFactory#certsToTrustManagerFactory" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="certsToTrustManagerFactory(certs:Seq[java.security.cert.X509Certificate]):javax.net.ssl.TrustManagerFactory"></a><a id="certsToTrustManagerFactory(Seq[X509Certificate]):TrustManagerFactory"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/util/security/X509TrustManagerFactory$.html#certsToTrustManagerFactory(certs:Seq[java.security.cert.X509Certificate]):javax.net.ssl.TrustManagerFactory" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">certsToTrustManagerFactory</span><span class="params">(<span name="certs">certs: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="java.security.cert.X509Certificate">X509Certificate</span>]</span>)</span><span class="result">: <span class="extype" name="javax.net.ssl.TrustManagerFactory">TrustManagerFactory</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Combine the passed in X.509 certificates in order to construct a
+<code>javax.net.ssl.TrustManagerFactory</code>.</p>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">

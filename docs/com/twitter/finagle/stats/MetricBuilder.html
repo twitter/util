@@ -251,6 +251,10 @@
                         <a href="Megabytes$.html" title="">Megabytes</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="trait" href="Metadata.html" title=""></a>
+                        <a href="Metadata.html" title="">Metadata</a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="MetricBuilder$.html" title=""></a>
                         <a class="class" href="" title="A builder class used to configure settings and metadata for metrics prior to instantiating them."></a>
                         <a href="" title="A builder class used to configure settings and metadata for metrics prior to instantiating them.">MetricBuilder</a>
                       </li><li class="current-entities indented4">
@@ -271,8 +275,16 @@
                         <a href="Milliseconds$.html" title="">Milliseconds</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="class" href="MultiMetadata.html" title=""></a>
+                        <a href="MultiMetadata.html" title="">MultiMetadata</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="NameTranslatingStatsReceiver.html" title="A StatsReceiver receiver proxy that translates all counter, stat, and gauge names according to a translate function."></a>
                         <a href="NameTranslatingStatsReceiver.html" title="A StatsReceiver receiver proxy that translates all counter, stat, and gauge names according to a translate function.">NameTranslatingStatsReceiver</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="NoMetadata$.html" title=""></a>
+                        <a href="NoMetadata$.html" title="">NoMetadata</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="object" href="NoRoleSpecified$.html" title=""></a>
@@ -368,14 +380,16 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="MetricBuilder$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
         <p id="owner"><a href="../../../index.html" class="extype" name="com">com</a>.<a href="../../index.html" class="extype" name="com.twitter">twitter</a>.<a href="../index.html" class="extype" name="com.twitter.finagle">finagle</a>.<a href="index.html" class="extype" name="com.twitter.finagle.stats">stats</a></p>
-        <h1>MetricBuilder<span class="permalink">
+        <h1><a href="MetricBuilder$.html" title="See companion object">MetricBuilder</a><span class="permalink">
       <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="MetricBuilder$.html" title="See companion object">object MetricBuilder</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -384,7 +398,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">MetricBuilder</span><span class="result"> extends <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
+        <span class="name">MetricBuilder</span><span class="result"> extends <a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a></span>
       </span>
       </h4>
 
@@ -396,7 +410,7 @@ instantiated in the underlying StatsReceiver.
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.12/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
+          <div class="superTypes hiddenContent"><a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a>, <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a>, <a href="https://www.scala-lang.org/api/2.12.12/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></div>
         </div></div>
         
 
@@ -422,7 +436,7 @@ instantiated in the underlying StatsReceiver.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.twitter.finagle.stats.MetricBuilder"><span>MetricBuilder</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.twitter.finagle.stats.MetricBuilder"><span>MetricBuilder</span></li><li class="in" name="com.twitter.finagle.stats.Metadata"><span>Metadata</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -440,26 +454,7 @@ instantiated in the underlying StatsReceiver.
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.twitter.finagle.stats.MetricBuilder#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(keyIndicator:Boolean,description:String,units:com.twitter.finagle.stats.MetricUnit,role:com.twitter.finagle.stats.SourceRole,verbosity:com.twitter.finagle.stats.Verbosity,sourceClass:Option[String],name:Seq[String],relativeName:Seq[String],processPath:Option[String],percentiles:IndexedSeq[Double],statsReceiver:com.twitter.finagle.stats.StatsReceiver):com.twitter.finagle.stats.MetricBuilder"></a><a id="&lt;init&gt;:MetricBuilder"></a>
-      <span class="permalink">
-      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#&lt;init&gt;(keyIndicator:Boolean,description:String,units:com.twitter.finagle.stats.MetricUnit,role:com.twitter.finagle.stats.SourceRole,verbosity:com.twitter.finagle.stats.Verbosity,sourceClass:Option[String],name:Seq[String],relativeName:Seq[String],processPath:Option[String],percentiles:IndexedSeq[Double],statsReceiver:com.twitter.finagle.stats.StatsReceiver):com.twitter.finagle.stats.MetricBuilder" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">MetricBuilder</span><span class="params">(<span name="keyIndicator">keyIndicator: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a> = <span class="symbol">false</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;No description provided&quot;</span></span>, <span name="units">units: <a href="MetricUnit.html" class="extype" name="com.twitter.finagle.stats.MetricUnit">MetricUnit</a> = <span class="symbol"><span class="name"><a href="Unspecified$.html">Unspecified</a></span></span></span>, <span name="role">role: <a href="SourceRole.html" class="extype" name="com.twitter.finagle.stats.SourceRole">SourceRole</a> = <span class="symbol"><span class="name"><a href="NoRoleSpecified$.html">NoRoleSpecified</a></span></span></span>, <span name="verbosity">verbosity: <a href="Verbosity.html" class="extype" name="com.twitter.finagle.stats.Verbosity">Verbosity</a> = <span class="symbol"><span class="name"><a href="Verbosity$.html">Verbosity.Default</a></span></span></span>, <span name="sourceClass">sourceClass: <a href="https://www.scala-lang.org/api/2.12.12/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">None</a></span></span></span>, <span name="name">name: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">Seq.empty</a></span></span></span>, <span name="relativeName">relativeName: <a href="../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">Seq.empty</a></span></span></span>, <span name="processPath">processPath: <a href="https://www.scala-lang.org/api/2.12.12/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">None</a></span></span></span>, <span name="percentiles">percentiles: <a href="../../../../scala/index.html#IndexedSeq[+A]=IndexedSeq[A]" class="extmbr" name="scala.IndexedSeq">IndexedSeq</a>[<a href="https://www.scala-lang.org/api/2.12.12/scala/Double.html#scala.Double" class="extype" name="scala.Double">Double</a>] = <span class="symbol"><span class="name"><a href="../../../../scala/index.html">IndexedSeq.empty</a></span></span></span>, <span name="statsReceiver">statsReceiver: <a href="StatsReceiver.html" class="extype" name="com.twitter.finagle.stats.StatsReceiver">StatsReceiver</a></span>)</span>
-      </span>
-      
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">keyIndicator</dt><dd class="cmt"><p>indicates whether this metric is crucial to this service (ie, an SLO metric)</p></dd><dt class="param">description</dt><dd class="cmt"><p>human-readable description of a metric's significance</p></dd><dt class="param">units</dt><dd class="cmt"><p>the unit associated with the metrics value (milliseconds, megabytes, requests, etc)</p></dd><dt class="param">role</dt><dd class="cmt"><p>whether the service is playing the part of client or server regarding this metric</p></dd><dt class="param">verbosity</dt><dd class="cmt"><p>see StatsReceiver for details</p></dd><dt class="param">sourceClass</dt><dd class="cmt"><p>the name of the class which generated this metric (ie, com.twitter.finagle.StatsFilter)</p></dd><dt class="param">name</dt><dd class="cmt"><p>the full metric name</p></dd><dt class="param">relativeName</dt><dd class="cmt"><p>the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage</p></dd><dt class="param">processPath</dt><dd class="cmt"><p>a universal coordinate for the resource</p></dd><dt class="param">percentiles</dt><dd class="cmt"><p>used to indicate buckets for histograms, to be set by the StatsReceiver</p></dd><dt class="param">statsReceiver</dt><dd class="cmt"><p>used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
 
         
 
@@ -580,7 +575,7 @@ instantiated in the underlying StatsReceiver.
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -669,7 +664,7 @@ instantiated in the underlying StatsReceiver.
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -689,7 +684,7 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -740,7 +735,7 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
@@ -751,6 +746,22 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
                 <span class="name">@varargs</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#isCounterishGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isCounterishGauge:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#isCounterishGauge:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isCounterishGauge</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -767,6 +778,22 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#kernel" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="kernel:Option[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#kernel:Option[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">kernel</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<a href="https://www.scala-lang.org/api/2.12.12/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a>]</span>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.MetricBuilder#keyIndicator" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="keyIndicator:Boolean"></a>
       <span class="permalink">
@@ -1081,6 +1108,22 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#withCounterishGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withCounterishGauge:com.twitter.finagle.stats.MetricBuilder"></a><a id="withCounterishGauge:MetricBuilder"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#withCounterishGauge:com.twitter.finagle.stats.MetricBuilder" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withCounterishGauge</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a></span>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.MetricBuilder#withDescription" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="withDescription(desc:String):com.twitter.finagle.stats.MetricBuilder"></a><a id="withDescription(String):MetricBuilder"></a>
       <span class="permalink">
@@ -1148,6 +1191,22 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
                 <span class="name">@varargs</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="com.twitter.finagle.stats.MetricBuilder#withNoCounterishGauge" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="withNoCounterishGauge:com.twitter.finagle.stats.MetricBuilder"></a><a id="withNoCounterishGauge:MetricBuilder"></a>
+      <span class="permalink">
+      <a href="../../../../com/twitter/finagle/stats/MetricBuilder.html#withNoCounterishGauge:com.twitter.finagle.stats.MetricBuilder" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withNoCounterishGauge</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.MetricBuilder">MetricBuilder</a></span>
+      </span>
+      
+      
     </li><li name="com.twitter.finagle.stats.MetricBuilder#withPercentiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withPercentiles(percentiles:Double*):com.twitter.finagle.stats.MetricBuilder"></a><a id="withPercentiles(Double*):MetricBuilder"></a>
       <span class="permalink">
@@ -1260,7 +1319,9 @@ This API is for Java compatibility</p></div><dl class="paramcmts block"><dt>retu
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="com.twitter.finagle.stats.Metadata">
+              <h3>Inherited from <a href="Metadata.html" class="extype" name="com.twitter.finagle.stats.Metadata">Metadata</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="../../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <a href="https://www.scala-lang.org/api/2.12.12/scala/Any.html#scala.Any" class="extype" name="scala.Any">Any</a></h3>

@@ -2139,7 +2139,7 @@ that supports cancellation.</p>
       <p class="shortcomment cmt">A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <code>java.util.Timer</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <a href="Timer.html" class="extype" name="com.twitter.util.Timer">Timer</a> that is implemented via a <code>java.util.Timer</code>.</p><p>This timer has millisecond granularity.</p><p>If your code has a reasonably high throughput of task scheduling
 and can trade off some precision of when tasks run,
 <a href="https://twitter.github.io/finagle/" target="_blank">Finagle</a> has a higher throughput
-<a href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala" target="_blank">hashed-wheel implementation</a>.
+<a href="https://github.com/twitter/finagle/blob/release/finagle-core/src/main/scala/com/twitter/finagle/util/DefaultTimer.scala" target="_blank">hashed-wheel implementation</a>.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>Due to the implementation using a single <code>Thread</code>, be wary of
       scheduling tasks that take a long time to execute (e.g. blocking IO)
       as this blocks other tasks from running at their scheduled time.</p></span></dd></dl></div>

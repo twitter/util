@@ -151,10 +151,6 @@
                         <a href="BufReader$.html" title="">BufReader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="class" href="BufReaders.html" title="Better Java APIs of BufReader for Scala 2.11."></a>
-                        <a href="BufReaders.html" title="Better Java APIs of BufReader for Scala 2.11.">BufReaders</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="class" href="Bufs.html" title="A Java adaptation of the com.twitter.io.Buf companion object."></a>
                         <a href="Bufs.html" title="A Java adaptation of the com.twitter.io.Buf companion object.">Bufs</a>
                       </li><li class="current-entities indented3">
@@ -215,10 +211,6 @@
                         <a href="ReaderDiscardedException.html" title="Indicates that a given stream was discarded by the Reader's consumer.">ReaderDiscardedException</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="class" href="Readers.html" title="Better Java APIs of Reader for Scala 2.11."></a>
-                        <a href="Readers.html" title="Better Java APIs of Reader for Scala 2.11.">Readers</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="object" href="StreamIO$.html" title=""></a>
                         <a href="StreamIO$.html" title="">StreamIO</a>
                       </li><li class="current-entities indented3">
@@ -241,10 +233,6 @@
                         <a class="object" href="Writer$.html" title=""></a>
                         <a class="trait" href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements."></a>
                         <a href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements.">Writer</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
-                        <a href="Writers.html" title="Java APIs for Writer.">Writers</a>
                       </li>
               </ul>
             </div>
@@ -616,6 +604,24 @@ at most <code>chunkSize</code> (bytes).
       <p class="shortcomment cmt">Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given <a href="Buf.html" class="extype" name="com.twitter.io.Buf">Buf</a>. The output of a returned reader is chunked by
 a least <code>chunkSize</code> (bytes).
 </p></div></div>
+    </li><li name="com.twitter.io.Reader#fromCollection" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fromCollection[A](list:java.util.Collection[A]):com.twitter.io.Reader[A]"></a><a id="fromCollection[A](Collection[A]):Reader[A]"></a>
+      <span class="permalink">
+      <a href="../../../com/twitter/io/Reader$.html#fromCollection[A](list:java.util.Collection[A]):com.twitter.io.Reader[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromCollection</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="list">list: <span class="extype" name="java.util.Collection">Collection</span>[<span class="extype" name="com.twitter.io.Reader.fromCollection.A">A</span>]</span>)</span><span class="result">: <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a>[<span class="extype" name="com.twitter.io.Reader.fromCollection.A">A</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt"> Java-Friendly version of fromSeq
+ Create a new <a href="Reader.html" class="extype" name="com.twitter.io.Reader">Reader</a> from a given Java <code>List</code>
+</p>
     </li><li name="com.twitter.io.Reader#fromFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="fromFile(f:java.io.File,chunkSize:Int):com.twitter.io.Reader[com.twitter.io.Buf]"></a><a id="fromFile(File,Int):Reader[Buf]"></a>
       <span class="permalink">

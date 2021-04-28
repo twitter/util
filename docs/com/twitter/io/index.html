@@ -263,10 +263,6 @@
                         <a href="BufReader$.html" title="">BufReader</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="class" href="BufReaders.html" title="Better Java APIs of BufReader for Scala 2.11."></a>
-                        <a href="BufReaders.html" title="Better Java APIs of BufReader for Scala 2.11.">BufReaders</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="class" href="Bufs.html" title="A Java adaptation of the com.twitter.io.Buf companion object."></a>
                         <a href="Bufs.html" title="A Java adaptation of the com.twitter.io.Buf companion object.">Bufs</a>
                       </li><li class="current-entities indented3">
@@ -327,10 +323,6 @@
                         <a href="ReaderDiscardedException.html" title="Indicates that a given stream was discarded by the Reader's consumer.">ReaderDiscardedException</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="class" href="Readers.html" title="Better Java APIs of Reader for Scala 2.11."></a>
-                        <a href="Readers.html" title="Better Java APIs of Reader for Scala 2.11.">Readers</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
                         <a class="object" href="StreamIO$.html" title=""></a>
                         <a href="StreamIO$.html" title="">StreamIO</a>
                       </li><li class="current-entities indented3">
@@ -353,10 +345,6 @@
                         <a class="object" href="Writer$.html" title=""></a>
                         <a class="trait" href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements."></a>
                         <a href="Writer.html" title="A writer represents a sink for a stream of arbitrary elements.">Writer</a>
-                      </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="Writers.html" title="Java APIs for Writer."></a>
-                        <a href="Writers.html" title="Java APIs for Writer.">Writers</a>
                       </li><li name="com.twitter.jvm" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="jvm"></a><a id="jvm:jvm"></a>
       <span class="permalink">
@@ -945,27 +933,6 @@ recursion to exert back-pressure: the next write isn't issued until the previous
 This will always ensure a finer grained back-pressure in network systems allowing the producers
 to adjust the flow rate based on consumer's speed and not on IO buffering.</p></span>, <span class="cmt"><p>Whether or not multiple pending writes are allowed on a <code>Writer</code> type is an undefined
       behaviour but could be changed in a refinement.</p></span></dd></dl></div>
-    </li><li name="com.twitter.io.BufReaders" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BufReadersextendsObject"></a><a id="BufReaders:BufReaders"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/BufReaders.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="Better Java APIs of BufReader for Scala 2.11." href="BufReaders.html"><span class="name deprecated" title="Deprecated: ">BufReaders</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Better Java APIs of BufReader for Scala 2.11.</p><div class="fullcomment"><div class="comment cmt"><p>Better Java APIs of BufReader for Scala 2.11.
-This will be removed when drop Scala 2.11 support.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.BufReader</p></span></dd></dl></div>
     </li><li name="com.twitter.io.Bufs" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="BufsextendsObject"></a><a id="Bufs:Bufs"></a>
       <span class="permalink">
@@ -986,47 +953,6 @@ This will be removed when drop Scala 2.11 support.
                 <span class="name">@Deprecated</span>
               
         </dd><dt>Deprecated</dt><dd class="cmt"></dd></dl></div>
-    </li><li name="com.twitter.io.Readers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ReadersextendsObject"></a><a id="Readers:Readers"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/Readers.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="Better Java APIs of Reader for Scala 2.11." href="Readers.html"><span class="name deprecated" title="Deprecated: ">Readers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Better Java APIs of Reader for Scala 2.11.</p><div class="fullcomment"><div class="comment cmt"><p>Better Java APIs of Reader for Scala 2.11.
-This will be removed when drop Scala 2.11 support.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Reader</p></span></dd></dl></div>
-    </li><li name="com.twitter.io.Writers" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="WritersextendsObject"></a><a id="Writers:Writers"></a>
-      <span class="permalink">
-      <a href="../../../com/twitter/io/Writers.html" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a title="Java APIs for Writer." href="Writers.html"><span class="name deprecated" title="Deprecated: ">Writers</span></a><span class="result"> extends <a href="../../../scala/index.html#AnyRef=Object" class="extmbr" name="scala.AnyRef">AnyRef</a></span>
-      </span>
-      
-      <p class="shortcomment cmt">Java APIs for Writer.</p><div class="fullcomment"><div class="comment cmt"><p>Java APIs for Writer.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@Deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"></dd><dt>See also</dt><dd><span class="cmt"><p>com.twitter.io.Writer</p></span></dd></dl></div>
     </li></ol>
             </div>
 

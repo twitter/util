@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>User Guide &#8212; Util 21.3.0 documentation</title>
+    <title>User Guide &#8212; Util 21.4.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -64,10 +64,10 @@
 <div class="section" id="choosing-the-stats-implementation-to-use-for-finagle">
 <span id="choosing-impl"></span><h2>Choosing the stats implementation to use for Finagle<a class="headerlink" href="#choosing-the-stats-implementation-to-use-for-finagle" title="Permalink to this headline">¶</a></h2>
 <p>Finagle uses util-stats heavily throughout and it is important for a well-run service to have this
-wired up properly. Finagle uses <a class="reference external" href="https://github.com/twitter/finagle/blob/master/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala">LoadService</a> in order to discover implementations on the
+wired up properly. Finagle uses <a class="reference external" href="https://github.com/twitter/finagle/blob/release/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala">LoadService</a> in order to discover implementations on the
 classpath. The standard implementation comes via <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">finagle-stats</a>.</p>
 <p>If multiple implementations are found, metrics are reported to <strong>all</strong> of the implementations via a
-<a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a>. This feature is useful when <span class="xref std std-ref">transitioning from one library
+<a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a>. This feature is useful when <span class="xref std std-ref">transitioning from one library
 implementation to another</span>. Once you are done migrating, in the interests of efficiency
 and memory pressure, it is wise to validate that only a single implementation is loaded via your
 dependencies. This also implies that developers of libraries should not depend on a specific
@@ -161,7 +161,7 @@ to be propagated between components, presumably introducing the overhead somewhe
 <span id="testing-code"></span><h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>If your tests do not need to verify the value of stats, you should use a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a>
 which provides a no-op implementation. If your tests need to verify the value of stats, you should
-use an <a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <code class="docutils literal notranslate"><span class="pre">ReadableCounters</span></code> and <code class="docutils literal notranslate"><span class="pre">ReadableStats</span></code> that
+use an <a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <code class="docutils literal notranslate"><span class="pre">ReadableCounters</span></code> and <code class="docutils literal notranslate"><span class="pre">ReadableStats</span></code> that
 enable simpler testing.</p>
 </div>
 <div class="section" id="usage-from-java">
@@ -215,10 +215,10 @@ should consider using one of <code class="docutils literal notranslate"><span cl
 <p>There a few <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s which work across implementations that
 developers may find useful.</p>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</li>
 <li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> for when you do not care about all metrics.</li>
 <li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala">DenylistStatsReceiver</a> programmatically decide which metrics to ignore.</li>
-<li><a class="reference external" href="https://github.com/twitter/util/blob/master/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s.</li>
+<li><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s.</li>
 </ul>
 </div>
 <div class="section" id="viewing-per-node-metrics">

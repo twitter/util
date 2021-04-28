@@ -445,23 +445,23 @@
               
         </dd></dl></div>
     </li><li name="com.twitter.util.reflect.Types#isCaseClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isCaseClass[T](clazz:Class[T]):Boolean"></a><a id="isCaseClass[T](Class[T]):Boolean"></a>
+      <a id="isCaseClass:Class[_]=&gt;Boolean"></a><a id="isCaseClass:(Class[_])⇒Boolean"></a>
       <span class="permalink">
-      <a href="../../../../com/twitter/util/reflect/Types$.html#isCaseClass[T](clazz:Class[T]):Boolean" title="Permalink">
+      <a href="../../../../com/twitter/util/reflect/Types$.html#isCaseClass:Class[_]=&gt;Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">isCaseClass</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="com.twitter.util.reflect.Types.isCaseClass.T">T</span>]</span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+        <span class="name">isCaseClass</span><span class="result">: (<span class="extype" name="scala.Predef.Class">Class</span>[_]) ⇒ <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
       <p class="shortcomment cmt">Returns  <code>true</code> if the given class type is considered a case class.</p><div class="fullcomment"><div class="comment cmt"><p>Returns  <code>true</code> if the given class type is considered a case class.
 True if:</p><ul><li>is assignable from PRODUCT and</li><li>not assignable from OPTION nor LIST and</li><li>is not a Tuple and</li><li>class symbol is case class.
-</li></ul></div><dl class="paramcmts block"><dt class="param">clazz</dt><dd class="cmt"><p>runtime representation of class type.</p></dd></dl></div>
+</li></ul></div></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -509,8 +509,8 @@ True if:</p><ul><li>is assignable from PRODUCT and</li><li>not assignable from O
         <span class="name">notCaseClass</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="clazz">clazz: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="com.twitter.util.reflect.Types.notCaseClass.T">T</span>]</span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
       </span>
       
-      <p class="shortcomment cmt">This is the negation of <a href="#isCaseClass[T](clazz:Class[T]):Boolean" class="extmbr" name="com.twitter.util.reflect.Types#isCaseClass">Types.isCaseClass</a>
-Determine if a given class type is not a case class.</p><div class="fullcomment"><div class="comment cmt"><p>This is the negation of <a href="#isCaseClass[T](clazz:Class[T]):Boolean" class="extmbr" name="com.twitter.util.reflect.Types#isCaseClass">Types.isCaseClass</a>
+      <p class="shortcomment cmt">This is the negation of <a href="#isCaseClass:Class[_]=&gt;Boolean" class="extmbr" name="com.twitter.util.reflect.Types#isCaseClass">Types.isCaseClass</a>
+Determine if a given class type is not a case class.</p><div class="fullcomment"><div class="comment cmt"><p>This is the negation of <a href="#isCaseClass:Class[_]=&gt;Boolean" class="extmbr" name="com.twitter.util.reflect.Types#isCaseClass">Types.isCaseClass</a>
 Determine if a given class type is not a case class.
 Returns <code>true</code> if it is NOT considered a case class.
 </p></div></div>
