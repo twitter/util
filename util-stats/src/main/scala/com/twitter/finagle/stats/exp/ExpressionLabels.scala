@@ -11,7 +11,7 @@ private[exp] object ExpressionLabels {
  *
  * @param processPath a universal coordinate for the resource
  * @param serviceName a client label or a server label depends on the `role`
- * @param role whether the service is playing the part of client or server regarding this metric
+ * @param role  whether the service is playing the part of client or server regarding this metric
  */
 private[exp] case class ExpressionLabels(
   processPath: Option[String],

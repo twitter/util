@@ -7,76 +7,106 @@ import org.scalatest.FunSuite
 import scala.util.control.NonFatal
 
 class ExpressionSchemaTest extends FunSuite {
+  trait Ctx {
+    val sr = new InMemoryStatsReceiver
+    val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
 
-  val sr = new InMemoryStatsReceiver
-  val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
+    val successMb =
+      CounterSchema(MetricBuilder(name = Seq("success"), statsReceiver = clientSR).withKernel)
+    val failuresMb =
+      CounterSchema(MetricBuilder(name = Seq("failures"), statsReceiver = clientSR).withKernel)
+    val latencyMb =
+      HistogramSchema(MetricBuilder(name = Seq("latency"), statsReceiver = clientSR).withKernel)
+    val sum = Expression(successMb).plus(Expression(failuresMb))
 
-  val successMb =
-    CounterSchema(MetricBuilder(name = Seq("success"), statsReceiver = clientSR).withKernel)
-  val failuresMb =
-    CounterSchema(MetricBuilder(name = Seq("failures"), statsReceiver = clientSR).withKernel)
-  val latencyMb =
-    HistogramSchema(MetricBuilder(name = Seq("latency"), statsReceiver = clientSR).withKernel)
-  val sum = Expression(successMb).plus(Expression(failuresMb))
-
-  val successRate = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-    .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
-    .withUnit(Percentage)
-    .withDescription("The success rate of the slow query")
-
-  val latency = ExpressionSchema("latency", Expression(latencyMb, Right(0.99)))
-    .withUnit(Milliseconds)
-    .withDescription("The latency of the slow query")
-
-  def slowQuery(ctl: TimeControl, succeed: Boolean): Unit = {
-    ctl.advance(50.milliseconds)
-    if (!succeed) {
-      throw new Exception("boom!")
+    def slowQuery(ctl: TimeControl, succeed: Boolean): Unit = {
+      ctl.advance(50.milliseconds)
+      if (!succeed) {
+        throw new Exception("boom!")
+      }
     }
   }
 
   test("Demonstrate an end to end example of using metric expressions") {
+    new Ctx {
+      val successCounter = clientSR.counter(successMb)
+      val failuresCounter = clientSR.counter(failuresMb)
+      val latencyStat = clientSR.stat(latencyMb)
 
-    val successCounter = clientSR.counter(successMb)
-    val failuresCounter = clientSR.counter(failuresMb)
-    val latencyStat = clientSR.stat(latencyMb)
+      val successRate = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+        .withUnit(Percentage)
+        .withDescription("The success rate of the slow query")
 
-    successRate.register()
-    latency.register()
+      val latency = ExpressionSchema("latency", Expression(latencyMb, Right(0.99)))
+        .withUnit(Milliseconds)
+        .withDescription("The latency of the slow query")
 
-    def runTheQuery(succeed: Boolean): Unit = {
-      Time.withCurrentTimeFrozen { ctl =>
-        val elapsed = Stopwatch.start()
-        try {
-          slowQuery(ctl, succeed)
-          successCounter.incr()
-        } catch {
-          case NonFatal(exn) =>
-            failuresCounter.incr()
-        } finally {
-          latencyStat.add(elapsed().inMilliseconds)
+      successRate.register()
+      latency.register()
+
+      def runTheQuery(succeed: Boolean): Unit = {
+        Time.withCurrentTimeFrozen { ctl =>
+          val elapsed = Stopwatch.start()
+          try {
+            slowQuery(ctl, succeed)
+            successCounter.incr()
+          } catch {
+            case NonFatal(exn) =>
+              failuresCounter.incr()
+          } finally {
+            latencyStat.add(elapsed().inMilliseconds)
+          }
         }
       }
+      runTheQuery(true)
+      runTheQuery(false)
+
+      assert(sr.expressions("success_rate_downstream").name == successRate.name)
+      assert(sr.expressions("success_rate_downstream").expr != successRate.expr)
+      assert(sr.expressions("latency_downstream").name == latency.name)
+      assert(sr.expressions("latency_downstream").expr != latency.expr)
+
+      assert(sr.counters(Seq("success")) == 1)
+      assert(sr.counters(Seq("failures")) == 1)
+      assert(sr.stats(Seq("latency")) == Seq(50, 50))
+
+      assert(sr.expressions("success_rate_downstream").labels.role == Client)
     }
-    runTheQuery(true)
-    runTheQuery(false)
-
-    assert(sr.expressions("success_rate_downstream").name == successRate.name)
-    assert(sr.expressions("success_rate_downstream").expr != successRate.expr)
-    assert(sr.expressions("latency_downstream").name == latency.name)
-    assert(sr.expressions("latency_downstream").expr != latency.expr)
-
-    assert(sr.counters(Seq("success")) == 1)
-    assert(sr.counters(Seq("failures")) == 1)
-    assert(sr.stats(Seq("latency")) == Seq(50, 50))
-
-    assert(sr.expressions("success_rate_downstream").labels.role == Client)
   }
 
   test("create a histogram expression requires a component") {
-    val e = intercept[IllegalArgumentException] {
-      ExpressionSchema("latency", Expression(latencyMb))
+    new Ctx {
+      val e = intercept[IllegalArgumentException] {
+        ExpressionSchema("latency", Expression(latencyMb))
+      }
+
+      assert(e.getMessage.contains("provide a component for histogram"))
     }
-    assert(e.getMessage.contains("provide a component for histogram"))
+  }
+
+  test("expressions with different namespaces are all stored") {
+    new Ctx {
+      val successRate1 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+        .withNamespaces("section1")
+        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+        .withUnit(Percentage)
+        .withDescription("The success rate of the slow query")
+        .register()
+
+      val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+        .withNamespaces("section2", "a")
+        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+        .withUnit(Percentage)
+        .withDescription("The success rate of the slow query")
+        .register()
+
+      assert(sr.expressions.values.size == 2)
+      val namespaces = sr.expressions.values.toSeq.map { exprSchema =>
+        exprSchema.namespaces
+      }
+      assert(namespaces.contains(Seq("section1")))
+      assert(namespaces.contains(Seq("section2", "a")))
+    }
   }
 }

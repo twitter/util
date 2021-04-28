@@ -285,10 +285,10 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
    * Designed to match the behavior of Metrics::registerExpression().
    */
   override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
-    val expressionId = schema.labels.serviceName match {
+    val expressionId = (schema.labels.serviceName match {
       case Some(serviceName) => schema.name + "_" + serviceName
       case None => schema.name
-    }
+    }) + schema.namespaces.mkString("_")
     preloadExpressions.put(expressionId, schema)
   }
 
