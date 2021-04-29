@@ -6,6 +6,7 @@ import com.twitter.util.validation.caseclasses._
 import com.twitter.util.validation.constraints.OneOf
 import jakarta.validation.ConstraintViolation
 import org.scalacheck.Gen
+import org.scalacheck.Shrink.shrinkAny
 import scala.reflect.runtime.universe._
 
 class OneOfConstraintValidatorTest extends ConstraintValidatorTest {
@@ -36,10 +37,7 @@ class OneOfConstraintValidatorTest extends ConstraintValidatorTest {
     val passValue = Gen.nonEmptyContainerOf[Seq, String](Gen.oneOf(oneOfValues.toSeq))
 
     forAll(passValue) { value =>
-      // shrinks end up with collection of empty string
-      if (value != null && !value.exists(_.nonEmpty) && value.nonEmpty) {
-        validate[OneOfSeqExample](value)
-      }
+      validate[OneOfSeqExample](value)
     }
   }
 

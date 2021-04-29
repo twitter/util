@@ -12,6 +12,7 @@ import com.twitter.util.validation.constraints.CountryCode
 import jakarta.validation.ConstraintViolation
 import java.util.Locale
 import org.scalacheck.Gen
+import org.scalacheck.Shrink.shrinkAny
 import scala.reflect.runtime.universe._
 
 class ISO3166CountryCodeConstraintValidatorTest extends ConstraintValidatorTest {
@@ -39,10 +40,7 @@ class ISO3166CountryCodeConstraintValidatorTest extends ConstraintValidatorTest 
     val passValue = Gen.nonEmptyContainerOf[Seq, String](Gen.oneOf(countryCodes))
 
     forAll(passValue) { value =>
-      // shrinks end up with collection of empty string
-      if (value != null && !value.exists(_.nonEmpty) && value.nonEmpty) {
-        validate[CountryCodeSeqExample](value).isEmpty should be(true)
-      }
+      validate[CountryCodeSeqExample](value).isEmpty should be(true)
     }
   }
 
@@ -66,13 +64,10 @@ class ISO3166CountryCodeConstraintValidatorTest extends ConstraintValidatorTest 
   }
 
   test("pass validation for valid country codes in array") {
-    val passValue = Gen.containerOf[Array, String](Gen.oneOf(countryCodes))
+    val passValue = Gen.nonEmptyContainerOf[Array, String](Gen.oneOf(countryCodes))
 
     forAll(passValue) { value =>
-      // shrinks end up with collection of empty string
-      if (value != null && !value.exists(_.nonEmpty) && value.nonEmpty) {
-        validate[CountryCodeArrayExample](value).isEmpty should be(true)
-      }
+      validate[CountryCodeArrayExample](value).isEmpty should be(true)
     }
   }
 
