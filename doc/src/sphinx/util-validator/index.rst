@@ -748,7 +748,7 @@ Use `validate` to perform validation of all constraints of a given case class.
    :emphasize-lines: 8
 
     import jakarta.validation.ConstraintViolation
-    import jakarta.validation.constraints.{AssertTure, NotEmpty}
+    import jakarta.validation.constraints.{AssertTrue, NotEmpty}
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean)
 
@@ -774,7 +774,7 @@ the method throws a `ConstraintViolationException <https://javadoc.io/static/jak
 
     import com.twitter.util.Try
     import jakarta.validation.ConstraintViolation
-    import jakarta.validation.constraints.{AssertTure, NotEmpty}
+    import jakarta.validation.constraints.{AssertTrue, NotEmpty}
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean)
 
@@ -793,7 +793,7 @@ be validated  successfully if the field had the given value:
    :emphasize-lines: 7,8,9,10
 
     import jakarta.validation.ConstraintViolation
-    import jakarta.validation.constraints.{AssertTure, NotEmpty}
+    import jakarta.validation.constraints.{AssertTrue, NotEmpty}
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean)
 
@@ -812,7 +812,7 @@ There is also a version of the method which instead of accepting a `Class[T]`, t
    :emphasize-lines: 6,9,10,11,12
 
     import jakarta.validation.ConstraintViolation
-    import jakarta.validation.constraints.{AssertTure, NotEmpty}
+    import jakarta.validation.constraints.{AssertTrue, NotEmpty}
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean)
 
@@ -836,7 +836,7 @@ instance.
    :emphasize-lines: 9,10,11
 
    import jakarta.validation.ConstraintViolation
-   import jakarta.validation.constraints.{AssertTure, NotEmpty}
+   import jakarta.validation.constraints.{AssertTrue, NotEmpty}
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean)
 
