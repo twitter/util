@@ -86,6 +86,20 @@ object caseclasses {
     }
   }
 
+  // throws a ConstraintDefinitionException as `@ethodValidation` must not define args
+  case class WithIncorrectlyDefinedMethodValidation(@NotEmpty id: String) {
+    @MethodValidation(fields = Array("id"))
+    def checkId(a: String): MethodValidationResult = {
+      MethodValidationResult.validIfTrue(a == id, "id not equal")
+    }
+  }
+
+  // throws a ConstraintDefinitionException as `@ethodValidation` must return a MethodValidationResult
+  case class AnotherIncorrectlyDefinedMethodValidation(@NotEmpty id: String) {
+    @MethodValidation(fields = Array("id"))
+    def checkId: Boolean = id.nonEmpty
+  }
+
   case class SmallCar(
     @NotNull manufacturer: String,
     @NotNull @Size(min = 2, max = 14) licensePlate: String,

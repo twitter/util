@@ -1,5 +1,6 @@
 package com.twitter.util.validation
 
+import com.twitter.util.Memoize
 import com.twitter.util.logging.Logging
 import com.twitter.util.reflect.{Classes, Annotations => ReflectAnnotations, Types => ReflectTypes}
 import com.twitter.util.validation.cfg.ConstraintMapping
@@ -189,8 +190,8 @@ class ScalaValidator private[validation] (
   }
 
   /**
-   * Returns the descriptorFactory object describing case class constraints. Descriptors describe constraint
-   * constraints on a given class and any isCascaded types.
+   * Returns a [[CaseClassDescriptor]] object describing the given case class type constraints.
+   * Descriptors describe constraints on a given class and any cascaded case class types.
    *
    * The returned object (and associated objects including CaseClassDescriptors) are immutable.
    *
@@ -205,25 +206,67 @@ class ScalaValidator private[validation] (
     descriptorFactory.describe[T](clazz)
 
   /**
+   * Returns a [[ExecutableDescriptor]] object describing a given [[Executable]].
+   *
+   * The returned object (and associated objects including ExecutableDescriptors) are immutable.
+   *
+   * @param executable the [[Executable]] to describe.
+   *
+   * @return the [[ExecutableDescriptor]] for the specified [[Executable]]
+   *
+   * @note the returned [[ExecutableDescriptor]] is NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
+   */
+  private[twitter] def describeExecutable(
+    executable: Executable,
+    mixinClazz: Option[Class[_]]
+  ): ExecutableDescriptor = descriptorFactory.describeExecutable(executable, mixinClazz)
+
+  /**
+   * Returns an array of [[MethodDescriptor]] instances describing the `@MethodValidation`-annotated
+   * or otherwise constrained methods of the given case class type.
+   *
+   * @param clazz class or interface type evaluated
+   *
+   * @return an array of [[MethodDescriptor]] for `@MethodValidation`-annotated or otherwise
+   *         constrained methods of the class
+   *
+   * @note the returned [[MethodDescriptor]] instances are NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
+   */
+  private[twitter] def describeMethods(
+    clazz: Class[_]
+  ): Array[MethodDescriptor] = descriptorFactory.describeMethods(clazz)
+
+  /**
    * Returns the set of Constraints which validate the given [[Annotation]] class.
    *
    * For instance if the constraint type is `Class[com.twitter.util.validation.constraints.CountryCode]`,
    * the returned set would contain an instance of the `ISO3166CountryCodeConstraintValidator`.
    *
-   * @param annotationType the Class[_] of the [[Annotation]] for which to find all supporting constraint validators.
-   *
    * @return the set of supporting constraint validators for a given [[Annotation]].
+   * @note this method is memoized as it should only ever need to be calculated once for a given [[Class]].
    */
-  def findConstraintValidators[A <: Annotation](
-    annotationType: Class[A]
-  ): Set[ConstraintValidatorType] = {
-    // compute from constraint, otherwise compute from registry
-    val validatedBy = findValidatedBy(annotationType)
-    if (validatedBy.isEmpty) {
-      validatorFactory.constraintHelper
-        .getAllValidatorDescriptors(annotationType).asScala
-        .map(_.newInstance(validatorFactory.constraintValidatorFactory)).toSet
-    } else validatedBy
+  val findConstraintValidators: Class[_ <: Annotation] => Set[ConstraintValidatorType] = Memoize {
+    annotationType: Class[_ <: Annotation] =>
+      // compute from constraint, otherwise compute from registry
+      val validatedBy: Set[ConstraintValidatorType] =
+        if (annotationType.isAnnotationPresent(classOf[Constraint])) {
+          val constraintAnnotation = annotationType.getAnnotation(classOf[Constraint])
+          constraintAnnotation
+            .validatedBy().map { clazz =>
+              val instance = validatorFactory.constraintValidatorFactory.getInstance(clazz)
+              if (instance == null)
+                throw new ValidationException(
+                  s"Constraint factory returned null when trying to create instance of $clazz.")
+              instance.asInstanceOf[ConstraintValidatorType]
+            }.toSet
+        } else Set.empty
+      if (validatedBy.isEmpty) {
+        validatorFactory.constraintHelper
+          .getAllValidatorDescriptors(annotationType).asScala
+          .map(_.newInstance(validatorFactory.constraintValidatorFactory)).toSet
+      } else validatedBy
   }
 
   /**
@@ -251,12 +294,13 @@ class ScalaValidator private[validation] (
    *   - Define a `groups` parameter
    *   - Define a `payload` parameter
    *
-   * @param annotationType The [[Annotation]] class to test.
-   *
    * @return true if the constraint fulfills the above conditions, false otherwise.
+   * @note this method is memoized as it should only ever need to be calculated once for a given [[Class]].
    */
-  def isConstraintAnnotation(annotationType: Class[_ <: Annotation]): Boolean =
-    validatorFactory.constraintHelper.isConstraintAnnotation(annotationType)
+  val isConstraintAnnotation: Class[_ <: Annotation] => Boolean = Memoize {
+    annotationType: Class[_ <: Annotation] =>
+      validatorFactory.constraintHelper.isConstraintAnnotation(annotationType)
+  }
 
   /**
    * Validates all constraint constraints on an object.
@@ -625,10 +669,9 @@ class ScalaValidator private[validation] (
 
   /** @inheritdoc */
   private[twitter] def validateExecutableParameters[T](
-    executable: Executable,
+    executable: ExecutableDescriptor,
     parameterValues: Array[Any],
     parameterNames: Array[String],
-    mixinClazz: Option[Class[_]],
     groups: Class[_]*
   ): Set[ConstraintViolation[T]] = {
     if (executable == null)
@@ -636,37 +679,35 @@ class ScalaValidator private[validation] (
     if (parameterValues == null)
       throw new IllegalArgumentException("The constructor parameter array cannot not be null.")
 
-    val parameterCount = executable.getParameterCount
+    val parameterCount = executable.executable.getParameterCount
     val parameterValuesLength = parameterValues.length
     if (parameterCount != parameterValuesLength)
       throw new ValidationException(
         s"Wrong number of parameters. Method or constructor $executable expects $parameterCount parameters, but got $parameterValuesLength.")
 
-    executable match {
-      case constructor: Constructor[_] =>
-        validateExecutableParameters[T](
-          executableDescriptor =
-            descriptorFactory.describe[T](constructor.asInstanceOf[Constructor[T]], mixinClazz),
-          root = None,
-          leaf = None,
-          parameterValues = parameterValues,
-          parameterNames = Some(parameterNames),
-          groups = groups
-        )
-      case _ =>
-        descriptorFactory.describe(executable.asInstanceOf[Method]) match {
-          case Some(descriptor: ExecutableDescriptor) =>
-            validateExecutableParameters[T](
-              executableDescriptor = descriptor,
-              root = None,
-              leaf = None,
-              parameterValues = parameterValues,
-              parameterNames = Some(parameterNames),
-              groups = groups
-            )
-          case _ => Set.empty[ConstraintViolation[T]]
-        }
-    }
+    validateExecutableParameters[T](
+      executableDescriptor = executable,
+      root = None,
+      leaf = None,
+      parameterValues = parameterValues,
+      parameterNames = Some(parameterNames),
+      groups = groups
+    )
+  }
+
+  /** @inheritdoc */
+  private[twitter] def validateMethods[T](
+    methods: Array[MethodDescriptor],
+    obj: T,
+    groups: Class[_]*
+  ): Set[ConstraintViolation[T]] = {
+    validateMethods[T](
+      rootClazz = Some(obj.getClass.asInstanceOf[Class[T]]),
+      root = Some(obj),
+      methods = methods,
+      obj = obj,
+      groups = groups
+    )
   }
 
   // note: Prefer while loop over Scala for loop for better performance. The scala for loop
@@ -785,24 +826,6 @@ class ScalaValidator private[validation] (
       results.toSet
     } else Set.empty[ConstraintViolation[Any]]
 
-  private[this] def findValidatedBy[A <: Annotation](
-    annotationType: Class[A]
-  ): Set[ConstraintValidatorType] = {
-    if (annotationType.isAnnotationPresent(classOf[Constraint])) {
-      val constraintAnnotation = annotationType.getAnnotation(classOf[Constraint])
-      val clazzes: Array[Class[ConstraintValidatorType]] =
-        constraintAnnotation.validatedBy().map(_.asInstanceOf[Class[ConstraintValidatorType]])
-
-      clazzes.map { clazz =>
-        val instance = validatorFactory.constraintValidatorFactory.getInstance(clazz)
-        if (instance == null)
-          throw new ValidationException(
-            s"Constraint factory returned null when trying to create instance of $clazz.")
-        instance
-      }.toSet
-    } else Set.empty
-  }
-
   // https://beanvalidation.org/2.0/spec/#constraintsdefinitionimplementation-validationimplementation
   // From the documentation:
   //
@@ -841,12 +864,7 @@ class ScalaValidator private[validation] (
         case Some(names) =>
           names
         case _ =>
-          val parameterNameProviderNames: java.util.List[String] =
-            validatorFactory.validatorFactoryScopedContext.getParameterNameProvider
-              .getParameterNames(executableDescriptor.executable)
-          Array.tabulate(parameterNameProviderNames.size()) { index =>
-            parameterNameProviderNames.get(index)
-          }
+          getExecutableParameterNames(executableDescriptor.executable)
       }
 
     // executable parameter constraints
@@ -1366,49 +1384,64 @@ class ScalaValidator private[validation] (
     else groups.exists(groupsFromAnnotation.contains)
   }
 
-  private[this] def parametersValidationTargetFilter(
-    constraintValidator: ConstraintValidator[_, _]
-  ): Boolean =
-    ReflectAnnotations
-      .findAnnotation(
-        classOf[SupportedValidationTarget],
-        constraintValidator.getClass.getAnnotations) match {
-      case Some(annotation: SupportedValidationTarget) =>
-        annotation.value().contains(ValidationTarget.PARAMETERS)
-      case _ => false
+  /** @note this method is memoized as it should only ever need to be calculated once for a given [[Executable]] */
+  private[this] val getExecutableParameterNames: Executable => Array[String] = Memoize {
+    executable: Executable =>
+      val parameterNameProviderNames: java.util.List[String] =
+        validatorFactory.validatorFactoryScopedContext.getParameterNameProvider
+          .getParameterNames(executable)
+      // depending on the underlying list this may be linear and not constant lookup
+      Array.tabulate(parameterNameProviderNames.size()) { index =>
+        parameterNameProviderNames.get(index)
+      }
+  }
+
+  /** @note this method is memoized as it should only ever need to be calculated once for a given [[ConstraintValidator]] */
+  private[this] val parametersValidationTargetFilter: ConstraintValidator[_, _] => Boolean =
+    Memoize { constraintValidator: ConstraintValidator[_, _] =>
+      ReflectAnnotations
+        .findAnnotation(
+          classOf[SupportedValidationTarget],
+          constraintValidator.getClass.getAnnotations) match {
+        case Some(annotation: SupportedValidationTarget) =>
+          annotation.value().contains(ValidationTarget.PARAMETERS)
+        case _ => false
+      }
     }
 
-  private[this] def getExecutableMetaData[T](executable: Executable): ExecutableMetaData = {
-    val callable: ExecutableCallable[_] = executable match {
-      case constructor: Constructor[_] =>
-        new ConstructorCallable(constructor)
-      case method: Method =>
-        new MethodCallable(method)
-    }
-    val builder = new ExecutableMetaData.Builder(
-      executable.getDeclaringClass,
-      new ConstrainedExecutable(
-        ConfigurationSource.ANNOTATION,
-        callable,
-        callable.getParameters
-          .map(p =>
-            new ConstrainedParameter(
-              ConfigurationSource.ANNOTATION,
-              callable,
-              p.getType,
-              p.getIndex)).asJava,
-        Collections.emptySet(),
-        Collections.emptySet(),
-        Collections.emptySet(),
-        CascadingMetaDataBuilder.nonCascading
-      ),
-      validatorFactory.getConstraintCreationContext,
-      validatorFactory.getExecutableHelper,
-      validatorFactory.getExecutableParameterNameProvider,
-      validatorFactory.getMethodValidationConfiguration
-    )
+  /** @note this method is memoized as it should only ever need to be calculated once for a given [[Executable]] */
+  private[this] val getExecutableMetaData: Executable => ExecutableMetaData = Memoize {
+    executable: Executable =>
+      val callable: ExecutableCallable[_] = executable match {
+        case constructor: Constructor[_] =>
+          new ConstructorCallable(constructor)
+        case method: Method =>
+          new MethodCallable(method)
+      }
+      val builder = new ExecutableMetaData.Builder(
+        executable.getDeclaringClass,
+        new ConstrainedExecutable(
+          ConfigurationSource.ANNOTATION,
+          callable,
+          callable.getParameters
+            .map(p =>
+              new ConstrainedParameter(
+                ConfigurationSource.ANNOTATION,
+                callable,
+                p.getType,
+                p.getIndex)).asJava,
+          Collections.emptySet(),
+          Collections.emptySet(),
+          Collections.emptySet(),
+          CascadingMetaDataBuilder.nonCascading
+        ),
+        validatorFactory.getConstraintCreationContext,
+        validatorFactory.getExecutableHelper,
+        validatorFactory.getExecutableParameterNameProvider,
+        validatorFactory.getMethodValidationConfiguration
+      )
 
-    builder.build()
+      builder.build()
   }
 
   private[validation] def parseMethodValidationFailures[T](

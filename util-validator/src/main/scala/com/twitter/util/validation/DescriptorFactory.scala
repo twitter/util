@@ -7,18 +7,19 @@ import com.twitter.util.validation.internal.Types
 import com.twitter.util.validation.metadata.{
   CaseClassDescriptor,
   ConstructorDescriptor,
+  ExecutableDescriptor,
   MethodDescriptor,
   PropertyDescriptor
 }
 import com.twitter.util.{Return, Try}
 import jakarta.validation.{Constraint, ConstraintDeclarationException, Valid, ValidationException}
 import java.lang.annotation.Annotation
-import java.lang.reflect.{Constructor, Method, Parameter}
-import java.util.function.Function
+import java.lang.reflect.{Constructor, Executable, Method, Parameter}
 import org.hibernate.validator.internal.metadata.core.ConstraintHelper
 import org.json4s.reflect.{ClassDescriptor, ConstructorParamDescriptor, Reflector, ScalaType}
 import org.json4s.{reflect => json4s}
 import scala.collection.mutable
+import scala.util.control.NonFatal
 
 private[validation] object DescriptorFactory {
 
@@ -69,56 +70,142 @@ private[validation] class DescriptorFactory(
     caseClassDescriptors.cleanUp()
   }
 
-  /** Describe a [[Class]] */
+  /**
+   * Describe a [[Class]].
+   *
+   * @note the returned [[CaseClassDescriptor]] is cached for repeated lookup attempts keyed by
+   *       the given Class[T] type.
+   */
   def describe[T](
     clazz: Class[T]
   ): CaseClassDescriptor[T] = {
     caseClassDescriptors
       .get(
         clazz,
-        new Function[Class[_], CaseClassDescriptor[_]] {
-          def apply(key: Class[_]): CaseClassDescriptor[_] = {
-            buildDescriptor[T](clazz)
-          }
-        }
+        (key: Class[_]) => buildDescriptor[T](clazz)
       ).asInstanceOf[CaseClassDescriptor[T]]
   }
 
   /**
-   * Describe a [[Method]].
+   * Describe a [[Constructor]].
+   *
+   * @note the returned [[ConstructorDescriptor]] is NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
+   */
+  def describe[T](
+    constructor: Constructor[T]
+  ): ConstructorDescriptor = {
+    buildConstructorDescriptor(
+      constructor.getDeclaringClass,
+      getJson4sConstructorDescriptor(constructor),
+      None
+    )
+  }
+
+  /**
+   * Describe a `@MethodValidation`-annotated or otherwise constrained [[Method]].
    *
    * As we do not want to describe every possible case class method, this potentially
    * returns a None in the case where the method has no constraint annotation and no
    * constrained parameters.
+   *
+   * @note the returned [[MethodDescriptor]] is NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
    */
   def describe(method: Method): Option[MethodDescriptor] = buildMethodDescriptor(method)
 
-  /** Describe a [[Constructor]]. */
-  def describe[T](
-    constructor: Constructor[T]
-  ): ConstructorDescriptor = describe(constructor, None)
-
-  /** Describe a [[Constructor]] given an optional "mix-in" Class. */
-  def describe[T](
-    constructor: Constructor[T],
+  /**
+   * Describe an [[Executable]] given an optional "mix-in" Class.
+   *
+   * @note the returned [[ExecutableDescriptor]] is NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
+   */
+  def describeExecutable[T](
+    executable: Executable,
     mixinClazz: Option[Class[_]]
-  ): ConstructorDescriptor = {
-    val parameters: Array[Parameter] = constructor.getParameters
-    val desc = org.json4s.reflect.ConstructorDescriptor(
-      params = Seq.tabulate(parameters.length) { index =>
-        val parameter = parameters(index)
-        org.json4s.reflect.ConstructorParamDescriptor(
-          name = unmangleName(parameter.getName),
-          mangledName = parameter.getName,
-          argIndex = index,
-          argType = Reflector.scalaTypeOf(parameter.getParameterizedType),
-          defaultValue = None
+  ): ExecutableDescriptor = {
+    executable match {
+      case constructor: Constructor[_] =>
+        val desc = getJson4sConstructorDescriptor(constructor)
+        val clazz = constructor.getDeclaringClass.asInstanceOf[Class[T]]
+        val parameterAnnotations = mixinClazz match {
+          case Some(mixin) =>
+            val constructorAnnotationMap = getConstructorParams(clazz, desc)
+            // augment with mixin class field annotations
+            constructorAnnotationMap.map {
+              case (name, params) =>
+                try {
+                  val method = mixin.getDeclaredMethod(name)
+                  (
+                    name,
+                    params.copy(annotations =
+                      params.annotations ++
+                        method.getAnnotations.filter(isConstraintAnnotation))
+                  )
+                } catch {
+                  case NonFatal(_) => // do nothing
+                    (name, params)
+                }
+            }
+          case _ =>
+            getConstructorParams(clazz, desc)
+        }
+        buildConstructorDescriptor(
+          constructor.getDeclaringClass,
+          desc,
+          Some(parameterAnnotations)
         )
-      },
-      constructor = new org.json4s.reflect.Executable(constructor, true),
-      isPrimary = true
-    )
-    buildConstructorDescriptor[T](constructor.getDeclaringClass, mixinClazz, desc)
+      case method: Method =>
+        MethodDescriptor(
+          method = method,
+          annotations = method.getDeclaredAnnotations.filter(isConstraintAnnotation),
+          members = method.getParameters.map { parameter =>
+            val name = parameter.getName
+            // augment with mixin class field annotations
+            val parameterAnnotations =
+              mixinClazz match {
+                case Some(mixin) =>
+                  try {
+                    val method = mixin.getDeclaredMethod(name)
+                    parameter.getAnnotations ++
+                      method.getAnnotations.filter(isConstraintAnnotation)
+                  } catch {
+                    case NonFatal(_) => // do nothing
+                      parameter.getAnnotations
+                  }
+                case _ => // do nothing
+                  parameter.getAnnotations
+              }
+            parameter.getName -> buildPropertyDescriptor(
+              Reflector.scalaTypeOf(parameter.getParameterizedType),
+              parameterAnnotations
+            )
+          }.toMap
+        )
+      case _ => // should not get here
+        throw new IllegalArgumentException
+    }
+  }
+
+  /**
+   * Describe `@MethodValidation`-annotated or otherwise constrained methods of a given `Class[_]`.
+   *
+   * @note the returned [[MethodDescriptor]] instances are NOT cached. It is up to the caller of this
+   *       method to optimize any calls to this method.
+   */
+  def describeMethods(clazz: Class[_]): Array[MethodDescriptor] = {
+    val clazzMethods = clazz.getMethods
+    if (clazzMethods.nonEmpty) {
+      val methods = new mutable.ArrayBuffer[MethodDescriptor](clazzMethods.length)
+      var index = 0
+      val length = clazzMethods.length
+      while (index < length) {
+        val method = clazzMethods(index)
+        buildMethodDescriptor(method).foreach(methods.append(_))
+        index += 1
+      }
+      methods.toArray
+    } else Array.empty[MethodDescriptor]
   }
 
   /* Private */
@@ -162,7 +249,7 @@ private[validation] class DescriptorFactory(
     val jsize = clazzDescriptor.constructors.size
     while (jindex < jsize) {
       constructors.append(
-        buildConstructorDescriptor(clazz, None, clazzDescriptor.constructors(jindex))
+        buildConstructorDescriptor(clazz, clazzDescriptor.constructors(jindex), None)
       )
       jindex += 1
     }
@@ -309,34 +396,35 @@ private[validation] class DescriptorFactory(
     )
   }
 
+  private[this] def getJson4sConstructorDescriptor(
+    constructor: Constructor[_]
+  ): org.json4s.reflect.ConstructorDescriptor = {
+    val parameters: Array[Parameter] = constructor.getParameters
+    org.json4s.reflect.ConstructorDescriptor(
+      params = Seq.tabulate(parameters.length) { index =>
+        val parameter = parameters(index)
+        org.json4s.reflect.ConstructorParamDescriptor(
+          name = unmangleName(parameter.getName),
+          mangledName = parameter.getName,
+          argIndex = index,
+          argType = Reflector.scalaTypeOf(parameter.getParameterizedType),
+          defaultValue = None
+        )
+      },
+      constructor = new org.json4s.reflect.Executable(constructor, true),
+      isPrimary = true
+    )
+  }
+
   private[this] def buildConstructorDescriptor[T](
     clazz: Class[T],
-    mixinClazz: Option[Class[_]],
-    constructorDescriptor: org.json4s.reflect.ConstructorDescriptor
+    constructorDescriptor: org.json4s.reflect.ConstructorDescriptor,
+    parameterAnnotationsMap: Option[scala.collection.Map[String, ConstructorParams]]
   ): ConstructorDescriptor = {
-    val parameterAnnotations =
-      mixinClazz match {
-        case Some(mixin) =>
-          val constructorAnnotationMap = getConstructorParams(clazz, constructorDescriptor)
-          // augment with mixin class field annotations
-          constructorAnnotationMap.map {
-            case (name, params) =>
-              Try(mixin.getDeclaredMethod(name)).toOption match {
-                case Some(mixinField) =>
-                  (
-                    name,
-                    params.copy(annotations =
-                      params.annotations ++
-                        mixinField.getAnnotations.filter(isConstraintAnnotation))
-                  )
-                case _ => // do nothing
-                  (name, params)
-              }
-          }
-        case _ =>
-          getConstructorParams(clazz, constructorDescriptor)
-      }
-
+    val parameterAnnotations = parameterAnnotationsMap match {
+      case Some(m) => m
+      case _ => getConstructorParams(clazz, constructorDescriptor)
+    }
     val (executable, annotations) = Option(constructorDescriptor.constructor.constructor) match {
       case Some(constructor) =>
         (constructor, constructor.getAnnotations)
@@ -407,8 +495,8 @@ private[validation] class DescriptorFactory(
       throw new ConstraintDeclarationException(
         s"Methods annotated with @${classOf[MethodValidation].getSimpleName} must not declare any arguments")
     if (method.getReturnType != classOf[MethodValidationResult])
-      throw new ConstraintDeclarationException(
-        s"Methods annotated with @${classOf[MethodValidation].getSimpleName} must return a ${classOf[MethodValidationResult]}")
+      throw new ConstraintDeclarationException(s"Methods annotated with @${classOf[
+        MethodValidation].getSimpleName} must return a ${classOf[MethodValidationResult].getName}")
     true
   }
 

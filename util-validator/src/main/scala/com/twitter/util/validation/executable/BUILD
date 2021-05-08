@@ -9,10 +9,10 @@ scala_library(
     strict_deps = True,
     dependencies = [
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",
-        "util/util-core:scala",
-        "util/util-slf4j-api/src/main/scala",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/metadata",
     ],
     exports = [
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/metadata",
     ],
 )

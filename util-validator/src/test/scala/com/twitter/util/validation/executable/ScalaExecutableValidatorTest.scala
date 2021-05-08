@@ -6,6 +6,7 @@ import com.twitter.util.validation.caseclasses.{
   Car,
   CarWithPassengerCount,
   Customer,
+  NestedUser,
   Page,
   Path,
   PathNotEmpty,
@@ -82,6 +83,69 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
           car,
           classOf[Car],
           car)
+      )
+    )
+  }
+
+  test("ScalaExecutableValidator#validateMethods 3") {
+    val owner = Person(id = "", name = "A. Einstein", address = DefaultAddress)
+    val car = Car(
+      id = 1234,
+      make = CarMake.Volkswagen,
+      model = "Beetle",
+      year = 1970,
+      owners = Seq(owner),
+      licensePlate = "CA123",
+      numDoors = 2,
+      manual = true,
+      ownershipStart = LocalDate.now,
+      ownershipEnd = LocalDate.now.plusYears(10),
+      warrantyEnd = Some(LocalDate.now.plusYears(3)),
+      passengers = Seq(
+        Person(id = "1001", name = "R. Franklin", address = DefaultAddress)
+      )
+    )
+
+    val methods = validator.describeMethods(classOf[Car])
+    val violations = executableValidator.validateMethods(methods, car)
+    assertViolations(
+      violations,
+      Seq(
+        WithViolation("validateId", "id may not be even", car, classOf[Car], car),
+        WithViolation(
+          "warrantyTimeValid.warrantyEnd",
+          "both warrantyStart and warrantyEnd are required for a valid range",
+          car,
+          classOf[Car],
+          car),
+        WithViolation(
+          "warrantyTimeValid.warrantyStart",
+          "both warrantyStart and warrantyEnd are required for a valid range",
+          car,
+          classOf[Car],
+          car)
+      )
+    )
+  }
+
+  test("ScalaExecutableValidator#validateMethods 4") {
+    val nestedUser = NestedUser(
+      "abcd1234",
+      Person(id = "1234abcd", name = "A. Einstein", address = DefaultAddress),
+      "Other",
+      ""
+    )
+    val methods = validator.describeMethods(classOf[NestedUser])
+    val violations = executableValidator.validateMethods(methods, nestedUser)
+    assertViolations(
+      violations,
+      Seq(
+        WithViolation(
+          "jobCheck.job",
+          "cannot be empty",
+          nestedUser,
+          classOf[NestedUser],
+          nestedUser)
       )
     )
   }
@@ -456,13 +520,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
 
   test("ScalaExecutableValidator#validateExecutableParameters 1") {
     val constructor = classOf[RentalStation].getConstructor(classOf[String])
+    val descriptor = validator.describeExecutable(constructor, None)
 
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array(null),
-        constructor.getParameters.map(_.getName),
-        None
+        constructor.getParameters.map(_.getName)
       )
     violations.size should equal(1)
 
@@ -476,13 +540,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
 
   test("ScalaExecutableValidator#validateExecutableParameters 2") {
     val constructor = classOf[UnicodeNameCaseClass].getConstructor(classOf[Int], classOf[String])
+    val descriptor = validator.describeExecutable(constructor, None)
 
     val violations: Set[ConstraintViolation[UnicodeNameCaseClass]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array(5, ""),
-        constructor.getParameters.map(_.getName),
-        None
+        constructor.getParameters.map(_.getName)
       )
     violations.size should equal(2)
 
@@ -510,18 +574,18 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
       classOf[Int],
       classOf[Option[Long]],
       classOf[Option[Long]])
+    val descriptor = validator.describeExecutable(constructor, None)
 
     val violations: Set[ConstraintViolation[Page[String]]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array(
           List("foo", "bar"),
           0.asInstanceOf[AnyRef],
           Some(1),
           Some(2)
         ),
-        constructor.getParameters.map(_.getName),
-        None
+        constructor.getParameters.map(_.getName)
       )
     violations.size should equal(1)
     val violation = violations.head
@@ -536,12 +600,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
     // validation should handle encoded parameter name
     val method =
       classOf[RentalStation].getMethod("listCars", classOf[String])
+    val descriptor = validator.describeExecutable(method, None)
+
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        method,
+        descriptor,
         Array(""),
-        method.getParameters.map(_.getName),
-        None
+        method.getParameters.map(_.getName)
       )
     violations.size should equal(1)
     val violation = violations.head
@@ -556,16 +621,17 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
     // validation should cascade to customer parameter which is missing first name
     val method =
       classOf[RentalStation].getMethod("updateCustomerRecords", classOf[Seq[Customer]])
+    val descriptor = validator.describeExecutable(method, None)
+
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        method,
+        descriptor,
         Array(
           Seq(
             Customer("", "Ride")
           )
         ),
-        method.getParameters.map(_.getName),
-        None
+        method.getParameters.map(_.getName)
       )
     violations.size should equal(1)
     val sortedViolations: Seq[ConstraintViolation[RentalStation]] =
@@ -581,12 +647,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
   test("ScalaExecutableValidator#validateExecutableParameters 6") {
     val method =
       classOf[RentalStation].getMethod("updateCustomerRecords", classOf[Seq[Customer]])
+    val descriptor = validator.describeExecutable(method, None)
+
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        method,
+        descriptor,
         Array(Seq.empty[Customer]),
-        method.getParameters.map(_.getName),
-        None
+        method.getParameters.map(_.getName)
       )
     violations.size should equal(2)
     val sortedViolations: Seq[ConstraintViolation[RentalStation]] =
@@ -615,12 +682,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
         classOf[Customer],
         classOf[LocalDate],
         classOf[Int])
+    val descriptor = validator.describeExecutable(method, None)
+
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        method,
+        descriptor,
         Array(customer, LocalDate.now().minusDays(1), Integer.valueOf(5)),
-        method.getParameters.map(_.getName),
-        None
+        method.getParameters.map(_.getName)
       )
     violations.size should equal(1)
     val invalidRentalStartDateViolation = violations.head
@@ -658,13 +726,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
   test("ScalaExecutableValidator#validateExecutableParameters 8") {
     // test mixin class support
     val constructor = classOf[RentalStation].getConstructor(classOf[String])
+    val descriptor = validator.describeExecutable(constructor, Some(classOf[RentalStationMixin]))
 
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array("Hertz"),
-        constructor.getParameters.map(_.getName),
-        Some(classOf[RentalStationMixin])
+        constructor.getParameters.map(_.getName)
       )
     violations.size should equal(1)
 
@@ -680,13 +748,13 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
   test("ScalaExecutableValidator#validateExecutableParameters 9") {
     // test mixin class support and replacement of parameter names
     val constructor = classOf[RentalStation].getConstructor(classOf[String])
+    val descriptor = validator.describeExecutable(constructor, Some(classOf[RentalStationMixin]))
 
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array("Hertz"),
-        Array("id"),
-        Some(classOf[RentalStationMixin])
+        Array("id")
       )
     violations.size should equal(1)
 
@@ -702,13 +770,17 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
   test("ScalaExecutableValidator#validateExecutableParameters 10") {
     // test mixin class support with mixin that doesn't define the field
     val constructor = classOf[RentalStation].getConstructor(classOf[String])
+    val descriptor =
+      validator.describeExecutable(
+        constructor,
+        Some(classOf[RandoMixin])
+      ) // doesn't define any fields so no additional constraints
 
     val violations: Set[ConstraintViolation[RentalStation]] =
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array("Hertz"),
-        Array("id"),
-        Some(classOf[RandoMixin]) // doesn't define any fields so no additional constraints
+        Array("id")
       )
     violations.isEmpty should be(true)
   }
@@ -716,14 +788,14 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
   test("ScalaExecutableValidator#validateExecutableParameters 11") {
     val pathValue = Path.apply("foo")
     val constructor = classOf[PathNotEmpty].getConstructor(classOf[Path], classOf[String])
+    val descriptor = validator.describeExecutable(constructor, None)
 
     // no validator registered `@NotEmpty` for Path type, should be returned as a violation not an exception
     val e = intercept[UnexpectedTypeException] {
       executableValidator.validateExecutableParameters(
-        constructor,
+        descriptor,
         Array(pathValue, "12345"),
-        constructor.getParameters.map(_.getName),
-        None
+        constructor.getParameters.map(_.getName)
       )
     }
     e.getMessage should equal(
@@ -735,30 +807,29 @@ class ScalaExecutableValidatorTest extends AssertViolationTest {
       classOf[Int],
       classOf[Option[LocalDate]],
       classOf[Boolean])
+    val descriptor = validator.describeExecutable(constructor, None)
 
     executableValidator
       .validateExecutableParameters(
-        constructor,
+        descriptor,
         Array(
           10,
           Some(LocalDate.parse("2013-01-01")),
           true
         ),
-        constructor.getParameters.map(_.getName),
-        None
+        constructor.getParameters.map(_.getName)
       ).isEmpty should be(true)
 
     val violations: Set[ConstraintViolation[UsersRequest]] =
       executableValidator
         .validateExecutableParameters(
-          constructor,
+          descriptor,
           Array(
             200,
             Some(LocalDate.parse("2013-01-01")),
             true
           ),
-          constructor.getParameters.map(_.getName),
-          None
+          constructor.getParameters.map(_.getName)
         )
     violations.size should equal(1)
 

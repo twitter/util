@@ -22,6 +22,7 @@ import com.twitter.util.validation.internal.validators.{
 }
 import jakarta.validation.constraints.{Min, NotEmpty, Pattern, Size}
 import jakarta.validation.{
+  ConstraintDeclarationException,
   ConstraintValidator,
   ConstraintViolation,
   ConstraintViolationException,
@@ -1491,6 +1492,26 @@ class ScalaValidatorTest extends AssertViolationTest with BeforeAndAfterAll {
     warrantyTimeValid.annotations.length should equal(1)
     warrantyTimeValid.annotations.head.annotationType() should equal(classOf[MethodValidation])
     warrantyTimeValid.members.size should equal(0)
+  }
+
+  test("ScalaValidator#class with incorrect method validation definition 1") {
+    val value = WithIncorrectlyDefinedMethodValidation("abcd1234")
+
+    val e = intercept[ConstraintDeclarationException] {
+      validator.validate(value)
+    }
+    e.getMessage should equal(
+      "Methods annotated with @MethodValidation must not declare any arguments")
+  }
+
+  test("ScalaValidator#class with incorrect method validation definition 2") {
+    val value = AnotherIncorrectlyDefinedMethodValidation("abcd1234")
+
+    val e = intercept[ConstraintDeclarationException] {
+      validator.validate(value)
+    }
+    e.getMessage should equal(
+      "Methods annotated with @MethodValidation must return a com.twitter.util.validation.engine.MethodValidationResult")
   }
 
   private[this] def getValidationAnnotations(

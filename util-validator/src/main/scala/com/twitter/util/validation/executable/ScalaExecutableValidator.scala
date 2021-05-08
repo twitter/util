@@ -1,7 +1,8 @@
 package com.twitter.util.validation.executable
 
+import com.twitter.util.validation.metadata.{ExecutableDescriptor, MethodDescriptor}
 import jakarta.validation.{ConstraintViolation, ValidationException}
-import java.lang.reflect.{Constructor, Executable, Method}
+import java.lang.reflect.{Constructor, Method}
 
 /**
  * Scala version of the Bean Specification [[jakarta.validation.executable.ExecutableValidator]].
@@ -155,24 +156,39 @@ trait ScalaExecutableValidator {
   /**
    * Validates all constraints placed on the parameters of the given executable.
    *
-   * @param executable the executable for which the parameter constraints is validated.
+  * @param executable the [[ExecutableDescriptor]] for which the parameter constraints is validated.
    * @param parameterValues the values provided by the caller for the given executable's parameters.
    * @param parameterNames the parameter names to use for error reporting.
-   * @param mixinClazz the optional mix-in class to also consider for annotation processing.
    * @param groups the list of groups targeted for validation (defaults to Default).
    * @tparam T the type defining the executable to validate.
+   *
+  * @return a set with the constraint violations caused by this validation; Will be empty if no error occurs, but never null.
+   *
+  * @throws IllegalArgumentException - if null is passed for any of the parameters or if parameters don't match with each other.
+   * @throws ValidationException      - if a non-recoverable error happens during the validation process.
+   */
+  private[twitter] def validateExecutableParameters[T](
+    executable: ExecutableDescriptor,
+    parameterValues: Array[Any],
+    parameterNames: Array[String],
+    groups: Class[_]*
+  ): Set[ConstraintViolation[T]]
+
+  /**
+   * Validates the `@MethodValidation` placed constraints on the given array of descriptors.
+   * @param methods the array of [[MethodDescriptor]] instances to evaluate.
+   * @param obj the object on which the method to validate is invoked.
+   * @param groups the list of groups targeted for validation (defaults to Default).
+   * @tparam T the type defining the methods to validate.
    *
    * @return a set with the constraint violations caused by this validation; Will be empty if no error occurs, but never null.
    *
    * @throws IllegalArgumentException - if null is passed for any of the parameters or if parameters don't match with each other.
-   * @throws ValidationException      - if a non recoverable error happens during the validation process.
+   * @throws ValidationException      - if a non-recoverable error happens during the validation process.
    */
-  @throws[ValidationException]
-  private[twitter] def validateExecutableParameters[T](
-    executable: Executable,
-    parameterValues: Array[Any],
-    parameterNames: Array[String],
-    mixinClazz: Option[Class[_]],
+  private[twitter] def validateMethods[T](
+    methods: Array[MethodDescriptor],
+    obj: T,
     groups: Class[_]*
   ): Set[ConstraintViolation[T]]
 }
