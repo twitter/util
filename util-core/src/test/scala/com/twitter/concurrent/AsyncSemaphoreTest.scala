@@ -2,7 +2,14 @@ package com.twitter.concurrent
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
-import java.util.concurrent.{ConcurrentLinkedQueue, RejectedExecutionException, CountDownLatch}
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.{
+  ConcurrentLinkedQueue,
+  CountDownLatch,
+  Executors,
+  RejectedExecutionException,
+  ThreadLocalRandom
+}
 import scala.collection.mutable
 import org.scalatest.Outcome
 import org.scalatest.funspec.FixtureAnyFunSpec
@@ -386,6 +393,35 @@ class AsyncSemaphoreTest extends FixtureAnyFunSpec {
       val results = Seq(r2.poll, r3.poll, r4.poll, r5.poll)
       val msgs = results.collect { case Some(Throw(e)) => e.getMessage }
       assert(msgs.forall(_ == "woop"))
+    }
+
+    it("behaves properly under contention") { () =>
+      val as = new AsyncSemaphore(5)
+      val exec = Executors.newCachedThreadPool()
+      val pool = FuturePool(exec)
+      val active = new AtomicInteger(0)
+      try {
+        val done =
+          Future.collect {
+            for (i <- 0 until 10) yield {
+              pool {
+                for (j <- 0 until 100) {
+                  val res =
+                    as.acquireAndRunSync {
+                      assert(active.incrementAndGet() <= as.numInitialPermits)
+                      Thread.sleep(ThreadLocalRandom.current().nextInt(10))
+                      assert(active.decrementAndGet() <= as.numInitialPermits)
+                      i * j
+                    }
+                  assert(await(res) == i * j)
+                }
+              }
+            }
+          }
+        await(done)
+      } finally {
+        exec.shutdown()
+      }
     }
   }
 }
