@@ -258,6 +258,8 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
    * executed after all postmains complete. The thread resumes when all exit
    * hooks complete or `closeDeadline` expires.
+   *
+   * @see [[runOnExit(Runnable)]] for a variant that is more suitable for Java.
    */
   protected final def onExit(f: => Unit): Unit = {
     closeOnExit {
@@ -268,9 +270,34 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
   }
 
   /**
+   * Invoke `runnable.run()` when shutdown is requested. Exit hooks run in parallel
+   * and are executed after all postmains complete. The thread resumes when all exit
+   * hooks complete or `closeDeadline` expires.
+   *
+   * This is a Java friendly API to allow Java 8 users to invoke `onExit` with lambda
+   * expressions.
+   *
+   * For example (in Java):
+   *
+   * {{{
+   *   runOnExit(() -> {
+   *    clientA.close();
+   *    clientB.close();
+   *   });
+   * }}}
+   *
+   * @see [[onExit(f: => Unit)]] for a variant that is more suitable for Scala.
+   */
+  protected final def runOnExit(runnable: Runnable): Unit = {
+    onExit(runnable.run())
+  }
+
+  /**
    * Invoke `f` when shutdown is requested. Exit hooks run in parallel and are
    * executed after all closeOnExit functions complete. The thread resumes when all exit
    * hooks complete or `closeDeadline` expires.
+   *
+   * @see [[runOnExitLast(Runnable)]] for a variant that is more suitable for Java.
    */
   protected final def onExitLast(f: => Unit): Unit = {
     closeOnExitLast {
@@ -278,6 +305,29 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
         FuturePool.unboundedPool(f).by(shutdownTimer, deadline)
       }
     }
+  }
+
+  /**
+   * Invoke `runnable.run()` when shutdown is requested. Exit hooks run in parallel
+   * and are executed after all closeOnExit functions complete. The thread resumes
+   * when all exit hooks complete or `closeDeadline` expires.
+   *
+   * This is a Java friendly API to allow Java 8 users to invoke `onExitLast` with lambda
+   * expressions.
+   *
+   * For example (in Java):
+   *
+   * {{{
+   *   runOnExitLast(() -> {
+   *    clientA.close();
+   *    clientB.close();
+   *   });
+   * }}}
+   *
+   * @see [[onExitLast(f: => Unit)]] for a variant that is more suitable for Scala.
+   */
+  protected final def runOnExitLast(runnable: Runnable): Unit = {
+    onExitLast(runnable.run())
   }
 
   /**

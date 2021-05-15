@@ -7,10 +7,17 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
 * util-validator: Introduce new library for case class validations (akin to Java bean validation)
   which follows the Jakarta Bean Validation specification (https://beanvalidation.org/) by wrapping
   the Hibernate Validator library and thus supports `jakarta.validation.Constraint` annotations and
   validators for annotating and validating fields of Scala case classes. ``PHAB_ID=D638603``
+
+* util-app: Introduce a Java-friendly API `c.t.app.App#runOnExit(Runnable)` and 
+`c.t.app.App#runOnExitLast(Runnable)` to allow Java 8 users to call `c.t.app.App#runOnExit`
+and `c.t.app.App#runOnExitLast` with lambda expressions. ``PHAB_ID=D511536``
 
 21.4.0
 ------

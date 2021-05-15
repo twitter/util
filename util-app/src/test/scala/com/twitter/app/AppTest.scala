@@ -114,6 +114,20 @@ class AppTest extends AnyFunSuite {
     assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4, 5))
   }
 
+  test("App: order of hooks with runOnExit and runOnExitLast") {
+    val q = new ConcurrentLinkedQueue[Int]
+    class Test1 extends App {
+      runOnExitLast(() => q.add(5))
+      runOnExit(() => q.add(4))
+      postmain(q.add(3))
+      def main(): Unit = q.add(2)
+      premain(q.add(1))
+      init(q.add(0))
+    }
+    new Test1().main(Array.empty)
+    assert(q.asScala.toSeq == Seq(0, 1, 2, 3, 4, 5))
+  }
+
   test("App: order of hooks via observer") {
     val enterQueue = new ConcurrentLinkedQueue[Event]
     val completeQueue = new ConcurrentLinkedQueue[Event]
