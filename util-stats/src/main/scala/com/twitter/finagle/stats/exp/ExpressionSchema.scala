@@ -52,7 +52,23 @@ case class ExpressionSchema private (
       case _ => // should not happen
     }
   }
+
+  def schemaKey(): ExpressionSchemaKey = {
+    ExpressionSchemaKey(name, labels.serviceName, namespaces)
+  }
 }
+
+/**
+ * ExpressionSchemaKey is a class that exists to serve as a key into a Map of ExpressionSchemas.
+ * It is simply a subset of the fields of the ExpressionSchema. Namely:
+ * @param name
+ * @param serviceName
+ * @param namespaces
+ */
+case class ExpressionSchemaKey(
+  name: String,
+  serviceName: Option[String],
+  namespaces: Seq[String])
 
 // expose for testing in twitter-server
 private[twitter] object ExpressionSchema {

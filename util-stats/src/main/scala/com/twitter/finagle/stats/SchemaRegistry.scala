@@ -1,6 +1,6 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey}
 
 /**
  * Interface used via the LoadService mechanism to obtain an
@@ -13,6 +13,6 @@ private[twitter] trait SchemaRegistry {
 
   def schemas(): Map[String, MetricSchema]
 
-  def expressions(): Map[String, ExpressionSchema]
+  def expressions(): Map[ExpressionSchemaKey, ExpressionSchema]
 
 }
