@@ -1,8 +1,8 @@
 package com.twitter.finagle.stats
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class RoleConfiguredStatsReceiverTest extends FunSuite {
+class RoleConfiguredStatsReceiverTest extends AnyFunSuite {
   test("RoleConfiguredSR configures metadata role correctly") {
     val mem = new InMemoryStatsReceiver
     val clientSR = new RoleConfiguredStatsReceiver(mem, Client)

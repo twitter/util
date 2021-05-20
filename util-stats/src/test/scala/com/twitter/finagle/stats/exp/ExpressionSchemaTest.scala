@@ -3,10 +3,10 @@ package com.twitter.finagle.stats.exp
 import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.stats._
 import com.twitter.util.{Stopwatch, Time, TimeControl}
-import org.scalatest.FunSuite
 import scala.util.control.NonFatal
+import org.scalatest.funsuite.AnyFunSuite
 
-class ExpressionSchemaTest extends FunSuite {
+class ExpressionSchemaTest extends AnyFunSuite {
   trait Ctx {
     val sr = new InMemoryStatsReceiver
     val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
