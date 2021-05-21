@@ -85,6 +85,20 @@ object MetricBuilder {
     )
   }
 }
+object Metadata {
+
+  /**
+   * extract the MetricBuilder from Metadata
+   */
+  def getMetricBuilder(metadata: Metadata): Option[MetricBuilder] = {
+    metadata match {
+      case metricBuilder: MetricBuilder => Some(metricBuilder)
+      case NoMetadata => None
+      case MultiMetadata(schemas) =>
+        schemas.find(_ != NoMetadata).asInstanceOf[Option[MetricBuilder]]
+    }
+  }
+}
 
 sealed trait Metadata
 

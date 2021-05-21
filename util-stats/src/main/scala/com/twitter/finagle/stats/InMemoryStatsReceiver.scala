@@ -257,6 +257,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     stats.clear()
     gauges.clear()
     schemas.clear()
+    preloadExpressions.clear()
   }
 
   private[this] def toHistogramDetail(addedValues: Seq[Float]): HistogramDetail = {
