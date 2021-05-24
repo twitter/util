@@ -82,8 +82,11 @@ def jdk11GcJavaOptions: Seq[String] = {
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.13.6",
-  crossScalaVersions := Seq("2.12.12", "2.13.6")
+  crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.0")
 )
+
+def isScala3(scalaBinaryVersion: String): Boolean =
+  scalaBinaryVersion == "3"
 
 val baseSettings = Seq(
   version := releaseVersion,
@@ -91,11 +94,16 @@ val baseSettings = Seq(
   // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
   Compile / unmanagedClasspath += Attributed.blank(new java.io.File("doesnotexist")),
   libraryDependencies ++= Seq(
-    "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.2",
+    "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4",
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
-    "org.scalatest" %% "scalatest" % "3.1.2" % "test",
-    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
+    (
+      if (isScala3(scalaBinaryVersion.value))
+        "org.scalatest" %% "scalatest" % "3.2.9" % "test"
+      else
+        "org.scalatest" %% "scalatest" % "3.1.2" % "test"
+    ),
+    ("org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
   ),
   Test / fork := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
@@ -120,7 +128,9 @@ val baseSettings = Seq(
     // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
     "-Xlint:-missing-interpolator",
     "-Yrangepos"
-  ),
+  ) ++ Seq(
+    "-source:3.0-migration"
+  ).filter(_ => isScala3(scalaBinaryVersion.value)),
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
@@ -232,7 +242,7 @@ lazy val utilApp = Project(
     name := "util-app",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+      ("org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
 
@@ -275,7 +285,7 @@ lazy val utilCache = Project(
       caffeineLib,
       jsr305Lib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+      ("org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilCore)
 
@@ -318,14 +328,14 @@ lazy val utilCore = Project(
     // so that util-core would work better for Pants projects in IntelliJ.
     Compile / unmanagedSourceDirectories += baseDirectory.value / "concurrent-extra",
     libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
       caffeineLib % "test",
-      scalacheckLib,
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
+    ) ++ Seq(
+      scalacheckLib,
       "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    ),
+    ).map(_.cross(CrossVersion.for3Use2_13)),
     Compile / resourceGenerators += Def.task {
       val projectName = name.value
       val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"
@@ -371,7 +381,10 @@ lazy val utilReflect = Project(
 ).settings(
     sharedSettings
   ).settings(
-    name := "util-reflect"
+    name := "util-reflect",
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value
+    )
   ).dependsOn(utilCore)
 
 lazy val utilHashing = Project(
@@ -384,7 +397,7 @@ lazy val utilHashing = Project(
     libraryDependencies ++= Seq(
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    )
+    ).map(_.cross(CrossVersion.for3Use2_13))
   ).dependsOn(utilCore % "test")
 
 lazy val utilJacksonAnnotations = Project(
@@ -427,7 +440,7 @@ lazy val utilJvm = Project(
     name := "util-jvm",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+      ("org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilApp, utilCore, utilStats)
 
@@ -460,7 +473,7 @@ lazy val utilMock = Project(
       // only depend on mockito-scala; it will pull in the correct corresponding version of mockito.
       "org.mockito" %% "mockito-scala" % mockitoScalaVersion,
       "org.mockito" %% "mockito-scala-scalatest" % mockitoScalaVersion % "test"
-    )
+    ).map(_.cross(CrossVersion.for3Use2_13))
   ).dependsOn(utilCore % "test")
 
 lazy val utilRegistry = Project(
@@ -472,7 +485,7 @@ lazy val utilRegistry = Project(
     name := "util-registry",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+      ("org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilCore)
 
@@ -494,7 +507,7 @@ lazy val utilSlf4jApi = Project(
     name := "util-slf4j-api",
     libraryDependencies ++= Seq(
       slf4jApi,
-      "org.mockito" %% "mockito-scala" % mockitoScalaVersion % "test",
+      ("org.mockito" %% "mockito-scala" % mockitoScalaVersion % "test").cross(CrossVersion.for3Use2_13),
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
     )
   ).dependsOn(utilCore % "test", utilMock % "test")
@@ -519,7 +532,7 @@ lazy val utilSecurity = Project(
     libraryDependencies ++= Seq(
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    )
+    ).map(_.cross(CrossVersion.for3Use2_13))
   ).dependsOn(utilCore, utilLogging, utilSecurityTestCerts % "test")
 
 lazy val utilSecurityTestCerts = Project(
@@ -541,14 +554,15 @@ lazy val utilStats = Project(
     libraryDependencies ++= Seq(
       caffeineLib,
       jsr305Lib,
-      scalacheckLib,
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
+    ) ++ Seq(
+      scalacheckLib,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    ) ++ {
+    ).map(_.cross(CrossVersion.for3Use2_13)) ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, major)) if major >= 13 =>
           Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0" % "test")
@@ -567,9 +581,12 @@ lazy val utilTest = Project(
     name := "util-test",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-all" % "1.10.19",
-      "org.scalatest" %% "scalatest" % "3.1.2",
-      "org.scalatestplus" %% "junit-4-12" % "3.1.2.0",
-      "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0"
+      (if (isScala3(scalaBinaryVersion.value))
+        "org.scalatest" %% "scalatest" % "3.2.9"
+      else
+        "org.scalatest" %% "scalatest" % "3.1.2"),
+      ("org.scalatestplus" %% "junit-4-12" % "3.1.2.0").cross(CrossVersion.for3Use2_13),
+      ("org.scalatestplus" %% "mockito-1-10" % "3.1.0.0").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilCore, utilLogging)
 
@@ -598,7 +615,7 @@ lazy val utilTunable = Project(
     libraryDependencies ++= Seq(
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")
+      ("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")).cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilApp, utilCore)
 
@@ -611,15 +628,16 @@ lazy val utilValidator = Project(
     name := "util-validator",
     libraryDependencies ++= Seq(
       caffeineLib,
-      scalacheckLib,
       "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
       "org.hibernate.validator" % "hibernate-validator" % "7.0.1.Final",
       "org.glassfish" % "jakarta.el" % "4.0.0",
-      "org.json4s" %% "json4s-core" % "3.6.7",
       "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
-    )
+    ) ++ Seq(
+      "org.json4s" %% "json4s-core" % "3.6.7",
+      scalacheckLib,
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
+    ).map(_.cross(CrossVersion.for3Use2_13))
   ).dependsOn(utilCore, utilReflect, utilSlf4jApi)
 
 lazy val utilZk = Project(
@@ -632,7 +650,7 @@ lazy val utilZk = Project(
     libraryDependencies ++= Seq(
       zkDependency,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+      ("org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
     )
   ).dependsOn(utilCore, utilLogging)
 
