@@ -289,7 +289,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     val expressionId = (schema.labels.serviceName match {
       case Some(serviceName) => schema.name + "_" + serviceName
       case None => schema.name
-    }) + schema.namespaces.mkString("_")
+    }) + schema.namespace.mkString("_")
     preloadExpressions.put(expressionId, schema)
   }
 

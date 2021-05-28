@@ -7,7 +7,7 @@ import com.twitter.finagle.stats.{MetricUnit, SourceRole, StatsReceiver, Unspeci
  *
  * @param name  this is going to be an important query key when fetching expressions
  * @param labels  service related information, see [[ExpressionLabels]]
- * @param namespaces  a list of namespaces the expression belongs to, this is usually
+ * @param namespace  a list of namespaces the expression belongs to, this is usually
  *                    used to indicate a tenant in a multi-tenancy systems or similar concepts.
  *                    For standalone services, this should be empty.
  * @param expr  class representation of the expression, see [[Expression]]
@@ -20,7 +20,7 @@ case class ExpressionSchema private (
   name: String,
   labels: ExpressionLabels,
   expr: Expression,
-  namespaces: Seq[String],
+  namespace: Seq[String],
   bounds: Bounds,
   description: String,
   unit: MetricUnit,
@@ -36,8 +36,8 @@ case class ExpressionSchema private (
    * a single string. This is for multi-tenancy system tenants or similar concepts and should
    * remain unset for standalone services.
    */
-  def withNamespaces(name: String*): ExpressionSchema =
-    copy(namespaces = this.namespaces ++ name)
+  def withNamespace(name: String*): ExpressionSchema =
+    copy(namespace = this.namespace ++ name)
 
   private[finagle] def withRole(role: SourceRole): ExpressionSchema =
     copy(labels = labels.copy(role = role))
@@ -54,7 +54,7 @@ case class ExpressionSchema private (
   }
 
   def schemaKey(): ExpressionSchemaKey = {
-    ExpressionSchemaKey(name, labels.serviceName, namespaces)
+    ExpressionSchemaKey(name, labels.serviceName, namespace)
   }
 }
 
@@ -76,7 +76,7 @@ private[twitter] object ExpressionSchema {
     ExpressionSchema(
       name = name,
       labels = ExpressionLabels.empty,
-      namespaces = Seq.empty,
+      namespace = Seq.empty,
       expr = expr,
       bounds = Unbounded.get,
       description = "Unspecified",

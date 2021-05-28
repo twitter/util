@@ -88,14 +88,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
   test("expressions with different namespaces are all stored") {
     new Ctx {
       val successRate1 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-        .withNamespaces("section1")
+        .withNamespace("section1")
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
         .register()
 
       val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-        .withNamespaces("section2", "a")
+        .withNamespace("section2", "a")
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
@@ -103,7 +103,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
       assert(sr.expressions.values.size == 2)
       val namespaces = sr.expressions.values.toSeq.map { exprSchema =>
-        exprSchema.namespaces
+        exprSchema.namespace
       }
       assert(namespaces.contains(Seq("section1")))
       assert(namespaces.contains(Seq("section2", "a")))
