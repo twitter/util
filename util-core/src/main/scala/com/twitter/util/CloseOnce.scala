@@ -55,7 +55,7 @@ trait CloseOnce { self: Closable =>
    */
   final def isClosed: Boolean = closed
 
-  override final def close(deadline: Time): Future[Unit] = {
+  override def close(deadline: Time): Future[Unit] = {
     // only call `closeOnce()` and assign `closePromise` if this is the first `close()` invocation
     if (firstCloseInvoked()) {
       try {

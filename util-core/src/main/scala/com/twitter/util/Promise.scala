@@ -1,6 +1,8 @@
 package com.twitter.util
 
 import com.twitter.concurrent.Scheduler
+
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import scala.annotation.tailrec
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NonFatal
@@ -184,11 +186,10 @@ object Promise {
       with (Try[A] => Unit) {
 
     // 0 represents not yet detached, 1 represents detached.
-    @volatile
-    private[this] var alreadyDetached: Int = 0
+    private[this] val alreadyDetached: AtomicInteger = new AtomicInteger(0)
 
     def detach(): Boolean =
-      unsafe.compareAndSwapInt(this, detachedFutureOffset, 0, 1)
+      alreadyDetached.compareAndSet(0, 1)
 
     def apply(result: Try[A]): Unit = if (detach()) update(result)
 
@@ -305,13 +306,6 @@ object Promise {
    * is satisfied.
    */
   private class Interrupted[A](val waitq: WaitQueue[A], val signal: Throwable)
-
-  private val unsafe: sun.misc.Unsafe = Unsafe()
-  private val stateOff: Long =
-    unsafe.objectFieldOffset(classOf[Promise[_]].getDeclaredField("state"))
-
-  private val detachedFutureOffset: Long =
-    unsafe.objectFieldOffset(classOf[DetachableFuture[_]].getDeclaredField("alreadyDetached"))
 
   private val AlwaysUnit: Any => Unit = _ => ()
 
@@ -467,26 +461,26 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   // - Transforming
   // - Try[A] (Done)
   // - Promise[A]
-  @volatile private[this] var state: Any = WaitQueue.empty[A]
-  private def theState(): Any = state
+  private[this] val state: AtomicReference[Any] = new AtomicReference[Any](WaitQueue.empty[A])
+  private def theState(): Any = state.get()
 
   private[util] def this(forwardInterrupts: Future[_]) = {
     this()
-    this.state = new Transforming[A](WaitQueue.empty, forwardInterrupts)
+    this.state.set(new Transforming[A](WaitQueue.empty, forwardInterrupts))
   }
 
   def this(handleInterrupt: PartialFunction[Throwable, Unit]) = {
     this()
-    this.state = new Interruptible[A](WaitQueue.empty, handleInterrupt, Local.save())
+    this.state.set(new Interruptible[A](WaitQueue.empty, handleInterrupt, Local.save()))
   }
 
   def this(result: Try[A]) = {
     this()
-    this.state = result
+    this.state.set(result)
   }
 
   override def toString: String = {
-    val theState = state match {
+    val theState = state.get() match {
       case waitq: WaitQueue[A] => s"Waiting($waitq)"
       case s: Interruptible[A] => s"Interruptible(${s.waitq},${s.handler})"
       case s: Transforming[A] => s"Transforming(${s.waitq},${s.other})"
@@ -498,7 +492,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   }
 
   @inline private[this] def cas(oldState: Any, newState: Any): Boolean =
-    unsafe.compareAndSwapObject(this, stateOff, oldState, newState)
+    state.compareAndSet(oldState, newState)
 
   /**
    * (Re)sets the interrupt handler. There is only
@@ -507,7 +501,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    * @param f the new interrupt handler
    */
   @tailrec
-  final def setInterruptHandler(f: PartialFunction[Throwable, Unit]): Unit = state match {
+  final def setInterruptHandler(f: PartialFunction[Throwable, Unit]): Unit = state.get() match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, new Interruptible(waitq, f, Local.save())))
         setInterruptHandler(f)
@@ -529,7 +523,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   }
 
   // Useful for debugging waitq.
-  private[util] def waitqLength: Int = state match {
+  private[util] def waitqLength: Int = state.get() match {
     case waitq: WaitQueue[A] => waitq.size
     case s: Interruptible[A] => s.waitq.size
     case s: Transforming[A] => s.waitq.size
@@ -549,7 +543,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   @tailrec final def forwardInterruptsTo(other: Future[_]): Unit = {
     // This reduces allocations in the common case.
     if (other.isDefined) return
-    state match {
+    state.get() match {
       case waitq: WaitQueue[A] =>
         if (!cas(waitq, new Transforming(waitq, other)))
           forwardInterruptsTo(other)
@@ -571,7 +565,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     }
   }
 
-  final def raise(intr: Throwable): Unit = state match {
+  final def raise(intr: Throwable): Unit = state.get() match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, new Interrupted(waitq, intr)))
         raise(intr)
@@ -601,7 +595,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     case p: Promise[A] /* Linked */ => p.raise(intr)
   }
 
-  @tailrec protected[Promise] final def detach(k: K[A]): Boolean = state match {
+  @tailrec protected[Promise] final def detach(k: K[A]): Boolean = state.get() match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, waitq.remove(k)))
         detach(k)
@@ -634,7 +628,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   // Awaitable
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = state match {
+  def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = state.get() match {
     case _: WaitQueue[A] | _: Interruptible[A] | _: Interrupted[A] | _: Transforming[A] =>
       val condition = new ReleaseOnApplyCDL[A]
       respond(condition)
@@ -668,7 +662,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   /**
    * Returns this promise's interrupt if it is interrupted.
    */
-  def isInterrupted: Option[Throwable] = state match {
+  def isInterrupted: Option[Throwable] = state.get() match {
     case _: WaitQueue[A] | _: Interruptible[A] | _: Transforming[A] => None
     case s: Interrupted[A] => Some(s.signal)
     case _: Try[A] /* Done */ => None
@@ -779,7 +773,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    * @return true only if the result is updated, false if it was already set.
    */
   @tailrec
-  final def updateIfEmpty(result: Try[A]): Boolean = state match {
+  final def updateIfEmpty(result: Try[A]): Boolean = state.get() match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, result)) updateIfEmpty(result)
       else {
@@ -812,7 +806,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   }
 
   @tailrec
-  protected final def continue(k: K[A]): Unit = state match {
+  protected final def continue(k: K[A]): Unit = state.get() match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, WaitQueue(k, waitq)))
         continue(k)
@@ -833,12 +827,12 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    * Should only be called when this Promise has already been fulfilled
    * or it is becoming another Future via `become`.
    */
-  protected final def compress(): Promise[A] = state match {
+  protected final def compress(): Promise[A] = state.get() match {
     case p: Promise[A] /* Linked */ =>
       val target = p.compress()
       // due to the assumptions stated above regarding when this can be called,
       // there should never be a `cas` fail.
-      state = target
+      state.set(target)
       target
 
     case _ => this
@@ -848,7 +842,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   protected final def link(target: Promise[A]): Unit = {
     if (this eq target) return
 
-    state match {
+    state.get() match {
       case waitq: WaitQueue[A] =>
         if (!cas(waitq, target)) link(target)
         else target.continueAll(waitq)
@@ -885,13 +879,13 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     }
   }
 
-  def poll: Option[Try[A]] = state match {
+  def poll: Option[Try[A]] = state.get() match {
     case res: Try[A] /* Done */ => Some(res)
     case p: Promise[A] /* Linked */ => p.poll
     case _ /* WaitQueue, Interruptible, Interrupted, or Transforming */ => None
   }
 
-  override def isDefined: Boolean = state match {
+  override def isDefined: Boolean = state.get() match {
     // Note: the basic implementation is the same as `poll()`, but we want to avoid doing
     // object allocations for `Some`s when the caller does not need the result.
     case _: Try[A] /* Done */ => true
