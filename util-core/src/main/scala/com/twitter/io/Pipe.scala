@@ -145,36 +145,36 @@ final class Pipe[A](timer: Timer) extends Reader[A] with Writer[A] {
   }
 
   def write(buf: A): Future[Unit] = {
-    val (waiter, value, result) = synchronized {
+    val result = synchronized {
       state match {
         case State.Failed(exc) =>
-          (null, null, Future.exception(exc))
+          Right(Future.exception(exc))
 
         case State.Closed | State.Closing(_, _) =>
-          (null, null, Future.exception(new IllegalStateException("write() while closed")))
+          Right(Future.exception(new IllegalStateException("write() while closed")))
 
         case State.Idle =>
           val p = new Promise[Unit]
           state = State.Writing(buf, p)
-          (null, null, p)
+          Right(p)
 
-        case State.Reading(p) =>
+        case State.Reading(p: Promise[Option[A]]) =>
           // pending reader has enough space for the full write
           state = State.Idle
-          (p, Some(buf), Future.Done)
+          Left(() => p.setValue(Some(buf)))
 
         case State.Writing(_, _) =>
-          (
-            null,
-            null,
-            Future.exception(new IllegalStateException("write() while write is pending"))
-          )
+          Right(Future.exception(new IllegalStateException("write() while write is pending")))
       }
     }
 
-    // The waiter and the value are mutually inclusive so just checking against waiter is adequate.
-    if (waiter != null) waiter.setValue(value)
-    result
+    result.fold(
+      { l =>
+        l()
+        Future.Done
+      },
+      r => r
+    )
   }
 
   def fail(cause: Throwable): Unit = fail(cause, discard = false)

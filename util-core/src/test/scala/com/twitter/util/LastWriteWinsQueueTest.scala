@@ -10,7 +10,7 @@ class LastWriteWinsQueueTest extends AnyWordSpec {
       assert(queue.size == 0)
       queue.add("1")
       assert(queue.size == 1)
-      assert(queue.remove() == "1")
+      assert(queue.remove == "1")
       assert(queue.size == 0)
     }
 

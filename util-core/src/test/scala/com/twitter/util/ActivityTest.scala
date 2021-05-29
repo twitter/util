@@ -85,24 +85,24 @@ class ActivityTest extends AnyFunSuite {
   }
 
   test("Activity.future: produce an initially-pending Activity") {
-    assert(Activity.future(Future.never).run.sample == Activity.Pending)
+    assert(Activity.future(Future.never).run.sample() == Activity.Pending)
   }
 
   test("Activity.future: produce an Activity that completes on success of the original Future") {
     val p = new Promise[Int]
     val act = Activity.future(p)
-    assert(act.run.sample == Activity.Pending)
+    assert(act.run.sample() == Activity.Pending)
     p.setValue(4)
-    assert(act.run.sample == Activity.Ok(4))
+    assert(act.run.sample() == Activity.Ok(4))
   }
 
   test("Activity.future: produce an Activity that fails on failure of the original Future") {
     val p = new Promise[Unit]
     val e = new Exception("gooby pls")
     val act = Activity.future(p)
-    assert(act.run.sample == Activity.Pending)
+    assert(act.run.sample() == Activity.Pending)
     p.setException(e)
-    assert(act.run.sample == Activity.Failed(e))
+    assert(act.run.sample() == Activity.Failed(e))
   }
 
   test(
@@ -326,7 +326,7 @@ class ActivityTest extends AnyFunSuite {
     def register(witness: Witness[Activity.State[Int]]): Closable = {
       count += 1
       w = witness
-      Closable.make { deadline: Time =>
+      Closable.make { (deadline: Time) =>
         count -= 1
         w = null
         Future.Done

@@ -1035,7 +1035,7 @@ class BufTest
       buf <- arbBuf.arbitrary
     } yield Buf(Seq.fill(n)(buf))
 
-    forAll(Gen.listOf(bufGen)) { bufs: List[Buf] =>
+    forAll(Gen.listOf(bufGen)) { (bufs: List[Buf]) =>
       val concatLeft = bufs.foldLeft(Buf.Empty) { (l, r) => l.concat(r) }
       val concatRight = bufs.foldRight(Buf.Empty) { (l, r) => l.concat(r) }
       val constructor = Buf(bufs)

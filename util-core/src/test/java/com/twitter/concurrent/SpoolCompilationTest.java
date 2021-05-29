@@ -4,6 +4,7 @@ import com.twitter.util.Await;
 import com.twitter.util.Future;
 import org.junit.Assert;
 import org.junit.Test;
+import scala.Function0;
 import scala.collection.JavaConverters;
 
 import java.util.Arrays;

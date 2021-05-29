@@ -62,7 +62,7 @@ class ReaderTest
     }
 
   test("Reader.concat collection of readers") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val concatedReaders = Reader.concat(readers)
       val values = Reader.readAllItems(concatedReaders)
@@ -71,7 +71,7 @@ class ReaderTest
   }
 
   test("Reader.concat from a collection won't force the stream") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val head = Reader.value("hmm")
       Reader.concat(head +: readers)
@@ -80,7 +80,7 @@ class ReaderTest
   }
 
   test("Reader.concat from a stream of readers") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val concatedReaders = Reader.concat(AsyncStream.fromSeq(readers))
       val values = Reader.readAllItems(concatedReaders)
@@ -89,7 +89,7 @@ class ReaderTest
   }
 
   test("Reader.concat from a stream of readers forces the stream") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val head = Reader.value("hmm")
       Reader.concat(AsyncStream.fromSeq(head +: readers))
@@ -154,7 +154,7 @@ class ReaderTest
   }
 
   test("Reader.flatten") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val value = Reader.readAllItems(Reader.flatten(Reader.fromSeq(readers)))
       assert(await(value) == ss)
@@ -162,7 +162,7 @@ class ReaderTest
   }
 
   test("Reader#flatten") {
-    forAll { ss: List[String] =>
+    forAll { (ss: List[String]) =>
       val readers: List[Reader[String]] = ss.map(s => Reader.value(s))
       val buf = Reader.readAllItems((Reader.fromSeq(readers).flatten))
       assert(await(buf) == ss)
@@ -249,7 +249,7 @@ class ReaderTest
 
     val r1 = Reader.value(1)
     val p2 = new Promise
-    val i2 = p2.interruptible
+    val i2 = p2.interruptible()
     val r2 = Reader.fromFuture(i2)
 
     def rStreams: Stream[Reader[Any]] = r1 #:: r2 #:: rStreams
@@ -331,7 +331,7 @@ class ReaderTest
   }
 
   test("Reader.toAsyncStream") {
-    forAll { l: List[Byte] =>
+    forAll { (l: List[Byte]) =>
       val buf = Buf.ByteArray.Owned(l.toArray)
       val as = Reader.toAsyncStream(Reader.fromBuf(buf, 1))
 
@@ -340,7 +340,7 @@ class ReaderTest
   }
 
   test("Reader.flatMap") {
-    forAll { s: String =>
+    forAll { (s: String) =>
       val reader1 = Reader.fromBuf(Buf.Utf8(s), 8)
       val reader2 = reader1.flatMap { buf =>
         val pipe = new Pipe[Buf]
@@ -429,7 +429,7 @@ class ReaderTest
   }
 
   test("Reader.value") {
-    forAll { a: AnyVal =>
+    forAll { (a: AnyVal) =>
       val r = Reader.value(a)
       assert(await(r.read()) == Some(a))
       assert(r.onClose.isDefined == false)
@@ -439,7 +439,7 @@ class ReaderTest
   }
 
   test("Reader.exception") {
-    forAll { ex: Exception =>
+    forAll { (ex: Exception) =>
       val r = Reader.exception(ex)
       val exr = intercept[Exception] {
         await(r.read())
@@ -467,7 +467,7 @@ class ReaderTest
   }
 
   test("Reader.map") {
-    forAll { l: List[Int] =>
+    forAll { (l: List[Int]) =>
       val pipe = new Pipe[Int]
       writeLoop(l, pipe)
       val reader2 = pipe.map(_.toString)

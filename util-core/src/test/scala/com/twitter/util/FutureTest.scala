@@ -901,8 +901,8 @@ class FutureTest extends AnyWordSpec with MockitoSugar with ScalaCheckDrivenProp
         }
       }
 
-      testJavaFuture("toJavaFuture", { f: Future[Int] => f.toJavaFuture })
-      testJavaFuture("toCompletableFuture", { f: Future[Int] => f.toCompletableFuture })
+      testJavaFuture("toJavaFuture", { (f: Future[Int]) => f.toJavaFuture })
+      testJavaFuture("toCompletableFuture", { (f: Future[Int]) => f.toCompletableFuture })
 
       "monitored" should {
         trait MonitoredHelper {

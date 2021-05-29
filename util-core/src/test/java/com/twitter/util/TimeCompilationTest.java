@@ -23,8 +23,8 @@ public class TimeCompilationTest {
   @Test
   public void testUndefined() {
     Time a = Time.Undefined();
-    Time b = Time.fromSeconds(99);
-    Time c = Time.fromSeconds(9999);
+    Time b = Time.fromSecondsJ(99);
+    Time c = Time.fromSecondsJ(9999);
 
     Assert.assertEquals(a, b.max(a));
     Assert.assertEquals(c, c.min(a));
@@ -33,11 +33,11 @@ public class TimeCompilationTest {
 
   @Test
   public void testFrom() {
-    Time a = Time.fromSeconds(1);
-    Time b = Time.fromMilliseconds(1000);
-    Time c = Time.fromMicroseconds(1000000);
+    Time a = Time.fromSecondsJ(1);
+    Time b = Time.fromMillisecondsJ(1000);
+    Time c = Time.fromMicrosecondsJ(1000000);
     Time d = Time.fromNanoseconds(1000000000);
-    Time e = Time.fromFractionalSeconds(1.0);
+    Time e = Time.fromFractionalSecondsJ(1.0);
 
     Assert.assertEquals(e, a);
     Assert.assertEquals(a, b);
@@ -47,7 +47,7 @@ public class TimeCompilationTest {
 
   @Test
   public void testMinAndMax() {
-    Time a = Time.fromSeconds(9);
+    Time a = Time.fromSecondsJ(9);
     Time b = Time.fromNanoseconds(9);
 
     Assert.assertEquals(a, a.max(Time.Bottom()));
@@ -58,9 +58,9 @@ public class TimeCompilationTest {
 
   @Test
   public void testPlusAndMinus() {
-    Time a = Time.fromMilliseconds(3333);
-    Time b = a.plus(Duration.fromMilliseconds(2222));
-    Time c = b.minus(Duration.fromMilliseconds(3333));
+    Time a = Time.fromMillisecondsJ(3333);
+    Time b = a.plus(Duration.fromMillisecondsJ(2222));
+    Time c = b.minus(Duration.fromMillisecondsJ(3333));
 
     Assert.assertEquals(a, a.plus(Duration.Zero()));
     Assert.assertEquals(a, a.minus(Duration.Zero()));
@@ -70,8 +70,8 @@ public class TimeCompilationTest {
 
   @Test
   public void testDiff() {
-    Time a = Time.fromSeconds(6);
-    Time b = Time.fromMilliseconds(2000);
+    Time a = Time.fromSecondsJ(6);
+    Time b = Time.fromMillisecondsJ(2000);
 
     Assert.assertEquals(4000, a.diff(b).inMilliseconds());
   }
@@ -79,7 +79,7 @@ public class TimeCompilationTest {
   @Test
   public void testFloor() {
     Time a = Time.fromNanoseconds(8888);
-    Time b = a.floor(Duration.fromMicroseconds(1));
+    Time b = a.floor(Duration.fromMicrosecondsJ(1));
 
     Assert.assertEquals(8, b.inMicroseconds());
   }
@@ -87,16 +87,16 @@ public class TimeCompilationTest {
   @Test
   public void testCeil() {
     Time a = Time.fromNanoseconds(6666);
-    Time b = a.ceil(Duration.fromMicroseconds(1));
+    Time b = a.ceil(Duration.fromMicrosecondsJ(1));
 
     Assert.assertEquals(7, b.inMicroseconds());
   }
 
   @Test
   public void testSince() {
-    Time a = Time.now().plus(Duration.fromSeconds(10));
-    Time b = Time.epoch().plus(Duration.fromSeconds(10));
-    Time c = Time.fromMilliseconds(0);
+    Time a = Time.now().plus(Duration.fromSecondsJ(10));
+    Time b = Time.epoch().plus(Duration.fromSecondsJ(10));
+    Time c = Time.fromMillisecondsJ(0);
 
     Assert.assertTrue(a.sinceNow().inSeconds() <= 10);
     Assert.assertTrue(b.sinceEpoch().inSeconds() <= 10);
@@ -105,8 +105,8 @@ public class TimeCompilationTest {
 
   @Test
   public void testUntil() {
-    Time a = Time.now().minus(Duration.fromMilliseconds(10));
-    Time b = Time.epoch().minus(Duration.fromMilliseconds(10));
+    Time a = Time.now().minus(Duration.fromMillisecondsJ(10));
+    Time b = Time.epoch().minus(Duration.fromMillisecondsJ(10));
     Time c = Time.fromNanoseconds(0);
 
     Assert.assertTrue(a.untilNow().inSeconds() <= 10);
@@ -116,14 +116,14 @@ public class TimeCompilationTest {
 
   @Test
   public void testWithTimeAt() {
-    Time time = Time.fromMilliseconds(123456L);
+    Time time = Time.fromMillisecondsJ(123456L);
     Time.withTimeAt(time, func(timeControl -> {
       Assert.assertEquals(Time.now(), time);
 
       // you can control time via the `TimeControl` instance.
-      timeControl.advance(Duration.fromSeconds(2));
+      timeControl.advance(Duration.fromSecondsJ(2));
       FuturePools.unboundedPool().apply(func0(() -> {
-        assert(Time.now().equals(time.plus(Duration.fromSeconds(2))));
+        assert(Time.now().equals(time.plus(Duration.fromSecondsJ(2))));
         return BoxedUnit.UNIT;
       }));
       return null;

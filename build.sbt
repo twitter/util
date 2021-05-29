@@ -26,6 +26,30 @@ val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 
+def scalatestLib(scalaBinaryVersion: String) =
+  if (isScala3(scalaBinaryVersion))
+    "org.scalatest" %% "scalatest" % "3.2.9" % "test"
+  else
+    "org.scalatest" %% "scalatest" % "3.1.2" % "test"
+
+def scalatestplusScalacheckLib(scalaBinaryVersion: String) =
+  if (isScala3(scalaBinaryVersion))
+    "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test"
+  else
+    "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
+
+def scalatestplusJUnitLib(scalaBinaryVersion: String) =
+  if (isScala3(scalaBinaryVersion))
+    "org.scalatestplus" %% "junit-4-13" % "3.2.9.0" % "test"
+  else
+    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
+
+def scalatestplusMockitoLib(scalaBinaryVersion: String) =
+  if (isScala3(scalaBinaryVersion))
+    "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+  else
+    "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+
 def travisTestJavaOptions: Seq[String] = {
   // We have some custom configuration for the Travis environment
   // https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
@@ -97,13 +121,8 @@ val baseSettings = Seq(
     "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4",
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
-    (
-      if (isScala3(scalaBinaryVersion.value))
-        "org.scalatest" %% "scalatest" % "3.2.9" % "test"
-      else
-        "org.scalatest" %% "scalatest" % "3.1.2" % "test"
-    ),
-    ("org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test").cross(CrossVersion.for3Use2_13)
+    scalatestLib(scalaBinaryVersion.value),
+    scalatestplusJUnitLib(scalaBinaryVersion.value),
   ),
   Test / fork := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
@@ -111,6 +130,7 @@ val baseSettings = Seq(
   Compile / unmanagedSourceDirectories += {
     val sourceDir = (Compile / sourceDirectory).value
     CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) => sourceDir / "scala-2.13+"
       case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
       case _ => sourceDir / "scala-2.12-"
     }
@@ -129,7 +149,10 @@ val baseSettings = Seq(
     "-Xlint:-missing-interpolator",
     "-Yrangepos"
   ) ++ Seq(
-    "-source:3.0-migration"
+    "-source:3.0-migration",
+    "-rewrite",
+    "-explain",
+    "-explain-types",
   ).filter(_ => isScala3(scalaBinaryVersion.value)),
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
@@ -330,12 +353,11 @@ lazy val utilCore = Project(
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
       caffeineLib % "test",
-      "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ Seq(
       scalacheckLib,
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    ).map(_.cross(CrossVersion.for3Use2_13)),
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      scalatestplusScalacheckLib(scalaBinaryVersion.value),
+      scalatestplusMockitoLib(scalaBinaryVersion.value),
+    ),
     Compile / resourceGenerators += Def.task {
       val projectName = name.value
       val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"

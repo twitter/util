@@ -78,7 +78,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
 
   test("Closable.all with exceptions") {
     val throwing = Closable.make(_ => sys.error("lolz"))
-    val tracking = new Closable {
+    val tracking: Closable { def calledClose: Boolean } = new Closable {
       @volatile
       var calledClose = false
       override def close(deadline: Time): Future[Unit] = {

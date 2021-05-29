@@ -35,7 +35,7 @@ public final class Vars {
    * @see com.twitter.util.Var$#value(Object)
    */
   public static <T> Var<T> newConstVar(T constant) {
-    return Var$.MODULE$.value(constant);
+    return (Var<T>) Var$.MODULE$.value(constant);
   }
 
   /**

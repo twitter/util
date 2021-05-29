@@ -20,9 +20,9 @@ public class DurationCompilationTest {
   @Test
   public void testFrom() {
     Duration a = Duration.fromTimeUnit(1, TimeUnit.MINUTES);
-    Duration b = Duration.fromSeconds(60);
-    Duration c = Duration.fromMilliseconds(60000);
-    Duration d = Duration.fromMicroseconds(60000000);
+    Duration b = Duration.fromSecondsJ(60);
+    Duration c = Duration.fromMillisecondsJ(60000);
+    Duration d = Duration.fromMicrosecondsJ(60000000);
     Duration e = Duration.fromNanoseconds(60000000000l);
 
     Assert.assertEquals(a, b);
@@ -40,9 +40,9 @@ public class DurationCompilationTest {
 
   @Test
   public void testPlusAndMinus() {
-    Duration a = Duration.fromSeconds(1);
-    Duration b = a.plus(Duration.fromMilliseconds(1000));
-    Duration c = b.minus(Duration.fromMilliseconds(500));
+    Duration a = Duration.fromSecondsJ(1);
+    Duration b = a.plus(Duration.fromMillisecondsJ(1000));
+    Duration c = b.minus(Duration.fromMillisecondsJ(500));
 
     Assert.assertEquals(a, a.minus(Duration.Zero()));
     Assert.assertEquals(a, a.plus(Duration.Zero()));
@@ -54,8 +54,8 @@ public class DurationCompilationTest {
 
   @Test
   public void testMinMax() {
-    Duration a = Duration.fromSeconds(4);
-    Duration b = Duration.fromMicroseconds(4);
+    Duration a = Duration.fromSecondsJ(4);
+    Duration b = Duration.fromMicrosecondsJ(4);
 
     Assert.assertEquals(a, a.max(Duration.Zero()));
     Assert.assertEquals(a, a.max(b));
@@ -76,7 +76,7 @@ public class DurationCompilationTest {
 
   @Test
   public void testAbs() {
-    Duration a = Duration.fromMicroseconds(-9999);
+    Duration a = Duration.fromMicrosecondsJ(-9999);
     Duration b = a.abs();
     Duration c = b.abs();
 
@@ -86,7 +86,7 @@ public class DurationCompilationTest {
 
   @Test
   public void testMulAndDiv() {
-    Duration a = Duration.fromSeconds(2);
+    Duration a = Duration.fromSecondsJ(2);
     Duration b = a.div(10);
     Duration c = b.mul(10);
 
@@ -96,7 +96,7 @@ public class DurationCompilationTest {
 
   @Test
   public void testMulAndDivDouble() {
-    Duration a = Duration.fromSeconds(9);
+    Duration a = Duration.fromSecondsJ(9);
     Duration b = a.div(4.5);
     Duration c = b.mul(4.5);
 
@@ -106,8 +106,8 @@ public class DurationCompilationTest {
 
   @Test
   public void testRem() {
-    Duration a = Duration.fromSeconds(5);
-    Duration b = a.rem(Duration.fromSeconds(2));
+    Duration a = Duration.fromSecondsJ(5);
+    Duration b = a.rem(Duration.fromSecondsJ(2));
 
     Assert.assertEquals(1000, b.inMilliseconds());
   }
@@ -122,16 +122,16 @@ public class DurationCompilationTest {
 
   @Test
   public void testFloor() {
-    Duration a = Duration.fromMilliseconds(2222);
-    Duration b = a.floor(Duration.fromSeconds(1));
+    Duration a = Duration.fromMillisecondsJ(2222);
+    Duration b = a.floor(Duration.fromSecondsJ(1));
 
     Assert.assertEquals(2, b.inSeconds());
   }
 
   @Test
   public void testCeil() {
-    Duration a = Duration.fromMilliseconds(3333);
-    Duration b = a.ceil(Duration.fromSeconds(1));
+    Duration a = Duration.fromMillisecondsJ(3333);
+    Duration b = a.ceil(Duration.fromSecondsJ(1));
 
     Assert.assertEquals(4, b.inSeconds());
   }

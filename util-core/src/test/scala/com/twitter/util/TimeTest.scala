@@ -10,8 +10,7 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import com.twitter.conversions.DurationOps._
 import org.scalatest.wordspec.AnyWordSpec
 
-trait TimeLikeSpec[T <: TimeLike[T]] extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
-  val ops: TimeLikeOps[T]
+class TimeLikeSpec[T <: TimeLike[T]](val ops: TimeLikeOps[T]) extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
   import ops._
 
   "Top, Bottom, Undefined, Nanoseconds(_), Finite(_)" should {
@@ -395,7 +394,7 @@ class TimeFormatTest extends AnyWordSpec {
   }
 }
 
-class TimeTest extends { val ops: Time.type = Time } with TimeLikeSpec[Time] with Eventually
+class TimeTest extends TimeLikeSpec[Time](ops = Time) with Eventually
 with IntegrationPatience {
 
   "Time" should {
@@ -600,13 +599,13 @@ with IntegrationPatience {
     "fromFractionalSeconds" in {
       val tolerance = 2.microseconds // we permit 1us slop
 
-      forAll { i: Int =>
+      forAll { (i: Int) =>
         assert(
           Time.fromSeconds(i).moreOrLessEquals(Time.fromFractionalSeconds(i.toDouble), tolerance)
         )
       }
 
-      forAll { d: Double =>
+      forAll { (d: Double) =>
         val magic = 9223372036854775L // cribbed from Time.fromMicroseconds
         val microseconds = d * 1.second.inMicroseconds
         whenever(microseconds > -magic && microseconds < magic) {
@@ -618,7 +617,7 @@ with IntegrationPatience {
         }
       }
 
-      forAll { l: Long =>
+      forAll { (l: Long) =>
         val seconds: Double = l.toDouble / 1.second.inNanoseconds
         assert(
           Time.fromFractionalSeconds(seconds).moreOrLessEquals(Time.fromNanoseconds(l), tolerance)

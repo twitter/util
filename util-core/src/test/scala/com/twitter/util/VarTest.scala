@@ -225,7 +225,7 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("Var.collect: empty") {
-    assert(Var.collect(List.empty[Var[Int]]).sample == Nil)
+    assert(Var.collect(List.empty[Var[Int]]).sample() == Nil)
   }
 
   test("Var.collect[Seq]") {
@@ -451,7 +451,7 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     // in order to avoid extremely long runtimes, we limit the max size
     // of the generated Seqs and Sets. A limit of 50 keeps runtime below
     // 1 second on my crufty old laptop.
-    implicit val generatorDrivenConfig = PropertyCheckConfiguration(sizeRange = 50)
+    implicit val generatorDrivenConfig: PropertyCheckConfiguration = PropertyCheckConfiguration(sizeRange = 50)
 
     forAll(arbitrary[Seq[Set[Int]]].suchThat(_.nonEmpty)) { sets =>
       val v = Var(sets.head)

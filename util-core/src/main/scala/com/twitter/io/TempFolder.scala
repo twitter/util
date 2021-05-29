@@ -39,9 +39,9 @@ trait TempFolder {
     // Note: If we were willing to have a dependency on Guava in util-core
     // we could just use `com.google.common.io.Files.createTempDir()`
     var folder: File = null
-    do {
+    while ({ {
       folder = new File(tempFolder, "scala-test-" + System.currentTimeMillis)
-    } while (!folder.mkdir())
+    } ; !folder.mkdir()}) ()
     _folderName.set(folder)
 
     try {
