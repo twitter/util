@@ -13,7 +13,7 @@ class BufReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   private def await[A](f: Future[A]): A = Await.result(f, 5.seconds)
 
   test("BufReader - apply(buf)") {
-    forAll { bytes: String =>
+    forAll { (bytes: String) =>
       val buf = Buf.Utf8(bytes)
       val r = BufReader(buf)
       assert(await(BufReader.readAll(r)) == buf)
@@ -35,7 +35,7 @@ class BufReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("BufReader - readAll") {
-    forAll { bytes: String =>
+    forAll { (bytes: String) =>
       val r = Reader.fromBuf(Buf.Utf8(bytes))
       assert(await(BufReader.readAll(r)) == Buf.Utf8(bytes))
     }
@@ -85,7 +85,7 @@ class BufReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
       } yield Buf.ByteArray.Owned(bytes)
     )
 
-    forAll(getByteArrays) { buffers: Seq[Buf] =>
+    forAll(getByteArrays) { (buffers: Seq[Buf]) =>
       val buffersWithLength = buffers.map(buf => Buf.U32BE(buf.length).concat(buf))
 
       val r = BufReader.framed(BufReader(Buf(buffersWithLength)), new BufReaderTest.U32BEFramer())

@@ -65,7 +65,7 @@ class Base64LongTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     assert(toBase64(0) == "A")
 
     val b = new StringBuilder
-    forAll { a: Alphabet =>
+    forAll { (a: Alphabet) =>
       b.setLength(0)
       toBase64(b, 0, a)
       assert(b.result == a(0).toString)
@@ -77,7 +77,7 @@ class Base64LongTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("toBase64 uses the expected number of digits") {
-    BoundaryValues.foreach { n: Long => assert(toBase64(n).length == expectedLength(n)) }
+    BoundaryValues.foreach { (n: Long) => assert(toBase64(n).length == expectedLength(n)) }
     forAll((n: Long) => assert(toBase64(n).length == expectedLength(n)))
 
     val b = new StringBuilder

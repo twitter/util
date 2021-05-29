@@ -78,12 +78,12 @@ sealed trait Spool[+A] {
       Future { f(Some(head)) } flatMap { _ =>
         tail transform {
           case Return(s) => s.foreachElem(f)
-          case Throw(_: EOFException) => Future { f(None) }
+          case Throw(_: EOFException) => Future { f(None); () }
           case Throw(cause) => Future.exception(cause)
         }
       }
     } else {
-      Future { f(None) }
+      Future { f(None); () }
     }
   }
 
@@ -273,8 +273,14 @@ sealed trait Spool[+A] {
 
 /**
  * Abstract `Spool` class for Java compatibility.
+ *
+ * The overrides for `++` are needed otherwise the java-compiler complains about two methods having the same erasure.
  */
-abstract class AbstractSpool[A] extends Spool[A]
+abstract class AbstractSpool[A] extends Spool[A] {
+  override def ++[B >: A](that: => Spool[B]): Spool[B] = super.++(that)
+
+  override def ++[B >: A](that: => Future[Spool[B]]): Future[Spool[B]] = super.++(that)
+}
 
 /**
  * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.

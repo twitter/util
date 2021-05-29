@@ -33,13 +33,13 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readByte")(forAll { byte: Byte =>
+  test("readByte")(forAll { (byte: Byte) =>
     val br = readerWith(byte)
     assert(br.readByte() == byte)
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readShortBE")(forAll { s: Short =>
+  test("readShortBE")(forAll { (s: Short) =>
     val br = readerWith(
       ((s >> 8) & 0xff).toByte,
       ((s) & 0xff).toByte
@@ -50,7 +50,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readShortLE")(forAll { s: Short =>
+  test("readShortLE")(forAll { (s: Short) =>
     val br = readerWith(
       ((s) & 0xff).toByte,
       ((s >> 8) & 0xff).toByte
@@ -62,7 +62,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readUnsignedMediumBE")(forAll { m: Int =>
+  test("readUnsignedMediumBE")(forAll { (m: Int) =>
     val br = readerWith(
       ((m >> 16) & 0xff).toByte,
       ((m >> 8) & 0xff).toByte,
@@ -72,7 +72,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readUnsignedMediumLE")(forAll { m: Int =>
+  test("readUnsignedMediumLE")(forAll { (m: Int) =>
     val br = readerWith(
       ((m) & 0xff).toByte,
       ((m >> 8) & 0xff).toByte,
@@ -82,7 +82,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readIntBE")(forAll { i: Int =>
+  test("readIntBE")(forAll { (i: Int) =>
     val br = readerWith(
       ((i >> 24) & 0xff).toByte,
       ((i >> 16) & 0xff).toByte,
@@ -93,7 +93,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readIntLE")(forAll { i: Int =>
+  test("readIntLE")(forAll { (i: Int) =>
     val br = readerWith(
       ((i) & 0xff).toByte,
       ((i >> 8) & 0xff).toByte,
@@ -104,7 +104,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readLongBE")(forAll { l: Long =>
+  test("readLongBE")(forAll { (l: Long) =>
     val br = readerWith(
       ((l >> 56) & 0xff).toByte,
       ((l >> 48) & 0xff).toByte,
@@ -119,7 +119,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readLongLE")(forAll { l: Long =>
+  test("readLongLE")(forAll { (l: Long) =>
     val br = readerWith(
       ((l) & 0xff).toByte,
       ((l >> 8) & 0xff).toByte,
@@ -134,41 +134,41 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readUnsignedByte")(forAll { b: Byte =>
+  test("readUnsignedByte")(forAll { (b: Byte) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readByte() = b }
     assert(br.readUnsignedByte() == (b & 0xff))
   })
 
-  test("readUnsignedShortBE")(forAll { s: Short =>
+  test("readUnsignedShortBE")(forAll { (s: Short) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readShortBE() = s }
     assert(br.readUnsignedShortBE() == (s & 0xffff))
   })
 
-  test("readUnsignedShortLE")(forAll { s: Short =>
+  test("readUnsignedShortLE")(forAll { (s: Short) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readShortLE() = s }
     assert(br.readUnsignedShortLE() == (s & 0xffff))
   })
 
-  test("readMediumBE")(forAll { i: Int =>
+  test("readMediumBE")(forAll { (i: Int) =>
     val m = maskMedium(i)
     val br = new ByteReaderImpl(Buf.Empty) { override def readUnsignedMediumBE() = m }
     val expected = if (m > SignedMediumMax) m | 0xff000000 else m
     assert(br.readMediumBE() == expected)
   })
 
-  test("readMediumLE")(forAll { i: Int =>
+  test("readMediumLE")(forAll { (i: Int) =>
     val m = maskMedium(i)
     val br = new ByteReaderImpl(Buf.Empty) { override def readUnsignedMediumLE() = m }
     val expected = if (m > SignedMediumMax) m | 0xff000000 else m
     assert(br.readMediumLE() == expected)
   })
 
-  test("readUnsignedIntBE")(forAll { i: Int =>
+  test("readUnsignedIntBE")(forAll { (i: Int) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntBE() = i }
     assert(br.readUnsignedIntBE() == (i & 0xffffffffL))
   })
 
-  test("readUnsignedIntLE")(forAll { i: Int =>
+  test("readUnsignedIntLE")(forAll { (i: Int) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntLE() = i }
     assert(br.readUnsignedIntLE() == (i & 0xffffffffL))
   })
@@ -177,7 +177,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     .chooseNum(Long.MinValue, Long.MaxValue)
     .map(x => BigInt(x) + BigInt(2).pow(63))
 
-  test("readUnsignedLongBE")(forAll(uInt64s) { bi: BigInt =>
+  test("readUnsignedLongBE")(forAll(uInt64s) { (bi: BigInt) =>
     val br = readerWith(
       ((bi >> 56) & 0xff).toByte,
       ((bi >> 48) & 0xff).toByte,
@@ -192,7 +192,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     intercept[UnderflowException] { br.readByte() }
   })
 
-  test("readUnsignedLongLE")(forAll(uInt64s) { bi1: BigInt =>
+  test("readUnsignedLongLE")(forAll(uInt64s) { (bi1: BigInt) =>
     val bi = bi1.abs
     val br = readerWith(
       ((bi) & 0xff).toByte,
@@ -209,27 +209,27 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   })
 
   // .equals is required to handle NaN
-  test("readFloatBE")(forAll { i: Int =>
+  test("readFloatBE")(forAll { (i: Int) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntBE() = i }
     assert(br.readFloatBE().equals(JFloat.intBitsToFloat(i)))
   })
 
-  test("readFloatLE")(forAll { i: Int =>
+  test("readFloatLE")(forAll { (i: Int) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readIntLE() = i }
     assert(br.readFloatLE().equals(JFloat.intBitsToFloat(i)))
   })
 
-  test("readDoubleBE")(forAll { l: Long =>
+  test("readDoubleBE")(forAll { (l: Long) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readLongBE() = l }
     assert(br.readDoubleBE().equals(JDouble.longBitsToDouble(l)))
   })
 
-  test("readDoubleLE")(forAll { l: Long =>
+  test("readDoubleLE")(forAll { (l: Long) =>
     val br = new ByteReaderImpl(Buf.Empty) { override def readLongLE() = l }
     assert(br.readDoubleLE().equals(JDouble.longBitsToDouble(l)))
   })
 
-  test("readBytes")(forAll { bytes: Array[Byte] =>
+  test("readBytes")(forAll { (bytes: Array[Byte]) =>
     val buf = Buf.ByteArray.Owned(bytes ++ bytes)
     val br = ByteReader(buf)
     intercept[IllegalArgumentException] { br.readBytes(-1) }
@@ -238,7 +238,7 @@ class ByteReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     assert(br.readBytes(1) == Buf.Empty)
   })
 
-  test("readAll")(forAll { bytes: Array[Byte] =>
+  test("readAll")(forAll { (bytes: Array[Byte]) =>
     val buf = Buf.ByteArray.Owned(bytes ++ bytes)
     val br = ByteReader(buf)
     assert(br.readAll() == Buf.ByteArray.Owned(bytes ++ bytes))

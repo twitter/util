@@ -22,11 +22,11 @@ class StorageUnitTest extends AnyFunSuite {
   }
 
   test("StorageUnit: should confer an essential humanity") {
-    assert(900.bytes.toHuman == "900 B")
-    assert(1.kilobyte.toHuman == "1024 B")
-    assert(2.kilobytes.toHuman == "2.0 KiB")
-    assert(Int.MaxValue.bytes.toHuman == "2.0 GiB")
-    assert(Long.MaxValue.bytes.toHuman == "8.0 EiB")
+    assert(900.bytes.toHuman() == "900 B")
+    assert(1.kilobyte.toHuman() == "1024 B")
+    assert(2.kilobytes.toHuman() == "2.0 KiB")
+    assert(Int.MaxValue.bytes.toHuman() == "2.0 GiB")
+    assert(Long.MaxValue.bytes.toHuman() == "8.0 EiB")
   }
 
   test("StorageUnit: should handle Long value") {
@@ -51,7 +51,7 @@ class StorageUnitTest extends AnyFunSuite {
 
   test("StorageUnit: should deal with negative values") {
     assert(-123.bytes.inBytes == -123)
-    assert(-2.kilobytes.toHuman == "-2.0 KiB")
+    assert(-2.kilobytes.toHuman() == "-2.0 KiB")
   }
 
   test("StorageUnit: should min properly") {

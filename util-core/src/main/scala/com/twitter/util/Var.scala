@@ -271,7 +271,7 @@ object Var {
 
     // In order to support unsubscribing from diffs when v is no longer referenced
     // we must avoid diffs keeping a strong reference to v.
-    val witness = Witness.weakReference { diff: Diff[CC, T] =>
+    val witness = Witness.weakReference { (diff: Diff[CC, T]) =>
       synchronized {
         v.update(diff.patch(v()))
       }

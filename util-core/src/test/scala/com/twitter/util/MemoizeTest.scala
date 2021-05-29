@@ -47,7 +47,7 @@ class MemoizeTest extends AnyFunSuite {
     val callCount = new AtomicInteger(0)
 
     val startUpLatch = new JavaCountDownLatch(1)
-    val memoizer = Memoize { i: Int =>
+    val memoizer = Memoize { (i: Int) =>
       // Wait for all of the threads to be started before
       // continuing. This gives races a chance to happen.
       startUpLatch.await()
@@ -85,7 +85,7 @@ class MemoizeTest extends AnyFunSuite {
 
     // A computation that should fail the first time, and then
     // succeed for all subsequent attempts.
-    val memo = Memoize { i: Int =>
+    val memo = Memoize { (i: Int) =>
       // Ensure that all of the callers have been started
       startUpLatch.await(200, TimeUnit.MILLISECONDS)
       // This effect should happen once per exception plus once for
