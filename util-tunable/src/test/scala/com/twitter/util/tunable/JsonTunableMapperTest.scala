@@ -26,7 +26,9 @@ class JsonTunableMapperTest extends AnyFunSuite {
     JsonTunableMapper().parse("""{ "tunables": [ ] }""") match {
       case Return(map) =>
         assert(map eq NullTunableMap)
-      case Throw(_) => fail()
+      case Throw(exc) =>
+        exc.printStackTrace()
+        fail(exc.getMessage)
     }
   }
 

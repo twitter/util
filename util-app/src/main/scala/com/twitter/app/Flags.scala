@@ -4,6 +4,7 @@ import scala.collection.immutable.TreeSet
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.jdk.CollectionConverters._
+import scala.reflect.ClassTag
 import scala.util.control.NonFatal
 
 /**
@@ -277,8 +278,9 @@ class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean)
    * @param name The name of the flag.
    * @param help The help string of the flag.
    */
-  def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: Manifest[T]): Flag[T] = {
-    val f = new Flag[T](name, help, m.toString, failFastUntilParsed)
+  def apply[T](name: String, help: String)(implicit _f: Flaggable[T], m: ClassTag[T]): Flag[T] = {
+    // TODO Scala3 Is ClassTag ok? Should we capitalize the type name?
+    val f = new Flag[T](name, help, m.runtimeClass.getTypeName.capitalize, failFastUntilParsed)
     add(f)
     f
   }

@@ -205,7 +205,7 @@ class AppTest extends AnyFunSuite {
     assert(n2 == 0)
     assert(!f.isDefined)
 
-    p.setDone
+    p.setDone()
     assert(n2 == 1)
     assert(f.isDefined)
   }

@@ -13,7 +13,7 @@ import scala.util.control.NonFatal
  * @see [[ClosableOnce.of]] for creating a proxy to a [[Closable]]
  *       that has already been instantiated.
  */
-trait CloseOnce { self: Closable =>
+trait CloseOnce extends Closable {
   // Our intrinsic lock for mutating the `closed` field
   private[this] val closePromise: Promise[Unit] = Promise[Unit]()
   @volatile private[this] var closed: Boolean = false

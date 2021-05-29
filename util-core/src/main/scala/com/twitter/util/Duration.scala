@@ -8,7 +8,7 @@ object Duration extends TimeLikeOps[Duration] {
     if (nanoseconds == 0L) Zero
     else new Duration(nanoseconds)
 
-  // FIXME figure out why the overrides cause issues in Scala 3.0
+  // TODO Scala3 figure out why the overrides cause issues in Scala 3.0
   // This is needed for Java compatibility.
   def fromFractionalSecondsJ(seconds: Double): Duration =
     super.fromFractionalSeconds(seconds)

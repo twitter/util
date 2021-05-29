@@ -198,7 +198,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       p.println("---------")
     }
     for ((k, v) <- sortedCounters)
-      p.print(f"$k%s $v%d\n")
+      p.println(f"$k%s $v%d") // TODO Scala3 bug-report?
     if (includeHeaders && sortedGauges.nonEmpty) {
       p.println("\nGauges:")
       p.println("-------")

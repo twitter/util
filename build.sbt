@@ -150,7 +150,7 @@ val baseSettings = Seq(
     "-Yrangepos"
   ) ++ Seq(
     "-source:3.0-migration",
-    "-rewrite",
+    //"-rewrite",
     "-explain",
     "-explain-types",
   ).filter(_ => isScala3(scalaBinaryVersion.value)),
@@ -239,7 +239,7 @@ lazy val util = Project(
     utilJvm,
     utilLint,
     utilLogging,
-    utilMock,
+    //utilMock,  // TODO Scala3
     utilReflect,
     utilRegistry,
     utilRouting,
@@ -529,10 +529,10 @@ lazy val utilSlf4jApi = Project(
     name := "util-slf4j-api",
     libraryDependencies ++= Seq(
       slf4jApi,
-      ("org.mockito" %% "mockito-scala" % mockitoScalaVersion % "test").cross(CrossVersion.for3Use2_13),
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
     )
-  ).dependsOn(utilCore % "test", utilMock % "test")
+  ).dependsOn(utilCore % "test")
 
 lazy val utilSlf4jJulBridge = Project(
   id = "util-slf4j-jul-bridge",
@@ -583,9 +583,11 @@ lazy val utilStats = Project(
       scalacheckLib,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
     ).map(_.cross(CrossVersion.for3Use2_13)) ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, major)) =>
+          Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3" % "test")
         case Some((2, major)) if major >= 13 =>
           Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0" % "test")
         case _ =>
@@ -634,10 +636,13 @@ lazy val utilTunable = Project(
     sharedSettings
   ).settings(
     name := "util-tunable",
+    resolvers += // TODO Scala3 remove this once the library is published properly
+      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      ("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")).cross(CrossVersion.for3Use2_13)
+      //("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")).cross(CrossVersion.for3Use2_13)
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.0-SNAPSHOT", // TODO Scala3 global jackson upgrade first?
     )
   ).dependsOn(utilApp, utilCore)
 

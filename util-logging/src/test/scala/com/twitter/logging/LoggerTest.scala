@@ -124,7 +124,7 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
         "asdf" + executed + " hi there"
       }
 
-      logger.debugLazy(function)
+      logger.debugLazy(function())
       assert(!executed)
     }
 
@@ -136,7 +136,7 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
         executed = true
         "asdf" + executed + " hi there"
       }
-      logger.debugLazy(function)
+      logger.debugLazy(function())
       assert(executed)
     }
 
@@ -263,11 +263,11 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
       val otherFactories = List(LoggerFactory(node = "", level = Some(Level.INFO)))
       Logger.configure(initialFactories)
 
-      assert(Logger.get("").getLevel == Level.DEBUG)
+      assert(Logger.get("").getLevel() == Level.DEBUG)
       Logger.withLoggers(otherFactories) {
         assert(Logger.get("").getLevel() == Level.INFO)
       }
-      assert(Logger.get("").getLevel == Level.DEBUG)
+      assert(Logger.get("").getLevel() == Level.DEBUG)
     }
 
     "configure logging" should {
@@ -294,7 +294,7 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
             ) :: Nil
           ).apply()
 
-          assert(log.getLevel == Level.DEBUG)
+          assert(log.getLevel() == Level.DEBUG)
           assert(log.getHandlers().length == 1)
           val handler = log.getHandlers()(0).asInstanceOf[FileHandler]
           val fileName = folderName + separator + "test.log"
@@ -325,7 +325,7 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
             ) :: Nil
           ).apply()
 
-          assert(log.getHandlers.length == 1)
+          assert(log.getHandlers().length == 1)
           val h = log.getHandlers()(0).asInstanceOf[SyslogHandler]
           assert(h.dest.asInstanceOf[InetSocketAddress].getHostName == "localhost")
           assert(h.dest.asInstanceOf[InetSocketAddress].getPort == 212)
@@ -365,9 +365,9 @@ class LoggerTest extends AnyWordSpec with TempFolder with BeforeAndAfter {
           ) :: Nil
 
           Logger.configure(factories)
-          assert(Logger.get("").getLevel == Level.INFO)
-          assert(Logger.get("w3c").getLevel == Level.OFF)
-          assert(Logger.get("bad_jobs").getLevel == Level.INFO)
+          assert(Logger.get("").getLevel() == Level.INFO)
+          assert(Logger.get("w3c").getLevel() == Level.OFF)
+          assert(Logger.get("bad_jobs").getLevel() == Level.INFO)
           try {
             Logger.get("").getHandlers()(0).asInstanceOf[ThrottledHandler]
           } catch {

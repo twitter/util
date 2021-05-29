@@ -1,271 +1,271 @@
 package com.twitter.util.logging
 
-import com.twitter.util.mock.Mockito
-import org.mockito.Mockito.when
+import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scala.language.reflectiveCalls
 
-class LoggingTest extends AnyFunSuite with Matchers with Mockito {
+class LoggingTest extends AnyFunSuite with Matchers {
 
   /* Trace */
 
   test("Logging#trace enabled") {
-    val f = fixture(_.isTraceEnabled, isEnabled = true)
+    val f = Fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.trace(f.message)
-    f.underlying.trace(f.message) was called
+    verify(f.underlying).trace(f.message)
   }
 
   test("Logging#trace not enabled") {
-    val f = fixture(_.isTraceEnabled, isEnabled = false)
+    val f = Fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.trace(f.message)
-    f.underlying.trace(any[String]) wasNever called
+    verify(f.underlying, never()).trace(any[String]())
   }
 
   test("Logging#trace enabled with message and cause") {
-    val f = fixture(_.isTraceEnabled, isEnabled = true)
+    val f = Fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.trace(f.message, f.cause)
-    f.underlying.trace(f.message, f.cause) was called
+    verify(f.underlying).trace(f.message, f.cause)
   }
 
   test("Logging#trace not enabled with message and cause") {
-    val f = fixture(_.isTraceEnabled, isEnabled = false)
+    val f = Fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.trace(f.message, f.cause)
-    f.underlying.trace(any[String], any) wasNever called
+    verify(f.underlying, never()).trace(any[String](), any())
   }
 
   test("Logging#trace enabled with parameters") {
-    val f = fixture(_.isTraceEnabled, isEnabled = true)
+    val f = Fixture(_.isTraceEnabled, isEnabled = true)
 
     f.logger.traceWith(f.message, f.arg1)
-    f.underlying.trace(f.message, Seq(f.arg1): _*) was called
+    verify(f.underlying).trace(f.message, Seq(f.arg1): _*)
     f.logger.traceWith(f.message, f.arg1, f.arg2)
-    f.underlying.trace(f.message, Seq(f.arg1, f.arg2): _*) was called
+    verify(f.underlying).trace(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.traceWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.trace(f.message, f.arg1, f.arg2, f.arg3) was called
+    verify(f.underlying).trace(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   test("Logging#trace not enabled with parameters") {
-    val f = fixture(_.isTraceEnabled, isEnabled = false)
+    val f = Fixture(_.isTraceEnabled, isEnabled = false)
 
     f.logger.traceWith(f.message, f.arg1)
-    f.underlying.trace(f.message, Seq(f.arg1): _*) wasNever called
+    verify(f.underlying, never()).trace(f.message, Seq(f.arg1): _*)
     f.logger.traceWith(f.message, f.arg1, f.arg2)
-    f.underlying.trace(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
+    verify(f.underlying, never()).trace(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.traceWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.trace(f.message, f.arg1, f.arg2, f.arg3) wasNever called
+    verify(f.underlying, never()).trace(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   /* Debug */
 
   test("Logging#debug enabled") {
-    val f = fixture(_.isDebugEnabled, isEnabled = true)
+    val f = Fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debug(f.message)
-    f.underlying.debug(f.message) was called
+    verify(f.underlying).debug(f.message)
   }
 
   test("Logging#debug not enabled") {
-    val f = fixture(_.isDebugEnabled, isEnabled = false)
+    val f = Fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debug(f.message)
-    f.underlying.debug(any[String]) wasNever called
+    verify(f.underlying, never()).debug(any[String]())
   }
 
   test("Logging#debug enabled with message and cause") {
-    val f = fixture(_.isDebugEnabled, isEnabled = true)
+    val f = Fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debug(f.message, f.cause)
-    f.underlying.debug(f.message, f.cause) was called
+    verify(f.underlying).debug(f.message, f.cause)
   }
 
   test("Logging#debug not enabled with message and cause") {
-    val f = fixture(_.isDebugEnabled, isEnabled = false)
+    val f = Fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debug(f.message, f.cause)
-    f.underlying.debug(any[String], any) wasNever called
+    verify(f.underlying, never()).debug(any[String](), any())
   }
 
   test("Logging#debug enabled with parameters") {
-    val f = fixture(_.isDebugEnabled, isEnabled = true)
+    val f = Fixture(_.isDebugEnabled, isEnabled = true)
 
     f.logger.debugWith(f.message, f.arg1)
-    f.underlying.debug(f.message, Seq(f.arg1): _*) was called
+    verify(f.underlying).debug(f.message, Seq(f.arg1): _*)
     f.logger.debugWith(f.message, f.arg1, f.arg2)
-    f.underlying.debug(f.message, Seq(f.arg1, f.arg2): _*) was called
+    verify(f.underlying).debug(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.debugWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.debug(f.message, f.arg1, f.arg2, f.arg3) was called
+    verify(f.underlying).debug(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   test("Logging#debug not enabled with parameters") {
-    val f = fixture(_.isDebugEnabled, isEnabled = false)
+    val f = Fixture(_.isDebugEnabled, isEnabled = false)
 
     f.logger.debugWith(f.message, f.arg1)
-    f.underlying.debug(f.message, Seq(f.arg1): _*) wasNever called
+    verify(f.underlying, never()).debug(f.message, Seq(f.arg1): _*)
     f.logger.debugWith(f.message, f.arg1, f.arg2)
-    f.underlying.debug(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
+    verify(f.underlying, never()).debug(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.debugWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.debug(f.message, f.arg1, f.arg2, f.arg3) wasNever called
+    verify(f.underlying, never()).debug(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   /* Info */
 
   test("Logging#info enabled") {
-    val f = fixture(_.isInfoEnabled, isEnabled = true)
+    val f = Fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.info(f.message)
-    f.underlying.info(f.message) was called
+    verify(f.underlying).info(f.message)
   }
 
   test("Logging#info not enabled") {
-    val f = fixture(_.isInfoEnabled, isEnabled = false)
+    val f = Fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.info(f.message)
-    f.underlying.info(any[String]) wasNever called
+    verify(f.underlying, never()).info(any[String]())
   }
 
   test("Logging#info enabled with message and cause") {
-    val f = fixture(_.isInfoEnabled, isEnabled = true)
+    val f = Fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.info(f.message, f.cause)
-    f.underlying.info(f.message, f.cause) was called
+    verify(f.underlying).info(f.message, f.cause)
   }
 
   test("Logging#info not enabled with message and cause") {
-    val f = fixture(_.isInfoEnabled, isEnabled = false)
+    val f = Fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.info(f.message, f.cause)
-    f.underlying.info(any[String], any) wasNever called
+    verify(f.underlying, never()).info(any[String](), any())
   }
 
   test("Logging#info enabled with parameters") {
-    val f = fixture(_.isInfoEnabled, isEnabled = true)
+    val f = Fixture(_.isInfoEnabled, isEnabled = true)
 
     f.logger.infoWith(f.message, f.arg1)
-    f.underlying.info(f.message, Seq(f.arg1): _*) was called
+    verify(f.underlying).info(f.message, Seq(f.arg1): _*)
     f.logger.infoWith(f.message, f.arg1, f.arg2)
-    f.underlying.info(f.message, Seq(f.arg1, f.arg2): _*) was called
+    verify(f.underlying).info(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.infoWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.info(f.message, f.arg1, f.arg2, f.arg3) was called
+    verify(f.underlying).info(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   test("Logging#info not enabled with parameters") {
-    val f = fixture(_.isInfoEnabled, isEnabled = false)
+    val f = Fixture(_.isInfoEnabled, isEnabled = false)
 
     f.logger.infoWith(f.message, f.arg1)
-    f.underlying.info(f.message, Seq(f.arg1): _*) wasNever called
+    verify(f.underlying, never()).info(f.message, Seq(f.arg1): _*)
     f.logger.infoWith(f.message, f.arg1, f.arg2)
-    f.underlying.info(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
+    verify(f.underlying, never()).info(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.infoWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.info(f.message, f.arg1, f.arg2, f.arg3) wasNever called
+    verify(f.underlying, never()).info(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   /* Warn */
 
   test("Logging#warn enabled") {
-    val f = fixture(_.isWarnEnabled, isEnabled = true)
+    val f = Fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warn(f.message)
-    f.underlying.warn(f.message) was called
+    verify(f.underlying).warn(f.message)
   }
 
   test("Logging#warn not enabled") {
-    val f = fixture(_.isWarnEnabled, isEnabled = false)
+    val f = Fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warn(f.message)
-    f.underlying.warn(any[String]) wasNever called
+    verify(f.underlying, never()).warn(any[String]())
   }
 
   test("Logging#warn enabled with message and cause") {
-    val f = fixture(_.isWarnEnabled, isEnabled = true)
+    val f = Fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warn(f.message, f.cause)
-    f.underlying.warn(f.message, f.cause) was called
+    verify(f.underlying).warn(f.message, f.cause)
   }
 
   test("Logging#warn not enabled with message and cause") {
-    val f = fixture(_.isWarnEnabled, isEnabled = false)
+    val f = Fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warn(f.message, f.cause)
-    f.underlying.warn(any[String], any) wasNever called
+    verify(f.underlying, never()).warn(any[String](), any())
   }
 
   test("Logging#warn enabled with parameters") {
-    val f = fixture(_.isWarnEnabled, isEnabled = true)
+    val f = Fixture(_.isWarnEnabled, isEnabled = true)
 
     f.logger.warnWith(f.message, f.arg1)
-    f.underlying.warn(f.message, Seq(f.arg1): _*) was called
+    verify(f.underlying).warn(f.message, Seq(f.arg1): _*)
     f.logger.warnWith(f.message, f.arg1, f.arg2)
-    f.underlying.warn(f.message, Seq(f.arg1, f.arg2): _*) was called
+    verify(f.underlying).warn(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.warnWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.warn(f.message, f.arg1, f.arg2, f.arg3) was called
+    verify(f.underlying).warn(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   test("Logging#warn not enabled with parameters") {
-    val f = fixture(_.isWarnEnabled, isEnabled = false)
+    val f = Fixture(_.isWarnEnabled, isEnabled = false)
 
     f.logger.warnWith(f.message, f.arg1)
-    f.underlying.warn(f.message, Seq(f.arg1): _*) wasNever called
+    verify(f.underlying, never()).warn(f.message, Seq(f.arg1): _*)
     f.logger.warnWith(f.message, f.arg1, f.arg2)
-    f.underlying.warn(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
+    verify(f.underlying, never()).warn(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.warnWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.warn(f.message, f.arg1, f.arg2, f.arg3) wasNever called
+    verify(f.underlying, never()).warn(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   /* Error */
 
   test("Logging#error enabled") {
-    val f = fixture(_.isErrorEnabled, isEnabled = true)
+    val f = Fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.error(f.message)
-    f.underlying.error(f.message) was called
+    verify(f.underlying).error(f.message)
   }
 
   test("Logging#error not enabled") {
-    val f = fixture(_.isErrorEnabled, isEnabled = false)
+    val f = Fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.error(f.message)
-    f.underlying.error(any[String]) wasNever called
+    verify(f.underlying, never()).error(any[String]())
   }
 
   test("Logging#error enabled with message and cause") {
-    val f = fixture(_.isErrorEnabled, isEnabled = true)
+    val f = Fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.error(f.message, f.cause)
-    f.underlying.error(f.message, f.cause) was called
+    verify(f.underlying).error(f.message, f.cause)
   }
 
   test("Logging#error not enabled with message and cause") {
-    val f = fixture(_.isErrorEnabled, isEnabled = false)
+    val f = Fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.error(f.message, f.cause)
-    f.underlying.error(any[String], any) wasNever called
+    verify(f.underlying, never()).error(any[String](), any())
   }
 
   test("Logging#error enabled with parameters") {
-    val f = fixture(_.isErrorEnabled, isEnabled = true)
+    val f = Fixture(_.isErrorEnabled, isEnabled = true)
 
     f.logger.errorWith(f.message, f.arg1)
-    f.underlying.error(f.message, Seq(f.arg1): _*) was called
+    verify(f.underlying).error(f.message, Seq(f.arg1): _*)
     f.logger.errorWith(f.message, f.arg1, f.arg2)
-    f.underlying.error(f.message, Seq(f.arg1, f.arg2): _*) was called
+    verify(f.underlying).error(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.errorWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.error(f.message, f.arg1, f.arg2, f.arg3) was called
+    verify(f.underlying).error(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   test("Logging#error not enabled with parameters") {
-    val f = fixture(_.isErrorEnabled, isEnabled = false)
+    val f = Fixture(_.isErrorEnabled, isEnabled = false)
 
     f.logger.errorWith(f.message, f.arg1)
-    f.underlying.error(f.message, Seq(f.arg1): _*) wasNever called
+    verify(f.underlying, never()).error(f.message, Seq(f.arg1): _*)
     f.logger.errorWith(f.message, f.arg1, f.arg2)
-    f.underlying.error(f.message, Seq(f.arg1, f.arg2): _*) wasNever called
+    verify(f.underlying, never()).error(f.message, Seq(f.arg1, f.arg2): _*)
     f.logger.errorWith(f.message, f.arg1, f.arg2, f.arg3)
-    f.underlying.error(f.message, f.arg1, f.arg2, f.arg3) wasNever called
+    verify(f.underlying, never()).error(f.message, f.arg1, f.arg2, f.arg3)
   }
 
   /* Instance Logging */
@@ -357,16 +357,17 @@ class LoggingTest extends AnyFunSuite with Matchers with Mockito {
 
   /* Private */
 
-  private def fixture(isEnabledFn: org.slf4j.Logger => Boolean, isEnabled: Boolean) = {
-    new {
-      val message = "msg"
-      val cause = new RuntimeException("TEST EXCEPTION")
-      val arg1 = "arg1"
-      val arg2 = Integer.valueOf(1)
-      val arg3 = "arg3"
-      val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
-      when(isEnabledFn(underlying)).thenReturn(isEnabled)
-      val logger: Logger = Logger(underlying)
-    }
+  private case class Fixture(
+    isEnabledFn: org.slf4j.Logger => Boolean,
+    isEnabled: Boolean
+  ) {
+    val message = "msg"
+    val cause = new RuntimeException("TEST EXCEPTION")
+    val arg1 = "arg1"
+    val arg2 = Integer.valueOf(1)
+    val arg3 = "arg3"
+    val underlying: org.slf4j.Logger = mock(classOf[org.slf4j.Logger])
+    when(isEnabledFn(underlying)).thenReturn(isEnabled)
+    val logger: Logger = Logger(underlying)
   }
 }
