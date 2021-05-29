@@ -55,7 +55,7 @@ class ShardCoordinator(zk: ZkClient, path: String, numShards: Int) {
    *                                    ShardCoordinator.
    */
   def acquire(): Future[ShardPermit] = {
-    semaphore.acquire flatMap { permit =>
+    semaphore.acquire() flatMap { permit =>
       shardNodes() map { nodes =>
         nodes map { node => shardIdOf(node.path) }
       } map { ids =>

@@ -19,7 +19,7 @@ public class JavaRefreshTest {
     @SuppressWarnings("unchecked")
     Function0<Future<Integer>> provider = mock(Function0.class);
     when(provider.apply()).thenReturn(Future.value(1));
-    Function0<Future<Integer>> memoized = Refresh.every(Duration.fromSeconds(10), provider);
+    Function0<Future<Integer>> memoized = Refresh.every(Duration.fromSecondsJ(10), provider);
 
     assertEquals(1, Await.result(memoized.apply()).intValue());
     assertEquals(1, Await.result(memoized.apply()).intValue());

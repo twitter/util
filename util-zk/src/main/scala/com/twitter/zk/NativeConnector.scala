@@ -53,7 +53,7 @@ case class NativeConnector(
         c.sessionEvents foreach { event => sessionBroker.send(event()).sync() }
         connection = Some(c)
         c
-      }.apply
+      }.apply()
     }.flatten
       .rescue {
         case e: NativeConnector.ConnectTimeoutException =>

@@ -224,9 +224,9 @@ class FileHandler(
       }
       case Policy.Weekly(weekday) => {
         next.set(Calendar.HOUR_OF_DAY, 0)
-        do {
+        while ({ {
           next.add(Calendar.DAY_OF_MONTH, 1)
-        } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
+        } ; next.get(Calendar.DAY_OF_WEEK) != weekday}) ()
         Some(next)
       }
     }
