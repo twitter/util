@@ -20,7 +20,7 @@ class ConcurrentMapCache[K, V](underlying: ConcurrentMap[K, Future[V]]) extends 
   def set(key: K, value: Future[V]): Unit = underlying.put(key, value)
 
   def getOrElseUpdate(key: K)(compute: => Future[V]): Future[V] = {
-    val p = Promise[V]
+    val p = Promise[V]()
     underlying.putIfAbsent(key, p) match {
       case null =>
         p.become(compute)

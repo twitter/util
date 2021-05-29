@@ -21,7 +21,7 @@ trait LowPriorityHashable {
 
   // Get the UTF-8 bytes of a string to hash it
   implicit def fromString[T](implicit h: Hashable[Array[Byte], T]): Hashable[String, T] =
-    h.compose { s: String => s.getBytes }
+    h.compose { (s: String) => s.getBytes }
 }
 
 object Hashable extends LowPriorityHashable {

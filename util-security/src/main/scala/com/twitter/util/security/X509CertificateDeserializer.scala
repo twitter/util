@@ -15,7 +15,7 @@ import java.security.cert.{CertificateFactory, X509Certificate}
  */
 object X509CertificateDeserializer {
   private[this] val MessageType: String = "CERTIFICATE"
-  private[this] val deserializeX509: Array[Byte] => X509Certificate = { certBytes: Array[Byte] =>
+  private[this] val deserializeX509: Array[Byte] => X509Certificate = { (certBytes: Array[Byte]) =>
     val certFactory = CertificateFactory.getInstance("X.509")
     val certificate = certFactory
       .generateCertificate(new ByteArrayInputStream(certBytes))

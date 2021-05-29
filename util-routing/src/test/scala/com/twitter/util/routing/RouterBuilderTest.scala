@@ -1,7 +1,7 @@
 package com.twitter.util.routing
 
 import com.twitter.util.routing.simple.{SimpleRoute, SimpleRouter}
-import org.scalatest.funsuite.AnyFunSuite
+impo()rt org.scalatest.funsuite.AnyFunSuite
 
 class RouterBuilderTest extends AnyFunSuite {
 
@@ -15,7 +15,7 @@ class RouterBuilderTest extends AnyFunSuite {
 
   private object ValidatingTestRouterBuilder {
     def newBuilder(): RouterBuilder[String, SimpleRoute, SimpleRouter] =
-      TestRouter.newBuilder.withValidator(
+      TestRouter.newBuilder().withValidator(
         new Validator[SimpleRoute] {
           def apply(routes: Iterable[SimpleRoute]): Iterable[ValidationError] =
             routes.collect {
@@ -40,7 +40,7 @@ class RouterBuilderTest extends AnyFunSuite {
   }
 
   test("throws when invalid route is passed") {
-    val router = ValidatingTestRouterBuilder.newBuilder
+    val router = ValidatingTestRouterBuilder.newBuilder()
       .withRoute(SimpleRoute("x", true))
       .withRoute(SimpleRoute("y", false))
       .withRoute(SimpleRoute("z", true))
@@ -55,7 +55,7 @@ class RouterBuilderTest extends AnyFunSuite {
   }
 
   test("throws when multiple invalid routes are passed") {
-    val router = ValidatingTestRouterBuilder.newBuilder
+    val router = ValidatingTestRouterBuilder.newBuilder()
       .withRoute(SimpleRoute("x", true))
       .withRoute(SimpleRoute("y", false))
       .withRoute(SimpleRoute("z", true))

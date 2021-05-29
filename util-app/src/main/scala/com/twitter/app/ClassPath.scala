@@ -71,7 +71,7 @@ private[app] sealed abstract class ClassPath[CpInfo <: ClassPath.Info] {
   // TODO - add suppport for the ModulePath after dropping JDK 8 support.
   private[this] def urlsFromClasspath(): Array[URL] = {
     val classpath: String = System.getProperty("java.class.path")
-    classpath.split(File.pathSeparator).map { pathEntry: String =>
+    classpath.split(File.pathSeparator).map { (pathEntry: String) =>
       Paths.get(pathEntry).toAbsolutePath().toUri().toURL
     }
   }
