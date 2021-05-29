@@ -15,11 +15,6 @@ public class ClosableOnceCompilationTest {
       closeCount++;
       return Future.Done();
     }
-
-    @Override
-    public Future<BoxedUnit> close(Time deadline) {
-      return Future.Done();
-    }
   }
 
   @Test

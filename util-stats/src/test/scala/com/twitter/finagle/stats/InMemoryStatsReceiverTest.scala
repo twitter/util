@@ -57,7 +57,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
   test("ReadableGauge.toString") {
     var n = 0
     val stats = new InMemoryStatsReceiver()
-    val g = stats.addGauge("a", "b") { n }
+    val g = stats.addGauge("a", "b") { n.toFloat }
     assert("Gauge(a/b=0.0)" == g.toString)
 
     n = 11
@@ -175,6 +175,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
 
       inMemoryStatsReceiver.print(ps)
       val content = new String(baos.toByteArray, StandardCharsets.UTF_8)
+      println(content)
       val parts = content.split('\n')
 
       assert(parts.length == 9)

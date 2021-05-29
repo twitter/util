@@ -5,6 +5,7 @@ import java.util.function.BiFunction
 import scala.annotation.varargs
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+import scala.reflect.ClassTag
 
 /**
  * A Map that can be used to access [[Tunable]]s using [[TunableMap.Key]]s.
@@ -133,7 +134,7 @@ object TunableMap {
   }
 
   object Key {
-    def apply[T](id: String)(implicit m: Manifest[T]): Key[T] =
+    def apply[T](id: String)(implicit m: ClassTag[T]): Key[T] = // TODO Scala3 Is ClassTag ok?
       Key[T](id, m.runtimeClass.asInstanceOf[Class[T]])
   }
 
@@ -199,7 +200,7 @@ object TunableMap {
      * Put a [[Tunable]] with id `id` and value `value` into the [[TunableMap]]. If the [[Tunable]]
      * for that `id` already exists, update the value to `value`.
      */
-    final def put[T](id: String, value: T)(implicit m: Manifest[T]): Key[T] =
+    final def put[T](id: String, value: T)(implicit m: ClassTag[T]): Key[T] = // TODO Scala3 Is ClassTag ok?
       put[T](id, m.runtimeClass.asInstanceOf[Class[T]], value)
 
     /**

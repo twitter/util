@@ -1,6 +1,7 @@
 package com.twitter.app
 
 import java.lang.reflect.Modifier
+import scala.reflect.ClassTag
 import scala.util.control.NonFatal
 
 /**
@@ -85,8 +86,9 @@ abstract class GlobalFlag[T] private[app] (
    *
    * @param help documentation regarding usage of this [[Flag]].
    */
-  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) =
-    this(Right(m.toString), help)
+  def this(help: String)(implicit _f: Flaggable[T], m: ClassTag[T]) =
+    // TODO Scala3 Is ClassTag ok? Should we capitalize the type name?
+    this(Right(m.runtimeClass.getTypeName.capitalize), help)
 
   /**
    * The "name", or "id", of this [[Flag]].

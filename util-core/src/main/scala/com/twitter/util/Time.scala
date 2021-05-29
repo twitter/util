@@ -293,7 +293,7 @@ private[util] object TimeBox {
 object Time extends TimeLikeOps[Time] {
   def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
 
-  // FIXME figure out why the overrides cause issues in Scala 3.0
+  // TODO Scala3 figure out why the overrides cause issues in Scala 3.0
   // This is needed for Java compatibility.
   def fromFractionalSecondsJ(seconds: Double): Time = super.fromFractionalSeconds(seconds)
   def fromSecondsJ(seconds: Int): Time = super.fromSeconds(seconds)

@@ -1,7 +1,7 @@
 package com.twitter.util.routing
 
 import com.twitter.util.routing.simple.{SimpleRoute, SimpleRouter}
-impo()rt org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 class RouterBuilderTest extends AnyFunSuite {
 

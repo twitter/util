@@ -1,7 +1,9 @@
 package com.twitter.conversions
 
 import com.twitter.util.Duration
+
 import java.util.concurrent.TimeUnit
+import scala.language.implicitConversions
 
 /**
  * Implicits for writing readable [[com.twitter.util.Duration]]s.
@@ -19,7 +21,12 @@ import java.util.concurrent.TimeUnit
  */
 object DurationOps {
 
-  implicit class RichDuration(val numNanos: Long) extends AnyVal {
+  /**
+   * Forwarder for Int, as Scala 3.0 seems to not like the implicit conversion to Long.
+   */
+  implicit def richDurationFromIntNanos(numNanos: Int): RichDuration = new RichDuration(numNanos.toLong)
+
+  implicit class RichDuration(private val numNanos: Long) extends AnyVal {
     def nanoseconds: Duration = Duration(numNanos, TimeUnit.NANOSECONDS)
     def nanosecond: Duration = nanoseconds
     def microseconds: Duration = Duration(numNanos, TimeUnit.MICROSECONDS)

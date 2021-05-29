@@ -24,11 +24,11 @@ class ShardCoordinatorTest extends AnyWordSpec with MockitoSugar {
           .withRetryPolicy(RetryPolicy.Basic(3))
           .withAcl(OPEN_ACL_UNSAFE.asScala.toSeq)
 
-        Await.result(Future { f(zk) } ensure { zk.release })
+        Await.result(Future { f(zk) } ensure { zk.release() })
       }
 
       def acquire(coord: ShardCoordinator) = {
-        coord.acquire within (new JavaTimer(true), 1.second)
+        coord.acquire() within (new JavaTimer(true), 1.second)
       }
 
       "provide shards" in {
@@ -52,15 +52,15 @@ class ShardCoordinatorTest extends AnyWordSpec with MockitoSugar {
 
           val fshard5 = acquire(coord)
           assert(fshard5.isDefined == (false))
-          shard3.release
+          shard3.release()
           val shard5 = Await.result(fshard5)
           assert(shard5.id == 3)
 
-          shard0.release
-          shard1.release
-          shard2.release
-          shard4.release
-          shard5.release
+          shard0.release()
+          shard1.release()
+          shard2.release()
+          shard4.release()
+          shard5.release()
         }
       }
 

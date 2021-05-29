@@ -55,7 +55,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
             case NonFatal(exn) =>
               failuresCounter.incr()
           } finally {
-            latencyStat.add(elapsed().inMilliseconds)
+            latencyStat.add(elapsed().inMilliseconds.toFloat)
           }
         }
       }

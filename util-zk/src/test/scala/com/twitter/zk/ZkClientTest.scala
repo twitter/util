@@ -20,7 +20,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ZkClientTest extends AnyWordSpec with MockitoSugar {
   Logger.get("").setLevel(Level.FATAL)
 
-  implicit val javaTimer = new JavaTimer(true)
+  implicit val javaTimer: JavaTimer = new JavaTimer(true)
 
   class ZkClientHelper {
     val zk = mock[ZooKeeper]
@@ -600,7 +600,7 @@ class ZkClientTest extends AnyWordSpec with MockitoSugar {
             )
             offer.sync()
             intercept[KeeperException.NoNodeException] {
-              offer.syncWait().get
+              offer.syncWait().get()
             }
             assert(offer.sync().isDefined == false)
           }
@@ -611,7 +611,7 @@ class ZkClientTest extends AnyWordSpec with MockitoSugar {
 
             watch(znode.path)(Future(new Stat))(Future(StateEvent.Disconnected()))
             val offer = znode.exists.monitor()
-            assert(offer.syncWait().get == result)
+            assert(offer.syncWait().get() == result)
 
             watch(znode.path) {
               Future.exception(new KeeperException.SessionExpiredException)
@@ -685,7 +685,7 @@ class ZkClientTest extends AnyWordSpec with MockitoSugar {
 
         val update = znode.getChildren.monitor()
         results foreach { result =>
-          val r = update.syncWait().get
+          val r = update.syncWait().get()
           assert(r.path == result.path)
         }
       }
@@ -857,7 +857,7 @@ class ZkClientTest extends AnyWordSpec with MockitoSugar {
             val e = expectedByPath(ztu.parent.path)
             assert(ztu.parent == e.parent)
             assert(ztu.added.map { _.path } == e.added.map { _.path }.toSet)
-            assert(ztu.removed == List())
+            assert(ztu.removed == Set.empty)
           }
           Await.result(offer.sync(), 1.second)
         }
