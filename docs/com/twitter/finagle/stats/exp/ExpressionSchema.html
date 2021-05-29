@@ -167,6 +167,10 @@
                         <a href="" title="ExpressionSchema is builder class that construct an expression with its metadata.">ExpressionSchema</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="ExpressionSchemaKey.html" title="ExpressionSchemaKey is a class that exists to serve as a key into a Map of ExpressionSchemas."></a>
+                        <a href="ExpressionSchemaKey.html" title="ExpressionSchemaKey is a class that exists to serve as a key into a Map of ExpressionSchemas.">ExpressionSchemaKey</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="FunctionExpression.html" title="Represents compound metrics and their arithmetical(or others) calculations"></a>
                         <a href="FunctionExpression.html" title="Represents compound metrics and their arithmetical(or others) calculations">FunctionExpression</a>
                       </li><li class="current-entities indented5">
@@ -540,6 +544,22 @@
       </span>
       
       
+    </li><li name="com.twitter.finagle.stats.exp.ExpressionSchema#namespaces" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="namespaces:Seq[String]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/finagle/stats/exp/ExpressionSchema.html#namespaces:Seq[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">namespaces</span><span class="result">: <a href="../../../../../scala/index.html#Seq[+A]=Seq[A]" class="extmbr" name="scala.Seq">Seq</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -607,6 +627,22 @@
       </span>
       <span class="symbol">
         <span class="name">register</span><span class="params">()</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      
+    </li><li name="com.twitter.finagle.stats.exp.ExpressionSchema#schemaKey" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="schemaKey():com.twitter.finagle.stats.exp.ExpressionSchemaKey"></a><a id="schemaKey():ExpressionSchemaKey"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/finagle/stats/exp/ExpressionSchema.html#schemaKey():com.twitter.finagle.stats.exp.ExpressionSchemaKey" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">schemaKey</span><span class="params">()</span><span class="result">: <a href="ExpressionSchemaKey.html" class="extype" name="com.twitter.finagle.stats.exp.ExpressionSchemaKey">ExpressionSchemaKey</a></span>
       </span>
       
       
@@ -742,6 +778,25 @@
       </span>
       
       
+    </li><li name="com.twitter.finagle.stats.exp.ExpressionSchema#withNamespaces" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withNamespaces(name:String*):com.twitter.finagle.stats.exp.ExpressionSchema"></a><a id="withNamespaces(String*):ExpressionSchema"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/finagle/stats/exp/ExpressionSchema.html#withNamespaces(name:String*):com.twitter.finagle.stats.exp.ExpressionSchema" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withNamespaces</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span>*</span>)</span><span class="result">: <a href="" class="extype" name="com.twitter.finagle.stats.exp.ExpressionSchema">ExpressionSchema</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Configure the expression with the given namespaces.</p><div class="fullcomment"><div class="comment cmt"><p>Configure the expression with the given namespaces. The path can be composed of segments or
+a single string. This is for multi-tenancy system tenants or similar concepts and should
+remain unset for standalone services.
+</p></div></div>
     </li><li name="com.twitter.finagle.stats.exp.ExpressionSchema#withUnit" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="withUnit(unit:com.twitter.finagle.stats.MetricUnit):com.twitter.finagle.stats.exp.ExpressionSchema"></a><a id="withUnit(MetricUnit):ExpressionSchema"></a>
       <span class="permalink">

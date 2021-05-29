@@ -13,6 +13,7 @@ Guides
 
    util-stats/index
    util-cookbook/index
+   util-validator/index
    Changelog
 
 

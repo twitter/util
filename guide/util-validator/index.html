@@ -1,0 +1,1275 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>util-validator Guide &#8212; Util 21.5.0 documentation</title>
+    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changelog" href="../Changelog.html" />
+    <link rel="prev" title="Usage from Java" href="../util-cookbook/java.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="../_static/small_flask.css" type= "text/css" rel="stylesheet" />
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-39101739-4', 'twitter.github.io');
+    ga('send', 'pageview');
+
+  </script>
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Changelog.html" title="Changelog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../util-cookbook/java.html" title="Usage from Java"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="util-validator-guide">
+<span id="util-validator-index"></span><h1>util-validator Guide<a class="headerlink" href="#util-validator-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preface">
+<h2>Preface<a class="headerlink" href="#preface" title="Permalink to this headline">¶</a></h2>
+<p>Validating data is a common task that occurs throughout all application layers, from the
+presentation to the persistence layer. Often the same validation logic is implemented in each
+layer which is time consuming and error-prone. To avoid duplication of these validations,
+developers often bundle validation logic directly into the domain model, cluttering domain classes
+with validation code which is really metadata about the class itself.</p>
+<p>The <a class="reference external" href="https://beanvalidation.org/2.0/">Jakarta Bean Validation 2.0</a> - defines a metadata model and API
+for entity and method validation. The default metadata source are Java annotations (with the ability
+to override and extend the meta-data through the use of XML if desired). The API is not tied to a
+specific application tier nor programming model and it is specifically not tied to either the web or
+persistence tier, and is available for both server-side application programming or rich client
+applications.</p>
+<p>The <cite>ScalaValidator</cite> is a Scala wrapper around the Java <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/">Hibernate Validator</a>
+which itself is the reference implementation of <a class="reference external" href="https://beanvalidation.org/">Jakarta Bean Validation specification</a>.</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>ScalaValidator</cite> depends only on the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/">Hibernate Validator</a>,
+the <a class="reference external" href="https://github.com/eclipse-ee4j/el-ri">Glassfish reference implementation</a> of the
+<a class="reference external" href="https://projects.eclipse.org/projects/ee4j.el">Jakarta Expression Language</a> for message interpolation,
+and <a class="reference external" href="https://github.com/json4s/json4s#guide">json4s-core</a> for Scala reflection.</p>
+<p>We highly recommend reading through the Hibernate Validator <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/">documentation</a>
+as our guide is largely based on this information.</p>
+<p>In order to use the <cite>util-validator</cite> add a dependency on the project, e.g. in <a class="reference external" href="https://scala-sbt.org">sbt</a>:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;com.twitter&quot;</span> <span class="o">%%</span> <span class="s">&quot;util-validator&quot;</span> <span class="o">%</span> <span class="n">utilValidatorVersion</span>
+</pre></div>
+</div>
+<p>or with <a class="reference external" href="https://maven.apache.org/">Maven</a>:</p>
+<div class="code xml highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">dependency</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="n">twitter</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">util</span><span class="o">-</span><span class="n">validator_2</span><span class="o">.</span><span class="mi">12</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="n">$</span><span class="o">{</span><span class="n">util</span><span class="o">.</span><span class="n">validator</span><span class="o">.</span><span class="n">version</span><span class="o">}&lt;/</span><span class="n">version</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">dependency</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <cite>utilValidatorVersion</cite> and <cite>util.validator.version</cite> are the expected library version.</p>
+<div class="section" id="applying-constraints">
+<h3>Applying constraints<a class="headerlink" href="#applying-constraints" title="Permalink to this headline">¶</a></h3>
+<p>Let’s start with a basic example to see how to apply constraints. Let’s assume you have a
+case class defined as such:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">com.example</span>
+
+<span class="k">import</span> <span class="nn">jakarta.validation.constraints.</span><span class="o">{</span><span class="nc">Min</span><span class="o">,</span> <span class="nc">NotEmpty</span><span class="o">,</span> <span class="nc">Size</span><span class="o">}</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span>
+  <span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="nd">@NotEmpty</span> <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="k">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">max</span> <span class="k">=</span> <span class="mi">14</span><span class="o">)</span> <span class="n">licensePlate</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="nd">@Min</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="n">seatCount</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The <cite>&#64;NotEmpty</cite>, <cite>&#64;Size</cite> and <cite>&#64;Min</cite> annotations are used to declare the constraints which should be
+applied to the fields of a <cite>Car</cite> instance:</p>
+<ul class="simple">
+<li><cite>manufacturer</cite> must never be an empty String (and thus also not <cite>null</cite>)</li>
+<li><cite>licensePlate</cite> must never be an empty String (thus not also not <cite>null</cite>) and must be between 2 and 14 characters</li>
+<li><cite>seatCount</cite> must be equal to at least 2</li>
+</ul>
+</div>
+<div class="section" id="validating-constraints">
+<h3>Validating constraints<a class="headerlink" href="#validating-constraints" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="scalavalidator-validate">
+<h4><cite>ScalaValidator#validate</cite><a class="headerlink" href="#scalavalidator-validate" title="Permalink to this headline">¶</a></h4>
+<p>To perform a validation of these constraints, you use an instance of the <cite>ScalaValidator</cite>. Let’s
+take a look at a test for validating <cite>Car</cite> instances:</p>
+<p>In the test constructor we instantiate an instance of a <cite>ScalaValidator</cite>. A <cite>ScalaValidator</cite> instance
+is thread-safe and may be reused multiple times. It thus can safely be stored in a member variable
+field and  be used in the test cases to validate the different <cite>Car</cite> instances.</p>
+<p>The <cite>ScalaValidator#validate</cite> method returns a set of <cite>ConstraintViolation</cite> instances, which you can
+iterate over in order to see which validation errors occurred. The first three tests show some
+expected constraint violations:</p>
+<ul class="simple">
+<li>The <cite>&#64;NotEmpty</cite> constraint on <cite>manufacturer</cite> is violated in <cite>test(“manufacturer is empty”)</cite></li>
+<li>The <cite>&#64;Size</cite> constraint on <cite>licensePlate</cite> is violated in <cite>test(“licensePlate is too short”)</cite></li>
+<li>The <cite>&#64;Min</cite> constraint on <cite>seatCount</cite> is violated in <cite>test(“seatCount is too small”)</cite></li>
+</ul>
+<p>If the object validates successfully, <cite>ScalaValidator#validate</cite> returns an empty set as you can see
+in <cite>test(“car is valid”)</cite>.</p>
+<p>Note that this method is recursive and will cascade validations as explained in the section on
+<a class="reference external" href="#object-graphs">Object graphs</a>.</p>
+</div>
+<div class="section" id="scalavalidator-verify">
+<h4><cite>ScalaValidator#verify</cite><a class="headerlink" href="#scalavalidator-verify" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>ScalaValidator</cite> also has an API to throw constraint violations as a type of <cite>ValidationException</cite>
+rather than returning a <cite>Set[ConstraintViolation[_]</cite>.</p>
+<p>Instead of calling <cite>ScalaValidator#validate</cite>, use <cite>ScalaValidator#verify</cite>:</p>
+<p>Like <cite>ScalaValidator#validate</cite>, this method is recursive and will cascade validations as explained
+in the section on <a class="reference external" href="#object-graphs">Object graphs</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="declaring-and-validating-case-class-constraints">
+<h2>Declaring and validating case class constraints<a class="headerlink" href="#declaring-and-validating-case-class-constraints" title="Permalink to this headline">¶</a></h2>
+<p>In this section we show how to declare (see <a class="reference external" href="#declaring-case-class-constraints">“Declaring case class constraints”</a>)
+and validate (see <a class="reference external" href="#validating-case-class-constraints">“Validating bean constraints”</a>) case class
+constraints.</p>
+<p>You will likely want to review Hibernate’s <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints">“Built-in constraints”</a>
+documentation which provides an overview of all built-in constraints coming with the Hibernate
+Validator and thus supported here.</p>
+<p>If you are interested in applying constraints to method parameters and return values, refer to
+<a class="reference external" href="#declaring-and-validating-method-constraints">Declaring and validating method constraints</a>.</p>
+<div class="section" id="declaring-case-class-constraints">
+<h3>Declaring case class constraints<a class="headerlink" href="#declaring-case-class-constraints" title="Permalink to this headline">¶</a></h3>
+<p>Constraints in Jakarta Bean Validation are expressed via Java annotations. In this section we show
+how to enhance an object model with these annotations. There are three types of bean constraints:</p>
+<ul class="simple">
+<li>field constraints</li>
+<li>property constraints</li>
+<li>container element constraints</li>
+<li>class constraints</li>
+</ul>
+<p>When defining a class field in Scala the compiler creates up to four accessors for it: a getter,
+a setter, and if the field is annotated with <cite>&#64;BeanProperty</cite>, a bean getter and a bean setter
+[<a class="reference external" href="https://www.scala-lang.org/api/current/scala/annotation/meta/index.html">reference</a>].</p>
+<p>Thus, if you had the following class definition:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">C</span><span class="o">(</span><span class="nd">@myAnnot</span> <span class="k">var</span> <span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>There are <strong>six</strong> entities which can carry the <cite>&#64;myAnnot</cite> annotation: the constructor param, the
+generated field and the four accessors. <strong>By default, annotations on constructor parameters end up
+only on the constructor parameter and not on any other entity</strong>. Annotations on fields, by default,
+only end up on the field.</p>
+<p>If you wanted Scala to copy the annotation to the generated field, you would need to apply the
+<cite>scala.annotation.meta.field</cite> meta annotation to the annotation.</p>
+<p>For example, using <cite>class C</cite> again from above:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">C</span><span class="o">(@(</span><span class="n">myAnnot</span> <span class="nd">@field</span><span class="o">)</span> <span class="k">var</span> <span class="n">c</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Thus to use the Hibernate Validator Java library directly from Scala, you would need to always
+annotate constraint annotations with a <cite>scala.annotation.meta</cite> annotation along with translating
+between Scala and Java collection types.</p>
+<p>The benefit of <cite>util-validator</cite> is that the library will work with simply annotated case class
+constructor parameters (i.e., without needing to add a <cite>scala.annotation.meta</cite> annotation) with an
+API that uses and expresses Scala collection types.</p>
+<div class="section" id="constructor-param-constraints">
+<h4>Constructor param constraints<a class="headerlink" href="#constructor-param-constraints" title="Permalink to this headline">¶</a></h4>
+<p>Constraints can be expressed by annotating the constructor param of a case class. E.g.,</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">com.example</span>
+
+<span class="k">import</span> <span class="nn">jakarta.validation.constraints.</span><span class="o">{</span><span class="nc">Min</span><span class="o">,</span> <span class="nc">NotEmpty</span><span class="o">,</span> <span class="nc">Size</span><span class="o">}</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span>
+  <span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="nd">@NotEmpty</span> <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="k">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">max</span> <span class="k">=</span> <span class="mi">14</span><span class="o">)</span> <span class="n">licensePlate</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="nd">@Min</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span> <span class="n">seatCount</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">When using constructor parameter constraints, field access strategy is used to access the value
+to be validated. This means the validation logic directly accesses the instance variable and
+will never invoke the generated property accessor method.</p>
+</div>
+<p>Constraints can be applied to fields of any access type (public, private etc.), including inherited
+members. Neither constraints on companion object fields, nor secondary companion object <cite>#apply</cite>
+method constraints are supported.</p>
+<div class="section" id="secondary-constructors">
+<h5>Secondary constructors<a class="headerlink" href="#secondary-constructors" title="Permalink to this headline">¶</a></h5>
+<p>The validation library is not used for case class construction but because of how annotations are
+carried by default in Scala for classes, the constructor of a case class plays an important role
+in case class validation. By default, the library only tracks constraint annotations for constructor
+parameters which are also declared fields within the class. Thus, if you have a primary constructor
+of <cite>Int</cite> types with a secondary constructor of constraint-annotated <cite>String</cite> types (which does some
+translation into the required <cite>Int</cite> types), the secondary constructor constraints have no bearing on
+validation.</p>
+</div>
+</div>
+<div class="section" id="container-element-constraints">
+<h4>Container element constraints<a class="headerlink" href="#container-element-constraints" title="Permalink to this headline">¶</a></h4>
+<p>Note that due to a long-standing issue [<a class="reference external" href="https://github.com/scala/bug/issues/9883">SCALA-9883</a>]
+which affects how to access Java annotations from the Scala compiler, that <strong>container element</strong>
+<strong>constraints are not supported</strong>.</p>
+<p>For examples of container element constraints, see the Hibernate <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#container-element-constraints">documentation</a>.</p>
+<p>Thus, take note that constraint annotations will apply only to the container and not the type(s) of
+the container with the one caveat being a field of type <cite>Option[_]</cite> which is always unwrapped by
+default and thus the annotation always pertains to the contained type.</p>
+<div class="section" id="with-option">
+<h5>With <cite>Option[_]</cite><a class="headerlink" href="#with-option" title="Permalink to this headline">¶</a></h5>
+<p>When applying a constraint on the type argument of <cite>Option[_]</cite>, the <cite>ScalaValidator</cite> will
+<em>automatically unwrap</em> the <cite>Option[_]</cite> type and validate the internal value. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Welcome to Scala <span class="m">2</span>.12.13 <span class="o">(</span>JDK <span class="m">64</span>-Bit Server VM, Java <span class="m">1</span>.8.0_242<span class="o">)</span>.
+Type in expressions <span class="k">for</span> evaluation. Or try :help.
+
+scala&gt; import jakarta.validation.constraints._
+import jakarta.validation.constraints._
+
+scala&gt; <span class="k">case</span> class Car<span class="o">(</span>@Min<span class="o">(</span><span class="m">1000</span><span class="o">)</span> towingCapacity: Option<span class="o">[</span>Int<span class="o">]</span> <span class="o">=</span> None<span class="o">)</span>
+defined class Car
+
+scala&gt; val <span class="nv">car</span> <span class="o">=</span> Car<span class="o">(</span>Some<span class="o">(</span><span class="m">100</span><span class="o">))</span>
+car: <span class="nv">Car</span> <span class="o">=</span> Car<span class="o">(</span>Some<span class="o">(</span><span class="m">100</span><span class="o">))</span>
+
+scala&gt; import com.twitter.util.validation.ScalaValidator
+import com.twitter.util.validation.ScalaValidator
+
+scala&gt; val <span class="nv">validator</span> <span class="o">=</span> ScalaValidator<span class="o">()</span>
+Mar <span class="m">30</span>, <span class="m">2021</span> <span class="m">11</span>:58:47 AM org.hibernate.validator.internal.util.Version &lt;clinit&gt;
+INFO: HV000001: Hibernate Validator <span class="m">7</span>.0.1.Final
+validator: com.twitter.util.validation.ScalaValidator <span class="o">=</span> com.twitter.util.validation.ScalaValidator@574f9e36
+
+<span class="hll">scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>car<span class="o">)</span>
+</span><span class="hll">violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must be greater than or equal to 1000&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>towingCapacity, <span class="nv">rootBeanClass</span><span class="o">=</span>class Car, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.Min.message}&#39;</span><span class="o">})</span>
+</span>
+scala&gt; val <span class="nv">violation</span> <span class="o">=</span> violations.head
+violation: jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]</span> <span class="o">=</span> ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must be greater than or equal to 1000&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>towingCapacity, <span class="nv">rootBeanClass</span><span class="o">=</span>class Car, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.Min.message}&#39;</span><span class="o">}</span>
+
+scala&gt; violation.getMessage
+res0: <span class="nv">String</span> <span class="o">=</span> must be greater than or equal to <span class="m">1000</span>
+
+scala&gt; violation.getPropertyPath.toString
+res1: <span class="nv">String</span> <span class="o">=</span> towingCapacity
+
+scala&gt;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The property path only contains the name of the property, in this way, <cite>Options</cite> are treated
+as a “transparent” container.</p>
+</div>
+</div>
+</div>
+<div class="section" id="class-level-constraints">
+<h4>Class-level constraints<a class="headerlink" href="#class-level-constraints" title="Permalink to this headline">¶</a></h4>
+<p>A constraint can also be placed on the class level. In this case not a single property is subject
+of the validation but the complete object. Class-level constraints are useful if the validation
+depends on a correlation between several properties of an object.</p>
+<p>For instance, if we had a <cite>Car</cite> case class defined with two field <cite>seatCount</cite> and <cite>passengers</cite> and
+we want to ensure that the list of <cite>passengers</cite> does not have more entries than available seats.
+For that purpose the <cite>&#64;ValidPassengerCount</cite> constraint is added on the class level. The validator of
+that constraint has access to the complete <cite>Car</cite> object, allowing to compare the numbers of seats
+and passengers.</p>
+<p>See the corresponding section in <a class="reference external" href="#">Creating custom constraints - Class-level constraints</a> for
+documentation on how to implement such a custom constraint.</p>
+</div>
+<div class="section" id="constraint-inheritance">
+<h4>Constraint inheritance<a class="headerlink" href="#constraint-inheritance" title="Permalink to this headline">¶</a></h4>
+<p>When a class implements a trait or extends an abstract class, all constraint annotations declared
+on the super-type apply in the same manner as the constraints specified in the class itself.
+For example, if we had a trait, <cite>Car</cite> with a <cite>RentalCar</cite> implementation:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Car</span> <span class="o">{</span>
+  <span class="nd">@NotEmpty</span> <span class="k">def</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span>
+<span class="o">}</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">RentalCar</span><span class="o">(</span><span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="nd">@NotEmpty</span> <span class="n">rentalStation</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Car</span>
+</pre></div>
+</div>
+<p>Here the case class <cite>RentalCar</cite> implements the <cite>Car</cite> trait and adds the property <cite>rentalStation</cite>. If
+an instance of <cite>RentalCar</cite> is validated, not only the <cite>&#64;NotEmpty</cite> constraint on <cite>rentalStation</cite> is
+evaluated, but also the constraint on <cite>manufacturer</cite> from the <cite>Car</cite> trait.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> Welcome to Scala <span class="m">2</span>.12.13 <span class="o">(</span>JDK <span class="m">64</span>-Bit Server VM, Java <span class="m">1</span>.8.0_242<span class="o">)</span>.
+ Type in expressions <span class="k">for</span> evaluation. Or try :help.
+
+ scala&gt; import jakarta.validation.constraints._
+ import jakarta.validation.constraints._
+
+ scala&gt; trait Car <span class="o">{</span>
+      <span class="p">|</span>   @NotEmpty def manufacturer: String
+      <span class="p">|</span> <span class="o">}</span>
+ defined trait Car
+
+ scala&gt; <span class="k">case</span> class RentalCar<span class="o">(</span>manufacturer: String, @NotEmpty rentalStation: String<span class="o">)</span> extends Car
+ defined class RentalCar
+
+ scala&gt; import com.twitter.util.validation.ScalaValidator
+ import com.twitter.util.validation.ScalaValidator
+
+ scala&gt; val <span class="nv">validator</span> <span class="o">=</span> ScalaValidator<span class="o">()</span>
+ Mar <span class="m">30</span>, <span class="m">2021</span> <span class="m">12</span>:21:41 PM org.hibernate.validator.internal.util.Version &lt;clinit&gt;
+ INFO: HV000001: Hibernate Validator <span class="m">7</span>.0.1.Final
+ validator: com.twitter.util.validation.ScalaValidator <span class="o">=</span> com.twitter.util.validation.ScalaValidator@64e89bb2
+
+ scala&gt; val <span class="nv">rental</span> <span class="o">=</span> RentalCar<span class="o">(</span><span class="s2">&quot;&quot;</span>, <span class="s2">&quot;Hertz&quot;</span><span class="o">)</span>
+ rental: <span class="nv">RentalCar</span> <span class="o">=</span> RentalCar<span class="o">(</span>,Hertz<span class="o">)</span>
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>rental<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>manufacturer, <span class="nv">rootBeanClass</span><span class="o">=</span>class RentalCar, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">})</span>
+</span>
+ scala&gt; violations.size
+ res0: <span class="nv">Int</span> <span class="o">=</span> <span class="m">1</span>
+
+ scala&gt; violations.head.getPropertyPath.toString
+ res: <span class="nv">String</span> <span class="o">=</span> manufacturer
+
+ scala&gt; violations.head.getMessage
+ res: <span class="nv">String</span> <span class="o">=</span> must not be empty
+
+ scala&gt; val <span class="nv">rental</span> <span class="o">=</span> RentalCar<span class="o">(</span><span class="s2">&quot;Renault&quot;</span>, <span class="s2">&quot;&quot;</span><span class="o">)</span>
+ rental: <span class="nv">RentalCar</span> <span class="o">=</span> RentalCar<span class="o">(</span>Renault,<span class="o">)</span>
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>rental<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>rentalStation, <span class="nv">rootBeanClass</span><span class="o">=</span>class RentalCar, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">})</span>
+</span>
+ scala&gt; violations.size
+ res: <span class="nv">Int</span> <span class="o">=</span> <span class="m">1</span>
+
+ scala&gt; violations.head.getPropertyPath.toString
+ res: <span class="nv">String</span> <span class="o">=</span> rentalStation
+
+ scala&gt; violations.head.getMessage
+ res: <span class="nv">String</span> <span class="o">=</span> must not be empty
+
+ scala&gt; val <span class="nv">rental</span> <span class="o">=</span> RentalCar<span class="o">(</span><span class="s2">&quot;&quot;</span>, <span class="s2">&quot;&quot;</span><span class="o">)</span>
+ rental: <span class="nv">RentalCar</span> <span class="o">=</span> RentalCar<span class="o">(</span>,<span class="o">)</span>
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>rental<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>manufacturer, <span class="nv">rootBeanClass</span><span class="o">=</span>class RentalCar, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">}</span>, ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>rentalStation, <span class="nv">rootBeanClass</span><span class="o">=</span>class RentalCar, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">})</span>
+</span>
+ scala&gt; violations.size
+ res: <span class="nv">Int</span> <span class="o">=</span> <span class="m">2</span>
+
+ scala&gt; violations.map<span class="o">(</span><span class="nv">v</span> <span class="o">=</span>&gt; s<span class="s2">&quot;</span><span class="si">${</span><span class="nv">v</span><span class="p">.getPropertyPath</span><span class="si">}</span><span class="s2">: </span><span class="si">${</span><span class="nv">v</span><span class="p">.getMessage</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>.mkString<span class="o">(</span><span class="s2">&quot;\n&quot;</span><span class="o">)</span>
+ res: <span class="nv">String</span> <span class="o">=</span>
+ manufacturer: must not be empty
+ rentalStation: must not be empty
+
+ scala&gt; val <span class="nv">rental</span> <span class="o">=</span> RentalCar<span class="o">(</span><span class="s2">&quot;Renault&quot;</span>, <span class="s2">&quot;Hertz&quot;</span><span class="o">)</span>
+ rental: <span class="nv">RentalCar</span> <span class="o">=</span> RentalCar<span class="o">(</span>Renault,Hertz<span class="o">)</span>
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>rental<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">()</span>
+</span>
+ scala&gt;
+</pre></div>
+</div>
+<p>The same would be true, if <cite>Car</cite> was not a trait but an abstract class implemented by <cite>RentalCar</cite>.</p>
+<p><strong>Constraint annotations are aggregated if members are overridden</strong>. So if the <cite>RentalCar</cite> case class
+also specifies any constraints on the <cite>manufacturer</cite> field, it would be evaluated in addition to the
+<cite>&#64;NotEmpty</cite> constraint from the <cite>Car</cite> trait:</p>
+</div>
+<div class="section" id="object-graphs">
+<h4>Object graphs<a class="headerlink" href="#object-graphs" title="Permalink to this headline">¶</a></h4>
+<p>The Jakarta Bean Validation API does not only allow to validate single case class instances but also
+complete object graphs via cascaded validation. To do so, just annotate a field or property
+representing a reference to another case class with <cite>&#64;Valid</cite>.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="nd">@Valid</span> <span class="n">driver</span><span class="k">:</span> <span class="kt">Person</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>If an instance of <cite>Car</cite> is validated, the referenced <cite>Person</cite> case class will also be validated, as
+the <cite>driver</cite> field is annotated with <cite>&#64;Valid</cite>. Therefore the validation of a <cite>Car</cite> will fail if the
+<cite>name</cite> field of the referenced Person instance is empty.</p>
+<p>The validation of object graphs is recursive, i.e. if a reference marked for cascaded validation
+points to an object which itself has properties annotated with <cite>&#64;Valid</cite>, these references will be
+followed up by the validation logic as well. The validation logic will ensure that no infinite
+loops occur during cascaded validation, for example if two objects hold references to each other.</p>
+<p>Note that <cite>null</cite> or <cite>None</cite> values are ignored during cascaded validation.</p>
+<div class="section" id="iterable">
+<h5><cite>Iterable[_]</cite><a class="headerlink" href="#iterable" title="Permalink to this headline">¶</a></h5>
+<p>Unlike constraints, object graph validation works for some container elements (those which are
+an <cite>Iterable[_]</cite>). That means the field of the container can be annotated with <cite>&#64;Valid</cite>, which will
+cause each contained element to be validated when the parent object is validated.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="nd">@Valid</span> <span class="n">drivers</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Person</span><span class="o">])</span>
+</pre></div>
+</div>
+<p>If an instance of <cite>Car</cite> is validated, the referenced sequence of <cite>Person</cite> case classes will also
+be validated, as the <cite>drivers</cite> field is annotated with <cite>&#64;Valid</cite>. Therefore the validation of a <cite>Car</cite>
+will fail if the <cite>name</cite> field of the referenced Person instance is empty.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> Welcome to Scala <span class="m">2</span>.12.13 <span class="o">(</span>JDK <span class="m">64</span>-Bit Server VM, Java <span class="m">1</span>.8.0_242<span class="o">)</span>.
+ Type in expressions <span class="k">for</span> evaluation. Or try :help.
+
+ scala&gt; import jakarta.validation.constraints._
+ import jakarta.validation.constraints._
+
+ scala&gt; <span class="k">case</span> class Person<span class="o">(</span>@NotEmpty name: String<span class="o">)</span>
+ defined class Person
+
+ scala&gt; import jakarta.validation.Valid
+ import jakarta.validation.Valid
+
+ scala&gt; <span class="k">case</span> class Car<span class="o">(</span>@NotEmpty manufacturer: String, @Valid drivers: Seq<span class="o">[</span>Person<span class="o">])</span>
+ defined class Car
+
+ scala&gt; val <span class="nv">car</span> <span class="o">=</span> Car<span class="o">(</span><span class="s2">&quot;Renault&quot;</span>, Seq<span class="o">(</span>Person<span class="o">(</span><span class="s2">&quot;&quot;</span><span class="o">)))</span>
+ car: <span class="nv">Car</span> <span class="o">=</span> Car<span class="o">(</span>Renault,List<span class="o">(</span>Person<span class="o">()))</span>
+
+ scala&gt; import com.twitter.util.validation.ScalaValidator
+ import com.twitter.util.validation.ScalaValidator
+
+ scala&gt; val <span class="nv">validator</span> <span class="o">=</span> ScalaValidator<span class="o">()</span>
+ Mar <span class="m">30</span>, <span class="m">2021</span> <span class="m">3</span>:59:53 PM org.hibernate.validator.internal.util.Version &lt;clinit&gt;
+ INFO: HV000001: Hibernate Validator <span class="m">7</span>.0.1.Final
+ validator: com.twitter.util.validation.ScalaValidator <span class="o">=</span> com.twitter.util.validation.ScalaValidator@6dcc7696
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>car<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>drivers<span class="o">[</span><span class="m">0</span><span class="o">]</span>.name, <span class="nv">rootBeanClass</span><span class="o">=</span>class Car, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">})</span>
+</span>
+ scala&gt; violations.head.getPropertyPath.toString
+ res: <span class="nv">String</span> <span class="o">=</span> drivers<span class="o">[</span><span class="m">0</span><span class="o">]</span>.name
+
+ scala&gt; violations.head.getMessage
+ res: <span class="nv">String</span> <span class="o">=</span> must not be empty
+
+ scala&gt; val <span class="nv">car</span> <span class="o">=</span> Car<span class="o">(</span><span class="s2">&quot;Renault&quot;</span>, Seq<span class="o">(</span>Person<span class="o">(</span><span class="s2">&quot;Lupin&quot;</span><span class="o">)</span>, Person<span class="o">(</span><span class="s2">&quot;&quot;</span><span class="o">)))</span>
+ car: <span class="nv">Car</span> <span class="o">=</span> Car<span class="o">(</span>Renault,List<span class="o">(</span>Person<span class="o">(</span>Lupin<span class="o">)</span>, Person<span class="o">()))</span>
+
+<span class="hll"> scala&gt; val <span class="nv">violations</span> <span class="o">=</span> validator.validate<span class="o">(</span>car<span class="o">)</span>
+</span><span class="hll"> violations: Set<span class="o">[</span>jakarta.validation.ConstraintViolation<span class="o">[</span>Car<span class="o">]]</span> <span class="o">=</span> Set<span class="o">(</span>ConstraintViolationImpl<span class="o">{</span><span class="nv">interpolatedMessage</span><span class="o">=</span><span class="s1">&#39;must not be empty&#39;</span>, <span class="nv">propertyPath</span><span class="o">=</span>drivers<span class="o">[</span><span class="m">1</span><span class="o">]</span>.name, <span class="nv">rootBeanClass</span><span class="o">=</span>class Car, <span class="nv">messageTemplate</span><span class="o">=</span><span class="s1">&#39;{jakarta.validation.constraints.NotEmpty.message}&#39;</span><span class="o">})</span>
+</span>
+ scala&gt; violations.head.getPropertyPath.toString
+ res: <span class="nv">String</span> <span class="o">=</span> drivers<span class="o">[</span><span class="m">1</span><span class="o">]</span>.name
+
+ scala&gt; violations.head.getMessage
+ res: <span class="nv">String</span> <span class="o">=</span> must not be empty
+
+ scala&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="validating-case-class-constraints">
+<h3>Validating case class constraints<a class="headerlink" href="#validating-case-class-constraints" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>ScalaValidator</cite> does not directly implement the Jakarta Bean Validation interface but provides
+the same methods (and a few more) with Scala collection types. Note, however, since the
+<cite>ScalaValidator</cite> is a wrapper that the underlying Jakarta Bean Validation is available for direct
+access for Java users or to use functionality not exposed in the <cite>ScalaValidator</cite>. Also note that
+this is a Java library and bypassing the <cite>ScalaValidator</cite> methods will thus not support all Scala
+types.</p>
+<p>This section shows how to obtain a configured <cite>ScalaValidator</cite> instance and then will walk through
+the different methods of the <cite>ScalaValidator</cite>.</p>
+<div class="section" id="obtaining-a-validator-instance">
+<h4>Obtaining a Validator instance<a class="headerlink" href="#obtaining-a-validator-instance" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>ScalaValidator</cite> has an <cite>apply()</cite> function which will return an instance of a <cite>ScalaValidator</cite>
+configured with defaults.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">validator</span><span class="k">:</span> <span class="kt">ScalaValidator</span> <span class="o">=</span> <span class="nc">ScalaValidator</span><span class="o">()</span>
+</pre></div>
+</div>
+<p>To apply custom configuration to create a <cite>ScalaValidator</cite>, there is a builder for constructing a
+customized validator.</p>
+<p>E.g., to configure a custom size for the descriptor cache:</p>
+<p>Or to add custom validations:</p>
+<p>or to specify multiple constraint mappings:</p>
+<p>You are <strong>not required</strong> to add a constraint mapping if the constraint annotation specifies a
+<cite>validatedBy()</cite> class.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Attempting to add multiple mappings for the same annotation will result in a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ValidationException.html">ValidationException</a>.</p>
+</div>
+</div>
+<div class="section" id="scalavalidator-api">
+<h4>ScalaValidator API<a class="headerlink" href="#scalavalidator-api" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>ScalaValidator</cite> contains methods that can be used to either validate entire entities or just
+single properties of the entity. All methods but <cite>ScalaValidator#verify</cite> return a
+<cite>Set[ConstraintViolation[_]]</cite>. The set is empty if the validation succeeds. Otherwise, a
+<cite>ConstraintViolation</cite> instance is added for each violated constraint. In the case of
+<cite>ScalaValidator#verify</cite>, when the returned <cite>Set[ConstraintViolation[_]]</cite> is non-empty a
+<a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintViolationException.html">ConstraintViolationException</a>
+is thrown which wraps the <cite>Set[ConstraintViolation[_]]</cite>.</p>
+<p>All the validation methods have a version which takes a <cite>groups: Seq[Class[_]]</cite> parameter that is
+used to specify validation groups to be considered when performing the validation. If the parameter
+is empty, the default validation group (<cite>jakarta.validation.groups.Default</cite>) is used.</p>
+<p>The topic of validation groups is discussed in detail in Hibernate’s <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#chapter-groups">Chapter 5, Grouping constraints</a>.</p>
+<div class="section" id="id1">
+<h5><cite>ScalaValidator#validate</cite><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h5>
+<p>Use <cite>validate</cite> to perform validation of all constraints of a given case class.</p>
+<p>Using the given definition of a <cite>Car</cite>, the above example shows an instance which fails to satisfy
+the <cite>&#64;NotEmpty</cite> constraint on the <cite>manufacturer</cite> property. The validation call therefore returns
+one <cite>ConstraintViolation[Car]</cite> object.</p>
+</div>
+<div class="section" id="id2">
+<h5><cite>ScalaValidator#verify</cite><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h5>
+<p>The <cite>verify</cite> method is the same as <cite>validate</cite> but instead of returning <cite>Set[ConstraintViolation[T]]</cite>
+the method throws a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintViolationException.html">ConstraintViolationException</a>.</p>
+</div>
+<div class="section" id="scalavalidator-validatevalue">
+<h5><cite>ScalaValidator#validateValue</cite><a class="headerlink" href="#scalavalidator-validatevalue" title="Permalink to this headline">¶</a></h5>
+<p>By using the <cite>validateValue</cite> method you can check whether a single field of a given case class can
+be validated  successfully if the field had the given value:</p>
+<p>There is also a version of the method which instead of accepting a <cite>Class[T]</cite>, takes a
+<cite>CaseClassDescriptor[T]</cite> of a given class.</p>
+</div>
+<div class="section" id="scalavalidator-validateproperty">
+<h5><cite>ScalaValidator#validateProperty</cite><a class="headerlink" href="#scalavalidator-validateproperty" title="Permalink to this headline">¶</a></h5>
+<p>With help of the <cite>validateProperty</cite> you can validate a single named field of a given case class
+instance.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The difference between <cite>validateValue</cite> and <cite>validateProperty</cite> is that the former takes a class
+type, a field in the class, and a presumed value in order to perform validation. Thus, no actual
+instance of the class is required for performing validation.</p>
+<p class="last">Whereas the latter performs validation of a given field on an instance of a case class.</p>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">The <cite>&#64;Valid</cite> annotation for cascading validation is not honored by <cite>validateValue</cite> or
+<cite>validateProperty</cite>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="constraintviolation">
+<h4>ConstraintViolation<a class="headerlink" href="#constraintviolation" title="Permalink to this headline">¶</a></h4>
+<p>As mentioned, all methods but <cite>ScalaValidator#verify</cite> return a <cite>Set[ConstraintViolation[_]]</cite>. The
+<a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintViolation.html">ConstraintViolation</a>
+contains information about the cause and location of the validation failure.</p>
+<p>See the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-constraint-violation-methods">Hibernate documentation</a> for details.</p>
+</div>
+<div class="section" id="built-in-constraints">
+<h4>Built-in constraints<a class="headerlink" href="#built-in-constraints" title="Permalink to this headline">¶</a></h4>
+<p>In addition to the constraints defined by the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints">Jakarta Bean Validation API and the Hibernate Built-in constraints</a>
+we provide several useful custom constraints which are listed below. These constraints all apply to
+the field/property level.</p>
+<ul>
+<li><p class="first"><cite>&#64;CountryCode</cite></p>
+<p>Checks that the annotated field represents a valid <a class="reference external" href="https://www.iso.org/iso-3166-country-codes.html">ISO 3166</a> country code or a collection of <a class="reference external" href="https://www.iso.org/iso-3166-country-codes.html">ISO 3166</a> country codes.</p>
+<ul>
+<li><p class="first"><strong>Supported data types</strong></p>
+<p><cite>String</cite>, <cite>Array[String]</cite>, <cite>Iterable[String]</cite></p>
+</li>
+</ul>
+</li>
+<li><p class="first"><cite>&#64;OneOf(value=)</cite></p>
+<p>Checks that the annotated field represents a value or a set of values from the given array of values. Note that the <cite>#toString</cite> representations are checked for equality.</p>
+<ul>
+<li><p class="first"><strong>Supported data types</strong></p>
+<p><cite>Any</cite>, <cite>Array[Any]</cite>, <cite>Iterable[Any]</cite></p>
+</li>
+</ul>
+</li>
+<li><p class="first"><cite>&#64;UUID</cite></p>
+<p>Checks if the annotated field is a valid <cite>String</cite> representation of a <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html">java.util.UUID</a>.</p>
+<ul>
+<li><p class="first"><strong>Supported data types</strong></p>
+<p><cite>String</cite></p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="declaring-and-validating-method-constraints">
+<h2>Declaring and validating method constraints<a class="headerlink" href="#declaring-and-validating-method-constraints" title="Permalink to this headline">¶</a></h2>
+<p>Constraints can not only be applied to case classes and their fields, but also to the parameters and
+return values of methods within the case class. Following the Jakarta Bean Validation specification,
+constraints can be used to specify</p>
+<ul class="simple">
+<li>the preconditions that must be satisfied by the caller before a method or constructor may be invoked (by applying constraints to the parameters of an executable)</li>
+<li>the postconditions that are guaranteed to the caller after a method or constructor invocation returns (by applying constraints to the return value of an executable)</li>
+</ul>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">In all cases <strong>except when using</strong> <cite>&#64;MethodValidation</cite>, declaring method or constructor
+constraints itself does not automatically cause their validation upon validation of a case class
+instance. Instead, the <cite>ScalaExecutableValidator</cite> API must be used to perform the validation.</p>
+</div>
+<div class="section" id="declaring-method-constraints">
+<h3>Declaring method constraints<a class="headerlink" href="#declaring-method-constraints" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="methodvalidation-constraint">
+<h4><cite>&#64;MethodValidation</cite> constraint<a class="headerlink" href="#methodvalidation-constraint" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>&#64;MethodValidation</cite> constraint annotation is a special method validation constraint provided by
+the library.</p>
+<p>Unlike other executable specific constraints, <cite>&#64;MethodValidation</cite>-annotated methods <strong>will be</strong>
+<strong>validated along with all field-level and class-level validations</strong> when calling
+<a class="reference external" href="#id1">ScalaValidate#validate</a> or <a class="reference external" href="#id2">ScalaValidator#verify</a>. Note, that the method
+validation is strictly performed <em>after</em> all field level validations (and <em>before</em> class-level
+validations). Annotated methods MUST have no specified parameters and MUST return a
+<cite>MethodValidationResult</cite>.</p>
+<p>To manually validate a given method or methods, you can use <a class="reference external" href="#scalaexecutablevalidator-validatemethod">ScalaExecutableValidator#validateMethod</a>
+or <a class="reference external" href="#scalaexecutablevalidator-validatemethods">ScalaExecutableValidator#validateMethods</a>.</p>
+<p>You can find details in <a class="reference external" href="#methodvalidation-constraints">“Creating custom constraints - &#64;MethodValidation constraints”</a>
+which shows how to implement a <cite>&#64;MethodValidation</cite> constraint.</p>
+</div>
+<div class="section" id="method-parameter-constraints">
+<h4>Method Parameter constraints<a class="headerlink" href="#method-parameter-constraints" title="Permalink to this headline">¶</a></h4>
+<p>You can specify the preconditions of a method by adding constraint annotations to its parameters:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">jakarta.validation.constraints.</span><span class="o">{</span><span class="nc">Min</span><span class="o">,</span> <span class="nc">NotEmpty</span><span class="o">,</span> <span class="nc">NotNull</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">java.time.LocalDate</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">RentalStation</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">rentCar</span><span class="o">(</span>
+    <span class="nd">@NotNull</span> <span class="n">customer</span><span class="k">:</span> <span class="kt">Customer</span><span class="o">,</span>
+    <span class="nd">@NotNull</span> <span class="nd">@Future</span> <span class="n">startDate</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">,</span>
+    <span class="nd">@Min</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="n">durationInDays</span><span class="k">:</span> <span class="kt">Int</span>
+  <span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">???</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The following preconditions are specified here:</p>
+<ul class="simple">
+<li>The <cite>name</cite> passed to the <cite>RentalCar</cite> constructor must not be empty.</li>
+<li>When invoking the <cite>rentCar()</cite> method, the given customer must not be null, the rental’s start date must not be <cite>null</cite> as well as be in the future and finally the rental duration must be at least one day.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Constraints may only be applied to instance methods, i.e. declaring constraints on static
+methods is not supported.</p>
+</div>
+<div class="section" id="cross-parameter-constraints">
+<h5>Cross-parameter constraints<a class="headerlink" href="#cross-parameter-constraints" title="Permalink to this headline">¶</a></h5>
+<p>Sometimes validation does not only depend on a single parameter but on several or even all
+parameters of a method. This kind of requirement can be fulfilled with help of a cross-parameter
+constraint.</p>
+<p>Cross-parameter constraints can be considered as the method validation equivalent to class-level
+constraints. Both can be used to implement validation requirements which are based on several
+elements. While class-level constraints can apply to several fields of a case class, cross-parameter
+constraints can apply to several parameters of a method.</p>
+<p>In contrast to single-parameter constraints, cross-parameter constraints are declared on the method.
+In the example below, the cross-parameter constraint <cite>&#64;LuggageCountMatchesPassengerCount</cite> declared
+on the <cite>load()</cite> method is used to ensure that no passenger has more than two pieces of luggage.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="nd">@AssertTrue</span> <span class="n">isRegistered</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="nd">@LuggageCountMatchesPassengerCount</span><span class="o">(</span><span class="n">piecesOfLuggagePerPassenger</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">load</span><span class="o">(</span><span class="n">passengers</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Person</span><span class="o">],</span> <span class="n">luggage</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PieceOfLuggage</span><span class="o">])</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">???</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>We’ll see in the next section that return value constraints are also declared on the method level.
+Thus, in order to distinguish cross-parameter constraints from return value constraints, the
+constraint target is configured in the <cite>ConstraintValidator</cite> implementation using the <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/constraintvalidation/SupportedValidationTarget.html">&#64;SupportedValidationTarget</a>
+annotation.</p>
+<p>More details in <a class="reference external" href="#id4">“Creating custom constraints - Cross-parameter constraints”</a> which shows
+how to implement a cross-parameter constraint.</p>
+</div>
+</div>
+<div class="section" id="method-return-value-constraints">
+<h4>Method Return value constraints<a class="headerlink" href="#method-return-value-constraints" title="Permalink to this headline">¶</a></h4>
+<p>The postconditions of a method or constructor are declared by adding constraint annotations to the
+executable:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">RentalStation</span> <span class="nd">@ValidRentalStation</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="nd">@NotEmpty</span>
+  <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="k">=</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">getCustomers</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Customer</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>In the example above, the following constraints apply to executables (constructor and a method in
+this case) of <cite>RentalStation</cite>:
+* A new <cite>RentalStation</cite> instance must satisfy the <cite>&#64;ValidRentalStation</cite> constraint
+* The <cite>Seq[Customer]</cite> returned by <cite>getCustomers</cite> must not be empty and must contain at least on element</p>
+</div>
+<div class="section" id="cascaded-validation">
+<h4>Cascaded Validation<a class="headerlink" href="#cascaded-validation" title="Permalink to this headline">¶</a></h4>
+<p>Like the cascaded validation of case class fields (see <a class="reference external" href="#object-graphs">“Object graphs”</a>), the
+<cite>&#64;Valid</cite> annotation can be used to mark executable parameters and return values for cascaded
+validation. When validating a parameter or return value annotated with <cite>&#64;Valid</cite>, the constraints
+declared on the parameter or return value object are also validated.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Car</span><span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">manufacturer</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="nd">@NotEmpty</span> <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="k">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">max</span> <span class="k">=</span> <span class="mi">14</span><span class="o">)</span> <span class="n">licensePlate</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Garage</span> <span class="nd">@Valid</span> <span class="o">(</span><span class="nd">@NotEmpty</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">checkCar</span><span class="o">(</span><span class="nd">@NotNull</span> <span class="nd">@Valid</span> <span class="n">car</span><span class="k">:</span> <span class="kt">Car</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">???</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Above, the <cite>car</cite> parameter of the method <cite>Garage#checkCar</cite> as well as the return value of the
+<cite>Garage</cite> constructor are marked for cascaded validation.</p>
+<p>When validating the arguments of the <cite>checkCar()</cite> method, the constraints on the properties of the
+passed <cite>Car</cite> object are evaluated as well. Similarly, the <cite>&#64;NotEmpty</cite> constraint on the name field
+of <cite>Garage</cite> is checked when validating the return value of the <cite>Garage</cite> constructor.</p>
+<p>Generally, the cascaded validation works for executables in the same way as it does for case class
+fields.</p>
+<p>In particular, <cite>null</cite> or <cite>None</cite> values are ignored during cascaded validation (which is impossible
+for constructor return values) and cascaded validation is performed recursively, i.e. if a parameter
+or return value object which is marked for cascaded validation itself has properties marked with
+<cite>&#64;Valid</cite>, the constraints declared on the referenced elements will be validated as well.</p>
+<p>Also, the same issues with annotating container elements apply because of the Scala compiler
+limitations but also note that more generally, the majority of executable methods proxy to the
+underlying Hibernate Java library.</p>
+</div>
+<div class="section" id="method-constraints-in-inheritance-hierarchies">
+<h4>Method constraints in inheritance hierarchies<a class="headerlink" href="#method-constraints-in-inheritance-hierarchies" title="Permalink to this headline">¶</a></h4>
+<p>Note there are some rules for method constraints and inheritance as outlined in the
+<a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-method-constraints-inheritance-hierarchies">Hibernate documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="validating-method-constraints">
+<h3>Validating method constraints<a class="headerlink" href="#validating-method-constraints" title="Permalink to this headline">¶</a></h3>
+<p>The validation of method constraints is done using the <cite>ScalaExecutableValidator</cite> interface.</p>
+<div class="section" id="obtaining-a-scalaexecutablevalidator-instance">
+<h4>Obtaining a <cite>ScalaExecutableValidator</cite> instance<a class="headerlink" href="#obtaining-a-scalaexecutablevalidator-instance" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>ScalaValidator</cite> provides a <cite>ScalaExecutableValidator</cite> which implements a set of “executable”
+methods that mirrors the bean validation <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/executable/ExecutableValidator.html">ExecutableValidator</a> API.</p>
+<p>All of the corollary <cite>ExecutableValidator</cite> methods proxy directly to the underlying Hibernate
+Validator for support since it properly handles annotations in these cases and no special logic is
+needed.</p>
+<p>The <cite>ScalaExecutableValidator</cite> can be obtained from the <cite>ScalaValidator</cite> by calling
+<cite>ScalaValidator#forExecutables</cite></p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.validation.ScalaValidator</span>
+<span class="k">import</span> <span class="nn">com.twitter.util.validation.executable.ScalaExecutableValidator</span>
+
+<span class="k">val</span> <span class="n">validator</span><span class="k">:</span> <span class="kt">ScalaValidator</span> <span class="o">=</span> <span class="nc">ScalaValidator</span><span class="o">()</span>
+<span class="k">val</span> <span class="n">executableValidator</span><span class="k">:</span> <span class="kt">ScalaExecutableValidator</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">forExecutables</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scalaexecutablevalidator-methods">
+<h4><cite>ScalaExecutableValidator</cite> methods<a class="headerlink" href="#scalaexecutablevalidator-methods" title="Permalink to this headline">¶</a></h4>
+<p>The <cite>ScalaExecutableValidator</cite> interface offers altogether six methods:</p>
+<ul class="simple">
+<li><cite>validateMethods()</cite>, <cite>validateMethod()</cite>, <cite>validateParameters()</cite>, and <cite>validateReturnValue()</cite> for method validation</li>
+<li><cite>validateConstructorParameters()</cite> and <cite>validateConstructorReturnValue()</cite> for constructor validation</li>
+</ul>
+<div class="section" id="scalaexecutablevalidator-validatemethods">
+<h5><cite>ScalaExecutableValidator#validateMethods</cite><a class="headerlink" href="#scalaexecutablevalidator-validatemethods" title="Permalink to this headline">¶</a></h5>
+<p>Validates all <cite>&#64;MethodValidation</cite>-annotated methods of a given object.</p>
+</div>
+<div class="section" id="scalaexecutablevalidator-validatemethod">
+<h5><cite>ScalaExecutableValidator#validateMethod</cite><a class="headerlink" href="#scalaexecutablevalidator-validatemethod" title="Permalink to this headline">¶</a></h5>
+<p>Validates the given <cite>&#64;MethodValidation</cite>-annotated method of an object.</p>
+</div>
+<div class="section" id="scalaexecutablevalidator-validateparameters">
+<h5><cite>ScalaExecutableValidator#validateParameters</cite><a class="headerlink" href="#scalaexecutablevalidator-validateparameters" title="Permalink to this headline">¶</a></h5>
+<p>Validates all constraints placed on the parameters of the given method. This method directly proxies
+to the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateparameters_code">underlying Hibernate validator</a>.</p>
+</div>
+<div class="section" id="scalaexecutablevalidator-validatereturnvalue">
+<h5><cite>ScalaExecutableValidator#validateReturnValue</cite><a class="headerlink" href="#scalaexecutablevalidator-validatereturnvalue" title="Permalink to this headline">¶</a></h5>
+<p>Validates return value constraints of the given method. This method directly proxies to the
+<a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validatereturnvalue_code">underlying Hibernate validator</a>.</p>
+</div>
+<div class="section" id="scalaexecutablevalidator-validateconstructorparameters">
+<h5><cite>ScalaExecutableValidator#validateConstructorParameters</cite><a class="headerlink" href="#scalaexecutablevalidator-validateconstructorparameters" title="Permalink to this headline">¶</a></h5>
+<p>Validates all constraints placed on the parameters of the given constructor. This method directly
+proxies to the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateconstructorparameters_code">underlying Hibernate validator</a>.</p>
+</div>
+<div class="section" id="scalaexecutablevalidator-validateconstructorreturnvalue">
+<h5><cite>ScalaExecutableValidator#validateConstructorReturnValue</cite><a class="headerlink" href="#scalaexecutablevalidator-validateconstructorreturnvalue" title="Permalink to this headline">¶</a></h5>
+<p>Validates a constructor’s return value. This method directly proxies to the
+<a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateconstructorreturnvalue_code">underlying Hibernate validator</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="built-in-method-constraints">
+<h3>Built-in method constraints<a class="headerlink" href="#built-in-method-constraints" title="Permalink to this headline">¶</a></h3>
+<p>In addition to the built-in case class and field-level constraints discussed in
+<a class="reference external" href="#built-in-constraints">“Built-in constraints”</a>, this library provides one method-level
+constraint, <cite>&#64;MethodValidation</cite>. This is a generic constraint which allows for implementation of
+validation of the (possibly even internal) state of a case class instance.</p>
+<p>This is different from a class-level constraint since being implemented as a method within the case
+class means that the method implementation potentially has access to private or internal state for
+performing validation whereas a class-level constraint only has access to publicly exposed fields
+and methods.</p>
+<ul>
+<li><p class="first"><cite>&#64;MethodValidation</cite></p>
+<p>Used to validate the (possibly internal) state of an entire object. It is important to note that any
+annotated method <strong>will be invoked when performing validation</strong> and should thus be side-effect free.</p>
+<ul>
+<li><p class="first"><strong>Supported data types</strong></p>
+<p>No-arg case class method that returns a <cite>MethodValidationResult</cite>.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="grouping-constraints">
+<h2>Grouping constraints<a class="headerlink" href="#grouping-constraints" title="Permalink to this headline">¶</a></h2>
+<p>See the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#chapter-groups">Hibernate documentation</a>
+which explains constraint grouping in detail.</p>
+</div>
+<div class="section" id="creating-custom-constraints">
+<h2>Creating custom constraints<a class="headerlink" href="#creating-custom-constraints" title="Permalink to this headline">¶</a></h2>
+<p>In cases where none of the <a class="reference external" href="#built-in-constraints">built-in constraints</a> suffice, you can create
+custom constraints to implement your specific validation requirements.</p>
+<div class="section" id="creating-a-simple-constraint">
+<h3>Creating a simple constraint<a class="headerlink" href="#creating-a-simple-constraint" title="Permalink to this headline">¶</a></h3>
+<p>To create a custom constraint, the following three steps are required:</p>
+<ul class="simple">
+<li>Create a constraint annotation</li>
+<li>Implement a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a></li>
+<li>Define a default error message</li>
+</ul>
+<div class="section" id="the-constraint-annotation">
+<h4>The constraint annotation<a class="headerlink" href="#the-constraint-annotation" title="Permalink to this headline">¶</a></h4>
+<p>This is detailed in the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-customconstraints-constraintannotation">Hibernate documentation</a>
+and all of the steps here are the same for use with this library. The linked documentation creates a
+<cite>CheckCase</cite> annotation with two modes for validating a <cite>String</cite> is either uppercase or lowercase.
+We’ll assume the <cite>CaseMode</cite> enum and the <cite>CheckCase</cite> constraint annotation exists.</p>
+</div>
+<div class="section" id="the-constraint-validator">
+<h4>The constraint validator<a class="headerlink" href="#the-constraint-validator" title="Permalink to this headline">¶</a></h4>
+<p>Having defined the annotation, we now need to create an implementation of a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a>,
+which is able to validate fields with a <cite>&#64;CheckCase</cite> annotation. To do so, we implement the Jakarta Bean Validation interface <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a>:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">com.example.constraint</span>
+
+<span class="k">import</span> <span class="nn">jakarta.validation.</span><span class="o">{</span><span class="nc">ConstraintValidator</span><span class="o">,</span> <span class="nc">ConstraintValidatorContext</span><span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">CheckCaseConstraintValidator</span> <span class="k">extends</span> <span class="nc">ConstraintValidator</span><span class="o">[</span><span class="kt">CheckCase</span>, <span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
+  <span class="nd">@volatile</span> <span class="k">private</span><span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">var</span> <span class="n">caseMode</span><span class="k">:</span> <span class="kt">CaseMode</span> <span class="o">=</span> <span class="k">_</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">initialize</span><span class="o">(</span><span class="n">constraintAnnotation</span><span class="k">:</span> <span class="kt">CheckCase</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="n">caseMode</span> <span class="k">=</span> <span class="n">constraintAnnotation</span><span class="o">.</span><span class="n">value</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">isValid</span><span class="o">(</span>
+    <span class="n">obj</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+    <span class="n">constraintContext</span><span class="k">:</span> <span class="kt">ConstraintValidatorContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">true</span>
+    <span class="k">else</span> <span class="o">{</span>
+      <span class="n">caseMode</span> <span class="k">match</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nc">UPPER</span> <span class="k">=&gt;</span>
+          <span class="n">obj</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">toUpperCase</span>
+        <span class="k">case</span> <span class="nc">LOWER</span> <span class="k">=&gt;</span>
+          <span class="n">obj</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">toLowerCase</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a>
+interface defines two type parameters which are set in the implementation. The first one specifies
+the annotation type to be validated (in this case <cite>CheckCase</cite>), the second one the type of elements
+the validator can handle (in this case, <cite>String</cite>).</p>
+<p>In case a constraint supports several data types, you can create a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a>
+implementation over the <cite>Any</cite> or <cite>AnyRef</cite> types and pattern-match within the implementation. If the
+implementation receives a type that is unsupported you can throw an <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/index.html?jakarta/validation/UnexpectedTypeException.html">UnexpectedTypeException</a>.</p>
+<p>The implementation of the validator is straightforward: the <cite>initialize</cite> method gives you access
+to the attribute values of the validated constraint and allows you to store them in a field of the
+validator as shown in the example.</p>
+<p>The <cite>isValid</cite> method contains the validator logic. For <cite>&#64;CheckCase</cite> this is the check as to whether
+a given string is either completely lower case or upper case, depending on the <cite>caseMode</cite> set from
+the constraint annotation value in <cite>initialize</cite>.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p>Note that the Jakarta Bean Validation specification recommends consideration of <cite>null</cite> values as
+being valid. If <cite>null</cite> is not a valid value for an element, it should be <strong>explicitly</strong> annotated
+with <cite>&#64;NotNull</cite>.</p>
+<p class="last">This library also extends the same consideration for <cite>None</cite> values during validation as
+detailed in <a class="reference external" href="#with-option">With Option[_]</a>.</p>
+</div>
+<div class="section" id="thread-safety">
+<h5>Thread-safety<a class="headerlink" href="#thread-safety" title="Permalink to this headline">¶</a></h5>
+<p>As noted in the <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html#isValid-T-jakarta.validation.ConstraintValidatorContext-">javadocs</a>:
+access to <cite>isValid</cite> can happen concurrently and thus thread-safety must be ensured by the
+implementation. Also note that <cite>isValid</cite> implementations <strong>should not</strong> alter the state of the value
+to validate.</p>
+</div>
+</div>
+<div class="section" id="the-error-message">
+<h4>The error message<a class="headerlink" href="#the-error-message" title="Permalink to this headline">¶</a></h4>
+<p>The last piece is an error message which should be used when a <cite>&#64;CheckCase</cite> constraint is violated.
+You have a few options. You can specify the default error message directly within the <cite>message()</cite>
+attribute of the constraint annotation, e.g.,</p>
+<div class="code java highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">String</span> <span class="n">message</span><span class="o">()</span> <span class="n">default</span> <span class="s">&quot;Case mode must be {value}&quot;</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>However, if you want to be able to <a class="reference external" href="https://docs.oracle.com/javase/tutorial/i18n/intro/steps.html">internationalize</a>
+an error message, it is generally recommended to place the value in a <a class="reference external" href="https://beanvalidation.org/2.0/spec/#constraintsdefinitionimplementation-constraintdefinition-properties-message">Resource Bundle</a>,
+specifying the resource key as the <cite>message()</cite> attribute in the constraint annotation.</p>
+<div class="code java highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="nc">String</span> <span class="n">message</span><span class="o">()</span> <span class="n">default</span> <span class="s">&quot;{com.example.constraint.CheckCase.message}&quot;</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>Create a <a class="reference external" href="https://en.wikipedia.org/wiki/.properties">properties</a> file,
+<em>ValidationMessages.properties</em> with the following contents:</p>
+<div class="code text highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">constraint</span><span class="o">.</span><span class="nc">CheckCase</span><span class="o">.</span><span class="n">message</span><span class="k">=</span><span class="nc">Case</span> <span class="n">mode</span> <span class="n">must</span> <span class="n">be</span> <span class="o">{</span><span class="n">value</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Make sure the <em>ValidationMessages.properties</em> is packaged on your classpath to be picked up by the
+library.</p>
+<p>For details, see the Hibernate documentation: <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-message-interpolation">“Default message interpolation”</a>.</p>
+<div class="section" id="the-twitterconstraintvalidatorcontext">
+<h5>The <cite>TwitterConstraintValidatorContext</cite><a class="headerlink" href="#the-twitterconstraintvalidatorcontext" title="Permalink to this headline">¶</a></h5>
+<p>First, see the documentation about the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_the_code_constraintvalidatorcontext_code">ConstraintValidatorContext</a>
+for background on its usage within a <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html">ConstraintValidator</a>
+implementation.</p>
+<p>This library provides a utility for customizing any returned <cite>ConstraintViolation</cite> from a
+<cite>ConstraintValidator</cite> by using the <cite>c.t.util.validation.constraintvalidation.TwitterConstraintValidatorContext</cite>.</p>
+<p>The <cite>TwitterConstraintValidatorContext</cite> uses the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-hibernateconstraintvalidatorcontext">HibernateConstraintValidatorContext</a>
+described in the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_custom_contexts">Custom contexts</a>
+Hibernate documentation. See the referenced documentation for details.</p>
+<p>The <cite>TwitterConstraintValidatorContext</cite> has a simple DSL to create custom constraint violations. The
+DSL allows you to set a dynamic <a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/Payload.html">Payload</a>,
+set message parameters or expression variables for an error message, or specify a fully custom error
+message template (that is a message template different than the default specified by the constraint
+annotation).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>As mentioned in the Hibernate <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-hibernateconstraintvalidatorcontext">documentation</a>:</p>
+<p><em>[T]he main difference between message parameters and expression variables is that message parameters</em>
+<em>are simply interpolated whereas expression variables are interpreted using the</em> <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#el-features">Expression Language engine</a>.</p>
+<p class="last"><em>In practice, use message parameters if you do not need the advanced features of an Expression Language.</em></p>
+</div>
+<p>By default, Expression Language support <strong>is not enabled</strong> for custom violations created via the
+<cite>ConstraintValidatorContext</cite>. However, for some advanced requirements, using Expression Language may
+be necessary. If you add an expression variable via the <cite>TwitterConstraintValidatorContext</cite>,
+Expression Language support will be enabled when adding a constraint violation.</p>
+</div>
+</div>
+<div class="section" id="using-the-constraint">
+<h4>Using the constraint<a class="headerlink" href="#using-the-constraint" title="Permalink to this headline">¶</a></h4>
+<p>To use the custom <cite>&#64;CheckCase</cite> constraint, annotate a case class field:</p>
+<p>During validation, a <cite>licensePlate</cite> field with an invalid case will now cause validation to fail.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// invalid license plate</span>
+<span class="k">val</span> <span class="n">car</span><span class="k">:</span> <span class="kt">Car</span> <span class="o">=</span> <span class="nc">Car</span><span class="o">(</span><span class="s">&quot;Morris&quot;</span><span class="o">,</span> <span class="s">&quot;dd-ab-123&quot;</span><span class="o">,</span> <span class="mi">4</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">violations</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">ConstraintViolation</span><span class="o">[</span><span class="kt">Car</span><span class="o">]]</span> <span class="k">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="o">(</span><span class="n">car</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">violations</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">violations</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">getMessage</span> <span class="o">==</span> <span class="s">&quot;Case mode must be UPPER&quot;</span><span class="o">)</span>
+
+<span class="c1">// valid license plate</span>
+<span class="k">val</span> <span class="n">car</span><span class="k">:</span> <span class="kt">Car</span> <span class="o">=</span> <span class="nc">Car</span><span class="o">(</span><span class="s">&quot;Morris&quot;</span><span class="o">,</span> <span class="s">&quot;DD-AB-123&quot;</span><span class="o">,</span> <span class="mi">4</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="o">(</span><span class="n">car</span><span class="o">).</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>Class-level constraints<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>As mentioned previously, constraints can also be applied on the class-level to validate the state of
+the entire case class instance. These constraints are defined in the same way as field constraints.</p>
+<p>Here we’ll see how to implement the <cite>&#64;ValidPassengerCount</cite> annotation seen in an earlier example:</p>
+<p>First the annotation definition could be written as:</p>
+<div class="code java highlight-scala notranslate"><div class="highlight"><pre><span></span>package com.example.constraint;
+
+@Target({ TYPE, ANNOTATION_TYPE })
+@Retention(RUNTIME)
+@Constraint(validatedBy = { ValidPassengerCountValidator.class })
+@Documented
+public @interface ValidPassengerCount {
+
+    String message() default &quot;{com.example.constraint.ValidPassengerCount.message}&quot;;
+
+    Class&lt;?&gt;[] groups() default { };
+
+    Class&lt;? extends Payload&gt;[] payload() default { };
+}
+</pre></div>
+</div>
+<p>We define an error message in a <em>Validation.properties</em> file:</p>
+<div class="code text highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">constraint</span><span class="o">.</span><span class="nc">ValidPassengerCount</span><span class="o">.</span><span class="n">message</span><span class="k">=</span><span class="n">invalid</span> <span class="n">number</span> <span class="n">of</span> <span class="n">passengers</span>
+</pre></div>
+</div>
+<p>Then the <cite>ConstraintValidator</cite> implementation which is specified to a <cite>Car</cite> type:</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">com.example</span>
+
+<span class="k">import</span> <span class="nn">com.example.constraint.ValidPassengerCount</span>
+<span class="k">import</span> <span class="nn">jakarta.validation.</span><span class="o">{</span><span class="nc">ConstraintValidator</span>
+
+<span class="k">class</span> <span class="nc">ValidPassengerCountValidator</span> <span class="k">extends</span> <span class="nc">ConstraintValidator</span><span class="o">[</span><span class="kt">ValidPassengerCount</span>, <span class="kt">Car</span><span class="o">]</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">isValid</span><span class="o">(</span>
+    <span class="n">car</span><span class="k">:</span> <span class="kt">Car</span><span class="o">,</span>
+    <span class="n">constraintContext</span><span class="k">:</span> <span class="kt">ConstraintValidatorContext</span>
+  <span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">car</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">true</span>
+    <span class="k">else</span> <span class="n">car</span><span class="o">.</span><span class="n">passengers</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="n">car</span><span class="o">.</span><span class="n">seatCount</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Note as the example shows, you need to use the element type <cite>TYPE</cite> in the <a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html">&#64;Target</a>
+annotation on the constraint annotation. This allows the constraint to be put on type definitions.
+The <cite>ValidPassengerCountValidator</cite> receives an instance of a <cite>Car</cite> in the <cite>isValid()</cite> method and can
+access the complete object state to decide whether the given instance is valid or not.</p>
+<p>During validation, an instance which does not satisfy the constraint will fail the validation.</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">com.example</span>
+
+<span class="k">import</span> <span class="nn">com.twitter.util.validation.ScalaValidator</span>
+<span class="k">import</span> <span class="nn">jakarta.validation.ConstraintViolation</span>
+
+<span class="k">val</span> <span class="n">car</span> <span class="k">=</span> <span class="nc">Car</span><span class="o">(</span>
+  <span class="n">seatCount</span> <span class="k">=</span> <span class="mi">2</span><span class="o">,</span>
+  <span class="n">passengers</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;abcd1234&quot;</span><span class="o">,</span> <span class="s">&quot;J Doe&quot;</span><span class="o">,</span> <span class="nc">DefaultAddress</span><span class="o">),</span>
+    <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;abcd1235&quot;</span><span class="o">,</span> <span class="s">&quot;K Doe&quot;</span><span class="o">,</span> <span class="nc">DefaultAddress</span><span class="o">),</span>
+    <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;abcd1236&quot;</span><span class="o">,</span> <span class="s">&quot;L Doe&quot;</span><span class="o">,</span> <span class="nc">DefaultAddress</span><span class="o">),</span>
+    <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;abcd1237&quot;</span><span class="o">,</span> <span class="s">&quot;M Doe&quot;</span><span class="o">,</span> <span class="nc">DefaultAddress</span><span class="o">),</span>
+    <span class="nc">Person</span><span class="o">(</span><span class="s">&quot;abcd1238&quot;</span><span class="o">,</span> <span class="s">&quot;N Doe&quot;</span><span class="o">,</span> <span class="nc">DefaultAddress</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">)</span>
+
+<span class="k">val</span> <span class="n">validator</span><span class="k">:</span> <span class="kt">ScalaValidator</span> <span class="o">=</span> <span class="nc">ScalaValidator</span><span class="o">()</span>
+
+<span class="k">val</span> <span class="n">violations</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">ConstraintViolation</span><span class="o">[</span><span class="kt">Car</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="o">(</span><span class="n">car</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">violations</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">violations</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">getMessage</span> <span class="o">==</span> <span class="s">&quot;invalid number of passengers&quot;</span><span class="o">)</span>
+<span class="n">assert</span><span class="o">(</span><span class="n">violations</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">getPropertyPath</span><span class="o">.</span><span class="n">toString</span> <span class="o">==</span> <span class="s">&quot;Car&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="section" id="custom-property-paths">
+<h4>Custom property paths<a class="headerlink" href="#custom-property-paths" title="Permalink to this headline">¶</a></h4>
+<p>By default for a class-level constraint, any constraint violation is reported on the level of the
+annotated type, e.g. in this case the <cite>Car</cite> type. If the class is the top-level, the property path
+will be empty, otherwise it will be the field name referencing the class type.</p>
+<p>See the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-custom-property-paths">Hibernate documentation</a>
+for details on how to set custom property paths when implementing a class-level constraint.</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>Cross-parameter constraints<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>The Bean validation specification distinguishes two types of constraints: generic constraints which
+apply to the annotated element (e.g., a type, field, container element, method parameter or return
+value, etc.), and <em>cross-parameter</em> constraints. Cross-parameter constraints by contrast, apply to
+an array of parameters of a method or constructor and can be used to express validation logic which
+depends on several parameter values.</p>
+<p>See the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-cross-parameter-constraints">Hibernate documentation</a>
+for details on implementing cross-parameter constraints.</p>
+</div>
+<div class="section" id="constraint-composition">
+<h3>Constraint composition<a class="headerlink" href="#constraint-composition" title="Permalink to this headline">¶</a></h3>
+<p>To keep the annotation of case class fields from becoming unwieldy or confusing, you can use a
+composing constraint. See the <a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-constraint-composition">Hibernate documentation</a>
+for details on creating a composing constraint.</p>
+</div>
+<div class="section" id="methodvalidation-constraints">
+<h3><cite>&#64;MethodValidation</cite> constraints<a class="headerlink" href="#methodvalidation-constraints" title="Permalink to this headline">¶</a></h3>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p>The <cite>&#64;MethodValidation</cite> constraint annotation MUST be applied to a no-arg method that returns a
+<cite>com.twitter.util.validation.engine.MethodValidationResult</cite>.</p>
+<p class="last">These annotated methods <strong>will be invoked</strong> during validation and should be side-effect free.</p>
+</div>
+<p>In a case class, define a no-arg method that returns a <cite>MethodValidationResult</cite>. Annotate the method
+with <cite>&#64;MethodValidation</cite>, optionally specifying validated fields of the case class for
+error-reporting.</p>
+</div>
+</div>
+<div class="section" id="value-extraction">
+<h2>Value Extraction<a class="headerlink" href="#value-extraction" title="Permalink to this headline">¶</a></h2>
+<p>Value extraction is the process of extracting values from a container so that they can be validated.</p>
+<p>It is used when dealing with <a class="reference external" href="#container-element-constraints">container element constraints</a> and
+<a class="reference external" href="#object-graphs">cascaded validation</a> inside containers.</p>
+<div class="section" id="built-in-value-extractors">
+<h3>Built-in value extractors<a class="headerlink" href="#built-in-value-extractors" title="Permalink to this headline">¶</a></h3>
+<p>This library provides built-in value extraction for Scala <a class="reference external" href="#iterable">Iterable[_]</a> types. See the
+<a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#chapter-valueextraction">Hibernate documentation</a>
+for more details on value extraction including how to define and register a new value extractor.</p>
+</div>
+</div>
+<div class="section" id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Case classes used for validation should be side-effect free under property access. That is, accessing a
+case class field should be able to be done eagerly and without side-effects.</p>
+</li>
+<li><p class="first">Case class methods for <cite>&#64;MethodValidation</cite> validation should be side-effect free under method access. That is, accessing a
+<cite>&#64;MethodValidation</cite>-annotated method should be able to be done eagerly and without side-effects.</p>
+</li>
+<li><p class="first">Case classes with generic type params should be considered <strong>not supported</strong> for validation. E.g.,</p>
+<div class="code scala highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">GenericCaseClass</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="nd">@NotEmpty</span> <span class="nd">@Valid</span> <span class="n">data</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This may appear to work for some category of data but in practice the way the library caches reflection data does not
+discriminate on the type binding and thus validation of genericized case classes is not fully guaranteed to be successful for
+differing type bindings of a given genericized class.</p>
+</li>
+<li><p class="first">While <cite>Iterable</cite> collections are supported for cascaded validation when annotated with <cite>&#64;Valid</cite>, this does
+not include <cite>Map</cite> types. Annotated <cite>Map</cite> types will be ignored during validation.</p>
+</li>
+<li><p class="first">More generally, types with multiple type params, e.g. <cite>Either[T, U]</cite>, are not supported for validation
+of contents when annotated with <cite>&#64;Valid</cite>. Annotated unsupported types will be <strong>ignored</strong> during validation.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="more-resources">
+<h2>More resources<a class="headerlink" href="#more-resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-specifics">Hibernate Validator Specifics</a> (from reference guide)</li>
+<li><a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/">Hibernate Validator Reference Guide</a></li>
+<li><a class="reference external" href="https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/index.html">Jakarta Bean Validation API 3.0.0 Javadocs</a></li>
+<li><a class="reference external" href="https://docs.jboss.org/hibernate/stable/validator/api/index.html">Hibernate Validator API Javadocs</a></li>
+<li><a class="reference external" href="https://beanvalidation.org/">Jakarta Bean Validation</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><a href="index.html"><h3>Util</h3></a>
+<p>
+  Miscellaneous Idiomatic Scala Utilities & Wrappers, by Twitter.
+</p>
+
+<h3>Useful Links</h3>
+<ul>
+  <li><a href="https://github.com/twitter/util">Util on GitHub</a></li>
+  <li><a href="https://github.com/twitter/util/issues">Issue Tracker</a></li>
+</ul>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">util-validator Guide</a><ul>
+<li><a class="reference internal" href="#preface">Preface</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li><a class="reference internal" href="#applying-constraints">Applying constraints</a></li>
+<li><a class="reference internal" href="#validating-constraints">Validating constraints</a><ul>
+<li><a class="reference internal" href="#scalavalidator-validate"><cite>ScalaValidator#validate</cite></a></li>
+<li><a class="reference internal" href="#scalavalidator-verify"><cite>ScalaValidator#verify</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#declaring-and-validating-case-class-constraints">Declaring and validating case class constraints</a><ul>
+<li><a class="reference internal" href="#declaring-case-class-constraints">Declaring case class constraints</a><ul>
+<li><a class="reference internal" href="#constructor-param-constraints">Constructor param constraints</a><ul>
+<li><a class="reference internal" href="#secondary-constructors">Secondary constructors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#container-element-constraints">Container element constraints</a><ul>
+<li><a class="reference internal" href="#with-option">With <cite>Option[_]</cite></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#class-level-constraints">Class-level constraints</a></li>
+<li><a class="reference internal" href="#constraint-inheritance">Constraint inheritance</a></li>
+<li><a class="reference internal" href="#object-graphs">Object graphs</a><ul>
+<li><a class="reference internal" href="#iterable"><cite>Iterable[_]</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#validating-case-class-constraints">Validating case class constraints</a><ul>
+<li><a class="reference internal" href="#obtaining-a-validator-instance">Obtaining a Validator instance</a></li>
+<li><a class="reference internal" href="#scalavalidator-api">ScalaValidator API</a><ul>
+<li><a class="reference internal" href="#id1"><cite>ScalaValidator#validate</cite></a></li>
+<li><a class="reference internal" href="#id2"><cite>ScalaValidator#verify</cite></a></li>
+<li><a class="reference internal" href="#scalavalidator-validatevalue"><cite>ScalaValidator#validateValue</cite></a></li>
+<li><a class="reference internal" href="#scalavalidator-validateproperty"><cite>ScalaValidator#validateProperty</cite></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#constraintviolation">ConstraintViolation</a></li>
+<li><a class="reference internal" href="#built-in-constraints">Built-in constraints</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#declaring-and-validating-method-constraints">Declaring and validating method constraints</a><ul>
+<li><a class="reference internal" href="#declaring-method-constraints">Declaring method constraints</a><ul>
+<li><a class="reference internal" href="#methodvalidation-constraint"><cite>&#64;MethodValidation</cite> constraint</a></li>
+<li><a class="reference internal" href="#method-parameter-constraints">Method Parameter constraints</a><ul>
+<li><a class="reference internal" href="#cross-parameter-constraints">Cross-parameter constraints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#method-return-value-constraints">Method Return value constraints</a></li>
+<li><a class="reference internal" href="#cascaded-validation">Cascaded Validation</a></li>
+<li><a class="reference internal" href="#method-constraints-in-inheritance-hierarchies">Method constraints in inheritance hierarchies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#validating-method-constraints">Validating method constraints</a><ul>
+<li><a class="reference internal" href="#obtaining-a-scalaexecutablevalidator-instance">Obtaining a <cite>ScalaExecutableValidator</cite> instance</a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-methods"><cite>ScalaExecutableValidator</cite> methods</a><ul>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validatemethods"><cite>ScalaExecutableValidator#validateMethods</cite></a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validatemethod"><cite>ScalaExecutableValidator#validateMethod</cite></a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validateparameters"><cite>ScalaExecutableValidator#validateParameters</cite></a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validatereturnvalue"><cite>ScalaExecutableValidator#validateReturnValue</cite></a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validateconstructorparameters"><cite>ScalaExecutableValidator#validateConstructorParameters</cite></a></li>
+<li><a class="reference internal" href="#scalaexecutablevalidator-validateconstructorreturnvalue"><cite>ScalaExecutableValidator#validateConstructorReturnValue</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#built-in-method-constraints">Built-in method constraints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grouping-constraints">Grouping constraints</a></li>
+<li><a class="reference internal" href="#creating-custom-constraints">Creating custom constraints</a><ul>
+<li><a class="reference internal" href="#creating-a-simple-constraint">Creating a simple constraint</a><ul>
+<li><a class="reference internal" href="#the-constraint-annotation">The constraint annotation</a></li>
+<li><a class="reference internal" href="#the-constraint-validator">The constraint validator</a><ul>
+<li><a class="reference internal" href="#thread-safety">Thread-safety</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-error-message">The error message</a><ul>
+<li><a class="reference internal" href="#the-twitterconstraintvalidatorcontext">The <cite>TwitterConstraintValidatorContext</cite></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-the-constraint">Using the constraint</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">Class-level constraints</a><ul>
+<li><a class="reference internal" href="#custom-property-paths">Custom property paths</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">Cross-parameter constraints</a></li>
+<li><a class="reference internal" href="#constraint-composition">Constraint composition</a></li>
+<li><a class="reference internal" href="#methodvalidation-constraints"><cite>&#64;MethodValidation</cite> constraints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#value-extraction">Value Extraction</a><ul>
+<li><a class="reference internal" href="#built-in-value-extractors">Built-in value extractors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li><a class="reference internal" href="#more-resources">More resources</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../util-cookbook/java.html" title="previous chapter">Usage from Java</a></li>
+      <li>Next: <a href="../Changelog.html" title="next chapter">Changelog</a></li>
+  </ul></li>
+</ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Search the contents of this site.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">&copy; Copyright 2021 Twitter, Inc.</div>
+  
+  </body>
+</html>

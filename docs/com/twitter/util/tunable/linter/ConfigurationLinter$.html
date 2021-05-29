@@ -994,7 +994,7 @@ and flag parsing.
       <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and are
 executed after all postmains complete. The thread resumes when all exit
 hooks complete or <code>closeDeadline</code> expires.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="runOnExit(Runnable)">runOnExit(Runnable)</span> for a variant that is more suitable for Java.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#onExitLast" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onExitLast(f:=&gt;Unit):Unit"></a><a id="onExitLast(⇒Unit):Unit"></a>
       <span class="permalink">
@@ -1013,7 +1013,7 @@ hooks complete or <code>closeDeadline</code> expires.
       <p class="shortcomment cmt">Invoke <code>f</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>f</code> when shutdown is requested. Exit hooks run in parallel and are
 executed after all closeOnExit functions complete. The thread resumes when all exit
 hooks complete or <code>closeDeadline</code> expires.
-</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="runOnExitLast(Runnable)">runOnExitLast(Runnable)</span> for a variant that is more suitable for Java.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#parseArgs" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parseArgs(args:Array[String]):Unit"></a><a id="parseArgs(Array[String]):Unit"></a>
       <span class="permalink">
@@ -1105,6 +1105,50 @@ method.
 access control mechanism: only <code>Await.result</code> may call this
 method.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd>CloseOnceAwaitably0 → <a href="../../Awaitable.html" class="extype" name="com.twitter.util.Awaitable">Awaitable</a></dd></dl></div>
+    </li><li name="com.twitter.app.App#runOnExit" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="runOnExit(runnable:Runnable):Unit"></a><a id="runOnExit(Runnable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#runOnExit(runnable:Runnable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">runOnExit</span><span class="params">(<span name="runnable">runnable: <span class="extype" name="java.lang.Runnable">Runnable</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Invoke <code>runnable.run()</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>runnable.run()</code> when shutdown is requested. Exit hooks run in parallel
+and are executed after all postmains complete. The thread resumes when all exit
+hooks complete or <code>closeDeadline</code> expires.</p><p>This is a Java friendly API to allow Java 8 users to invoke <code>onExit</code> with lambda
+expressions.</p><p>For example (in Java):</p><pre>runOnExit(() -&gt; {
+ clientA.close();
+ clientB.close();
+});</pre></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="onExit(f:">=&gt; Unit)</span> for a variant that is more suitable for Scala.</p></span></dd></dl></div>
+    </li><li name="com.twitter.app.App#runOnExitLast" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="runOnExitLast(runnable:Runnable):Unit"></a><a id="runOnExitLast(Runnable):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/twitter/util/tunable/linter/ConfigurationLinter$.html#runOnExitLast(runnable:Runnable):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">runOnExitLast</span><span class="params">(<span name="runnable">runnable: <span class="extype" name="java.lang.Runnable">Runnable</span></span>)</span><span class="result">: <a href="https://www.scala-lang.org/api/2.12.12/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Invoke <code>runnable.run()</code> when shutdown is requested.</p><div class="fullcomment"><div class="comment cmt"><p>Invoke <code>runnable.run()</code> when shutdown is requested. Exit hooks run in parallel
+and are executed after all closeOnExit functions complete. The thread resumes
+when all exit hooks complete or <code>closeDeadline</code> expires.</p><p>This is a Java friendly API to allow Java 8 users to invoke <code>onExitLast</code> with lambda
+expressions.</p><p>For example (in Java):</p><pre>runOnExitLast(() -&gt; {
+ clientA.close();
+ clientB.close();
+});</pre></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../../app/App.html" class="extype" name="com.twitter.app.App">App</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="onExitLast(f:">=&gt; Unit)</span> for a variant that is more suitable for Scala.</p></span></dd></dl></div>
     </li><li name="com.twitter.app.App#shutdownTimer" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="shutdownTimer:com.twitter.util.Timer"></a><a id="shutdownTimer:Timer"></a>
       <span class="permalink">
