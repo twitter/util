@@ -22,27 +22,24 @@ class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiv
     }
   }
 
-  override def counter(schema: CounterSchema) = new Counter {
+  override def counter(metricBuilder: MetricBuilder) = new Counter {
     private[this] val allCounters = BroadcastCounter(
-      tails(schema.metricBuilder.name).map(n =>
-        self.counter(CounterSchema(schema.metricBuilder.withName(n: _*))))
+      tails(metricBuilder.name).map(n => self.counter(metricBuilder.withName(n: _*)))
     )
     def incr(delta: Long): Unit = allCounters.incr(delta)
     def metadata: Metadata = allCounters.metadata
   }
-  override def stat(schema: HistogramSchema) = new Stat {
+  override def stat(metricBuilder: MetricBuilder) = new Stat {
     private[this] val allStats = BroadcastStat(
-      tails(schema.metricBuilder.name).map(n =>
-        self.stat(HistogramSchema(schema.metricBuilder.withName(n: _*))))
+      tails(metricBuilder.name).map(n => self.stat(metricBuilder.withName(n: _*)))
     )
     def add(value: Float): Unit = allStats.add(value)
     def metadata: Metadata = allStats.metadata
   }
 
-  override def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float) = new Gauge {
     private[this] val underlying =
-      tails(schema.metricBuilder.name).map(n =>
-        self.addGauge(GaugeSchema(schema.metricBuilder.withName(n: _*)))(f))
+      tails(metricBuilder.name).map(n => self.addGauge(metricBuilder.withName(n: _*))(f))
     def remove(): Unit = underlying.foreach(_.remove())
     def metadata: Metadata = MultiMetadata(underlying.map(_.metadata))
   }

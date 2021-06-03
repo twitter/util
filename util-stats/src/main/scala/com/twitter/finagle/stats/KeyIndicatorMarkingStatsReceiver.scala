@@ -9,15 +9,15 @@ package com.twitter.finagle.stats
 private[finagle] class KeyIndicatorMarkingStatsReceiver(protected val self: StatsReceiver)
     extends StatsReceiverProxy {
 
-  override def counter(counterSchema: CounterSchema): Counter = {
-    self.counter(CounterSchema(counterSchema.metricBuilder.withKeyIndicator()))
+  override def counter(metricBuilder: MetricBuilder): Counter = {
+    self.counter(metricBuilder.withKeyIndicator())
   }
 
-  override def stat(histogramSchema: HistogramSchema): Stat = {
-    self.stat(HistogramSchema(histogramSchema.metricBuilder.withKeyIndicator()))
+  override def stat(metricBuilder: MetricBuilder): Stat = {
+    self.stat(metricBuilder.withKeyIndicator())
   }
 
-  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
-    self.addGauge(GaugeSchema(gaugeSchema.metricBuilder.withKeyIndicator()))(f)
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+    self.addGauge(metricBuilder.withKeyIndicator())(f)
   }
 }

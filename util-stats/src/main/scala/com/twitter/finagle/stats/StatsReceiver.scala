@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType, MetricType}
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
@@ -108,7 +109,8 @@ trait StatsReceiver {
   /**
    * Get a [[MetricBuilder metricBuilder]] for this StatsReceiver.
    */
-  def metricBuilder(): MetricBuilder = MetricBuilder(statsReceiver = this)
+  def metricBuilder(metricType: MetricType): MetricBuilder =
+    MetricBuilder(metricType = metricType, statsReceiver = this)
 
   /**
    * Get a [[Counter counter]] with the given `name`.
@@ -121,12 +123,12 @@ trait StatsReceiver {
    */
   @varargs
   def counter(verbosity: Verbosity, name: String*): Counter =
-    counter(CounterSchema(this.metricBuilder().withVerbosity(verbosity).withName(name: _*)))
+    counter(this.metricBuilder(CounterType).withVerbosity(verbosity).withName(name: _*))
 
   /**
    * Get a [[Counter counter]] with the given schema.
    */
-  def counter(schema: CounterSchema): Counter
+  def counter(schema: MetricBuilder): Counter
 
   /**
    * Get a [[Stat stat]] with the given name.
@@ -139,12 +141,12 @@ trait StatsReceiver {
    */
   @varargs
   def stat(verbosity: Verbosity, name: String*): Stat =
-    stat(HistogramSchema(this.metricBuilder().withVerbosity(verbosity).withName(name: _*)))
+    stat(this.metricBuilder(HistogramType).withVerbosity(verbosity).withName(name: _*))
 
   /**
    * Get a [[Stat stat]] with the given schema.
    */
-  def stat(schema: HistogramSchema): Stat
+  def stat(schema: MetricBuilder): Stat
 
   /**
    * Register a function `f` as a [[Gauge gauge]] with the given name that has
@@ -214,7 +216,7 @@ trait StatsReceiver {
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
   def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
-    addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name: _*)))(f)
+    addGauge(this.metricBuilder(GaugeType).withVerbosity(verbosity).withName(name: _*))(f)
 
   /**
    * Just like $AddGaugeScaladocLink but optimized for better Java experience.
@@ -227,7 +229,7 @@ trait StatsReceiver {
    */
   @varargs
   def addGauge(f: Supplier[Float], verbosity: Verbosity, name: String*): Gauge =
-    addGauge(GaugeSchema(this.metricBuilder().withVerbosity(verbosity).withName(name: _*)))(f.get())
+    addGauge(this.metricBuilder(GaugeType).withVerbosity(verbosity).withName(name: _*))(f.get())
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.
@@ -245,7 +247,7 @@ trait StatsReceiver {
    *      good location to store the returned [[Gauge gauge]] that can give the desired lifecycle.
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  def addGauge(schema: GaugeSchema)(f: => Float): Gauge
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge
 
   /**
    * Prepend `namespace` to the names of the returned [[StatsReceiver]].
@@ -340,22 +342,28 @@ trait StatsReceiver {
   // We'll remove them once zk is upgraded: CSL-4710.
   private[stats] def counter0(name: String): Counter = counter(name)
   private[stats] def stat0(name: String): Stat = stat(name)
+
+  protected def validateMetricType(metricBuilder: MetricBuilder, expectedType: MetricType): Unit = {
+    require(
+      metricBuilder.metricType == expectedType,
+      s"creating a $expectedType using wrong MetricBuilder: ${metricBuilder.metricType}")
+  }
 }
 
 abstract class AbstractStatsReceiver extends StatsReceiver {
 
-  final def counter(schema: CounterSchema): Counter =
-    counterImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name)
+  final def counter(metricBuilder: MetricBuilder): Counter =
+    counterImpl(metricBuilder.verbosity, metricBuilder.name)
 
   protected def counterImpl(verbosity: Verbosity, name: scala.collection.Seq[String]): Counter
 
-  final def stat(schema: HistogramSchema): Stat =
-    statImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name)
+  final def stat(metricBuilder: MetricBuilder): Stat =
+    statImpl(metricBuilder.verbosity, metricBuilder.name)
 
   protected def statImpl(verbosity: Verbosity, name: scala.collection.Seq[String]): Stat
 
-  final def addGauge(schema: GaugeSchema)(f: => Float): Gauge =
-    addGaugeImpl(schema.metricBuilder.verbosity, schema.metricBuilder.name, f)
+  final def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge =
+    addGaugeImpl(metricBuilder.verbosity, metricBuilder.name, f)
 
   protected def addGaugeImpl(
     verbosity: Verbosity,

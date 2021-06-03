@@ -10,26 +10,19 @@ class RelativeNameMarkingStatsReceiver(
   protected val self: StatsReceiver)
     extends StatsReceiverProxy {
 
-  override def counter(counterSchema: CounterSchema): Counter = {
-    val schema = CounterSchema(
-      counterSchema.metricBuilder
-        .withRelativeName(counterSchema.metricBuilder.name: _*))
+  override def counter(metricBuilder: MetricBuilder): Counter = {
+    val schema = metricBuilder.withRelativeName(metricBuilder.name: _*)
     self.counter(schema)
   }
 
-  override def stat(histogramSchema: HistogramSchema): Stat = {
-    val schema =
-      HistogramSchema(
-        histogramSchema.metricBuilder
-          .withRelativeName(histogramSchema.metricBuilder.name: _*))
+  override def stat(metricBuilder: MetricBuilder): Stat = {
+    val schema = metricBuilder.withRelativeName(metricBuilder.name: _*)
     self.stat(schema)
   }
 
-  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
-    val schema =
-      GaugeSchema(
-        gaugeSchema.metricBuilder
-          .withRelativeName(gaugeSchema.metricBuilder.name: _*))
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+    val schema = metricBuilder
+      .withRelativeName(metricBuilder.name: _*)
     self.addGauge(schema)(f)
   }
 }

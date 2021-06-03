@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine, RemovalCause, RemovalListener}
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.util.lint._
 import java.lang.{Boolean => JBoolean}
 import java.util.concurrent.{ConcurrentHashMap, Executor, ForkJoinPool}
@@ -120,18 +121,18 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
    * The StatsReceiver implements these. They provide the cumulative
    * gauges.
    */
-  protected[this] def registerGauge(schema: GaugeSchema, f: => Float): Unit
+  protected[this] def registerGauge(metricBuilder: MetricBuilder, f: => Float): Unit
   protected[this] def deregisterGauge(name: Seq[String]): Unit
 
-  private[this] def getWhenNotPresent(schema: GaugeSchema) = whenNotPresent(schema)
+  private[this] def getWhenNotPresent(metricBuilder: MetricBuilder) = whenNotPresent(metricBuilder)
 
   /** The executor that will be used for expiring gauges */
   def executor: Executor = ForkJoinPool.commonPool()
 
-  private[this] def whenNotPresent(schema: GaugeSchema) =
+  private[this] def whenNotPresent(metricBuilder: MetricBuilder) =
     new JFunction[Seq[String], CumulativeGauge] {
       def apply(key: Seq[String]): CumulativeGauge = new CumulativeGauge(executor) {
-        self.registerGauge(schema, getValue)
+        self.registerGauge(metricBuilder, getValue)
 
         // The number of registers starts at `0` because every new gauge will cause a
         // registration, even the one that created the `CumulativeGauge`. Because 0 is
@@ -167,12 +168,13 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
       }
     }
 
-  def addGauge(schema: GaugeSchema)(f: => Float): Gauge = {
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+    validateMetricType(metricBuilder, GaugeType)
     var gauge: Gauge = null
     while (gauge == null) {
       val cumulativeGauge =
-        gauges.computeIfAbsent(schema.metricBuilder.name, getWhenNotPresent(schema))
-      gauge = cumulativeGauge.addGauge(f, schema.metricBuilder)
+        gauges.computeIfAbsent(metricBuilder.name, getWhenNotPresent(metricBuilder))
+      gauge = cumulativeGauge.addGauge(f, metricBuilder)
     }
     gauge
   }

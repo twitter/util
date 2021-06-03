@@ -11,7 +11,7 @@ private[twitter] trait SchemaRegistry {
   /** Whether or not the counters are latched. */
   def hasLatchedCounters: Boolean
 
-  def schemas(): Map[String, MetricSchema]
+  def schemas(): Map[String, MetricBuilder]
 
   def expressions(): Map[ExpressionSchemaKey, ExpressionSchema]
 

@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-stats: Removed MetricSchema trait (CounterSchema, GaugeSchema and HistogramSchema).
+  StatReceiver derived classes use MetricBuilder directly to create counters, gauges and stats.
+  ``PHAB_ID=D668739``
+
 21.5.0
 ------
 

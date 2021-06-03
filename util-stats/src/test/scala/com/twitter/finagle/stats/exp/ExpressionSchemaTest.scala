@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats.exp
 
 import com.twitter.conversions.DurationOps._
+import com.twitter.finagle.stats.MetricBuilder.{CounterType, HistogramType}
 import com.twitter.finagle.stats._
 import com.twitter.util.{Stopwatch, Time, TimeControl}
 import scala.util.control.NonFatal
@@ -12,11 +13,20 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
 
     val successMb =
-      CounterSchema(MetricBuilder(name = Seq("success"), statsReceiver = clientSR).withKernel)
+      MetricBuilder(
+        name = Seq("success"),
+        metricType = CounterType,
+        statsReceiver = clientSR).withKernel
     val failuresMb =
-      CounterSchema(MetricBuilder(name = Seq("failures"), statsReceiver = clientSR).withKernel)
+      MetricBuilder(
+        name = Seq("failures"),
+        metricType = CounterType,
+        statsReceiver = clientSR).withKernel
     val latencyMb =
-      HistogramSchema(MetricBuilder(name = Seq("latency"), statsReceiver = clientSR).withKernel)
+      MetricBuilder(
+        name = Seq("latency"),
+        metricType = HistogramType,
+        statsReceiver = clientSR).withKernel
     val sum = Expression(successMb).plus(Expression(failuresMb))
 
     def slowQuery(ctl: TimeControl, succeed: Boolean): Unit = {

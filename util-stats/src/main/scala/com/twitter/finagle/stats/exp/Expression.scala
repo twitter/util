@@ -1,14 +1,8 @@
 package com.twitter.finagle.stats.exp
 
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.exp.Expression.HistogramComponent
-import com.twitter.finagle.stats.{
-  CounterSchema,
-  GaugeSchema,
-  HistogramSchema,
-  MetricBuilder,
-  MetricSchema,
-  StatsReceiver
-}
+import com.twitter.finagle.stats.{MetricBuilder, StatsReceiver}
 import java.util.concurrent.ConcurrentHashMap
 import scala.annotation.varargs
 
@@ -27,8 +21,8 @@ private[twitter] object Expression {
         case (acc, expr) =>
           getStatsReceivers(expr) ++ acc
       }
-    case MetricExpression(schema) => Set(schema.metricBuilder.statsReceiver)
-    case HistogramExpression(schema, _) => Set(schema.metricBuilder.statsReceiver)
+    case MetricExpression(metricBuilder) => Set(metricBuilder.statsReceiver)
+    case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case ConstantExpression(_) => Set.empty
   }
 
@@ -42,15 +36,22 @@ private[twitter] object Expression {
    * @param component the histogram component either a [[HistogramComponent]] for Left
    *                  or a percentile in Double for Right.
    */
-  def apply(schema: HistogramSchema, component: Either[HistogramComponent, Double]) =
-    HistogramExpression(schema, component)
+  def apply(
+    metricBuilder: MetricBuilder,
+    component: Either[HistogramComponent, Double]
+  ): HistogramExpression = {
+    require(
+      metricBuilder.metricType == HistogramType,
+      "this method is for creating histogram expression")
+    HistogramExpression(metricBuilder, component)
+  }
 
   /**
    * Create an single expression wrapping a counter or gauge.
    */
-  def apply(schema: MetricSchema): Expression = {
-    require(!schema.isInstanceOf[HistogramSchema], "provide a component for histogram")
-    MetricExpression(schema)
+  def apply(metricBuilder: MetricBuilder): Expression = {
+    require(metricBuilder.metricType != HistogramType, "provide a component for histogram")
+    MetricExpression(metricBuilder)
   }
 
   // utility methods shared by Metrics.scala and InMemoryStatsReceiver
@@ -61,26 +62,19 @@ private[twitter] object Expression {
     expression match {
       case f @ FunctionExpression(_, exprs) =>
         f.copy(exprs = exprs.map(replaceExpression(_, metricBuilders)))
-      case m @ MetricExpression(schema) if schema.metricBuilder.kernel.isDefined =>
-        val builder = metricBuilders.get(schema.metricBuilder.kernel.get)
-        if (builder != null) m.copy(schema = reformSchema(schema, builder))
+      case m @ MetricExpression(metricBuilder) if metricBuilder.kernel.isDefined =>
+        val builder = metricBuilders.get(metricBuilder.kernel.get)
+        if (builder != null) m.copy(builder)
         else m
-      case h @ HistogramExpression(schema, _) if schema.metricBuilder.kernel.isDefined =>
-        val builder = metricBuilders.get(schema.metricBuilder.kernel.get)
-        if (builder != null)
-          h.copy(schema = reformSchema(schema, builder).asInstanceOf[HistogramSchema])
+      case h @ HistogramExpression(metricBuilder, _) if metricBuilder.kernel.isDefined =>
+        val builder = metricBuilders.get(metricBuilder.kernel.get)
+        if (builder != null) h.copy(builder)
         else h
       case otherExpression => otherExpression
     }
   }
 
-  private[this] def reformSchema(schema: MetricSchema, builder: MetricBuilder): MetricSchema = {
-    schema match {
-      case CounterSchema(_) => CounterSchema(builder)
-      case HistogramSchema(_) => HistogramSchema(builder)
-      case GaugeSchema(_) => GaugeSchema(builder)
-    }
-  }
+  private[this] def reformSchema(builder: MetricBuilder): MetricBuilder = builder
 }
 
 /**
@@ -116,13 +110,13 @@ case class FunctionExpression private (fnName: String, exprs: Seq[Expression]) e
 /**
  * Represents the leaf metrics
  */
-case class MetricExpression private (schema: MetricSchema) extends Expression
+case class MetricExpression private (metricBuilder: MetricBuilder) extends Expression
 
 /**
  * Represent a histogram expression with specified component, for example the average, or a percentile
  * @param component either a [[HistogramComponent]] or a percentile in Double
  */
 case class HistogramExpression private (
-  schema: HistogramSchema,
+  metricBuilder: MetricBuilder,
   component: Either[HistogramComponent, Double])
     extends Expression

@@ -1,5 +1,7 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.MetricBuilder.{CounterType, HistogramType}
+
 /**
  * Wraps an underlying [[StatsReceiver]] to ensure that derived counters and
  * stats will not start exporting metrics until `incr` or `add` is first called
@@ -19,15 +21,21 @@ package com.twitter.finagle.stats
  *       modeling whether a gauge is "used" or not.
  */
 final class LazyStatsReceiver(val self: StatsReceiver) extends StatsReceiverProxy {
-  override def counter(schema: CounterSchema): Counter = new Counter {
-    private[this] lazy val underlying = self.counter(schema)
-    def incr(delta: Long): Unit = underlying.incr(delta)
-    def metadata: Metadata = schema.metricBuilder
+  override def counter(metricBuilder: MetricBuilder): Counter = {
+    validateMetricType(metricBuilder, CounterType)
+    new Counter {
+      private[this] lazy val underlying = self.counter(metricBuilder)
+      def incr(delta: Long): Unit = underlying.incr(delta)
+      def metadata: Metadata = metricBuilder
+    }
   }
 
-  override def stat(schema: HistogramSchema): Stat = new Stat {
-    private[this] lazy val underlying = self.stat(schema)
-    def add(value: Float): Unit = underlying.add(value)
-    def metadata: Metadata = schema.metricBuilder
+  override def stat(metricBuilder: MetricBuilder): Stat = {
+    validateMetricType(metricBuilder, HistogramType)
+    new Stat {
+      private[this] lazy val underlying = self.stat(metricBuilder)
+      def add(value: Float): Unit = underlying.add(value)
+      def metadata: Metadata = metricBuilder
+    }
   }
 }

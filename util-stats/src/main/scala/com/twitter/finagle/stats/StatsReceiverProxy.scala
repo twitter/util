@@ -11,9 +11,9 @@ trait StatsReceiverProxy extends StatsReceiver with DelegatingStatsReceiver {
 
   def repr: AnyRef = self.repr
 
-  def counter(schema: CounterSchema): Counter = self.counter(schema)
-  def stat(schema: HistogramSchema): Stat = self.stat(schema)
-  def addGauge(schema: GaugeSchema)(f: => Float): Gauge = self.addGauge(schema)(f)
+  def counter(metricBuilder: MetricBuilder): Counter = self.counter(metricBuilder)
+  def stat(metricBuilder: MetricBuilder): Stat = self.stat(metricBuilder)
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = self.addGauge(metricBuilder)(f)
 
   override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit =
     self.registerExpression(expressionSchema)

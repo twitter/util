@@ -19,19 +19,19 @@ object BroadcastStatsReceiver {
       with DelegatingStatsReceiver {
     val repr: AnyRef = this
 
-    def counter(schema: CounterSchema) = new BroadcastCounter.Two(
-      first.counter(schema),
-      second.counter(schema)
+    def counter(metricBuilder: MetricBuilder) = new BroadcastCounter.Two(
+      first.counter(metricBuilder),
+      second.counter(metricBuilder)
     )
 
-    def stat(schema: HistogramSchema) = new BroadcastStat.Two(
-      first.stat(schema),
-      second.stat(schema)
+    def stat(metricBuilder: MetricBuilder) = new BroadcastStat.Two(
+      first.stat(metricBuilder),
+      second.stat(metricBuilder)
     )
 
-    def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
-      val firstGauge = first.addGauge(schema)(f)
-      val secondGauge = second.addGauge(schema)(f)
+    def addGauge(metricBuilder: MetricBuilder)(f: => Float) = new Gauge {
+      val firstGauge = first.addGauge(metricBuilder)(f)
+      val secondGauge = second.addGauge(metricBuilder)(f)
       def remove(): Unit = {
         firstGauge.remove()
         secondGauge.remove()
@@ -53,14 +53,14 @@ object BroadcastStatsReceiver {
   private class N(srs: Seq[StatsReceiver]) extends StatsReceiver with DelegatingStatsReceiver {
     val repr: AnyRef = this
 
-    def counter(schema: CounterSchema) =
-      BroadcastCounter(srs.map { _.counter(schema) })
+    def counter(metricBuilder: MetricBuilder) =
+      BroadcastCounter(srs.map { _.counter(metricBuilder) })
 
-    def stat(schema: HistogramSchema) =
-      BroadcastStat(srs.map { _.stat(schema) })
+    def stat(metricBuilder: MetricBuilder) =
+      BroadcastStat(srs.map { _.stat(metricBuilder) })
 
-    def addGauge(schema: GaugeSchema)(f: => Float) = new Gauge {
-      val gauges = srs.map { _.addGauge(schema)(f) }
+    def addGauge(metricBuilder: MetricBuilder)(f: => Float) = new Gauge {
+      val gauges = srs.map { _.addGauge(metricBuilder)(f) }
       def remove(): Unit = gauges.foreach { _.remove() }
       def metadata: Metadata = MultiMetadata(gauges.map(_.metadata))
     }

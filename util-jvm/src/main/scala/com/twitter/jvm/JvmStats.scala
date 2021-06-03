@@ -1,8 +1,9 @@
 package com.twitter.jvm
 
 import com.twitter.conversions.StringOps._
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.StatsReceiver
-import java.lang.management.{ManagementFactory, BufferPoolMXBean}
+import java.lang.management.{BufferPoolMXBean, ManagementFactory}
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
@@ -125,10 +126,10 @@ object JvmStats {
     val gcStats = stats.scope("gc")
     gcPool.foreach { gc =>
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
-      gauges.add(gcStats.metricBuilder().withCounterishGauge.gauge(name, "cycles") {
+      gauges.add(gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "cycles") {
         gc.getCollectionCount
       })
-      gauges.add(gcStats.metricBuilder().withCounterishGauge.gauge(name, "msec") {
+      gauges.add(gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "msec") {
         gc.getCollectionTime
       })
     }

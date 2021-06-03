@@ -15,16 +15,16 @@ case class RoleConfiguredStatsReceiver(
   name: Option[String] = None)
     extends StatsReceiverProxy {
 
-  override def counter(counterSchema: CounterSchema): Counter = {
-    self.counter(CounterSchema(counterSchema.metricBuilder.withRole(role)))
+  override def counter(metricBuilder: MetricBuilder): Counter = {
+    self.counter(metricBuilder.withRole(role))
   }
 
-  override def stat(histogramSchema: HistogramSchema): Stat = {
-    self.stat(HistogramSchema(histogramSchema.metricBuilder.withRole(role)))
+  override def stat(metricBuilder: MetricBuilder): Stat = {
+    self.stat(metricBuilder.withRole(role))
   }
 
-  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
-    self.addGauge(GaugeSchema(gaugeSchema.metricBuilder.withRole(role)))(f)
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+    self.addGauge(metricBuilder.withRole(role))(f)
   }
 
   override def registerExpression(expressionSchema: ExpressionSchema): Unit = {

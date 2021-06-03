@@ -2,8 +2,6 @@ package com.twitter.finagle.stats;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import scala.Some;
 
 /**
@@ -13,13 +11,13 @@ public final class MetricBuilderCompilationTest {
   @Test
   public void testMetricBuilderConstruction() {
     StatsReceiver sr = new InMemoryStatsReceiver();
-    MetricBuilder mb = sr.metricBuilder();
+    MetricBuilder mb = sr.metricBuilder(MetricBuilder.CounterType$.MODULE$);
   }
 
   @Test
   public void testWithMethods() {
     StatsReceiver sr = new InMemoryStatsReceiver();
-    MetricBuilder mb = sr.metricBuilder()
+    MetricBuilder mb = sr.metricBuilder(MetricBuilder.CounterType$.MODULE$)
       .withKeyIndicator(true)
       .withDescription("my cool metric")
       .withVerbosity(Verbosity.Debug())
@@ -35,7 +33,7 @@ public final class MetricBuilderCompilationTest {
   @Test
   public void testConstructingMetrics() {
     StatsReceiver sr = new InMemoryStatsReceiver();
-    MetricBuilder mb = sr.metricBuilder();
+    MetricBuilder mb = sr.metricBuilder(MetricBuilder.CounterType$.MODULE$);
     Gauge g = mb.gauge(() -> 3.0f, "my", "cool", "gauge");
     Stat s = mb.histogram("my", "cool", "histogram");
     Counter c = mb.counter("my", "cool", "counter");

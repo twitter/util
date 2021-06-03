@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType}
 import com.twitter.finagle.stats.exp.Expression.replaceExpression
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.io.PrintStream
@@ -68,8 +69,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val gauges: mutable.Map[Seq[String], () => Float] =
     new ConcurrentHashMap[Seq[String], () => Float]().asScala
 
-  val schemas: mutable.Map[Seq[String], MetricSchema] =
-    new ConcurrentHashMap[Seq[String], MetricSchema]().asScala
+  val schemas: mutable.Map[Seq[String], MetricBuilder] =
+    new ConcurrentHashMap[Seq[String], MetricBuilder]().asScala
 
   private val metricBuilders: ConcurrentHashMap[Int, MetricBuilder] =
     new ConcurrentHashMap[Int, MetricBuilder]()
@@ -86,110 +87,116 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   }
 
   override def counter(name: String*): ReadableCounter =
-    counter(CounterSchema(this.metricBuilder().withName(name: _*)))
+    counter(this.metricBuilder(CounterType).withName(name: _*))
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
    */
-  def counter(schema: CounterSchema): ReadableCounter =
+  def counter(metricBuilder: MetricBuilder): ReadableCounter = {
+    validateMetricType(metricBuilder, CounterType)
     new ReadableCounter {
 
-      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
+      verbosity += metricBuilder.name -> metricBuilder.verbosity
 
       // eagerly initialize
       counters.synchronized {
-        if (!counters.contains(schema.metricBuilder.name)) {
-          counters(schema.metricBuilder.name) = 0
-          schemas(schema.metricBuilder.name) = schema
-          storeMetricBuilder(schema)
+        if (!counters.contains(metricBuilder.name)) {
+          counters(metricBuilder.name) = 0
+          schemas(metricBuilder.name) = metricBuilder
+          storeMetricBuilder(metricBuilder)
         }
       }
 
       def incr(delta: Long): Unit = counters.synchronized {
         val oldValue = apply()
-        counters(schema.metricBuilder.name) = oldValue + delta
+        counters(metricBuilder.name) = oldValue + delta
       }
 
-      def apply(): Long = counters.getOrElse(schema.metricBuilder.name, 0)
+      def apply(): Long = counters.getOrElse(metricBuilder.name, 0)
 
-      def metadata: Metadata = schema.metricBuilder
+      def metadata: Metadata = metricBuilder
 
       override def toString: String =
-        s"Counter(${schema.metricBuilder.name.mkString("/")}=${apply()})"
+        s"Counter(${metricBuilder.name.mkString("/")}=${apply()})"
     }
+  }
 
   override def stat(name: String*): ReadableStat =
-    stat(HistogramSchema(this.metricBuilder().withName(name: _*)))
+    stat(this.metricBuilder(HistogramType).withName(name: _*))
 
   /**
    * Creates a [[ReadableStat]] of the given `name`.
    */
-  def stat(schema: HistogramSchema): ReadableStat =
+  def stat(metricBuilder: MetricBuilder): ReadableStat = {
+    validateMetricType(metricBuilder, HistogramType)
     new ReadableStat {
 
-      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
+      verbosity += metricBuilder.name -> metricBuilder.verbosity
 
       // eagerly initialize
       stats.synchronized {
-        if (!stats.contains(schema.metricBuilder.name)) {
-          stats(schema.metricBuilder.name) = Nil
-          schemas(schema.metricBuilder.name) = schema
-          storeMetricBuilder(schema)
+        if (!stats.contains(metricBuilder.name)) {
+          stats(metricBuilder.name) = Nil
+          schemas(metricBuilder.name) = metricBuilder
+          storeMetricBuilder(metricBuilder)
         }
       }
 
       def add(value: Float): Unit = stats.synchronized {
         val oldValue = apply()
-        stats(schema.metricBuilder.name) = oldValue :+ value
+        stats(metricBuilder.name) = oldValue :+ value
       }
-      def apply(): Seq[Float] = stats.getOrElse(schema.metricBuilder.name, Seq.empty)
+      def apply(): Seq[Float] = stats.getOrElse(metricBuilder.name, Seq.empty)
 
-      def metadata: Metadata = schema.metricBuilder
+      def metadata: Metadata = metricBuilder
 
       override def toString: String = {
         val vals = apply()
-        s"Stat(${schema.metricBuilder.name.mkString("/")}=${statValuesToStr(vals)})"
+        s"Stat(${metricBuilder.name.mkString("/")}=${statValuesToStr(vals)})"
       }
     }
+  }
 
   /**
    * Creates a [[Gauge]] of the given `name`.
    */
-  def addGauge(schema: GaugeSchema)(f: => Float) =
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float) = {
+    validateMetricType(metricBuilder, GaugeType)
     new Gauge {
 
-      gauges += schema.metricBuilder.name -> (() => f)
-      schemas += schema.metricBuilder.name -> schema
-      verbosity += schema.metricBuilder.name -> schema.metricBuilder.verbosity
-      storeMetricBuilder(schema)
+      gauges += metricBuilder.name -> (() => f)
+      schemas += metricBuilder.name -> metricBuilder
+      verbosity += metricBuilder.name -> metricBuilder.verbosity
+      storeMetricBuilder(metricBuilder)
 
       def remove(): Unit = {
-        gauges -= schema.metricBuilder.name
-        removeMetricBuilder(schema)
-        schemas -= schema.metricBuilder.name
+        gauges -= metricBuilder.name
+        removeMetricBuilder(metricBuilder)
+        schemas -= metricBuilder.name
       }
 
-      def metadata: Metadata = schema.metricBuilder
+      def metadata: Metadata = metricBuilder
 
       override def toString: String = {
         // avoid holding a reference to `f`
-        val current = gauges.get(schema.metricBuilder.name) match {
+        val current = gauges.get(metricBuilder.name) match {
           case Some(fn) => fn()
           case None => -0.0f
         }
-        s"Gauge(${schema.metricBuilder.name.mkString("/")}=$current)"
+        s"Gauge(${metricBuilder.name.mkString("/")}=$current)"
       }
     }
+  }
 
-  private[this] def storeMetricBuilder(schema: MetricSchema): Unit = {
-    schema.metricBuilder.kernel match {
-      case Some(kernel) => metricBuilders.put(kernel, schema.metricBuilder)
+  private[this] def storeMetricBuilder(metricBuilder: MetricBuilder): Unit = {
+    metricBuilder.kernel match {
+      case Some(kernel) => metricBuilders.put(kernel, metricBuilder)
       case None =>
     }
   }
 
-  private[this] def removeMetricBuilder(schema: MetricSchema): Unit = {
-    schema.metricBuilder.kernel match {
+  private[this] def removeMetricBuilder(metricBuilder: MetricBuilder): Unit = {
+    metricBuilder.kernel match {
       case Some(kernel) => metricBuilders.remove(kernel)
       case None =>
     }

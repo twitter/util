@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType, MetricType}
 import java.util.function.Supplier
 import scala.annotation.varargs
 
@@ -66,6 +67,7 @@ object MetricBuilder {
     processPath: Option[String] = None,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
     isCounterishGauge: Boolean = false,
+    metricType: MetricType,
     statsReceiver: StatsReceiver
   ): MetricBuilder = {
     new MetricBuilder(
@@ -81,9 +83,19 @@ object MetricBuilder {
       percentiles,
       isCounterishGauge,
       kernel = None,
+      metricType,
       statsReceiver
     )
   }
+
+  /**
+   * Indicate the Metric type, [[CounterType]] will create a [[Counter]],
+   * [[GaugeType]] will create a [[Gauge]], and [[HistogramType]] will create a [[Stat]].
+   */
+  sealed trait MetricType
+  case object CounterType extends MetricType
+  case object GaugeType extends MetricType
+  case object HistogramType extends MetricType
 }
 object Metadata {
 
@@ -126,6 +138,7 @@ class MetricBuilder private (
   val isCounterishGauge: Boolean,
   // see withKernel
   val kernel: Option[Int],
+  val metricType: MetricType,
   val statsReceiver: StatsReceiver)
     extends Metadata {
 
@@ -146,6 +159,7 @@ class MetricBuilder private (
     processPath: Option[String] = this.processPath,
     isCounterishGauge: Boolean = this.isCounterishGauge,
     percentiles: IndexedSeq[Double] = this.percentiles,
+    metricType: MetricType = this.metricType,
     kernel: Option[Int] = this.kernel
   ): MetricBuilder = {
     new MetricBuilder(
@@ -161,6 +175,7 @@ class MetricBuilder private (
       percentiles = percentiles,
       isCounterishGauge = isCounterishGauge,
       statsReceiver = this.statsReceiver,
+      metricType = metricType,
       kernel = kernel
     )
   }
@@ -207,25 +222,27 @@ class MetricBuilder private (
   def withNoCounterishGauge: MetricBuilder = this.copy(isCounterishGauge = false)
 
   /**
-   * Generates a CounterSchema which can be used to create a counter in a StatsReceiver.
+   * Generates a CounterType MetricBuilder which can be used to create a counter in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
-   * @return a CounterSchema describing a counter.
+   * @return a Countertype MetricBuilder.
    */
-  private[MetricBuilder] final def counterSchema: CounterSchema = CounterSchema(this)
+  private[MetricBuilder] final def counterSchema: MetricBuilder =
+    this.copy(metricType = CounterType)
 
   /**
-   * Generates a GaugeSchema which can be used to create a gauge in a StatsReceiver.
+   * Generates a GaugeType MetricBuilder which can be used to create a gauge in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
-   * @return a GaugeSchema describing a gauge.
+   * @return a GaugeType MetricBuilder.
    */
-  private[MetricBuilder] final def gaugeSchema: GaugeSchema = GaugeSchema(this)
+  private[MetricBuilder] final def gaugeSchema: MetricBuilder = this.copy(metricType = GaugeType)
 
   /**
-   * Generates a HistogramSchema which can be used to create a histogram in a StatsReceiver.
+   * Generates a HistogramType MetricBuilder which can be used to create a histogram in a StatsReceiver.
    * Used to test that builder class correctly propagates configured metadata.
-   * @return a HistogramSchema describing a histogram.
+   * @return a HistogramType MetricBuilder.
    */
-  private[MetricBuilder] final def histogramSchema: HistogramSchema = HistogramSchema(this)
+  private[MetricBuilder] final def histogramSchema: MetricBuilder =
+    this.copy(metricType = HistogramType)
 
   /**
    * Produce a counter as described by the builder inside the underlying StatsReceiver.
@@ -281,7 +298,8 @@ class MetricBuilder private (
         name == that.name &&
         relativeName == that.relativeName &&
         processPath == that.processPath &&
-        percentiles == that.percentiles
+        percentiles == that.percentiles &&
+        metricType == that.metricType
     case _ => false
   }
 
@@ -296,13 +314,14 @@ class MetricBuilder private (
         name,
         relativeName,
         processPath,
-        percentiles)
+        percentiles,
+        metricType)
     val hashCodes = keyIndicator.hashCode() +: state.map(_.hashCode())
     hashCodes.foldLeft(0)((a, b) => 31 * a + b)
   }
 
   override def toString(): String = {
     val nameString = name.mkString(metadataScopeSeparator())
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $relativeName, $processPath, $percentiles, $statsReceiver)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $relativeName, $processPath, $percentiles, $metricType, $statsReceiver)"
   }
 }

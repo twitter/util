@@ -45,14 +45,14 @@ object DenylistStatsReceiver {
 class DenylistStatsReceiver(protected val self: StatsReceiver, denylisted: Seq[String] => Boolean)
     extends StatsReceiverProxy {
 
-  override def counter(schema: CounterSchema) =
-    getStatsReceiver(schema.metricBuilder.name).counter(schema)
+  override def counter(metricBuilder: MetricBuilder) =
+    getStatsReceiver(metricBuilder.name).counter(metricBuilder)
 
-  override def stat(schema: HistogramSchema) =
-    getStatsReceiver(schema.metricBuilder.name).stat(schema)
+  override def stat(metricBuilder: MetricBuilder) =
+    getStatsReceiver(metricBuilder.name).stat(metricBuilder)
 
-  override def addGauge(schema: GaugeSchema)(f: => Float) =
-    getStatsReceiver(schema.metricBuilder.name).addGauge(schema)(f)
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float) =
+    getStatsReceiver(metricBuilder.name).addGauge(metricBuilder)(f)
 
   private[this] def getStatsReceiver(name: Seq[String]): StatsReceiver =
     if (denylisted(name)) NullStatsReceiver else self

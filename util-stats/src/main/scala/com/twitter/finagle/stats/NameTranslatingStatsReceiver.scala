@@ -17,22 +17,16 @@ abstract class NameTranslatingStatsReceiver(
 
   protected def translate(name: Seq[String]): Seq[String]
 
-  override def counter(counterSchema: CounterSchema): Counter = {
-    self.counter(
-      CounterSchema(
-        counterSchema.metricBuilder.withName(translate(counterSchema.metricBuilder.name): _*)))
+  override def counter(metricBuilder: MetricBuilder): Counter = {
+    self.counter(metricBuilder.withName(translate(metricBuilder.name): _*))
   }
 
-  override def stat(histogramSchema: HistogramSchema): Stat = {
-    self.stat(
-      HistogramSchema(
-        histogramSchema.metricBuilder.withName(translate(histogramSchema.metricBuilder.name): _*)))
+  override def stat(metricBuilder: MetricBuilder): Stat = {
+    self.stat(metricBuilder.withName(translate(metricBuilder.name): _*))
   }
 
-  override def addGauge(gaugeSchema: GaugeSchema)(f: => Float): Gauge = {
-    self.addGauge(
-      GaugeSchema(
-        gaugeSchema.metricBuilder.withName(translate(gaugeSchema.metricBuilder.name): _*)))(f)
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+    self.addGauge(metricBuilder.withName(translate(metricBuilder.name): _*))(f)
   }
 
   override def toString: String = s"$self/$namespacePrefix"

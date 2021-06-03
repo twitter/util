@@ -29,9 +29,9 @@ class NullStatsReceiver extends StatsReceiver {
 
   def repr: NullStatsReceiver = this
 
-  def counter(schema: CounterSchema) = NullCounter
-  def stat(schema: HistogramSchema) = NullStat
-  def addGauge(schema: GaugeSchema)(f: => Float) = NullGauge
+  def counter(metricBuilder: MetricBuilder) = NullCounter
+  def stat(metricBuilder: MetricBuilder) = NullStat
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float) = NullGauge
 
   override def scope(namespace: String): StatsReceiver = this
 
