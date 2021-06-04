@@ -631,15 +631,15 @@ class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     }
 
     test(s"$impl: sum") {
-      forAll { xs: List[Int] => assert(xs.sum == await(fromSeq(xs).sum)) }
+      forAll { (xs: List[Int]) => assert(xs.sum == await(fromSeq(xs).sum)) }
     }
 
     test(s"$impl: size") {
-      forAll { xs: List[Int] => assert(xs.size == await(fromSeq(xs).size)) }
+      forAll { (xs: List[Int]) => assert(xs.size == await(fromSeq(xs).size)) }
     }
 
     test(s"$impl: force") {
-      forAll { xs: List[Int] =>
+      forAll { (xs: List[Int]) =>
         val p = new Promise[Unit]
         // The promise will be defined iff the tail is forced.
         val s = fromSeq(xs) ++ { p.setDone(); AsyncStream.empty }
@@ -745,7 +745,7 @@ class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
       val stream = tailRecM(0) { i => AsyncStream.of(if (i < n) Left(i + 1) else Right(i)) }
 
-      assert(Await.result(stream.toSeq) == Seq(n))
+      assert(Await.result(stream.toSeq()) == Seq(n))
     }
   }
 

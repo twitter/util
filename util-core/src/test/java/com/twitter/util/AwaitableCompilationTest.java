@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.twitter.util.Awaitable.CanAwait;
+
 public class AwaitableCompilationTest {
 
   public static class MockAwaitable implements Awaitable<String> {

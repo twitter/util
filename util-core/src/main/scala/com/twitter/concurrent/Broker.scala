@@ -82,7 +82,6 @@ class Broker[T] {
           val nextState = s match {
             case Quiet => Sending(Queue(elem))
             case Sending(q) => Sending(q enqueue elem)
-            case Receiving(_) => throw new IllegalStateException()
           }
 
           if (state.compareAndSet(s, nextState)) p else prepare()
@@ -111,7 +110,6 @@ class Broker[T] {
           val nextState = s match {
             case Quiet => Receiving(Queue(p))
             case Receiving(q) => Receiving(q enqueue p)
-            case Sending(_) => throw new IllegalStateException()
           }
 
           if (state.compareAndSet(s, nextState)) p else prepare()

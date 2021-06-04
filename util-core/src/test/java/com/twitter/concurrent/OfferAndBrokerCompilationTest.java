@@ -37,7 +37,7 @@ public class OfferAndBrokerCompilationTest {
         return "33";
       }
     });
-    Offer<BoxedUnit> d = Offers.newTimeoutOffer(Duration.fromMicroseconds(1), new NullTimer());
+    Offer<BoxedUnit> d = Offers.newTimeoutOffer(Duration.fromMicrosecondsJ(1), new NullTimer());
 
     Assert.assertNotNull(a);
     Assert.assertNotNull(b);

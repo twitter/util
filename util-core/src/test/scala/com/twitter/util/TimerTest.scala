@@ -353,7 +353,7 @@ class TimerTest extends AnyFunSuite with MockitoSugar with Eventually with Integ
     assert(mockTimerLocalPropagation(timer, 99) == 99)
   }
 
-  private class SomeEx extends Exception
+  private case class SomeEx() extends Exception
 
   private def testTimerUsesLocalMonitor(timer: Timer): Unit = {
     val seen = new AtomicInteger(0)

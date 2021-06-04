@@ -19,7 +19,7 @@ package com.twitter.util
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.TimeUnit
 
-class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSpec[Duration] {
+class DurationTest extends TimeLikeSpec[Duration](ops = Duration) {
 
   "Duration" should {
     "*" in {

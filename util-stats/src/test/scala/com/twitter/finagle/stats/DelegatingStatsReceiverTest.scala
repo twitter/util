@@ -64,14 +64,14 @@ class DelegatingStatsReceiverTest extends AnyFunSuite with ScalaCheckDrivenPrope
       Gen.oneOf(seq).flatMap(identity)
     }
 
-    implicit val impl = Arbitrary(Gen.delay(statsReceiverTopology(0)))
+    implicit val impl: Arbitrary[StatsReceiver] = Arbitrary(Gen.delay(statsReceiverTopology(0)))
   }
 
   test("DelegatingStatsReceiver.all collects effectively across many StatsReceivers") {
     val ctx = new Ctx
     import ctx._
 
-    forAll { statsReceiver: StatsReceiver =>
+    forAll { (statsReceiver: StatsReceiver) =>
       assert(DelegatingStatsReceiver.all(statsReceiver).size == leafCounter)
       leafCounter = 0
     }

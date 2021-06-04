@@ -23,7 +23,7 @@ import scala.collection.{Map, Set, mutable}
 object SignalHandlerFactory {
   def apply(): Option[SunSignalHandler] = {
     // only one actual implementation for now
-    SunSignalHandler.instantiate
+    SunSignalHandler.instantiate()
   }
 }
 

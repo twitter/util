@@ -2,12 +2,16 @@ package com.twitter.jvm
 
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
+
 import java.util.logging.{Level, Logger}
 import org.mockito.ArgumentMatchers.contains
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+
 import scala.collection.mutable
 import org.scalatest.wordspec.AnyWordSpec
+
+import java.util.concurrent.ScheduledExecutorService
 
 class JvmTest extends AnyWordSpec with MockitoSugar {
   "Jvm" should {
@@ -28,7 +32,8 @@ class JvmTest extends AnyWordSpec with MockitoSugar {
         currentSnap = snap
       }
 
-      override val executor = new MockScheduledExecutorService
+      val mockExecutor = new MockScheduledExecutorService
+      override val executor: ScheduledExecutorService =  mockExecutor
 
       def snap = currentSnap
 
@@ -62,10 +67,10 @@ class JvmTest extends AnyWordSpec with MockitoSugar {
       "Capture interleaving GCs with different names" in {
         val jvm = new JvmHelper()
         val b = mutable.Buffer[Gc]()
-        assert(jvm.executor.schedules == List())
+        assert(jvm.mockExecutor.schedules == List())
         jvm foreachGc { b += _ }
-        assert(jvm.executor.schedules.size == 1)
-        val r = jvm.executor.schedules.head._1
+        assert(jvm.mockExecutor.schedules.size == 1)
+        val r = jvm.mockExecutor.schedules.head._1
         r.run()
         assert(b == List())
         val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
@@ -99,8 +104,8 @@ class JvmTest extends AnyWordSpec with MockitoSugar {
           val jvm = new JvmHelper(Some(logger))
 
           jvm.foreachGc(_ => () /*ignore*/ )
-          assert(jvm.executor.schedules.size == 1)
-          val r = jvm.executor.schedules.head._1
+          assert(jvm.mockExecutor.schedules.size == 1)
+          val r = jvm.mockExecutor.schedules.head._1
           val gc = Gc(0, "pcopy", Time.now, 1.millisecond)
           r.run()
           jvm.pushGc(gc)
@@ -126,8 +131,8 @@ class JvmTest extends AnyWordSpec with MockitoSugar {
       "queries gcs in range, in reverse chronological order" in Time.withCurrentTimeFrozen { tc =>
         val jvm = new JvmHelper()
         val query = jvm.monitorGcs(10.seconds)
-        assert(jvm.executor.schedules.size == 1)
-        val r = jvm.executor.schedules.head._1
+        assert(jvm.mockExecutor.schedules.size == 1)
+        val r = jvm.mockExecutor.schedules.head._1
         val gc0 = Gc(0, "pcopy", Time.now, 1.millisecond)
         val gc1 = Gc(1, "CMS", Time.now, 1.millisecond)
         jvm.pushGc(gc1)

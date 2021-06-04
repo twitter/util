@@ -860,12 +860,12 @@ class ScalaValidator private[validation] (
     val results = new mutable.ListBuffer[ConstraintViolation[T]]()
     val parameters: Array[Parameter] = executableDescriptor.executable.getParameters
     val parameterNamesList: Array[String] =
-      parameterNames match {
+      (parameterNames match {
         case Some(names) =>
           names
         case _ =>
           getExecutableParameterNames(executableDescriptor.executable)
-      }
+      }).map(DescriptorFactory.unmangleName) // parameter names are encoded since Scala 2.13.5
 
     // executable parameter constraints
     var index = 0

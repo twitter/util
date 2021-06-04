@@ -2,6 +2,8 @@ package com.twitter.conversions
 
 import com.twitter.util.StorageUnit
 
+import scala.language.implicitConversions
+
 /**
  * Implicits for writing readable [[com.twitter.util.StorageUnit]]s.
  *
@@ -16,7 +18,12 @@ import com.twitter.util.StorageUnit
  */
 object StorageUnitOps {
 
-  implicit class RichStorageUnit(val numBytes: Long) extends AnyVal {
+  /**
+   * Forwarder for Int, as Scala 3.0 seems to not like the implicit conversion to Long.
+   */
+  implicit def numBytesFromInt(numBytes: Int): RichStorageUnit = new RichStorageUnit(numBytes.toLong)
+
+  implicit class RichStorageUnit(private val numBytes: Long) extends AnyVal {
     def byte: StorageUnit = bytes
     def bytes: StorageUnit = StorageUnit.fromBytes(numBytes)
     def kilobyte: StorageUnit = kilobytes
