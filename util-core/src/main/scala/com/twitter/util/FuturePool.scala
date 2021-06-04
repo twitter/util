@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import com.twitter.concurrent.NamedPoolThreadFactory
+import com.twitter.concurrent.{ForkingScheduler, NamedPoolThreadFactory}
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{Future => _, _}
 import scala.runtime.NonLocalReturnControl
@@ -129,59 +129,82 @@ class ExecutorServiceFuturePool protected[this] (
     extends FuturePool {
   def this(executor: ExecutorService) = this(executor, false)
 
-  def apply[T](f: => T): Future[T] = {
-    val runOk = new AtomicBoolean(true)
-    val p = new Promise[T]
-    val task = new Runnable {
-      private[this] val saved = Local.save()
-
-      def run(): Unit = {
-        // Make an effort to skip work in the case the promise
-        // has been cancelled or already defined.
-        if (!runOk.compareAndSet(true, false))
-          return
-
-        val current = Local.save()
-        Local.restore(saved)
-
-        try p.updateIfEmpty(Try(f))
-        catch {
-          case nlrc: NonLocalReturnControl[_] =>
-            val fnlrc = new FutureNonLocalReturnControl(nlrc)
-            p.updateIfEmpty(Throw(fnlrc))
-            throw fnlrc
-          case e: Throwable =>
-            p.updateIfEmpty(Throw(new ExecutionException(e)))
-            throw e
-        } finally Local.restore(current)
-      }
-    }
-
-    // This is safe: the only thing that can call task.run() is
-    // executor, the only thing that can raise an interrupt is the
-    // receiver of this value, which will then be fully initialized.
-    val javaFuture =
-      try executor.submit(task)
-      catch {
-        case e: RejectedExecutionException =>
-          runOk.set(false)
-          p.setException(e)
-          null
-      }
-
-    p.setInterruptHandler {
-      case cause =>
-        if (interruptible || runOk.compareAndSet(true, false)) {
-          if (p.updateIfEmpty(Throw(cause)))
-            javaFuture.cancel(true)
+  /**
+   * Not null if the current scheduler supports forking and indicates that
+   * `FuturePool`s should be redirected to it. If the provided executor is a
+   * `ThreadPoolExecutor`, the max concurrency of the forking scheduler is
+   * set to the size of the thread pool, maintaining a similar concurrency behavior
+   */
+  private[this] lazy val forkingScheduler: ForkingScheduler = {
+    ForkingScheduler()
+      .filter(_.redirectFuturePools())
+      .map { s =>
+        executor match {
+          case e: ThreadPoolExecutor =>
+            s.withMaxConcurrency(e.getMaximumPoolSize)
+          case _ =>
+            s
         }
-    }
+      }.getOrElse(null)
+  }
 
-    p
+  def apply[T](f: => T): Future[T] = {
+    if (forkingScheduler != null) {
+      forkingScheduler.fork(Future.value(f))
+    } else {
+      val runOk = new AtomicBoolean(true)
+      val p = new Promise[T]
+      val task = new Runnable {
+        private[this] val saved = Local.save()
+
+        def run(): Unit = {
+          // Make an effort to skip work in the case the promise
+          // has been cancelled or already defined.
+          if (!runOk.compareAndSet(true, false))
+            return
+
+          val current = Local.save()
+          Local.restore(saved)
+
+          try p.updateIfEmpty(Try(f))
+          catch {
+            case nlrc: NonLocalReturnControl[_] =>
+              val fnlrc = new FutureNonLocalReturnControl(nlrc)
+              p.updateIfEmpty(Throw(fnlrc))
+              throw fnlrc
+            case e: Throwable =>
+              p.updateIfEmpty(Throw(new ExecutionException(e)))
+              throw e
+          } finally Local.restore(current)
+        }
+      }
+
+      // This is safe: the only thing that can call task.run() is
+      // executor, the only thing that can raise an interrupt is the
+      // receiver of this value, which will then be fully initialized.
+      val javaFuture =
+        try executor.submit(task)
+        catch {
+          case e: RejectedExecutionException =>
+            runOk.set(false)
+            p.setException(e)
+            null
+        }
+
+      p.setInterruptHandler {
+        case cause =>
+          if (interruptible || runOk.compareAndSet(true, false)) {
+            if (p.updateIfEmpty(Throw(cause)))
+              javaFuture.cancel(true)
+          }
+      }
+
+      p
+    }
   }
 
   override def toString: String =
-    s"ExecutorServiceFuturePool(interruptible=$interruptible, executor=$executor)"
+    s"ExecutorServiceFuturePool(interruptible=$interruptible, executor=$executor, forkingScheduler=$forkingScheduler)"
 
   override def poolSize: Int = executor match {
     case tpe: ThreadPoolExecutor => tpe.getPoolSize
