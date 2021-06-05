@@ -1,0 +1,31 @@
+scala_library(
+    sources = ["*.scala"],
+    compiler_option_sets = ["fatal_warnings"],
+    provides = scala_artifact(
+        org = "com.twitter",
+        name = "util-jackson-caseclass",
+        repo = artifactory,
+    ),
+    strict_deps = True,
+    dependencies = [
+        "3rdparty/jvm/com/fasterxml/jackson/core:jackson-core",
+        "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
+        "3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala",
+        "3rdparty/jvm/org/json4s:json4s-core",
+        "3rdparty/jvm/org/scala-lang/modules:scala-collection-compat",
+        "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/conversions",
+        "util/util-jackson-annotations/src/main/java/com/twitter/util/jackson/annotation",
+        "util/util-jackson/src/main/scala/com/fasterxml/jackson/databind",
+        "util/util-jackson/src/main/scala/com/twitter/util/jackson/caseclass/exceptions",
+        "util/util-reflect/src/main/scala/com/twitter/util/reflect",
+        "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
+        "util/util-validator/src/main/scala/com/twitter/util/validation",
+        "util/util-validator/src/main/scala/com/twitter/util/validation/conversions",
+    ],
+    exports = [
+        "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
+        "3rdparty/jvm/org/json4s:json4s-core",
+        "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
+    ],
+)

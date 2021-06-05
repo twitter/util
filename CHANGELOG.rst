@@ -7,6 +7,16 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-jackson: Introduce a new library for JSON serialization and deserialization based on the
+  Jackson integration in `Finatra <https://twitter.github.io/finatra/user-guide/json/index.html>`__.
+
+  This includes a custom case class deserializer which "fails slow" to collect all mapping failures
+  for error reporting. This deserializer is also natively integrated with the util-validator library
+  to provide for performing case class validations during deserialization. ``PHAB_ID=D664962``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -26,8 +36,8 @@ New Features
   validators for annotating and validating fields of Scala case classes. ``PHAB_ID=D638603``
 
 * util-app: Introduce a Java-friendly API `c.t.app.App#runOnExit(Runnable)` and 
-`c.t.app.App#runOnExitLast(Runnable)` to allow Java 8 users to call `c.t.app.App#runOnExit`
-and `c.t.app.App#runOnExitLast` with lambda expressions. ``PHAB_ID=D511536``
+  `c.t.app.App#runOnExitLast(Runnable)` to allow Java 8 users to call `c.t.app.App#runOnExit`
+  and `c.t.app.App#runOnExitLast` with lambda expressions. ``PHAB_ID=D511536``
 
 21.4.0
 ------

@@ -201,6 +201,8 @@ lazy val util = Project(
     utilDoc,
     utilFunction,
     utilHashing,
+    utilJacksonAnnotations,
+    utilJackson,
     utilJvm,
     utilLint,
     utilLogging,
@@ -252,7 +254,15 @@ lazy val utilBenchmark = Project(
     JmhPlugin
   ).settings(
     name := "util-benchmark"
-  ).dependsOn(utilCore, utilHashing, utilJvm, utilReflect, utilStats, utilValidator)
+  ).dependsOn(
+    utilCore,
+    utilHashing,
+    utilJackson,
+    utilJvm,
+    utilReflect,
+    utilStats,
+    utilValidator
+  )
 
 lazy val utilCache = Project(
   id = "util-cache",
@@ -376,6 +386,37 @@ lazy val utilHashing = Project(
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
     )
   ).dependsOn(utilCore % "test")
+
+lazy val utilJacksonAnnotations = Project(
+  id = "util-jackson-annotations",
+  base = file("util-jackson-annotations")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-jackson-annotations"
+  )
+
+lazy val utilJackson = Project(
+  id = "util-jackson",
+  base = file("util-jackson")
+).settings(
+    sharedSettings
+  ).settings(
+    name := "util-jackson",
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % jacksonVersion,
+      "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
+      "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
+      "org.json4s" %% "json4s-core" % "3.6.7",
+      "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
+      scalacheckLib,
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
+      "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
+    )
+  ).dependsOn(utilCore, utilJacksonAnnotations, utilMock % Test, utilReflect, utilSlf4jApi, utilValidator)
 
 lazy val utilJvm = Project(
   id = "util-jvm",
