@@ -864,7 +864,11 @@ class ScalaValidator private[validation] (
         case Some(names) =>
           names
         case _ =>
-          getExecutableParameterNames(executableDescriptor.executable)
+          getExecutableParameterNames(executableDescriptor.executable).map { maybeMangled =>
+            DescriptorFactory.unmangleName(
+              maybeMangled
+            ) // parameter names are encoded since Scala 2.13.5
+          }
       }
 
     // executable parameter constraints

@@ -81,8 +81,8 @@ def jdk11GcJavaOptions: Seq[String] = {
 }
 
 val defaultProjectSettings = Seq(
-  scalaVersion := "2.12.12",
-  crossScalaVersions := Seq("2.12.12", "2.13.1")
+  scalaVersion := "2.13.6",
+  crossScalaVersions := Seq("2.12.12", "2.13.6")
 )
 
 val baseSettings = Seq(
