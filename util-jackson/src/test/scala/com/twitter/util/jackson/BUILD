@@ -5,7 +5,6 @@ junit_tests(
         "caseclass/*.scala",
         "serde/*.scala",
     ],
-    tags = ["known-to-fail-jira:CSL-11031"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-annotations",
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-core",

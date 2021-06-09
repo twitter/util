@@ -73,10 +73,17 @@ class LocalDateTimeSerdeTest extends AnyFunSuite with Matchers {
     val mapper = new JacksonObjectMapper()
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     mapper.registerModule(new JavaTimeModule)
-    val actual = mapper.writeValueAsString(NowUtc)
-    val expected = quote(NowUtc.toString)
-    // occasionally Jackson does not include the last 0 when writing the nano seconds
-    expected.startsWith(actual) should be(true)
+    val actualStr = mapper.writeValueAsString(NowUtc)
+    val actualStrUnquoted =
+      actualStr.substring(1, actualStr.length - 1) // drop beginning and end quotes
+    val actual =
+      actualStrUnquoted.substring(
+        0,
+        actualStrUnquoted.lastIndexOf('.')
+      ) // // drop fractions of second
+    val expectStr = NowUtc.toString
+    val expected = expectStr.substring(0, expectStr.lastIndexOf('.')) // drop fractions of second
+    expected should be(actual)
   }
 
   test("deserialize from text") {
