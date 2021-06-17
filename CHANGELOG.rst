@@ -10,6 +10,9 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: Add `ClasspathResource`, a utility for loading classpath resources as an
+  optional `InputStream`. ``PHAB_ID=D687324``
+
 * util-jackson: Introduce a new library for JSON serialization and deserialization based on the
   Jackson integration in `Finatra <https://twitter.github.io/finatra/user-guide/json/index.html>`__.
 
