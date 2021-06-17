@@ -23,7 +23,7 @@ val zkDependency = "org.apache.zookeeper" % "zookeeper" % zkVersion excludeAll (
 val guavaLib = "com.google.guava" % "guava" % "25.1-jre"
 val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.8.5"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
-val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"
+val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 
 def travisTestJavaOptions: Seq[String] = {
