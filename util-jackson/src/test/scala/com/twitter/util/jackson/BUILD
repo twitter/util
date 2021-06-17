@@ -33,6 +33,7 @@ junit_tests(
         "util/util-jackson/src/main/scala/com/twitter/util/jackson/caseclass/exceptions",
         "util/util-jackson/src/main/scala/com/twitter/util/jackson/serde",
         "util/util-jackson/src/test/java/com/twitter/util/jackson",
+        "util/util-jackson/src/test/resources",
         "util/util-mock/src/main/scala/com/twitter/util/mock",
         "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
         "util/util-validator/src/main/java/com/twitter/util/validation",

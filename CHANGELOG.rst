@@ -13,6 +13,10 @@ New Features
 * util-core: Add `ClasspathResource`, a utility for loading classpath resources as an
   optional `InputStream`. ``PHAB_ID=D687324``
 
+* util-jackson: Add `com.twitter.util.jackson.YAML` for YAML serde operations with a
+  default configured `ScalaObjectMapper.` Add more methods to `com.twitter.util.jackson.JSON`
+  ``PHAB_ID=D687327``
+
 * util-jackson: Introduce a new library for JSON serialization and deserialization based on the
   Jackson integration in `Finatra <https://twitter.github.io/finatra/user-guide/json/index.html>`__.
 

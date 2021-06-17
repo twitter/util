@@ -798,15 +798,17 @@ than the `scala.util.parsing.json.JSON` utility.
 
 .. important::
 
-    The `c.t.util.jackson.JSON` API does not return an exception when parsing but rather returns an
-    `Option[T]` result. When parsing is successful, this is a `Some(T)`, otherwise it is a `None`. But
-    note that the specifics of any failure are lost.
+    The `c.t.util.jackson.JSON <#c-t-util-jackson-json>`__ API does not return an exception when
+    parsing but rather returns an `Option[T]` result. When parsing is successful, this is a `Some(T)`,
+    otherwise it is a `None`. But note that the specifics of any failure are lost.
 
     It is thus also important to note that for this reason that the `c.t.util.jackson.JSON` uses a
-    default configured `ScalaObjectMapper <#defaults>`__ **with validation specifically disabled**,
+    `default configured ScalaObjectMapper <#defaults>`__ **with validation specifically disabled**,
     such that no `Bean Validation 2.0 <../util-validator>`__ style validations are performed when
-    parsing with `c.t.util.jackson.JSON`. Users should prefer using a configured `ScalaObjectMapper`
-    to perform validations in order to be able to properly handle validation exceptions.
+    parsing with `c.t.util.jackson.JSON`.
+
+    Users should prefer using a configured |ScalaObjectMapper|_ to perform validations in order to
+    be able to properly handle validation exceptions.
 
 .. code:: scala
    :emphasize-lines: 7, 13, 22, 25
@@ -840,6 +842,63 @@ than the `scala.util.parsing.json.JSON` utility.
     {
       "id" : "99999999"
     }
+
+    scala>
+
+
+`c.t.util.jackson.YAML`
+-----------------------
+
+Similarly, there is also a utility for `YAML <https://yaml.org/>`__ serde operations with many of
+the same methods as `c.t.util.jackson.JSON <#c-t-util-jackson-json>`__ using a default |ScalaObjectMapper|_
+configured with a `YAMLFactory`.
+
+.. code:: scala
+   :emphasize-lines: 8, 9, 10, 11, 12, 18, 19, 20, 29
+
+    Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
+    Type in expressions for evaluation. Or try :help.
+
+    scala> import com.twitter.util.jackson.YAML
+    import com.twitter.util.jackson.YAML
+
+    scala> val result =
+         |   YAML.parse[Map[String, Int]]("""
+         |     |---
+         |     |a: 1
+         |     |b: 2
+         |     |c: 3""".stripMargin)
+    result: Option[Map[String,Int]] = Some(Map(a -> 1, b -> 2, c -> 3))
+
+    scala> case class FooClass(id: String)
+    defined class FooClass
+
+    scala> val result = YAML.parse[FooClass]("""
+         |   |---
+         |   |id: abcde1234""".stripMargin)
+    result: Option[FooClass] = Some(FooClass(abcde1234))
+
+    scala> result.get
+    res0: FooClass = FooClass(abcde1234)
+
+    scala> val f = FooClass("99999999")
+    f: FooClass = FooClass(99999999)
+
+    scala> YAML.write(f)
+    res1: String =
+    "---
+    id: "99999999"
+    "
+
+    scala>
+
+.. important::
+
+    Like with `c.t.util.jackson.JSON <#c-t-util-jackson-json>`__, the `c.t.util.jackson.YAML <#c-t-util-jackson-yaml>`__
+    API does not return an exception when parsing but rather returns an `Option[T]` result.
+
+    Users should prefer using a configured |ScalaObjectMapper|_ to perform validations in order to be
+    able to properly handle validation exceptions.
 
 `c.t.util.jackson.JsonDiff`
 ---------------------------

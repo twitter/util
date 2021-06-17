@@ -30,6 +30,7 @@ scala_library(
         "3rdparty/jvm/com/fasterxml/jackson/dataformat:jackson-dataformat-yaml",
         "3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala",
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",
+        "util/util-core/src/main/scala/com/twitter/io",
         "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
     ],
 )

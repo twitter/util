@@ -12,45 +12,41 @@ import java.io.{File, InputStream}
  *
  * @see [[ScalaObjectMapper]]
  */
-object JSON {
+object YAML {
   private final val Mapper: ScalaObjectMapper =
-    ScalaObjectMapper.builder.withNoValidation.objectMapper
+    ScalaObjectMapper.builder.withNoValidation.yamlObjectMapper
 
-  /** Simple utility to parse a JSON string into an Option[T] type. */
+  /** Simple utility to parse a YAML string into an Option[T] type. */
   def parse[T: Manifest](input: String): Option[T] =
     Try(Mapper.parse[T](input)).toOption
 
-  /** Simple utility to parse a JSON [[Buf]] into an Option[T] type. */
+  /** Simple utility to parse a YAML [[Buf]] into an Option[T] type. */
   def parse[T: Manifest](input: Buf): Option[T] =
     Try(Mapper.parse[T](input)).toOption
 
   /**
-   * Simple utility to parse a JSON [[InputStream]] into an Option[T] type.
+   * Simple utility to parse a YAML [[InputStream]] into an Option[T] type.
    * @note the caller is responsible for managing the lifecycle of the given [[InputStream]].
    */
   def parse[T: Manifest](input: InputStream): Option[T] =
     Try(Mapper.parse[T](input)).toOption
 
   /**
-   * Simple utility to load a JSON file and parse contents into an Option[T] type.
+   * Simple utility to load a YAML file and parse contents into an Option[T] type.
    *
    * @note the caller is responsible for managing the lifecycle of the given [[File]].
    */
   def parse[T: Manifest](f: File): Option[T] =
     Try(Mapper.underlying.readValue[T](f)).toOption
 
-  /** Simple utility to write a value as a JSON encoded String. */
+  /** Simple utility to write a value as a YAML encoded String. */
   def write(any: Any): String =
     Mapper.writeValueAsString(any)
-
-  /** Simple utility to pretty print a JSON encoded String from the given instance. */
-  def prettyPrint(any: Any): String =
-    Mapper.writePrettyString(any)
 
   object Resource {
 
     /**
-     * Simple utility to load a JSON resource from the classpath and parse contents into an Option[T] type.
+     * Simple utility to load a YAML resource from the classpath and parse contents into an Option[T] type.
      *
      * @note `name` resolution to locate the resource is governed by [[java.lang.Class#getResourceAsStream]]
      */
@@ -58,7 +54,7 @@ object JSON {
       ClasspathResource.load(name) match {
         case Some(inputStream) =>
           try {
-            JSON.parse[T](inputStream)
+            YAML.parse[T](inputStream)
           } finally {
             inputStream.close()
           }
