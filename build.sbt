@@ -106,7 +106,7 @@ def jdk11GcJavaOptions: Seq[String] = {
 
 val defaultProjectSettings = Seq(
   scalaVersion := "2.13.6",
-  crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.0")
+  crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.2-RC1") // TODO Scala3 use 3.0.2 once released
 )
 
 def isScala3(scalaBinaryVersion: String): Boolean =

@@ -16,7 +16,7 @@ public class AsyncMeterCompilationTest {
   @Test
   public void testCreateNewMeter() {
     MockTimer timer = new MockTimer();
-    AsyncMeter meter = AsyncMeter.newMeter(5, Duration.fromMillisecondsJ(5), 5, timer);
+    AsyncMeter meter = AsyncMeter.newMeter(5, Duration.fromMilliseconds(5), 5, timer);
   }
 
   @Test

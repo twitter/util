@@ -8,16 +8,15 @@ object Duration extends TimeLikeOps[Duration] {
     if (nanoseconds == 0L) Zero
     else new Duration(nanoseconds)
 
-  // TODO Scala3 figure out why the overrides cause issues in Scala 3.0
   // This is needed for Java compatibility.
   def fromFractionalSecondsJ(seconds: Double): Duration =
     super.fromFractionalSeconds(seconds)
-  def fromSecondsJ(seconds: Int): Duration = super.fromSeconds(seconds)
-  def fromMinutesJ(minutes: Int): Duration = super.fromMinutes(minutes)
-  def fromMillisecondsJ(millis: Long): Duration = super.fromMilliseconds(millis)
-  def fromMicrosecondsJ(micros: Long): Duration = super.fromMicroseconds(micros)
-  def fromHoursJ(hours: Int): Duration = super.fromHours(hours)
-  def fromDaysJ(days: Int): Duration = super.fromDays(days)
+  override def fromSeconds(seconds: Int): Duration = super.fromSeconds(seconds)
+  override def fromMinutes(minutes: Int): Duration = super.fromMinutes(minutes)
+  override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
+  override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
+  override def fromHours(hours: Int): Duration = super.fromHours(hours)
+  override def fromDays(days: Int): Duration = super.fromDays(days)
 
   val NanosPerMicrosecond: Long = 1000L
   val NanosPerMillisecond: Long = NanosPerMicrosecond * 1000L

@@ -15,7 +15,7 @@ public class TokenBucketCompilationTest {
 
   @Test
   public void testLeakyBucket() throws Exception {
-    TokenBucket bucket = TokenBucket.newLeakyBucket(Duration.fromSecondsJ(3), 3);
+    TokenBucket bucket = TokenBucket.newLeakyBucket(Duration.fromSeconds(3), 3);
     bucket.put(3);
     bucket.tryGet(4); // don't check the value so we don't have to manipulate time
     bucket.count(); // don't check the value

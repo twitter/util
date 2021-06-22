@@ -60,7 +60,7 @@ public class JavaFlagTest {
     Flag<Float> floatFlag = flag.create("float", 1.0f, "", Flaggable.ofJavaFloat());
     Flag<Double> doubleFlag = flag.create("double", 1.0d, "", Flaggable.ofJavaDouble());
     Flag<Duration> durationFlag =
-        flag.create("duration", Duration.fromSecondsJ(1), "", Flaggable.ofDuration());
+        flag.create("duration", Duration.fromSeconds(1), "", Flaggable.ofDuration());
     Flag<StorageUnit> StorageUnitFlag =
         flag.create("storage unit", StorageUnit.zero(), "", Flaggable.ofStorageUnit());
     Flag<Time> timeFlag = flag.create("time", Time.Bottom(), "", Flaggable.ofTime());

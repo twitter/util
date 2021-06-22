@@ -21,11 +21,11 @@ public class TimerCompilationTest {
   public void testDoAt() {
     Time.withCurrentTimeFrozen(exfunc(timeControl -> {
       MockTimer timer = new MockTimer();
-      Time at = Time.now().plus(Duration.fromMillisecondsJ(1));
+      Time at = Time.now().plus(Duration.fromMilliseconds(1));
       Future<String> f = timer.doAt(at, Function.ofCallable(boom));
 
       Assert.assertFalse(f.isDefined());
-      timeControl.advance(Duration.fromMillisecondsJ(2));
+      timeControl.advance(Duration.fromMilliseconds(2));
       timer.tick();
       Assert.assertTrue(f.isDefined());
       Assert.assertEquals("boom", Await.result(f));
@@ -37,11 +37,11 @@ public class TimerCompilationTest {
   public void testDoLater() throws Exception {
     Time.withCurrentTimeFrozen(exfunc(timeControl -> {
       MockTimer timer = new MockTimer();
-      Future<String> f = timer.doLater(Duration.fromMillisecondsJ(1),
+      Future<String> f = timer.doLater(Duration.fromMilliseconds(1),
                                        Function.ofCallable(boom));
 
       Assert.assertFalse(f.isDefined());
-      timeControl.advance(Duration.fromMillisecondsJ(2));
+      timeControl.advance(Duration.fromMilliseconds(2));
       timer.tick();
       Assert.assertTrue(f.isDefined());
       Assert.assertEquals("boom", Await.result(f));
@@ -71,10 +71,10 @@ public class TimerCompilationTest {
     Time.withCurrentTimeFrozen(exfunc(timeControl -> {
       MockCounter counter = new MockCounter();
       MockTimer timer = new MockTimer();
-      Time when = Time.now().plus(Duration.fromMillisecondsJ(1));
+      Time when = Time.now().plus(Duration.fromMilliseconds(1));
       timer.schedule(when, Function.ofRunnable(counter.incrementer()));
 
-      timeControl.advance(Duration.fromMillisecondsJ(2));
+      timeControl.advance(Duration.fromMilliseconds(2));
       timer.tick();
       Assert.assertEquals(1, counter.get());
       return null;
@@ -86,12 +86,12 @@ public class TimerCompilationTest {
     Time.withCurrentTimeFrozen(exfunc(timeControl -> {
       MockCounter counter = new MockCounter();
       MockTimer timer = new MockTimer();
-      Time when = Time.now().plus(Duration.fromMillisecondsJ(1));
+      Time when = Time.now().plus(Duration.fromMilliseconds(1));
       TimerTask task = timer.schedule(when,
                                       Function.ofRunnable(counter.incrementer()));
 
       task.cancel();
-      timeControl.advance(Duration.fromMillisecondsJ(2));
+      timeControl.advance(Duration.fromMilliseconds(2));
       timer.tick();
       Assert.assertEquals(0, counter.get());
       return null;
