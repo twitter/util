@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
+  of a shell command. ``PHAB_ID=D686134``
+
 21.6.0
 ------
 
