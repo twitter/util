@@ -36,10 +36,15 @@ class Command private[command] (
    *
    * @param cmd The shell command to run
    * @param workingDirectory An optional directory from which the command should be run
+   * @param extraEnv A map of extra environment variables to set for the command to be run
    * @return A [[CommandOutput]] with stdout & stderr from the command
    */
-  def run(cmd: Seq[String], workingDirectory: Option[File] = None): CommandOutput = {
-    val process = commandExecutor(cmd, workingDirectory)
+  def run(
+    cmd: Seq[String],
+    workingDirectory: Option[File] = None,
+    extraEnv: Map[String, String] = Map.empty
+  ): CommandOutput = {
+    val process = commandExecutor(cmd, workingDirectory, extraEnv)
     CommandOutput.fromProcess(cmd, process)
   }
 

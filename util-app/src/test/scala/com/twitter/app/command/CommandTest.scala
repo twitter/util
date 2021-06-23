@@ -22,7 +22,8 @@ class CommandTest extends AnyFunSuite with BeforeAndAfterEach with Matchers {
 
     override def apply(
       cmd: Seq[String],
-      directory: Option[File]
+      directory: Option[File],
+      extraEnv: Map[String, String]
     ): Process = {
       retValue = new Promise[Int]()
       command = cmd
