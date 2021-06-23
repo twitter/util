@@ -34,6 +34,11 @@ Breaking API Changes
   StatReceiver derived classes use MetricBuilder directly to create counters, gauges and stats.
   ``PHAB_ID=D668739``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-cache: Update Caffeine cache library to version 2.9.1 ``PHAB_ID=D660908``
+
 21.5.0
 ------
 
@@ -45,7 +50,7 @@ New Features
   the Hibernate Validator library and thus supports `jakarta.validation.Constraint` annotations and
   validators for annotating and validating fields of Scala case classes. ``PHAB_ID=D638603``
 
-* util-app: Introduce a Java-friendly API `c.t.app.App#runOnExit(Runnable)` and 
+* util-app: Introduce a Java-friendly API `c.t.app.App#runOnExit(Runnable)` and
   `c.t.app.App#runOnExitLast(Runnable)` to allow Java 8 users to call `c.t.app.App#runOnExit`
   and `c.t.app.App#runOnExitLast` with lambda expressions. ``PHAB_ID=D511536``
 
