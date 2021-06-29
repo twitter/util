@@ -2,13 +2,33 @@ package com.twitter.app.command
 
 import com.twitter.app.command.RealCommandTest.ScriptPath
 import com.twitter.conversions.DurationOps._
-import com.twitter.io.{Buf, Reader}
+import com.twitter.io.{Buf, Reader, TempFile}
 import com.twitter.util.{Await, Awaitable, Future}
+import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.Files
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import scala.collection.JavaConverters._
 
 object RealCommandTest {
-  private val ScriptPath = getClass.getClassLoader.getResource("command-test.sh").getPath
+  // Bazel provides the internal dependency as a JAR, and consequently,
+  // we need to copy the script into a temp directory to use it.
+  // http://go/bazel-compatibility/no-such-file
+  private val ScriptPath: String = {
+    val temp = TempFile.fromResourcePath(this.getClass, "/command-test.sh")
+    Files.setPosixFilePermissions(
+      temp.toPath,
+      Set(
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_EXECUTE,
+        PosixFilePermission.GROUP_READ,
+        PosixFilePermission.GROUP_EXECUTE,
+        PosixFilePermission.OTHERS_READ,
+        PosixFilePermission.OTHERS_EXECUTE
+      ).asJava
+    )
+    temp.toString
+  }
 }
 
 class RealCommandTest extends AnyFunSuite with Matchers {
