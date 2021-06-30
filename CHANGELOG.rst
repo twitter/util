@@ -13,6 +13,11 @@ New Features
 * util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
   of a shell command. ``PHAB_ID=D686134``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Update Scalatest to version 1.15.4 ``PHAB_ID=D691691``
+
 21.6.0
 ------
 
