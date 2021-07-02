@@ -6,6 +6,7 @@ scala_library(
         name = "util-app",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-app-lifecycle/src/main/scala/com/twitter/app/lifecycle",
         "util/util-app/src/main/java/com/twitter/app",

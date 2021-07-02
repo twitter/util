@@ -6,8 +6,9 @@ scala_library(
         name = "util-core-io",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
-        "util/util-core/src/main/scala/com/twitter/concurrent",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
     ],
 )

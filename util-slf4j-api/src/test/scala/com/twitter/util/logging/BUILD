@@ -5,6 +5,7 @@ scala_library(
         "*.java",
         "*.scala",
     ],
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/slf4j:slf4j-api",
         "util/util-core/src/main/scala/com/twitter/io",
@@ -21,7 +22,10 @@ scala_library(
 
 junit_tests(
     compiler_option_sets = ["fatal_warnings"],
-    tags = ["non-exclusive"],
+    tags = [
+        "bazel-compatible",
+        "non-exclusive",
+    ],
     dependencies = [
         ":testutil",
         "3rdparty/jvm/org/mockito:mockito-scala",

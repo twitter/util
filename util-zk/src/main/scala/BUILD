@@ -6,6 +6,7 @@ scala_library(
         name = "util-zk",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-zk/src/main/scala/com/twitter/zk",
         "util/util-zk/src/main/scala/com/twitter/zk/coordination",

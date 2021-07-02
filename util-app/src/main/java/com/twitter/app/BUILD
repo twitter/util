@@ -7,4 +7,5 @@ java_library(
     ),
     # Not detected as required by zinc.
     scope = "forced",
+    tags = ["bazel-compatible"],
 )

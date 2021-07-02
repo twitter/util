@@ -5,6 +5,7 @@ scala_library(
         name = "util-reflect",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core:util-core-util",
     ],

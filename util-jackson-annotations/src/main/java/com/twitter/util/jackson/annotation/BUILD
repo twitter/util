@@ -7,4 +7,5 @@ java_library(
         repo = artifactory,
     ),
     strict_deps = True,
+    tags = ["bazel-compatible"],
 )

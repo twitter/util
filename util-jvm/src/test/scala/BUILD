@@ -15,7 +15,10 @@ junit_tests(
         "**/*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
-    tags = ["non-exclusive"],
+    tags = [
+        "bazel-compatible",
+        "non-exclusive",
+    ],
     dependencies = COMMON_DEPS + ["3rdparty/jvm/org/scalatestplus:junit"],
 )
 
@@ -29,11 +32,13 @@ scala_library(
     #    does not strictly enforce it.
     sources = ["**/*.scala"],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["bazel-compatible"],
     dependencies = COMMON_DEPS,
 )
 
 jvm_binary(
     name = "bin",
     main = "com.twitter.jvm.EstimatorApp",
+    tags = ["bazel-compatible"],
     dependencies = [":estimator_app"],
 )

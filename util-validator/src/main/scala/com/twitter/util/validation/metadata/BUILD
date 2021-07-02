@@ -7,6 +7,7 @@ scala_library(
         repo = artifactory,
     ),
     strict_deps = True,
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",

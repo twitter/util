@@ -5,6 +5,7 @@ scala_library(
         name = "util-thrift",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
         "3rdparty/jvm/org/apache/thrift:libthrift",

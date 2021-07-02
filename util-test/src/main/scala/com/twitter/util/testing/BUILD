@@ -5,6 +5,7 @@ scala_library(
         name = "util-test-testing",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/mockito:mockito-all",
         "3rdparty/jvm/org/scalatest",

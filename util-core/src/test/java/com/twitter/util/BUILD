@@ -2,6 +2,7 @@ java_library(
     name = "object_size_calculator",
     sources = ["ObjectSizeCalculator.java"],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/com/google/errorprone:error_prone_annotations",
@@ -14,7 +15,10 @@ junit_tests(
         "*.java",
     ],
     compiler_option_sets = ["fatal_warnings"],
-    tags = ["non-exclusive"],
+    tags = [
+        "bazel-compatible",
+        "non-exclusive",
+    ],
     dependencies = [
         ":object_size_calculator",
         "3rdparty/jvm/com/github/ben-manes/caffeine",

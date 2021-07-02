@@ -7,6 +7,7 @@ scala_library(
         repo = artifactory,
     ),
     strict_deps = True,
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
         "3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala",

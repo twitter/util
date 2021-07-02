@@ -1,5 +1,6 @@
 junit_tests(
     sources = ["**/*.java"],
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/dataformat:jackson-dataformat-yaml",
         "3rdparty/jvm/junit",

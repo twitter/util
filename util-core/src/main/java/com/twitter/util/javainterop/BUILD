@@ -5,6 +5,7 @@ java_library(
         name = "util-core-java-javainterop",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/scala-lang:scala-library",
     ],

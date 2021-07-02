@@ -5,7 +5,10 @@ junit_tests(
         "*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
-    tags = ["non-exclusive"],
+    tags = [
+        "bazel-compatible",
+        "non-exclusive",
+    ],
     dependencies = [
         ":abstract_tests",
         "3rdparty/jvm/com/github/ben-manes/caffeine",
@@ -28,6 +31,7 @@ scala_library(
         "AbstractLoadingFutureCacheTest.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatest",

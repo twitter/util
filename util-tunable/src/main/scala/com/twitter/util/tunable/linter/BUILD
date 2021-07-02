@@ -1,5 +1,6 @@
 scala_library(
     name = "scala",
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-core",
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-databind",
@@ -14,6 +15,7 @@ jvm_binary(
     name = "configuration-linter",
     main = "com.twitter.util.tunable.linter.ConfigurationLinter",
     compiler_option_sets = ["fatal_warnings"],
+    tags = ["bazel-compatible"],
     dependencies = [
         ":scala",
     ],

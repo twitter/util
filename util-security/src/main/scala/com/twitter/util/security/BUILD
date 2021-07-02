@@ -5,6 +5,7 @@ scala_library(
         name = "util-security",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core:util-core-util",
         "util/util-logging/src/main/scala/com/twitter/logging",

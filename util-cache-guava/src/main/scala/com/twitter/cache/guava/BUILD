@@ -5,6 +5,7 @@ scala_library(
         name = "util-cache-guava",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/google/guava",
         "util/util-cache/src/main/scala/com/twitter/cache",

@@ -5,6 +5,7 @@ scala_library(
         name = "util-slf4j-jul-bridge",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/slf4j:jul-to-slf4j",
         "3rdparty/jvm/org/slf4j:slf4j-api",

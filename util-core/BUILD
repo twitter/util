@@ -1,4 +1,5 @@
 target(
+    tags = ["bazel-compatible"],
     dependencies = [
         ":scala",
         "util/util-core/src/main/java",
@@ -7,6 +8,7 @@ target(
 
 test_suite(
     name = "tests",
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core/src/test/java",
         "util/util-core/src/test/scala",
@@ -29,6 +31,7 @@ scala_library(
         name = "util-core-util",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/scala-lang:scala-reflect",
         "3rdparty/jvm/org/scala-lang/modules:scala-collection-compat",
@@ -51,6 +54,7 @@ scala_library(
         name = "util-core",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         ":util-core-util",
         "util/util-core/src/main/scala/com/twitter/concurrent",

@@ -6,4 +6,5 @@ java_library(
         name = "util-core-java-service",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
 )

@@ -5,6 +5,7 @@ scala_library(
         name = "util-core-conversions",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core:util-core-util",
     ],

@@ -1,4 +1,5 @@
 target(
+    tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core/src/main/java/com/twitter/concurrent",
         "util/util-core/src/main/java/com/twitter/io",

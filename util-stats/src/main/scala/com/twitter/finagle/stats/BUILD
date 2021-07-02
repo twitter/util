@@ -6,6 +6,7 @@ scala_library(
         name = "util-stats",
         repo = artifactory,
     ),
+    tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson:jackson-module-scala",
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-core",

@@ -3,4 +3,5 @@ resources(
         "**/*.properties",
         "**/*.xml",
     ],
+    tags = ["bazel-compatible"],
 )
