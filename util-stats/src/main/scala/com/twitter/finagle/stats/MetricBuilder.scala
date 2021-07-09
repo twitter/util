@@ -1,6 +1,12 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType, MetricType}
+import com.twitter.finagle.stats.MetricBuilder.{
+  CounterType,
+  CounterishGaugeType,
+  GaugeType,
+  HistogramType,
+  MetricType
+}
 import java.util.function.Supplier
 import scala.annotation.varargs
 
@@ -52,7 +58,6 @@ object MetricBuilder {
    * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
    * @param processPath a universal coordinate for the resource
    * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
-   * @param isCounterishGauge used to indicate that a gauge is being used to model something that acts like a counter
    * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
    */
   def apply(
@@ -66,7 +71,6 @@ object MetricBuilder {
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
-    isCounterishGauge: Boolean = false,
     metricType: MetricType,
     statsReceiver: StatsReceiver
   ): MetricBuilder = {
@@ -81,7 +85,6 @@ object MetricBuilder {
       relativeName,
       processPath,
       percentiles,
-      isCounterishGauge,
       metricType,
       statsReceiver
     )
@@ -89,10 +92,14 @@ object MetricBuilder {
 
   /**
    * Indicate the Metric type, [[CounterType]] will create a [[Counter]],
-   * [[GaugeType]] will create a [[Gauge]], and [[HistogramType]] will create a [[Stat]].
+   * [[GaugeType]] will create a standard [[Gauge]], and [[HistogramType]] will create a [[Stat]].
+   *
+   * @note [[CounterishGaugeType]] will also create a [[Gauge]], but specifically one that
+   *       models a [[Counter]].
    */
   sealed trait MetricType
   case object CounterType extends MetricType
+  case object CounterishGaugeType extends MetricType
   case object GaugeType extends MetricType
   case object HistogramType extends MetricType
 }
@@ -133,7 +140,6 @@ class MetricBuilder private (
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double],
-  val isCounterishGauge: Boolean,
   val metricType: MetricType,
   val statsReceiver: StatsReceiver)
     extends Metadata {
@@ -153,7 +159,6 @@ class MetricBuilder private (
     name: Seq[String] = this.name,
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
-    isCounterishGauge: Boolean = this.isCounterishGauge,
     percentiles: IndexedSeq[Double] = this.percentiles,
     metricType: MetricType = this.metricType
   ): MetricBuilder = {
@@ -168,7 +173,6 @@ class MetricBuilder private (
       relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
-      isCounterishGauge = isCounterishGauge,
       statsReceiver = this.statsReceiver,
       metricType = metricType
     )
@@ -202,9 +206,12 @@ class MetricBuilder private (
   def withPercentiles(percentiles: Double*): MetricBuilder =
     this.copy(percentiles = percentiles.toIndexedSeq)
 
-  def withCounterishGauge: MetricBuilder = this.copy(isCounterishGauge = true)
-
-  def withNoCounterishGauge: MetricBuilder = this.copy(isCounterishGauge = false)
+  def withCounterishGauge: MetricBuilder = {
+    require(
+      this.metricType == GaugeType,
+      "Cannot create a CounterishGauge from a Counter or Histogram")
+    this.copy(metricType = CounterishGaugeType)
+  }
 
   /**
    * Generates a CounterType MetricBuilder which can be used to create a counter in a StatsReceiver.
@@ -228,6 +235,14 @@ class MetricBuilder private (
    */
   private[MetricBuilder] final def histogramSchema: MetricBuilder =
     this.copy(metricType = HistogramType)
+
+  /**
+   * Generates a CounterishGaugeType MetricBuilder which can be used to create a counter-ish gauge
+   * in a StatsReceiver. Used to test that builder class correctly propagates configured metadata.
+   * @return a CounterishGaugeType MetricBuilder.
+   */
+  private[MetricBuilder] final def counterishGaugeSchema: MetricBuilder =
+    this.copy(metricType = CounterishGaugeType)
 
   /**
    * Produce a counter as described by the builder inside the underlying StatsReceiver.
