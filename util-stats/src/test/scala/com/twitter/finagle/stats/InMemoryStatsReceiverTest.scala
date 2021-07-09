@@ -367,24 +367,18 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     }
   }
 
-  test("expression are reloaded with fully scoped names") {
+  test("expressions can be hydrated from metadata that metrics use") {
     val sr = new InMemoryStatsReceiver
 
-    val aSchema =
-      MetricBuilder(name = Seq("a"), metricType = CounterType, statsReceiver = sr).withKernel
-    val bSchema =
-      MetricBuilder(name = Seq("b"), metricType = HistogramType, statsReceiver = sr).withKernel
-    val cSchema =
-      MetricBuilder(name = Seq("c"), metricType = GaugeType, statsReceiver = sr).withKernel
+    val aCounter = sr.scope("test").counter("a")
+    val bHisto = sr.scope("test").stat("b")
+    val cGauge = sr.scope("test").addGauge("c") { 1 }
 
     val expression = ExpressionSchema(
       "test_expression",
-      Expression(aSchema).plus(Expression(bSchema, Left(Expression.Min)).plus(Expression(cSchema))))
-      .register()
-
-    val aCounter = sr.scope("test").counter(aSchema)
-    val bHisto = sr.scope("test").stat(bSchema)
-    val cGauge = sr.scope(("test")).addGauge(cSchema) { 1 }
+      Expression(aCounter.metadata).plus(Expression(bHisto.metadata, Left(Expression.Min))
+        .plus(Expression(cGauge.metadata)))
+    ).register()
 
     // what we expected as hydrated metric builders
     val aaSchema =

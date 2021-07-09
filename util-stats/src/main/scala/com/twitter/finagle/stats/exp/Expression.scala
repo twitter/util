@@ -2,8 +2,7 @@ package com.twitter.finagle.stats.exp
 
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.exp.Expression.HistogramComponent
-import com.twitter.finagle.stats.{MetricBuilder, StatsReceiver}
-import java.util.concurrent.ConcurrentHashMap
+import com.twitter.finagle.stats.{Metadata, MetricBuilder, StatsReceiver}
 import scala.annotation.varargs
 
 private[twitter] object Expression {
@@ -24,6 +23,7 @@ private[twitter] object Expression {
     case MetricExpression(metricBuilder) => Set(metricBuilder.statsReceiver)
     case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case ConstantExpression(_) => Set.empty
+    case NoExpression => Set.empty
   }
 
   /**
@@ -37,58 +37,46 @@ private[twitter] object Expression {
    *                  or a percentile in Double for Right.
    */
   def apply(
-    metricBuilder: MetricBuilder,
+    metadata: Metadata,
     component: Either[HistogramComponent, Double]
-  ): HistogramExpression = {
-    require(
-      metricBuilder.metricType == HistogramType,
-      "this method is for creating histogram expression")
-    HistogramExpression(metricBuilder, component)
+  ): Expression = {
+    metadata.toMetricBuilder match {
+      case Some(metricBuilder) =>
+        require(
+          metricBuilder.metricType == HistogramType,
+          "this method is for creating histogram expression")
+        HistogramExpression(metricBuilder, component)
+      case None =>
+        NoExpression
+    }
   }
 
   /**
    * Create an single expression wrapping a counter or gauge.
    */
-  def apply(metricBuilder: MetricBuilder): Expression = {
-    require(metricBuilder.metricType != HistogramType, "provide a component for histogram")
-    MetricExpression(metricBuilder)
-  }
-
-  // utility methods shared by Metrics.scala and InMemoryStatsReceiver
-  private[stats] def replaceExpression(
-    expression: Expression,
-    metricBuilders: ConcurrentHashMap[Int, MetricBuilder]
-  ): Expression = {
-    expression match {
-      case f @ FunctionExpression(_, exprs) =>
-        f.copy(exprs = exprs.map(replaceExpression(_, metricBuilders)))
-      case m @ MetricExpression(metricBuilder) if metricBuilder.kernel.isDefined =>
-        val builder = metricBuilders.get(metricBuilder.kernel.get)
-        if (builder != null) m.copy(builder)
-        else m
-      case h @ HistogramExpression(metricBuilder, _) if metricBuilder.kernel.isDefined =>
-        val builder = metricBuilders.get(metricBuilder.kernel.get)
-        if (builder != null) h.copy(builder)
-        else h
-      case otherExpression => otherExpression
+  def apply(metadata: Metadata): Expression = {
+    metadata.toMetricBuilder match {
+      case Some(metricBuilder) =>
+        require(metricBuilder.metricType != HistogramType, "provide a component for histogram")
+        MetricExpression(metricBuilder)
+      case None =>
+        NoExpression
     }
   }
-
-  private[this] def reformSchema(builder: MetricBuilder): MetricBuilder = builder
 }
 
 /**
  * Metrics with their arithmetical(or others) calculations
  */
 private[twitter] sealed trait Expression {
-  def plus(other: Expression): Expression = FunctionExpression("plus", Seq(this, other))
+  final def plus(other: Expression): Expression = func("plus", other)
 
-  def minus(other: Expression): Expression = FunctionExpression("minus", Seq(this, other))
+  final def minus(other: Expression): Expression = func("minus", other)
 
-  def divide(other: Expression): Expression = FunctionExpression("divide", Seq(this, other))
+  final def divide(other: Expression): Expression = func("divide", other)
 
-  def multiply(other: Expression): Expression =
-    FunctionExpression("multiply", Seq(this, other))
+  final def multiply(other: Expression): Expression =
+    func("multiply", other)
 
   @varargs
   def func(name: String, rest: Expression*): Expression =
@@ -120,3 +108,8 @@ case class HistogramExpression private (
   metricBuilder: MetricBuilder,
   component: Either[HistogramComponent, Double])
     extends Expression
+
+case object NoExpression extends Expression {
+  @varargs
+  override def func(name: String, rest: Expression*): Expression = NoExpression
+}

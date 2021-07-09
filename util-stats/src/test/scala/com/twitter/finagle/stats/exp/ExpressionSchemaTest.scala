@@ -13,20 +13,11 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
 
     val successMb =
-      MetricBuilder(
-        name = Seq("success"),
-        metricType = CounterType,
-        statsReceiver = clientSR).withKernel
+      MetricBuilder(name = Seq("success"), metricType = CounterType, statsReceiver = clientSR)
     val failuresMb =
-      MetricBuilder(
-        name = Seq("failures"),
-        metricType = CounterType,
-        statsReceiver = clientSR).withKernel
+      MetricBuilder(name = Seq("failures"), metricType = CounterType, statsReceiver = clientSR)
     val latencyMb =
-      MetricBuilder(
-        name = Seq("latency"),
-        metricType = HistogramType,
-        statsReceiver = clientSR).withKernel
+      MetricBuilder(name = Seq("latency"), metricType = HistogramType, statsReceiver = clientSR)
     val sum = Expression(successMb).plus(Expression(failuresMb))
 
     def slowQuery(ctl: TimeControl, succeed: Boolean): Unit = {
@@ -73,9 +64,9 @@ class ExpressionSchemaTest extends AnyFunSuite {
       runTheQuery(false)
 
       assert(sr.expressions("success_rate_downstream").name == successRate.name)
-      assert(sr.expressions("success_rate_downstream").expr != successRate.expr)
+      assert(sr.expressions("success_rate_downstream").expr == successRate.expr)
       assert(sr.expressions("latency_downstream").name == latency.name)
-      assert(sr.expressions("latency_downstream").expr != latency.expr)
+      assert(sr.expressions("latency_downstream").expr == latency.expr)
 
       assert(sr.counters(Seq("success")) == 1)
       assert(sr.counters(Seq("failures")) == 1)

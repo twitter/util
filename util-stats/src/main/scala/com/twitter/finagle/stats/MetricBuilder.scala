@@ -82,7 +82,6 @@ object MetricBuilder {
       processPath,
       percentiles,
       isCounterishGauge,
-      kernel = None,
       metricType,
       statsReceiver
     )
@@ -97,22 +96,21 @@ object MetricBuilder {
   case object GaugeType extends MetricType
   case object HistogramType extends MetricType
 }
-object Metadata {
+
+sealed trait Metadata {
 
   /**
-   * extract the MetricBuilder from Metadata
+   * Extract the MetricBuilder from Metadata
+   *
+   * Will return `None` if it's `NoMetadata`
    */
-  def getMetricBuilder(metadata: Metadata): Option[MetricBuilder] = {
-    metadata match {
-      case metricBuilder: MetricBuilder => Some(metricBuilder)
-      case NoMetadata => None
-      case MultiMetadata(schemas) =>
-        schemas.find(_ != NoMetadata).asInstanceOf[Option[MetricBuilder]]
-    }
+  def toMetricBuilder: Option[MetricBuilder] = this match {
+    case metricBuilder: MetricBuilder => Some(metricBuilder)
+    case NoMetadata => None
+    case MultiMetadata(schemas) =>
+      schemas.find(_ != NoMetadata).flatMap(_.toMetricBuilder)
   }
 }
-
-sealed trait Metadata
 
 case object NoMetadata extends Metadata
 
@@ -136,8 +134,6 @@ class MetricBuilder private (
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double],
   val isCounterishGauge: Boolean,
-  // see withKernel
-  val kernel: Option[Int],
   val metricType: MetricType,
   val statsReceiver: StatsReceiver)
     extends Metadata {
@@ -159,8 +155,7 @@ class MetricBuilder private (
     processPath: Option[String] = this.processPath,
     isCounterishGauge: Boolean = this.isCounterishGauge,
     percentiles: IndexedSeq[Double] = this.percentiles,
-    metricType: MetricType = this.metricType,
-    kernel: Option[Int] = this.kernel
+    metricType: MetricType = this.metricType
   ): MetricBuilder = {
     new MetricBuilder(
       keyIndicator = keyIndicator,
@@ -175,18 +170,8 @@ class MetricBuilder private (
       percentiles = percentiles,
       isCounterishGauge = isCounterishGauge,
       statsReceiver = this.statsReceiver,
-      metricType = metricType,
-      kernel = kernel
+      metricType = metricType
     )
-  }
-
-  // This is a work-around for memoizing this MetricBuilder, it is the object reference
-  // hashCode of `this` MetricBuilder, only explicitly configured for metrics used for expressions.
-  // Metric use it as the hash key to find the fully hydrated MetricBuilder.
-  // Copying the MetricBuilder to configure other metadata must keep the kernel untouched.
-  private[finagle] def withKernel: MetricBuilder = {
-    require(this.kernel.isEmpty, "This MetricBuilder is already hashed")
-    this.copy(kernel = Some(System.identityHashCode(this)))
   }
 
   def withKeyIndicator(isKeyIndicator: Boolean = true): MetricBuilder =
