@@ -321,7 +321,7 @@ lazy val utilCore = Project(
       caffeineLib % "test",
       scalacheckLib,
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
       "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
