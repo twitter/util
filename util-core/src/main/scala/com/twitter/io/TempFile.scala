@@ -55,7 +55,12 @@ object TempFile {
       case null =>
         throw new FileNotFoundException(path)
       case stream =>
-        val (basename, ext) = parsePath(path)
+        val (basename, ext) = parsePath(path) match {
+          // The prefix parameter of File.createTempFile(prefix,suffix) is
+          // expected to be 3 characters long.
+          case (basename, ext) if basename.length < 3 => (basename + "tmp", ext)
+          case basenameExt => basenameExt
+        }
         val file = File.createTempFile(basename, "." + ext)
         file.deleteOnExit()
         val fos = new BufferedOutputStream(new FileOutputStream(file), 1 << 20)
