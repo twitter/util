@@ -2,6 +2,7 @@ package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.MetricBuilder.{
   CounterType,
+  CounterishGaugeType,
   GaugeType,
   HistogramType,
   MetricType,
@@ -353,6 +354,8 @@ trait StatsReceiver {
     val typeMatch = expectedType match {
       case CounterType =>
         metricBuilder.metricType == CounterType || metricBuilder.metricType == UnlatchedCounter
+      case GaugeType =>
+        metricBuilder.metricType == GaugeType || metricBuilder.metricType == CounterishGaugeType
       case _ => metricBuilder.metricType == expectedType
     }
     require(

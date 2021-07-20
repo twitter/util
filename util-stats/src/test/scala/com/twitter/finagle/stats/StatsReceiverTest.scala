@@ -1,11 +1,18 @@
 package com.twitter.finagle.stats
 
 import com.twitter.conversions.DurationOps._
+import com.twitter.finagle.stats.MetricBuilder.{
+  CounterType,
+  CounterishGaugeType,
+  GaugeType,
+  HistogramType,
+  UnlatchedCounter
+}
 import com.twitter.util.{Await, Future}
 import java.util.concurrent.TimeUnit
 import org.mockito.Mockito._
-import scala.collection.mutable.ArrayBuffer
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.mutable.ArrayBuffer
 
 class StatsReceiverTest extends AnyFunSuite {
   test("RollupStatsReceiver counter/stats") {
@@ -177,4 +184,24 @@ class StatsReceiverTest extends AnyFunSuite {
 
   }
 
+  test("StatsReceiver validate and record metrics") {
+    val sr = new InMemoryStatsReceiver()
+    val counter = MetricBuilder(name = Seq("a"), metricType = CounterType, statsReceiver = sr)
+    val counterishGauge =
+      MetricBuilder(name = Seq("b"), metricType = CounterishGaugeType, statsReceiver = sr)
+    val gauge = MetricBuilder(name = Seq("c"), metricType = GaugeType, statsReceiver = sr)
+    val stat = MetricBuilder(name = Seq("d"), metricType = HistogramType, statsReceiver = sr)
+    val unlatchedCounter =
+      MetricBuilder(name = Seq("e"), metricType = UnlatchedCounter, statsReceiver = sr)
+
+    sr.addGauge(gauge)(1)
+    sr.addGauge(counterishGauge)(1)
+    sr.counter(counter)
+    sr.counter(unlatchedCounter)
+    sr.stat(stat)
+
+    intercept[IllegalArgumentException] {
+      sr.counter(counterishGauge)
+    }
+  }
 }
