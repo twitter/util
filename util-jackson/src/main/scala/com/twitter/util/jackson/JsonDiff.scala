@@ -1,7 +1,8 @@
 package com.twitter.util.jackson
 
-import com.fasterxml.jackson.databind.{JsonNode, ObjectMapperCopier, SerializationFeature}
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.node.TextNode
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapperCopier, SerializationFeature}
 import com.twitter.util.logging.Logging
 import java.io.PrintStream
 import scala.util.control.NonFatal
@@ -14,6 +15,7 @@ object JsonDiff extends Logging {
   private[this] lazy val sortingObjectMapper: JacksonScalaObjectMapperType = {
     val newMapper = ObjectMapperCopier.copy(mapper.underlying)
     newMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+    newMapper.setDefaultPropertyInclusion(Include.ALWAYS)
     newMapper
   }
 

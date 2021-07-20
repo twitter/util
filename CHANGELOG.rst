@@ -18,6 +18,13 @@ Runtime Behavior Changes
 
 * util: Update ScalaCheck to version 1.15.4 ``PHAB_ID=D691691``
 
+
+Bug Fixes
+~~~~~~~~~
+
+* util-jackson: `JsonDiff#toSortedString` now includes null-type nodes, so that
+  `JsonDiff.Result#toString` shows differences in objects due to such nodes. ``PHAB_ID=D707033``
+
 21.6.0
 ------
 

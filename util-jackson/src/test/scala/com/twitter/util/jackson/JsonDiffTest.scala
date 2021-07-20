@@ -248,9 +248,56 @@ class JsonDiffTest
     }
   }
 
-  test("JsonDiff#generate sorted") {
+  // (the arbitrary tests above do not generate tests for array depth 1)
+
+  test("JsonDiff#diff array depth 1 fail") {
+    val expected = """["a","b"]"""
+    val actual = """["b","a"]"""
+    JsonDiff.diff(expected, actual).isEmpty should be(false)
+  }
+
+  test("JsonDiff#diff array depth 1 pass") {
+    val expected = """["a","b"]"""
+    val actual = """["a","b"]"""
+    JsonDiff.diff(expected, actual).isEmpty should be(true)
+  }
+
+  // (the arbitrary tests above do not generate tests with null values or escapes)
+
+  test("JsonDiff#diff with null values - fail") {
+    val expected = """{"a":null}"""
+    val actual = "{}"
+    JsonDiff.diff(expected, actual).isEmpty should be(false)
+  }
+
+  test("JsonDiff#diff with null values - pass") {
+    val expected = """{"a":null}"""
+    val actual = """{"a": null}"""
+    JsonDiff.diff(expected, actual).isEmpty should be(true)
+  }
+
+  test("JsonDiff#diff with unicode escape - pass") {
+    val expected = """{"t1": "24\u00B0F"}"""
+    val actual = """{"t1": "24°F"}"""
+    JsonDiff.diff(expected, actual).isEmpty should be(true)
+  }
+
+  test("JsonDiff#toSortedString is sorted") {
     val before = mapper.parse[JsonNode]("""{"a":1,"c":3,"b":2}""")
     val expected = """{"a":1,"b":2,"c":3}"""
     JsonDiff.toSortedString(before) should equal(expected)
   }
+
+  test("JsonDiff#toSortedString doesn't sort arrays") {
+    val before = mapper.parse[JsonNode]("""["b","a"]""")
+    val expected = """["b","a"]"""
+    JsonDiff.toSortedString(before) should equal(expected)
+  }
+
+  test("JsonDiff#toSortedString includes null values") {
+    val before = mapper.parse[JsonNode]("""{"a":null}""")
+    val expected = """{"a":null}"""
+    JsonDiff.toSortedString(before) should equal(expected)
+  }
+
 }
