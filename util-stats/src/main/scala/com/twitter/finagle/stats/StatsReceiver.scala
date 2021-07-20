@@ -1,6 +1,12 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType, MetricType}
+import com.twitter.finagle.stats.MetricBuilder.{
+  CounterType,
+  GaugeType,
+  HistogramType,
+  MetricType,
+  UnlatchedCounter
+}
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
@@ -344,8 +350,13 @@ trait StatsReceiver {
   private[stats] def stat0(name: String): Stat = stat(name)
 
   protected def validateMetricType(metricBuilder: MetricBuilder, expectedType: MetricType): Unit = {
+    val typeMatch = expectedType match {
+      case CounterType =>
+        metricBuilder.metricType == CounterType || metricBuilder.metricType == UnlatchedCounter
+      case _ => metricBuilder.metricType == expectedType
+    }
     require(
-      metricBuilder.metricType == expectedType,
+      typeMatch,
       s"creating a $expectedType using wrong MetricBuilder: ${metricBuilder.metricType}")
   }
 }

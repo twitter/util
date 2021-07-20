@@ -5,7 +5,8 @@ import com.twitter.finagle.stats.MetricBuilder.{
   CounterishGaugeType,
   GaugeType,
   HistogramType,
-  MetricType
+  MetricType,
+  UnlatchedCounter
 }
 import java.util.function.Supplier
 import scala.annotation.varargs
@@ -71,6 +72,7 @@ object MetricBuilder {
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
+    isStandard: Boolean = false,
     metricType: MetricType,
     statsReceiver: StatsReceiver
   ): MetricBuilder = {
@@ -85,6 +87,7 @@ object MetricBuilder {
       relativeName,
       processPath,
       percentiles,
+      isStandard,
       metricType,
       statsReceiver
     )
@@ -102,6 +105,9 @@ object MetricBuilder {
   case object CounterishGaugeType extends MetricType
   case object GaugeType extends MetricType
   case object HistogramType extends MetricType
+
+  /** Counter type that will be always unlatched */
+  case object UnlatchedCounter extends MetricType
 }
 
 sealed trait Metadata {
@@ -140,6 +146,7 @@ class MetricBuilder private (
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double],
+  val isStandard: Boolean,
   val metricType: MetricType,
   val statsReceiver: StatsReceiver)
     extends Metadata {
@@ -159,6 +166,7 @@ class MetricBuilder private (
     name: Seq[String] = this.name,
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
+    isStandard: Boolean = this.isStandard,
     percentiles: IndexedSeq[Double] = this.percentiles,
     metricType: MetricType = this.metricType
   ): MetricBuilder = {
@@ -173,9 +181,19 @@ class MetricBuilder private (
       relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
+      isStandard = isStandard,
       statsReceiver = this.statsReceiver,
       metricType = metricType
     )
+  }
+
+  private[finagle] def withStandard: MetricBuilder = {
+    this.copy(isStandard = true)
+  }
+
+  private[finagle] def withUnlatchedCounter: MetricBuilder = {
+    require(this.metricType == CounterType, "unable to set a non counter to unlatched counter")
+    this.copy(metricType = UnlatchedCounter)
   }
 
   def withKeyIndicator(isKeyIndicator: Boolean = true): MetricBuilder =

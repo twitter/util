@@ -122,7 +122,7 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
    * gauges.
    */
   protected[this] def registerGauge(metricBuilder: MetricBuilder, f: => Float): Unit
-  protected[this] def deregisterGauge(name: Seq[String]): Unit
+  protected[this] def deregisterGauge(metricBuilder: MetricBuilder): Unit
 
   private[this] def getWhenNotPresent(metricBuilder: MetricBuilder) = whenNotPresent(metricBuilder)
 
@@ -156,7 +156,7 @@ trait StatsReceiverWithCumulativeGauges extends StatsReceiver { self =>
             } else {
               // Do the cleanup.
               gauges.remove(key)
-              self.deregisterGauge(key)
+              self.deregisterGauge(metricBuilder)
             }
 
           case c =>

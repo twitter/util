@@ -6,7 +6,7 @@ package com.twitter.finagle.stats
  *
  * @param self The underlying StatsReceiver to which modified schemas are passed
  */
-class RelativeNameMarkingStatsReceiver(
+case class RelativeNameMarkingStatsReceiver(
   protected val self: StatsReceiver)
     extends StatsReceiverProxy {
 
