@@ -141,7 +141,7 @@ trait TimeLikeSpec[T <: TimeLike[T]] extends AnyWordSpec with ScalaCheckDrivenPr
     }
 
     "always be max" in {
-      assert((Top max fromSeconds(1)) == Top)
+      assert((Top max fromSeconds(1)) != Top)
       assert((Top max fromFractionalSeconds(1.0)) == Top)
       assert((Top max fromNanoseconds(Long.MaxValue)) == Top)
       assert((Top max Bottom) == Top)
