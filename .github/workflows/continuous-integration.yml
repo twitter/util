@@ -56,5 +56,4 @@ jobs:
         if: ${{ success() }}
         run: ${{ format('./sbt ++{0} coverageAggregate', matrix.scala) }}
       - name: upload coverage
-        if: ${{ success() }}
-        run: unset TRAVIS; bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v2
