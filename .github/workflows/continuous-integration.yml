@@ -53,8 +53,6 @@ jobs:
       - name: test
         run: ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
       - name: coverage
-        if: ${{ success() }}
         run: ${{ format('./sbt ++{0} coverageAggregate', matrix.scala) }}
       - name: upload coverage
-        if: ${{ success() }}
         uses: codecov/codecov-action@v2
