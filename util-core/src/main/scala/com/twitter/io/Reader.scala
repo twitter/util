@@ -5,7 +5,7 @@ import com.twitter.util.Promise.Detachable
 import com.twitter.util._
 import java.io.{File, FileInputStream, InputStream}
 import java.util.{Collection => JCollection}
-import scala.collection.JavaConverters
+import scala.jdk.CollectionConverters._
 
 /**
  * A reader exposes a pull-based API to model a potentially infinite stream of arbitrary elements.
@@ -291,7 +291,7 @@ object Reader {
    *  Create a new [[Reader]] from a given Java `List`
    */
   def fromCollection[A](list: JCollection[A]): Reader[A] = fromSeq(
-    JavaConverters.asScalaIteratorConverter(list.iterator).asScala.toSeq
+    list.iterator.asScala.toSeq
   )
 
   /**

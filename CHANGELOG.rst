@@ -10,6 +10,11 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: Now builds with Scala 3.0! ``PHAB_ID=D694775``.
+
+* util-core (BREAKING): Remove `AbstractSpool`. Java users should use `Spools` static class or
+ the Spool companion object to create instances of `Spool`.
+
 * util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
   of a shell command. ``PHAB_ID=D686134``
 

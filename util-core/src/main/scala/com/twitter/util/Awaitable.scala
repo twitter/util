@@ -225,7 +225,12 @@ private[util] trait CloseAwaitably0[U <: Unit] extends Awaitable[U] {
 }
 
 // See https://stackoverflow.com/questions/26643045/java-interoperability-woes-with-scala-generics-and-boxing
-private[util] trait CloseOnceAwaitably0[U <: Unit] extends Awaitable[U] { self: CloseOnce =>
+//
+// NOTE: the self type must mixin [[Closable]] due to Scala 3 requirement that the self type is closed.
+// See https://github.com/lampepfl/dotty/issues/2214 &
+// https://github.com/lampepfl/dotty/commit/175499537c87c78d0b926d84b7a9030011e42c00
+private[util] trait CloseOnceAwaitably0[U <: Unit] extends Awaitable[U] {
+  self: CloseOnce with Closable =>
 
   def ready(timeout: Duration)(implicit permit: Awaitable.CanAwait): this.type = {
     closeFuture.ready(timeout)
@@ -251,7 +256,7 @@ private[util] trait CloseOnceAwaitably0[U <: Unit] extends Awaitable[U] { self: 
  * }
  * }}}
  */
-trait CloseOnceAwaitably extends CloseOnceAwaitably0[Unit] { self: CloseOnce => }
+trait CloseOnceAwaitably extends CloseOnceAwaitably0[Unit] { self: CloseOnce with Closable => }
 
 /**
  * A mixin to make an [[com.twitter.util.Awaitable]] out

@@ -5,6 +5,7 @@ import com.twitter.util._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.compat.immutable.LazyList
 
 class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   import AsyncStream.{mk, of}
@@ -114,7 +115,7 @@ class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     }
 
     test(s"$impl: fromSeq works on infinite streams") {
-      def ones: Stream[Int] = 1 #:: ones
+      def ones: LazyList[Int] = 1 #:: ones
       assert(toSeq(fromSeq(ones).take(3)) == Seq(1, 1, 1))
     }
 

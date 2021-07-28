@@ -161,7 +161,11 @@ final class Pipe[A](timer: Timer) extends Reader[A] with Writer[A] {
         case State.Reading(p) =>
           // pending reader has enough space for the full write
           state = State.Idle
-          (p, Some(buf), Future.Done)
+          // The Scala 3 compiler differentiates between the class type, `A` and the the defined
+          // type of Promise in `Reading`, due to `State` being covariant in it's type parameter
+          // but invariant in `Reading`. Let's explictly cast this type as we know it will be of
+          // `Promise[Option[A]]`. See CSL-11210 or https://github.com/lampepfl/dotty/issues/13126
+          (p.asInstanceOf[Promise[Option[A]]], Some(buf), Future.Done)
 
         case State.Writing(_, _) =>
           (

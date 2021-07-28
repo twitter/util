@@ -73,49 +73,56 @@ class Broker[T] {
             Future.value(sendTx)
           }
 
-        case s @ (Quiet | Sending(_)) =>
-          val p = new Promise[Tx[Unit]]
-          val elem: (Promise[Tx[Unit]], T) = (p, msg)
-          p.setInterruptHandler {
-            case _ => rmElem(elem)
-          }
-          val nextState = s match {
-            case Quiet => Sending(Queue(elem))
-            case Sending(q) => Sending(q enqueue elem)
-            case Receiving(_) => throw new IllegalStateException()
-          }
+        case s @ Sending(q) =>
+          val elem = createElem()
+          if (state.compareAndSet(s, Sending(q enqueue elem))) elem._1
+          else prepare()
 
-          if (state.compareAndSet(s, nextState)) p else prepare()
+        case Quiet =>
+          val elem = createElem()
+          if (state.compareAndSet(Quiet, Sending(Queue(elem)))) elem._1
+          else prepare()
       }
+    }
+
+    def createElem(): (Promise[Tx[Unit]], T) = {
+      val p = new Promise[Tx[Unit]]
+      val elem = (p, msg)
+      p.setInterruptHandler { case _ => rmElem(elem) }
+      elem
     }
   }
 
   val recv: Offer[T] = new Offer[T] {
     @tailrec
-    def prepare() =
-      state.get match {
-        case s @ Sending(sq) =>
-          if (sq.isEmpty) throw new IllegalStateException()
-          val ((sendp, msg), newq) = sq.dequeue
-          val nextState = if (newq.isEmpty) Quiet else Sending(newq)
-          if (!state.compareAndSet(s, nextState)) prepare()
-          else {
-            val (sendTx, recvTx) = Tx.twoParty(msg)
-            sendp.setValue(sendTx)
-            Future.value(recvTx)
-          }
+    def prepare() = state.get match {
+      case s @ Sending(sq) =>
+        if (sq.isEmpty) throw new IllegalStateException()
+        val ((sendp, msg), newq) = sq.dequeue
+        val nextState = if (newq.isEmpty) Quiet else Sending(newq)
+        if (!state.compareAndSet(s, nextState)) prepare()
+        else {
+          val (sendTx, recvTx) = Tx.twoParty(msg)
+          sendp.setValue(sendTx)
+          Future.value(recvTx)
+        }
 
-        case s @ (Quiet | Receiving(_)) =>
-          val p = new Promise[Tx[T]]
-          p.setInterruptHandler { case _ => rmElem(p) }
-          val nextState = s match {
-            case Quiet => Receiving(Queue(p))
-            case Receiving(q) => Receiving(q enqueue p)
-            case Sending(_) => throw new IllegalStateException()
-          }
+      case s @ Receiving(q) =>
+        val p = createPromise()
+        if (state.compareAndSet(s, Receiving(q enqueue p))) p
+        else prepare()
 
-          if (state.compareAndSet(s, nextState)) p else prepare()
-      }
+      case Quiet =>
+        val p = createPromise()
+        if (state.compareAndSet(Quiet, Receiving(Queue(p)))) p
+        else prepare()
+    }
+
+    def createPromise(): Promise[Tx[T]] = {
+      val p = new Promise[Tx[T]]
+      p.setInterruptHandler { case _ => rmElem(p) }
+      p
+    }
   }
 
   /* Scala actor style / CSP syntax. */

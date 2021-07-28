@@ -1,20 +1,20 @@
 package com.twitter.concurrent
 
-import scala.util.Random
-
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
 import com.twitter.conversions.DurationOps._
 import com.twitter.util.{Await, Future, MockTimer, Promise, Return, Time}
+import org.mockito.Mockito._
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.wordspec.AnyWordSpec
+import scala.collection.compat.immutable.LazyList
+import scala.util.Random
 
-class SimpleOffer[T](var futures: Stream[Future[Tx[T]]]) extends Offer[T] {
-  def this(fut: Future[Tx[T]]) = this(Stream.continually(fut))
-  def this(tx: Tx[T]) = this(Stream.continually(Future.value(tx)))
+class SimpleOffer[T](var futures: LazyList[Future[Tx[T]]]) extends Offer[T] {
+  def this(fut: Future[Tx[T]]) = this(LazyList.continually(fut))
+  def this(tx: Tx[T]) = this(LazyList.continually(Future.value(tx)))
 
   def prepare(): Future[Tx[T]] = {
-    val next #:: rest = futures
-    futures = rest
+    val next = futures.head
+    futures = futures.tail
     next
   }
 }
@@ -176,7 +176,7 @@ class OfferTest extends AnyWordSpec with MockitoSugar {
       }
 
       "retry when it aborts" in {
-        val txps = new Promise[Tx[Int]] #:: new Promise[Tx[Int]] #:: Stream.empty
+        val txps = new Promise[Tx[Int]] #:: new Promise[Tx[Int]] #:: LazyList.empty
         val offer = spy(new SimpleOffer(txps))
         val badTx = mock[Tx[Int]]
         val result = Future.value(Abort)
@@ -262,7 +262,7 @@ class OfferTest extends AnyWordSpec with MockitoSugar {
         val h = new OfferOrElseHelper
         import h._
 
-        val e1 = spy(new SimpleOffer(Stream.empty))
+        val e1 = spy(new SimpleOffer(LazyList.empty))
         val offer = e0 orElse e1
         val tx = mock[Tx[Int]]
         val result = Future.value(Commit(321))
@@ -283,7 +283,7 @@ class OfferTest extends AnyWordSpec with MockitoSugar {
         val tx2 = new Promise[Tx[Int]]
         val e0 = spy(
           new SimpleOffer(
-            Future.value(Tx.aborted: Tx[Int]) #:: (tx2: Future[Tx[Int]]) #:: Stream.empty
+            Future.value(Tx.aborted: Tx[Int]) #:: (tx2: Future[Tx[Int]]) #:: LazyList.empty
           )
         )
         val offer = e0 orElse Offer.const(123)

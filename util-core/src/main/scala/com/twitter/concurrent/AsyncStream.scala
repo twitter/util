@@ -1,5 +1,6 @@
 package com.twitter.concurrent
 
+import com.twitter.conversions.SeqUtil
 import com.twitter.util.{Future, Return, Throw, Promise}
 import scala.annotation.varargs
 
@@ -583,19 +584,21 @@ object AsyncStream {
   private case object Empty extends AsyncStream[Nothing]
   private case class Embed[A](fas: Future[AsyncStream[A]]) extends AsyncStream[A]
   private case class FromFuture[A](fa: Future[A]) extends AsyncStream[A]
-  private class Cons[A](val fa: Future[A], next: () => AsyncStream[A]) extends AsyncStream[A] {
-    private[this] lazy val _more: AsyncStream[A] = next()
-    def more(): AsyncStream[A] = _more
-    override def toString(): String = s"Cons($fa, $next)"
-  }
 
+  /**
+   * This is defined as a case class so that we get a generated unapply that works with
+   *  [[AsyncStream]]s covariant type in Scala 3. See CSL-11207 or
+   *  https://github.com/lampepfl/dotty/issues/13125
+   */
+  private case class Cons[A] private (fa: Future[A], next: () => AsyncStream[A])
+      extends AsyncStream[A]
   object Cons {
-    def apply[A](fa: Future[A], next: () => AsyncStream[A]): AsyncStream[A] =
-      new Cons(fa, next)
-
-    def unapply[A](as: Cons[A]): Option[(Future[A], () => AsyncStream[A])] =
-      // note: pattern match returns the memoized value
-      Some((as.fa, () => as.more()))
+    def apply[A](fut: Future[A], nextAsync: () => AsyncStream[A]): AsyncStream[A] = {
+      lazy val _more: AsyncStream[A] = nextAsync()
+      new Cons(fut, () => _more) {
+        override def toString(): String = s"Cons($fut, $nextAsync)"
+      }
+    }
   }
 
   implicit class Ops[A](tail: => AsyncStream[A]) {
@@ -643,7 +646,7 @@ object AsyncStream {
    */
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {
     case Nil => empty
-    case _ if seq.hasDefiniteSize && seq.tail.isEmpty => of(seq.head)
+    case _ if SeqUtil.hasKnownSize(seq) && seq.tail.isEmpty => of(seq.head)
     case _ => seq.head +:: fromSeq(seq.tail)
   }
 

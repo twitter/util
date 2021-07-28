@@ -271,7 +271,7 @@ object Var {
 
     // In order to support unsubscribing from diffs when v is no longer referenced
     // we must avoid diffs keeping a strong reference to v.
-    val witness = Witness.weakReference { diff: Diff[CC, T] =>
+    val witness = Witness.weakReference { (diff: Diff[CC, T]) =>
       synchronized {
         v.update(diff.patch(v()))
       }
@@ -282,20 +282,10 @@ object Var {
     v
   }
 
-  private case class Value[T](v: T) extends Var[T] with Extractable[T] {
-    protected def observe(depth: Int, obs: Observer[T]): Closable = {
-      obs.claim(this)
-      obs.publish(this, v, 0)
-      Closable.nop
-    }
-
-    def apply(): T = v
-  }
-
   /**
    * Create a new, constant, v-valued Var.
    */
-  def value[T](v: T): Var[T] with Extractable[T] = Value(v)
+  def value[T](v: T): Var[T] with Extractable[T] = new ConstVar(v)
 
   /**
    * Collect a collection of Vars into a Var of collection.
@@ -548,6 +538,19 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
   }
 
   override def toString: String = "Var(" + state.get.value + ")@" + hashCode
+}
+
+/**
+ * A constant [[Extractable]] [[Var]] on `v`.
+ */
+class ConstVar[T](v: T) extends Var[T] with Extractable[T] {
+  protected def observe(depth: Int, obs: Var.Observer[T]): Closable = {
+    obs.claim(this)
+    obs.publish(this, v, 0)
+    Closable.nop
+  }
+
+  def apply(): T = v
 }
 
 /**

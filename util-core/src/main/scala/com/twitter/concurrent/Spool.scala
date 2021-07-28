@@ -7,7 +7,8 @@ import java.io.EOFException
 
 /**
  * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.
- * We encourage you to use [[AsyncStream]] instead.
+ * We encourage you to use [[AsyncStream]] instead. See [[Spools]] for the Java
+ * adaptation of the [[Spool]] companion object.
  *
  * A spool is an asynchronous stream. It more or less mimics the scala
  * {{Stream}} collection, but with cons cells that have either eager or
@@ -35,8 +36,6 @@ import java.io.EOFException
  *   fill(rest)
  *   firstElem *:: rest
  * }}}
- *
- * Note: There is a Java-friendly API for this trait: [[com.twitter.concurrent.AbstractSpool]].
  */
 sealed trait Spool[+A] {
   // NB: Spools are always lazy internally in order to provide the expected behavior
@@ -78,12 +77,12 @@ sealed trait Spool[+A] {
       Future { f(Some(head)) } flatMap { _ =>
         tail transform {
           case Return(s) => s.foreachElem(f)
-          case Throw(_: EOFException) => Future { f(None) }
+          case Throw(_: EOFException) => Future { f(None); () }
           case Throw(cause) => Future.exception(cause)
         }
       }
     } else {
-      Future { f(None) }
+      Future { f(None); () }
     }
   }
 
@@ -270,11 +269,6 @@ sealed trait Spool[+A] {
    */
   def force: Future[Unit] = foreach { _ => () }
 }
-
-/**
- * Abstract `Spool` class for Java compatibility.
- */
-abstract class AbstractSpool[A] extends Spool[A]
 
 /**
  * Note: [[Spool]] is no longer the recommended asynchronous stream abstraction.

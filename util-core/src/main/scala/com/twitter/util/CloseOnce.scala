@@ -12,8 +12,12 @@ import scala.util.control.NonFatal
  * @see [[ClosableOnce]] if you are not mixing in or extending an existing [[Closable]]
  * @see [[ClosableOnce.of]] for creating a proxy to a [[Closable]]
  *       that has already been instantiated.
+ *
+ * @note this mixin extends [[Closable]] as a workaround for extending [[AbstractClosableOnce]]
+ * in Java. The mixin's final override is not recognized when compiled with Scala 3. See CSL-11187
+ * or https://github.com/lampepfl/dotty/issues/13104.
  */
-trait CloseOnce { self: Closable =>
+trait CloseOnce extends Closable { self: Closable =>
   // Our intrinsic lock for mutating the `closed` field
   private[this] val closePromise: Promise[Unit] = Promise[Unit]()
   @volatile private[this] var closed: Boolean = false
@@ -71,5 +75,4 @@ trait CloseOnce { self: Closable =>
 
     closePromise
   }
-
 }

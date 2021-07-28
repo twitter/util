@@ -10,28 +10,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class SpoolCompilationTest {
-  private static class OwnSpool extends AbstractSpool<String> {
-    @Override
-    public boolean isEmpty() {
-      return false;
-    }
-
-    @Override
-    public Future<Spool<String>> tail() {
-      return Future.value(Spools.<String>newEmptySpool());
-    }
-
-    @Override
-    public String head() {
-      return "spool";
-    }
-  }  
-  @Test
-  public void testOwnSpool() {
-    Spool<String> a = new OwnSpool();
-    Assert.assertFalse(a.isEmpty());
-    Assert.assertEquals("spool", a.head());
-  }
 
   @Test
   public void testSpoolCreation() {

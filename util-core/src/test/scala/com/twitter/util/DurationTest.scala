@@ -18,8 +18,10 @@ package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.TimeUnit
+import org.scalatest.wordspec.AnyWordSpec
 
-class DurationTest extends { val ops: Duration.type = Duration } with TimeLikeSpec[Duration] {
+trait DurationOps { val ops: Duration.type = Duration }
+class DurationTest extends AnyWordSpec with DurationOps with TimeLikeSpec[Duration] {
 
   "Duration" should {
     "*" in {

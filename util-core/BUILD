@@ -17,11 +17,12 @@ test_suite(
 
 # (DPB-10452) This target definition lives here because it needs to accommodate util-core
 # code resolution in IntelliJ as well as `util-core-util` which contains packages
-# com.twitter.concurrent and com.twitter.util
+# com.twitter.concurrent, com.twitter.conversions, and com.twitter.util
 scala_library(
     name = "util-core-util",
     sources = [
         "concurrent-extra/src/main/scala/com/twitter/concurrent/*.scala",
+        "src/main/scala-2.12-/com/twitter/conversions/*.scala",
         "src/main/scala-2.12-/com/twitter/util/*.scala",
         "src/main/scala/com/twitter/util/*.scala",
     ],

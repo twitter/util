@@ -115,7 +115,9 @@ class SpoolTest extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
           assert(x == 1)
           await(rest) match {
             case y *:: rest if y == 2 => await(rest).isEmpty
+            case _ => fail("expected 3 elements in spool")
           }
+        case _ => fail("expected 3 elements in spool")
       })
     }
 

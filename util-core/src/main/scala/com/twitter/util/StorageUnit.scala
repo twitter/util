@@ -51,6 +51,13 @@ object StorageUnit {
     }
   }
 
+  // We define this internally since `signum` is deprecated since Scala 2.13 in favor of `sig`.
+  // Lets define this simple method here until support for Scala 2.12 is dropped.
+  private def sig(bytes: Long): Int =
+    if (bytes > 0) 1
+    else if (bytes < 0) -1
+    else 0
+
   /**
    * Note, this can cause overflows of the Long used to represent the
    * number of bytes.
@@ -87,6 +94,8 @@ object StorageUnit {
  *       number of bytes.
  */
 class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
+  import StorageUnit.sig
+
   def inBytes: Long = bytes
   def inKilobytes: Long = bytes / 1024L
   def inMegabytes: Long = bytes / (1024L * 1024)
@@ -139,7 +148,8 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
     if (prefixIndex < 0) {
       "%d B".format(bytes)
     } else {
-      "%.1f %ciB".formatLocal(Locale.ENGLISH, display * bytes.signum, prefix.charAt(prefixIndex))
+      "%.1f %ciB".formatLocal(Locale.ENGLISH, display * sig(bytes), prefix.charAt(prefixIndex))
     }
   }
+
 }

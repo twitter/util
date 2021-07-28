@@ -196,6 +196,8 @@ trait Event[+T] { self =>
               if (rest.isEmpty) state = None
               else state = Some(Right(Queue(rest: _*)))
               s.notify((t, u))
+            case Some(Right(_)) =>
+              throw new IllegalStateException("unexpected empty queue")
           }
         }
       }
@@ -211,6 +213,8 @@ trait Event[+T] { self =>
               if (rest.isEmpty) state = None
               else state = Some(Left(Queue(rest: _*)))
               s.notify((t, u))
+            case Some(Left(_)) =>
+              throw new IllegalStateException("unexpected empty queue")
           }
         }
       }

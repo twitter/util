@@ -11,9 +11,10 @@ import org.mockito.Mockito._
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import scala.collection.mutable.ArrayBuffer
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import scala.collection.compat.immutable.LazyList
+import scala.collection.mutable.ArrayBuffer
 
 class ReaderTest
     extends AnyFunSuite
@@ -252,7 +253,7 @@ class ReaderTest
     val i2 = p2.interruptible
     val r2 = Reader.fromFuture(i2)
 
-    def rStreams: Stream[Reader[Any]] = r1 #:: r2 #:: rStreams
+    def rStreams: LazyList[Reader[Any]] = r1 #:: r2 #:: rStreams
 
     val reader = Reader.fromSeq(rStreams)
     val rFlat = reader.flatten
@@ -270,7 +271,7 @@ class ReaderTest
   }
 
   test("Reader.fromSeq works on infinite streams") {
-    def ones: Stream[Int] = 1 #:: ones
+    def ones: LazyList[Int] = 1 #:: ones
     val reader = Reader.fromSeq(ones)
     assert(await(reader.read()) == Some(1))
     assert(await(reader.read()) == Some(1))

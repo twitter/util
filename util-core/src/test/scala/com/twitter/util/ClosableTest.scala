@@ -2,7 +2,6 @@ package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import scala.language.reflectiveCalls
 import org.scalatest.funsuite.AnyFunSuite
 
 class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience {
@@ -78,7 +77,8 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
 
   test("Closable.all with exceptions") {
     val throwing = Closable.make(_ => sys.error("lolz"))
-    val tracking = new Closable {
+
+    class TrackedClosable extends Closable {
       @volatile
       var calledClose = false
       override def close(deadline: Time): Future[Unit] = {
@@ -87,6 +87,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
       }
     }
 
+    val tracking = new TrackedClosable()
     val f = Closable.all(throwing, tracking).close()
     intercept[Exception] {
       Await.result(f, 5.seconds)

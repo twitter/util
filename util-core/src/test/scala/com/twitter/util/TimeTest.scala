@@ -395,8 +395,13 @@ class TimeFormatTest extends AnyWordSpec {
   }
 }
 
-class TimeTest extends { val ops: Time.type = Time } with TimeLikeSpec[Time] with Eventually
-with IntegrationPatience {
+trait TimeOps { val ops: Time.type = Time }
+class TimeTest
+    extends AnyWordSpec
+    with TimeOps
+    with TimeLikeSpec[Time]
+    with Eventually
+    with IntegrationPatience {
 
   "Time" should {
     "work in collections" in {

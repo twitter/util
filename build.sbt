@@ -80,9 +80,34 @@ def jdk11GcJavaOptions: Seq[String] = {
   )
 }
 
-val defaultProjectSettings = Seq(
-  scalaVersion := "2.13.6",
-  crossScalaVersions := Seq("2.12.12", "2.13.6")
+val defaultScala3Settings = Seq(
+    scalaVersion := "3.0.1",
+    crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1")
+)
+val defaultScala2Settings = Seq(
+    scalaVersion := "2.13.6",
+    crossScalaVersions := Seq("2.12.12", "2.13.6")
+)
+
+// Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
+// to account for there differences but should merge these artifacts as they are updated.
+val scalaDependencies = Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4")
+val scala3Dependencies = scalaDependencies ++ Seq(
+  "org.scalatest" %% "scalatest" % "3.2.9" % "test",
+  "org.scalatestplus" %% "junit-4-13" % "3.2.9.0" % "test"
+)
+val scala2Dependencies = scalaDependencies ++ Seq(
+  "org.scalatest" %% "scalatest" % "3.1.2" % "test",
+  "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
+)
+val scala2cOptions = Seq(
+    "-target:jvm-1.8",
+    // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
+    "-Xlint:-missing-interpolator",
+    "-Yrangepos"
+)
+val scala3cOptions = Seq(
+    "-Xtarget:8"
 )
 
 val baseSettings = Seq(
@@ -91,36 +116,32 @@ val baseSettings = Seq(
   // Workaround for a scaladoc bug which causes it to choke on empty classpaths.
   Compile / unmanagedClasspath += Attributed.blank(new java.io.File("doesnotexist")),
   libraryDependencies ++= Seq(
-    "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.2",
     // See https://www.scala-sbt.org/0.13/docs/Testing.html#JUnit
     "com.novocode" % "junit-interface" % "0.11" % "test",
-    "org.scalatest" %% "scalatest" % "3.1.2" % "test",
-    "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
   ),
   Test / fork := true, // We have to fork to get the JavaOptions
   // Workaround for cross building HealthyQueue.scala, which is not compatible between
-  // 2.12- with 2.13+.
+  // 2.12-, 2.13+, and scala 3.
   Compile / unmanagedSourceDirectories += {
     val sourceDir = (Compile / sourceDirectory).value
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
-      case _ => sourceDir / "scala-2.12-"
+      case Some((2, n)) if n < 13 => sourceDir / "scala-2.12-"
+      case _ => sourceDir / "scala-2.13+"
     }
   },
   ScoverageKeys.coverageHighlighting := true,
   resolvers +=
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions := Seq(
-    "-target:jvm-1.8",
     "-unchecked",
     "-deprecation",
     "-feature",
     "-encoding",
     "utf8",
-    // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
-    "-Xlint:-missing-interpolator",
-    "-Yrangepos"
-  ),
+  ) ++ {
+      if (scalaVersion.value.startsWith("2")) scala2cOptions
+      else scala3cOptions
+  },
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
   javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.8", "-target", "1.8"),
@@ -172,7 +193,15 @@ val baseSettings = Seq(
   }
 )
 
-val sharedSettings = defaultProjectSettings ++ baseSettings
+val sharedSettings =
+  baseSettings ++
+    defaultScala2Settings ++
+    Seq(libraryDependencies ++= scala2Dependencies)
+
+val sharedScala3Settings =
+  baseSettings ++
+    defaultScala3Settings ++
+    Seq(libraryDependencies ++= scala3Dependencies)
 
 lazy val noPublishSettings = Seq(
   publish / skip := true
@@ -311,21 +340,37 @@ lazy val utilCore = Project(
   id = "util-core",
   base = file("util-core")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-core",
     // Moved some code to 'concurrent-extra' to conform to Pants' 1:1:1 principle (https://www.pantsbuild.org/build_files.html#target-granularity)
     // so that util-core would work better for Pants projects in IntelliJ.
     Compile / unmanagedSourceDirectories += baseDirectory.value / "concurrent-extra",
+    scalacOptions ++= {
+      // We're keeping in the migration flag until we use the `-rewrite` flag to have the compiler make the required syntax changes for us.
+      if (scalaVersion.value.startsWith("2")) Seq.empty
+      else Seq("-source:3.0-migration")
+    },
     libraryDependencies ++= Seq(
       caffeineLib % "test",
       scalacheckLib,
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    ),
+    ) ++ {
+      if (scalaVersion.value.startsWith("2")) {
+        Seq(
+          "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+          "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
+          "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
+          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+        )
+      } else {
+        Seq(
+          "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
+          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test",
+          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+        )
+      }
+    },
     Compile / resourceGenerators += Def.task {
       val projectName = name.value
       val file = resourceManaged.value / "com" / "twitter" / projectName / "build.properties"
@@ -416,7 +461,13 @@ lazy val utilJackson = Project(
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
     )
-  ).dependsOn(utilCore, utilJacksonAnnotations, utilMock % Test, utilReflect, utilSlf4jApi, utilValidator)
+  ).dependsOn(
+    utilCore,
+    utilJacksonAnnotations,
+    utilMock % Test,
+    utilReflect,
+    utilSlf4jApi,
+    utilValidator)
 
 lazy val utilJvm = Project(
   id = "util-jvm",

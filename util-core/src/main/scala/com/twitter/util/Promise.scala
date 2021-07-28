@@ -144,7 +144,7 @@ object Promise {
    * A template trait for [[com.twitter.util.Promise Promises]] that are derived
    * and capable of being detached from other Promises.
    */
-  trait Detachable { _: Promise[_] =>
+  trait Detachable { self: Promise[_] =>
 
     /**
      * Returns true if successfully detached, will return true at most once.
@@ -571,13 +571,20 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
     }
   }
 
-  @tailrec final def raise(intr: Throwable): Unit = state match {
+  final def raise(intr: Throwable): Unit = raiseImpl(intr)
+
+  // This is implemented as a private method on Promise so that the Scala 3
+  // compiler recognizes this as a tail-recursive implementation. `raise` is
+  // a definition on `Future` instead of `Promise`, which the Scala 3
+  // compiler errors on with @tailrec annocation on the `Transforming` case,
+  // where `s.other.raise` is invoked on a Future and not Promise. See CSL-11192.
+  @tailrec private def raiseImpl(intr: Throwable): Unit = state match {
     case waitq: WaitQueue[A] =>
       if (!cas(waitq, new Interrupted(waitq, intr)))
-        raise(intr)
+        raiseImpl(intr)
 
     case s: Interruptible[A] =>
-      if (!cas(s, new Interrupted(s.waitq, intr))) raise(intr)
+      if (!cas(s, new Interrupted(s.waitq, intr))) raiseImpl(intr)
       else {
         val current = Local.save()
         if (current ne s.saved)
@@ -587,18 +594,18 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
       }
 
     case s: Transforming[A] =>
-      if (!cas(s, new Interrupted(s.waitq, intr))) raise(intr)
+      if (!cas(s, new Interrupted(s.waitq, intr))) raiseImpl(intr)
       else {
         s.other.raise(intr)
       }
 
     case s: Interrupted[A] =>
       if (!cas(s, new Interrupted(s.waitq, intr)))
-        raise(intr)
+        raiseImpl(intr)
 
     case _: Try[A] /* Done */ => () // nothing to do, as its already satisfied.
 
-    case p: Promise[A] /* Linked */ => p.raise(intr)
+    case p: Promise[A] /* Linked */ => p.raiseImpl(intr)
   }
 
   @tailrec protected[Promise] final def detach(k: K[A]): Boolean = state match {

@@ -12,17 +12,17 @@ public class AwaitableCompilationTest {
 
   public static class MockAwaitable implements Awaitable<String> {
     @Override
-    public Awaitable<String> ready(Duration timeout, CanAwait permit) throws TimeoutException {
+    public Awaitable<String> ready(Duration timeout, Awaitable.CanAwait permit) throws TimeoutException {
       return this;
     }
 
     @Override
-    public String result(Duration timeout, CanAwait permit) throws Exception {
+    public String result(Duration timeout, Awaitable.CanAwait permit) throws Exception {
       return "42";
     }
 
     @Override
-    public boolean isReady(CanAwait permit) {
+    public boolean isReady(Awaitable.CanAwait permit) {
       return true;
     }
   }

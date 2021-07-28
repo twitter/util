@@ -437,8 +437,11 @@ sealed class Duration private[util] (protected val nanos: Long)
   def %(x: Duration): Duration = x match {
     case Undefined => Undefined
     case ns if ns.isZero => Undefined
-    case ns if ns.isFinite => fromNanoseconds(nanos % ns.inNanoseconds)
-    case Top | Bottom => this
+    // Analogous to `case Top | Bottom =>`.
+    // We pattern match this way so that the compiler
+    // recognizes a fully exhaustive pattern match.
+    case ns if !ns.isFinite => this
+    case ns => fromNanoseconds(nanos % ns.inNanoseconds)
   }
 
   /**

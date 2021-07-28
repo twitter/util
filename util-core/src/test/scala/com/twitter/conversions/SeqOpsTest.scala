@@ -2,6 +2,7 @@ package com.twitter.conversions
 
 import com.twitter.conversions.SeqOps._
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.compat.immutable.LazyList
 
 class SeqOpsTest extends AnyFunSuite {
 
@@ -23,8 +24,8 @@ class SeqOpsTest extends AnyFunSuite {
     assert(Seq(1, 2, 3).findItemAfter(5) == None)
     assert(Seq[Int]().findItemAfter(5) == None)
 
-    assert(Stream(1, 2, 3).findItemAfter(1) == Some(2))
-    assert(Stream[Int]().findItemAfter(5) == None)
+    assert(LazyList(1, 2, 3).findItemAfter(1) == Some(2))
+    assert(LazyList[Int]().findItemAfter(5) == None)
 
     assert(Vector(1, 2, 3).findItemAfter(1) == Some(2))
     assert(Vector[Int]().findItemAfter(5) == None)
