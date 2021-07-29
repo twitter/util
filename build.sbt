@@ -346,11 +346,6 @@ lazy val utilCore = Project(
     // Moved some code to 'concurrent-extra' to conform to Pants' 1:1:1 principle (https://www.pantsbuild.org/build_files.html#target-granularity)
     // so that util-core would work better for Pants projects in IntelliJ.
     Compile / unmanagedSourceDirectories += baseDirectory.value / "concurrent-extra",
-    scalacOptions ++= {
-      // We're keeping in the migration flag until we use the `-rewrite` flag to have the compiler make the required syntax changes for us.
-      if (scalaVersion.value.startsWith("2")) Seq.empty
-      else Seq("-source:3.0-migration")
-    },
     libraryDependencies ++= Seq(
       caffeineLib % "test",
       scalacheckLib,

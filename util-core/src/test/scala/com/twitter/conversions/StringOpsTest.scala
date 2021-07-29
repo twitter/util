@@ -22,23 +22,24 @@ import org.scalatest.funsuite.AnyFunSuite
 class StringOpsTest extends AnyFunSuite {
 
   test("string#quoteC") {
-    assert("nothing".quoteC == "nothing")
+    assert("nothing".quoteC() == "nothing")
     assert(
-      "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC == "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
+      "name\tvalue\t\u20acb\u00fcllet?\u20ac".quoteC() == "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
     )
-    assert("she said \"hello\"".quoteC == "she said \\\"hello\\\"")
-    assert("\\backslash".quoteC == "\\\\backslash")
+    assert("she said \"hello\"".quoteC() == "she said \\\"hello\\\"")
+    assert("\\backslash".quoteC() == "\\\\backslash")
   }
 
   test("string#unquoteC") {
-    assert("nothing".unquoteC == "nothing")
+    assert("nothing".unquoteC() == "nothing")
     assert(
-      "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac".unquoteC == "name\tvalue\t\u20acb\u00fcllet?\u20ac"
+      "name\\tvalue\\t\\u20acb\\xfcllet?\\u20ac"
+        .unquoteC() == "name\tvalue\t\u20acb\u00fcllet?\u20ac"
     )
-    assert("she said \\\"hello\\\"".unquoteC == "she said \"hello\"")
-    assert("\\\\backslash".unquoteC == "\\backslash")
-    assert("real\\$dollar".unquoteC == "real\\$dollar")
-    assert("silly\\/quote".unquoteC == "silly/quote")
+    assert("she said \\\"hello\\\"".unquoteC() == "she said \"hello\"")
+    assert("\\\\backslash".unquoteC() == "\\backslash")
+    assert("real\\$dollar".unquoteC() == "real\\$dollar")
+    assert("silly\\/quote".unquoteC() == "silly/quote")
   }
 
   test("string#hexlify") {
@@ -47,10 +48,10 @@ class StringOpsTest extends AnyFunSuite {
   }
 
   test("string#unhexlify") {
-    assert("656c6c".unhexlify.toList == "hello".getBytes.slice(1, 4).toList)
-    assert("68656c6c6f".unhexlify.toList == "hello".getBytes.toList)
-    "5".unhexlify
-    assert("5".unhexlify.hexlify.toInt == 5)
+    assert("656c6c".unhexlify().toList == "hello".getBytes.slice(1, 4).toList)
+    assert("68656c6c6f".unhexlify().toList == "hello".getBytes.toList)
+    "5".unhexlify()
+    assert("5".unhexlify().hexlify.toInt == 5)
   }
 
   test("string#toCamelCase") {

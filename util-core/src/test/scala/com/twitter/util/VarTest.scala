@@ -225,7 +225,7 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   }
 
   test("Var.collect: empty") {
-    assert(Var.collect(List.empty[Var[Int]]).sample == Nil)
+    assert(Var.collect(List.empty[Var[Int]]).sample() == Nil)
   }
 
   test("Var.collect[Seq]") {

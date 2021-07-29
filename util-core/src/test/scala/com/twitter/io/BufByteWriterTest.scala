@@ -33,7 +33,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
   }
 
   def testWriteByte(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeByte")(forAll { byte: Byte =>
+    test(s"$name: writeByte")(forAll { (byte: Byte) =>
       val bw = bwFactory()
       val buf = bw.writeByte(byte).owned()
 
@@ -43,7 +43,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteShort(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeShort{BE,LE}")(forAll { s: Short =>
+    test(s"$name: writeShort{BE,LE}")(forAll { (s: Short) =>
       val be = bwFactory().writeShortBE(s)
       val le = bwFactory().writeShortLE(s)
 
@@ -64,7 +64,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteMedium(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeMedium{BE,LE}")(forAll { m: Int =>
+    test(s"$name: writeMedium{BE,LE}")(forAll { (m: Int) =>
       val be = bwFactory().writeMediumBE(m)
       val le = bwFactory().writeMediumLE(m)
 
@@ -86,7 +86,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteInt(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeInt{BE,LE}")(forAll { i: Int =>
+    test(s"$name: writeInt{BE,LE}")(forAll { (i: Int) =>
       val be = bwFactory().writeIntBE(i)
       val le = bwFactory().writeIntLE(i)
 
@@ -109,7 +109,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteLong(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeLong{BE,LE}")(forAll { l: Long =>
+    test(s"$name: writeLong{BE,LE}")(forAll { (l: Long) =>
       val be = bwFactory().writeLongBE(l)
       val le = bwFactory().writeLongLE(l)
 
@@ -136,7 +136,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteFloat(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeFloat{BE,LE}")(forAll { f: Float =>
+    test(s"$name: writeFloat{BE,LE}")(forAll { (f: Float) =>
       val be = bwFactory().writeFloatBE(f)
       val le = bwFactory().writeFloatLE(f)
 
@@ -161,7 +161,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     })
 
   def testWriteDouble(name: String, bwFactory: () => BufByteWriter, overflowOK: Boolean): Unit =
-    test(s"$name: writeDouble{BE,LE}")(forAll { d: Double =>
+    test(s"$name: writeDouble{BE,LE}")(forAll { (d: Double) =>
       val be = bwFactory().writeDoubleBE(d)
       val le = bwFactory().writeDoubleLE(d)
 
@@ -195,9 +195,9 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
   }
 
   test("trims unwritten bytes") {
-    assert(BufByteWriter.fixed(5).owned.length == 0)
-    assert(BufByteWriter.fixed(5).writeIntBE(1).owned.length == 4)
-    assert(BufByteWriter.fixed(4).writeIntBE(1).owned.length == 4)
+    assert(BufByteWriter.fixed(5).owned().length == 0)
+    assert(BufByteWriter.fixed(5).writeIntBE(1).owned().length == 4)
+    assert(BufByteWriter.fixed(4).writeIntBE(1).owned().length == 4)
   }
 
   testWriteString("fixed", size => BufByteWriter.fixed(size), overflowOK = false)
@@ -209,7 +209,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
   testWriteFloat("fixed", () => BufByteWriter.fixed(4), overflowOK = false)
   testWriteDouble("fixed", () => BufByteWriter.fixed(8), overflowOK = false)
 
-  test("fixed: writeBytes(Array[Byte])")(forAll { bytes: Array[Byte] =>
+  test("fixed: writeBytes(Array[Byte])")(forAll { (bytes: Array[Byte]) =>
     val bw = BufByteWriter.fixed(bytes.length)
     val buf = bw.writeBytes(bytes).owned()
     intercept[OverflowException] { bw.writeByte(0xff) }
@@ -217,7 +217,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     assertIndex(bw, bytes.length)
   })
 
-  test("fixed: writeBytes(Array[Byte]) 2 times")(forAll { bytes: Array[Byte] =>
+  test("fixed: writeBytes(Array[Byte]) 2 times")(forAll { (bytes: Array[Byte]) =>
     val bw = BufByteWriter.fixed(bytes.length * 2)
     val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
     intercept[OverflowException] { bw.writeByte(0xff) }
@@ -226,7 +226,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     assertIndex(bw, bytes.length * 2)
   })
 
-  test("fixed: writeBytes(Buf)")(forAll { arr: Array[Byte] =>
+  test("fixed: writeBytes(Buf)")(forAll { (arr: Array[Byte]) =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.fixed(bytes.length)
     val buf = bw.writeBytes(bytes).owned()
@@ -235,7 +235,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     assertIndex(bw, bytes.length)
   })
 
-  test("fixed: writeBytes(Buf) 2 times")(forAll { arr: Array[Byte] =>
+  test("fixed: writeBytes(Buf) 2 times")(forAll { (arr: Array[Byte]) =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.fixed(bytes.length * 2)
     val buf = bw.writeBytes(bytes).writeBytes(bytes).owned()
@@ -263,20 +263,20 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     overflowOK = true
   )
 
-  test("dynamic: writeBytes(Array[Byte])")(forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Array[Byte])")(forAll { (bytes: Array[Byte]) =>
     val bw = BufByteWriter.dynamic()
     val buf = bw.writeBytes(bytes).owned()
     assert(buf == Buf.ByteArray.Owned(bytes))
   })
 
-  test("dynamic: writeBytes(Buf)")(forAll { arr: Array[Byte] =>
+  test("dynamic: writeBytes(Buf)")(forAll { (arr: Array[Byte]) =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.dynamic()
     val buf = bw.writeBytes(bytes).owned()
     assert(buf == bytes)
   })
 
-  test("dynamic: writeBytes(Array[Byte]) 3 times")(forAll { bytes: Array[Byte] =>
+  test("dynamic: writeBytes(Array[Byte]) 3 times")(forAll { (bytes: Array[Byte]) =>
     val bw = BufByteWriter.dynamic()
     val buf = bw
       .writeBytes(bytes)
@@ -286,7 +286,7 @@ final class BufByteWriterTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     assert(buf == Buf.ByteArray.Owned(bytes ++ bytes ++ bytes))
   })
 
-  test("dynamic: writeBytes(Buf) 3 times")(forAll { arr: Array[Byte] =>
+  test("dynamic: writeBytes(Buf) 3 times")(forAll { (arr: Array[Byte]) =>
     val bytes = Buf.ByteArray.Owned(arr)
     val bw = BufByteWriter.dynamic()
     val buf = bw

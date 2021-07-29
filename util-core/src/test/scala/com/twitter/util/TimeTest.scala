@@ -605,13 +605,13 @@ class TimeTest
     "fromFractionalSeconds" in {
       val tolerance = 2.microseconds // we permit 1us slop
 
-      forAll { i: Int =>
+      forAll { (i: Int) =>
         assert(
           Time.fromSeconds(i).moreOrLessEquals(Time.fromFractionalSeconds(i.toDouble), tolerance)
         )
       }
 
-      forAll { d: Double =>
+      forAll { (d: Double) =>
         val magic = 9223372036854775L // cribbed from Time.fromMicroseconds
         val microseconds = d * 1.second.inMicroseconds
         whenever(microseconds > -magic && microseconds < magic) {
@@ -623,7 +623,7 @@ class TimeTest
         }
       }
 
-      forAll { l: Long =>
+      forAll { (l: Long) =>
         val seconds: Double = l.toDouble / 1.second.inNanoseconds
         assert(
           Time.fromFractionalSeconds(seconds).moreOrLessEquals(Time.fromNanoseconds(l), tolerance)

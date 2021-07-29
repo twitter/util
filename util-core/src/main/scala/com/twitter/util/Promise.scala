@@ -470,17 +470,17 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
   @volatile private[this] var state: Any = WaitQueue.empty[A]
   private def theState(): Any = state
 
-  private[util] def this(forwardInterrupts: Future[_]) {
+  private[util] def this(forwardInterrupts: Future[_]) = {
     this()
     this.state = new Transforming[A](WaitQueue.empty, forwardInterrupts)
   }
 
-  def this(handleInterrupt: PartialFunction[Throwable, Unit]) {
+  def this(handleInterrupt: PartialFunction[Throwable, Unit]) = {
     this()
     this.state = new Interruptible[A](WaitQueue.empty, handleInterrupt, Local.save())
   }
 
-  def this(result: Try[A]) {
+  def this(result: Try[A]) = {
     this()
     this.state = result
   }
