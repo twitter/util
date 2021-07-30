@@ -481,7 +481,7 @@ lazy val utilLint = Project(
   id = "util-lint",
   base = file("util-lint")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-lint"
   ).dependsOn(utilCore)

@@ -32,7 +32,7 @@ class GlobalRulesTest extends AnyFunSuite {
     // alwaysRule should not be present
     assert(GlobalRules.get.iterable.size == 1)
     // should just be neverRule
-    assert(GlobalRules.get.iterable.seq.head == neverRule)
+    assert(GlobalRules.get.iterable.head == neverRule)
   }
 
 }
