@@ -4,7 +4,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / excludeLintKeys += scalacOptions // might be actually unused in util-doc module but not sure
 
 // All Twitter library releases are date versioned as YY.MM.patch
-val releaseVersion = "21.7.0-SNAPSHOT"
+val releaseVersion = "21.7.0"
 
 val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.11.2"
