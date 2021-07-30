@@ -6,7 +6,7 @@ import com.twitter.finagle.stats.{MetricUnit, SourceRole, StatsReceiver, Unspeci
  * ExpressionSchema is builder class that construct an expression with its metadata.
  *
  * @param name  this is going to be an important query key when fetching expressions
- * @param labels  service related information, see [[ExpressionLabels]]
+ * @param labels  service related information
  * @param namespace  a list of namespaces the expression belongs to, this is usually
  *                    used to indicate a tenant in a multi-tenancy systems or similar concepts.
  *                    For standalone services, this should be empty.
@@ -18,7 +18,7 @@ import com.twitter.finagle.stats.{MetricUnit, SourceRole, StatsReceiver, Unspeci
  */
 case class ExpressionSchema private (
   name: String,
-  labels: ExpressionLabels,
+  labels: Map[String, String],
   expr: Expression,
   namespace: Seq[String],
   bounds: Bounds,
@@ -39,11 +39,14 @@ case class ExpressionSchema private (
   def withNamespace(name: String*): ExpressionSchema =
     copy(namespace = this.namespace ++ name)
 
+  def withLabel(labelName: String, labelValue: String): ExpressionSchema =
+    copy(labels = labels + (labelName -> labelValue))
+
   private[finagle] def withRole(role: SourceRole): ExpressionSchema =
-    copy(labels = labels.copy(role = role))
+    withLabel(ExpressionSchema.Role, role.toString)
 
   private[finagle] def withServiceName(name: String): ExpressionSchema =
-    copy(labels = labels.copy(serviceName = Some(name)))
+    withLabel(ExpressionSchema.ServiceName, name)
 
   def register(): Unit = {
     Expression.getStatsReceivers(expr).toSeq match {
@@ -54,7 +57,7 @@ case class ExpressionSchema private (
   }
 
   def schemaKey(): ExpressionSchemaKey = {
-    ExpressionSchemaKey(name, labels.serviceName, namespace)
+    ExpressionSchemaKey(name, labels, namespace)
   }
 }
 
@@ -67,15 +70,19 @@ case class ExpressionSchema private (
  */
 case class ExpressionSchemaKey(
   name: String,
-  serviceName: Option[String],
+  labels: Map[String, String],
   namespaces: Seq[String])
 
 // expose for testing in twitter-server
 private[twitter] object ExpressionSchema {
+  val Role: String = "role"
+  val ServiceName: String = "service_name"
+  val ProcessPath: String = "process_path"
+
   def apply(name: String, expr: Expression): ExpressionSchema =
     ExpressionSchema(
       name = name,
-      labels = ExpressionLabels.empty,
+      labels = Map.empty,
       namespace = Seq.empty,
       expr = expr,
       bounds = Unbounded.get,

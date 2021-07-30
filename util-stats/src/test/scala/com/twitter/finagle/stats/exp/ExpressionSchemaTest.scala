@@ -63,16 +63,26 @@ class ExpressionSchemaTest extends AnyFunSuite {
       runTheQuery(true)
       runTheQuery(false)
 
-      assert(sr.expressions("success_rate_downstream").name == successRate.name)
-      assert(sr.expressions("success_rate_downstream").expr == successRate.expr)
-      assert(sr.expressions("latency_downstream").name == latency.name)
-      assert(sr.expressions("latency_downstream").expr == latency.expr)
+      val downstreamLabel =
+        Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
+      assert(
+        sr.expressions(
+            ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).name == successRate.name)
+      assert(
+        sr.expressions(
+            ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).expr == successRate.expr)
+      assert(
+        sr.expressions(ExpressionSchemaKey("latency", downstreamLabel, Nil)).name == latency.name)
+      assert(
+        sr.expressions(ExpressionSchemaKey("latency", downstreamLabel, Nil)).expr == latency.expr)
 
       assert(sr.counters(Seq("success")) == 1)
       assert(sr.counters(Seq("failures")) == 1)
       assert(sr.stats(Seq("latency")) == Seq(50, 50))
 
-      assert(sr.expressions("success_rate_downstream").labels.role == Client)
+      assert(
+        sr.expressions(ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).labels(
+            ExpressionSchema.Role) == Client.toString)
     }
   }
 

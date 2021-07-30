@@ -1,7 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType}
-import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema}
+import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema, ExpressionSchemaKey}
 import java.io.{ByteArrayOutputStream, PrintStream}
 import java.nio.charset.StandardCharsets
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
@@ -127,7 +127,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       "a",
       Expression(
         MetricBuilder(name = Seq("counter"), metricType = CounterType, statsReceiver = stats)))
-    stats.expressions.contains("a")
+    stats.expressions.contains(ExpressionSchemaKey("a", Map(), Nil))
   }
 
   test("print") {
@@ -393,6 +393,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       Expression(aaSchema).plus(
         Expression(bbSchema, Left(Expression.Min)).plus(Expression(ccSchema))))
 
-    assert(sr.expressions.get("test_expression").get.expr == expected_expression.expr)
+    assert(sr.expressions
+      .get(ExpressionSchemaKey("test_expression", Map(), Nil)).get.expr == expected_expression.expr)
   }
 }

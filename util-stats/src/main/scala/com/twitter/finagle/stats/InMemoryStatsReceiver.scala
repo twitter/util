@@ -1,7 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType}
-import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey}
 import java.io.PrintStream
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
@@ -71,8 +71,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val schemas: mutable.Map[Seq[String], MetricBuilder] =
     new ConcurrentHashMap[Seq[String], MetricBuilder]().asScala
 
-  val expressions: mutable.Map[String, ExpressionSchema] =
-    new ConcurrentHashMap[String, ExpressionSchema]().asScala
+  val expressions: mutable.Map[ExpressionSchemaKey, ExpressionSchema] =
+    new ConcurrentHashMap[ExpressionSchemaKey, ExpressionSchema]().asScala
 
   override def counter(name: String*): ReadableCounter =
     counter(this.metricBuilder(CounterType).withName(name: _*))
@@ -263,11 +263,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
    * Designed to match the behavior of Metrics::registerExpression().
    */
   override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
-    val expressionId = (schema.labels.serviceName match {
-      case Some(serviceName) => schema.name + "_" + serviceName
-      case None => schema.name
-    }) + schema.namespace.mkString("_")
-    expressions.put(expressionId, schema)
+    expressions.put(schema.schemaKey, schema)
   }
 
 }
