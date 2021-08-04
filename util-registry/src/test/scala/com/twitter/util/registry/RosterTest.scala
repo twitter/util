@@ -2,7 +2,7 @@ package com.twitter.util.registry
 
 import java.util.logging.Logger
 import org.mockito.Mockito.{never, verify}
-import org.mockito.ArgumentMatchers.anyObject
+import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -24,7 +24,7 @@ class RosterTest extends AnyFunSuite with MockitoSugar {
         Entry(Seq("foo", "bar"), "qux")
       )
       assert(GlobalRegistry.get.toSet == expected)
-      verify(log, never).warning(anyObject[String])
+      verify(log, never).warning(any[String])
     }
   }
 
@@ -35,7 +35,7 @@ class RosterTest extends AnyFunSuite with MockitoSugar {
         Entry(Seq("foo", "bar"), "fantastic")
       )
       assert(GlobalRegistry.get.toSet == expected)
-      verify(log, never).warning(anyObject[String])
+      verify(log, never).warning(any[String])
     }
   }
 

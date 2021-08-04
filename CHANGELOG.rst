@@ -23,6 +23,8 @@ New Features
 
 * util-lint: Now builds with Scala 3.0! ``PHAB_ID=D698954``
 
+* util-registry: Now builds with Scala 3.0! ``PHAB_ID=D716019``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

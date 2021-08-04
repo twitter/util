@@ -513,13 +513,22 @@ lazy val utilRegistry = Project(
   id = "util-registry",
   base = file("util-registry")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-registry",
     libraryDependencies ++= Seq(
-      "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-    )
+    "org.mockito" % "mockito-core" % mockitoVersion % "test",
+    ) ++ {
+      if (scalaVersion.value.startsWith("2")) {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
+        )
+      } else {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+        )
+      }
+    }
   ).dependsOn(utilCore)
 
 lazy val utilRouting = Project(
