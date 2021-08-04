@@ -269,7 +269,7 @@ lazy val utilAppLifecycle = Project(
   id = "util-app-lifecycle",
   base = file("util-app-lifecycle")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-app-lifecycle"
   ).dependsOn(utilCore)
