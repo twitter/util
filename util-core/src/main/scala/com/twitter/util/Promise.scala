@@ -187,6 +187,11 @@ object Promise {
     @volatile
     private[this] var alreadyDetached: Int = 0
 
+    // We add this method so that the Scala 3 compiler doesn't optimize
+    // away the `alreadyDetached` field which isn't explictly used within
+    // the scope of this class
+    private[this] def detached: Boolean = alreadyDetached == 1
+
     def detach(): Boolean =
       unsafe.compareAndSwapInt(this, detachedFutureOffset, 0, 1)
 

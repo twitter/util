@@ -353,9 +353,16 @@ class TimerTest extends AnyFunSuite with MockitoSugar with Eventually with Integ
     assert(mockTimerLocalPropagation(timer, 99) == 99)
   }
 
-  private class SomeEx extends Exception
-
   private def testTimerUsesLocalMonitor(timer: Timer): Unit = {
+    // Let's define this exception within this private method since
+    // the Scala 3.0.1 compiler removes the accessor method to the
+    // outer instance, `TimerTest`. This is needed when pattern matching
+    // on the exception in `Monitor.mk`.
+    //
+    // See CSL-11237 or https://github.com/lampepfl/dotty/issues/13096.
+    // The next Scala 3 release will fix this bug.
+    class SomeEx extends Exception
+
     val seen = new AtomicInteger(0)
     val monitor = Monitor.mk {
       case _: SomeEx =>
