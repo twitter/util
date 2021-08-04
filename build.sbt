@@ -81,12 +81,12 @@ def jdk11GcJavaOptions: Seq[String] = {
 }
 
 val defaultScala3Settings = Seq(
-    scalaVersion := "3.0.1",
-    crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1")
+  scalaVersion := "3.0.1",
+  crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1")
 )
 val defaultScala2Settings = Seq(
-    scalaVersion := "2.13.6",
-    crossScalaVersions := Seq("2.12.12", "2.13.6")
+  scalaVersion := "2.13.6",
+  crossScalaVersions := Seq("2.12.12", "2.13.6")
 )
 
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
@@ -101,13 +101,13 @@ val scala2Dependencies = scalaDependencies ++ Seq(
   "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
 )
 val scala2cOptions = Seq(
-    "-target:jvm-1.8",
-    // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
-    "-Xlint:-missing-interpolator",
-    "-Yrangepos"
+  "-target:jvm-1.8",
+  // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
+  "-Xlint:-missing-interpolator",
+  "-Yrangepos"
 )
 val scala3cOptions = Seq(
-    "-Xtarget:8"
+  "-Xtarget:8"
 )
 
 val baseSettings = Seq(
@@ -139,8 +139,8 @@ val baseSettings = Seq(
     "-encoding",
     "utf8",
   ) ++ {
-      if (scalaVersion.value.startsWith("2")) scala2cOptions
-      else scala3cOptions
+    if (scalaVersion.value.startsWith("2")) scala2cOptions
+    else scala3cOptions
   },
   // Note: Use -Xlint rather than -Xlint:unchecked when TestThriftStructure
   // warnings are resolved
@@ -331,7 +331,7 @@ lazy val utilCodec = Project(
   id = "util-codec",
   base = file("util-codec")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-codec"
   ).dependsOn(utilCore)

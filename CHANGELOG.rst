@@ -12,6 +12,7 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
+* util-codec: Now builds with Scala 3.0! ``PHAB_ID=D715114``.
 
 * util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
   of a shell command. ``PHAB_ID=D686134``
