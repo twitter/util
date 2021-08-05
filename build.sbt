@@ -520,7 +520,7 @@ lazy val utilRegistry = Project(
   ).settings(
     name := "util-registry",
     libraryDependencies ++= Seq(
-    "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
     ) ++ {
       if (scalaVersion.value.startsWith("2")) {
         Seq(
@@ -635,7 +635,7 @@ lazy val utilThrift = Project(
   id = "util-thrift",
   base = file("util-thrift")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-thrift",
     libraryDependencies ++= Seq(
