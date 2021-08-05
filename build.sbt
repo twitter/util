@@ -80,13 +80,16 @@ def jdk11GcJavaOptions: Seq[String] = {
   )
 }
 
-val defaultScala3Settings = Seq(
-  scalaVersion := "3.0.1",
-  crossScalaVersions := Seq("2.12.12", "2.13.6", "3.0.1")
+val _scalaVersion = "2.13.6"
+val _crossScalaVersions = Seq("2.12.12", "2.13.6")
+
+val defaultScalaSettings = Seq(
+  scalaVersion := _scalaVersion,
+  crossScalaVersions := _crossScalaVersions
 )
-val defaultScala2Settings = Seq(
-  scalaVersion := "2.13.6",
-  crossScalaVersions := Seq("2.12.12", "2.13.6")
+val defaultScala3EnabledSettings = Seq(
+  scalaVersion := _scalaVersion,
+  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.1")
 )
 
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
@@ -195,12 +198,12 @@ val baseSettings = Seq(
 
 val sharedSettings =
   baseSettings ++
-    defaultScala2Settings ++
+    defaultScalaSettings ++
     Seq(libraryDependencies ++= scala2Dependencies)
 
-val sharedScala3Settings =
+val sharedScala3EnabledSettings =
   baseSettings ++
-    defaultScala3Settings ++
+    defaultScala3EnabledSettings ++
     Seq(libraryDependencies ++= scala3Dependencies)
 
 lazy val noPublishSettings = Seq(
@@ -269,7 +272,7 @@ lazy val utilAppLifecycle = Project(
   id = "util-app-lifecycle",
   base = file("util-app-lifecycle")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-app-lifecycle"
   ).dependsOn(utilCore)
@@ -331,7 +334,7 @@ lazy val utilCodec = Project(
   id = "util-codec",
   base = file("util-codec")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-codec"
   ).dependsOn(utilCore)
@@ -340,7 +343,7 @@ lazy val utilCore = Project(
   id = "util-core",
   base = file("util-core")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-core",
     // Moved some code to 'concurrent-extra' to conform to Pants' 1:1:1 principle (https://www.pantsbuild.org/build_files.html#target-granularity)
@@ -481,7 +484,7 @@ lazy val utilLint = Project(
   id = "util-lint",
   base = file("util-lint")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-lint"
   ).dependsOn(utilCore)
@@ -513,7 +516,7 @@ lazy val utilRegistry = Project(
   id = "util-registry",
   base = file("util-registry")
 ).settings(
-    sharedScala3Settings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-registry",
     libraryDependencies ++= Seq(
