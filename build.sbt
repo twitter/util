@@ -635,7 +635,7 @@ lazy val utilThrift = Project(
   id = "util-thrift",
   base = file("util-thrift")
 ).settings(
-    sharedSettings
+    sharedScala3Settings
   ).settings(
     name := "util-thrift",
     libraryDependencies ++= Seq(

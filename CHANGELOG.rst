@@ -12,6 +12,11 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
+* util-thrift: Now builds with Scala 3.0! ``PHAB_ID=D715129``.
+
+* util-thrift (BREAKING): ThriftCodec now uses ClassTag instead of Manifest. In scala3 Manifest is
+ intended for use by the compiler and should not be used in client code. ``PHAB_ID=D715129``
+
 * util-codec: Now builds with Scala 3.0! ``PHAB_ID=D715114``.
 
 * util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
