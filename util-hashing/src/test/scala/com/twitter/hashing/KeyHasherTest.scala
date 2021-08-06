@@ -10,7 +10,7 @@ class KeyHasherTest extends AnyWordSpec {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
     val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/" + name))
-    src.getLines
+    src.getLines()
   }
 
   val base64 = Base64.getDecoder

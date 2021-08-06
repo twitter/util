@@ -29,6 +29,8 @@ New Features
 * util-core (BREAKING): Remove `AbstractSpool`. Java users should use `Spools` static class or
  the Spool companion object to create instances of `Spool`.
 
+* util-hashing: Now builds with Scala 3.0! ``PHAB_ID=D718914``
+
 * util-lint: Now builds with Scala 3.0! ``PHAB_ID=D698954``
 
 * util-registry: Now builds with Scala 3.0! ``PHAB_ID=D716019``

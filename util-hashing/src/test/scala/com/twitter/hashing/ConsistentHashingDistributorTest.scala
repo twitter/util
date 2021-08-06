@@ -33,15 +33,13 @@ class ConsistentHashingDistributorTest extends AnyWordSpec with ScalaCheckDriven
       val stream = getClass.getClassLoader.getResourceAsStream("ketama_results")
       val reader = new BufferedReader(new InputStreamReader(stream))
       val expected = new mutable.ListBuffer[Array[String]]
-      var line: String = null
-      do {
-        line = reader.readLine
-        if (line != null) {
-          val segments = line.split(" ")
-          assert(segments.length == 4)
-          expected += segments
-        }
-      } while (line != null)
+      var line: String = reader.readLine()
+      while (line != null) {
+        val segments = line.split(" ")
+        assert(segments.length == 4)
+        expected += segments
+        line = reader.readLine()
+      }
       assert(expected.size == 99)
 
       // Test that ketamaClient.clientOf(key) == expected IP
@@ -86,7 +84,7 @@ class ConsistentHashingDistributorTest extends AnyWordSpec with ScalaCheckDriven
 
     "byteArrayToLE" in {
       val ketama = new ConsistentHashingDistributor[Unit](Seq.empty, 0, false)
-      forAll { s: String =>
+      forAll { (s: String) =>
         val ba = MessageDigest.getInstance("MD5").digest(s.getBytes("UTF-8"))
         val bb = ByteBuffer.wrap(ba).order(ByteOrder.LITTLE_ENDIAN)
 
@@ -110,7 +108,7 @@ class ConsistentHashingDistributorTest extends AnyWordSpec with ScalaCheckDriven
         assert(pid1 == pid2)
       }
 
-      forAll { s: String =>
+      forAll { (s: String) =>
         val hash = keyHasher.hashKey(s.getBytes("UTF-8"))
         val (pid1, _) = ketamaDistributor.entryForHash(hash)
         val pid2 = ketamaDistributor.partitionIdForHash(hash)

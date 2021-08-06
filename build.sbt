@@ -421,13 +421,22 @@ lazy val utilHashing = Project(
   id = "util-hashing",
   base = file("util-hashing")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-hashing",
     libraryDependencies ++= Seq(
-      scalacheckLib,
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    )
+      scalacheckLib
+    ) ++ {
+      if (scalaVersion.value.startsWith("2")) {
+        Seq(
+          "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
+        )
+      } else {
+        Seq(
+          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test",
+        )
+      }
+    },
   ).dependsOn(utilCore % "test")
 
 lazy val utilJacksonAnnotations = Project(
