@@ -256,7 +256,7 @@ object Activity {
         case _ => assert(false)
       }
 
-      Ok(ts.result)
+      Ok(ts.result())
     }
 
     Activity(stateVar map flip)

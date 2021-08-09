@@ -67,7 +67,7 @@ object MapOps {
 
     val invertedMap = immutable.Map.newBuilder[V, Seq[K]]
     for ((k, valueBuilder) <- invertedMapWithBuilderValues) {
-      invertedMap += (k -> valueBuilder.result)
+      invertedMap += (k -> valueBuilder.result())
     }
 
     invertedMap.result()

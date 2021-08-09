@@ -260,7 +260,7 @@ sealed trait Spool[+A] {
     val as = Vector.newBuilder[A]
     foreach { a =>
       as += a
-    } map { _ => as.result }
+    } map { _ => as.result() }
   }
 
   /**

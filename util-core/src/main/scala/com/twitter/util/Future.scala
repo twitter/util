@@ -1184,7 +1184,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
         buf += h.liftToTry
         buf += iterator.next().liftToTry
         while (iterator.hasNext) buf += iterator.next().liftToTry
-        Future.collect(buf.result)
+        Future.collect(buf.result())
       } else {
         Future.collect(List(h.liftToTry))
       }
@@ -1378,7 +1378,7 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
       buf += f
       i += 1
     }
-    buf.result
+    buf.result()
   }
 
   /**

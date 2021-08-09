@@ -476,8 +476,8 @@ sealed abstract class AsyncStream[+A] {
       }
 
     go(this).transform {
-      case Throw(exc) => Future.value(buf.result -> Some(exc))
-      case Return(_) => Future.value(buf.result -> None)
+      case Throw(exc) => Future.value(buf.result() -> Some(exc))
+      case Return(_) => Future.value(buf.result() -> None)
     }
   }
 
@@ -498,15 +498,15 @@ sealed abstract class AsyncStream[+A] {
     )(
       s: => AsyncStream[A]
     ): Future[(Seq[A], () => AsyncStream[A])] =
-      if (sizeRemaining < 1) Future.value((buffer.result, () => s))
+      if (sizeRemaining < 1) Future.value((buffer.result(), () => s))
       else
         s match {
-          case Empty => Future.value((buffer.result, () => s))
+          case Empty => Future.value((buffer.result(), () => s))
 
           case FromFuture(fa) =>
             fa.flatMap { a =>
               buffer += a
-              Future.value((buffer.result, () => empty))
+              Future.value((buffer.result(), () => empty))
             }
 
           case Cons(fa, more) =>
