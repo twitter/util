@@ -2,6 +2,7 @@ package com.twitter.app
 
 import java.lang.reflect.Modifier
 import scala.util.control.NonFatal
+import scala.reflect.ClassTag
 
 /**
  * Subclasses of GlobalFlag (that are defined in libraries) are "global" in the
@@ -85,7 +86,7 @@ abstract class GlobalFlag[T] private[app] (
    *
    * @param help documentation regarding usage of this [[Flag]].
    */
-  def this(help: String)(implicit _f: Flaggable[T], m: Manifest[T]) =
+  def this(help: String)(implicit _f: Flaggable[T], m: ClassTag[T]) =
     this(Right(m.toString), help)
 
   /**

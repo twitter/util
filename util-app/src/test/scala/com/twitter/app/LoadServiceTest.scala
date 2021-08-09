@@ -109,7 +109,7 @@ class LoadServiceTest extends AnyFunSuite with MockitoSugar {
       f.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.result.isEmpty)
+      assert(buf.result().isEmpty)
       f.delete()
     }
   }
@@ -128,7 +128,7 @@ class LoadServiceTest extends AnyFunSuite with MockitoSugar {
       subDir.setReadable(false)
 
       new LoadServiceClassPath().browseUri(f.toURI, loader, buf)
-      assert(buf.result.isEmpty)
+      assert(buf.result().isEmpty)
 
       subDir.delete()
       f.delete()

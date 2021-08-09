@@ -7,6 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+* util-app: Now builds with Scala 3.0! ``PHAB_ID=D714780``
+
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+* util-app: Flags and GlobalFlag now use ClassTag instead of Manifest.  ``PHAB_ID=D714780``
+
 21.7.0
 ------
 

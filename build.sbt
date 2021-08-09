@@ -259,13 +259,22 @@ lazy val utilApp = Project(
   id = "util-app",
   base = file("util-app")
 ).settings(
-    sharedSettings
+   sharedScala3EnabledSettings
   ).settings(
     name := "util-app",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-    )
+    ) ++ {
+      if (scalaVersion.value.startsWith("2")) {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+        )
+      } else {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+        )
+      }
+    },
   ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
 
 lazy val utilAppLifecycle = Project(

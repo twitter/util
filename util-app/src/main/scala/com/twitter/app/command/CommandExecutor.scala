@@ -1,7 +1,7 @@
 package com.twitter.app.command
 
 import java.io.File
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * CommandExecutor is a private trait used for testing so that the actual forking of the

@@ -8,7 +8,7 @@ import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.Files
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object RealCommandTest {
   // Bazel provides the internal dependency as a JAR, and consequently,
