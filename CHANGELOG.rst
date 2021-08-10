@@ -9,39 +9,43 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
-* util-app: Now builds with Scala 3.0! ``PHAB_ID=D714780``
+
+* util-app: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D714780``
+
+* util-app-lifecycle: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D716444``
+
+* util-codec: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D715114``
+
+* util-hashing: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D718914``
+
+* util-lint: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D698954``
+
+* util-registry: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D716019``
+
+* util-thrift: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D715129``
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 * util-app: Flags and GlobalFlag now use ClassTag instead of Manifest.  ``PHAB_ID=D714780``
+
+* util-thrift: ThriftCodec now uses ClassTag instead of Manifest. In
+  scala3 Manifest is intended for use by the compiler and should not be used in
+  client code. ``PHAB_ID=D715129``
 
 21.7.0
 ------
 
 New Features
 ~~~~~~~~~~~~
-* util-thrift: Now builds with Scala 3.0! ``PHAB_ID=D715129``.
-
-* util-thrift (BREAKING): ThriftCodec now uses ClassTag instead of Manifest. In scala3 Manifest is
- intended for use by the compiler and should not be used in client code. ``PHAB_ID=D715129``
-
-* util-codec: Now builds with Scala 3.0! ``PHAB_ID=D715114``.
 
 * util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
   of a shell command. ``PHAB_ID=D686134``
 
-* util-app-lifecycle: Now builds with Scala 3.0! ``PHAB_ID=D716444``
-
-* util-core: Now builds with Scala 3.0! ``PHAB_ID=D694775``.
+* util-core: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D694775``
 
 * util-core (BREAKING): Remove `AbstractSpool`. Java users should use `Spools` static class or
- the Spool companion object to create instances of `Spool`.
+  the Spool companion object to create instances of `Spool`.
 
-* util-hashing: Now builds with Scala 3.0! ``PHAB_ID=D718914``
-
-* util-lint: Now builds with Scala 3.0! ``PHAB_ID=D698954``
-
-* util-registry: Now builds with Scala 3.0! ``PHAB_ID=D716019``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
