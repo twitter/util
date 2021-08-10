@@ -89,7 +89,7 @@ val defaultScalaSettings = Seq(
 )
 val defaultScala3EnabledSettings = Seq(
   scalaVersion := _scalaVersion,
-  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.1")
+  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.2-RC1")
 )
 
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
@@ -131,6 +131,16 @@ val baseSettings = Seq(
       case Some((2, n)) if n < 13 => sourceDir / "scala-2.12-"
       case _ => sourceDir / "scala-2.13+"
     }
+  },
+  // Let's skip compiling docs for Scala 3 due a Dotty Scaladoc bug where generating the docs
+  // requires network access. See https://github.com/lampepfl/dotty/issues/13272 or CSL-11251.
+  Compile / doc / sources := {
+    if (scalaVersion.value.startsWith("3")) Seq.empty
+    else (Compile / doc / sources).value
+  },
+  Compile / packageDoc / publishArtifact := {
+    if (scalaVersion.value.startsWith("3")) false
+    else (Compile / packageDoc / publishArtifact).value
   },
   ScoverageKeys.coverageHighlighting := true,
   resolvers +=

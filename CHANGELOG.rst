@@ -44,8 +44,7 @@ New Features
 * util-core: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D694775``
 
 * util-core (BREAKING): Remove `AbstractSpool`. Java users should use `Spools` static class or
-  the Spool companion object to create instances of `Spool`.
-
+  the Spool companion object to create instances of `Spool`. ``PHAB_ID=D694775``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
