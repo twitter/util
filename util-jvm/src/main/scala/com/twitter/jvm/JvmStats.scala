@@ -2,7 +2,8 @@ package com.twitter.jvm
 
 import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
-import com.twitter.finagle.stats.StatsReceiver
+import com.twitter.finagle.stats.{Milliseconds, StatsReceiver}
+import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema}
 import java.lang.management.{BufferPoolMXBean, ManagementFactory}
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
@@ -38,8 +39,9 @@ object JvmStats {
     gauges.add(threadStats.addGauge("peak_count") { threads.getPeakThreadCount().toLong })
 
     val runtime = ManagementFactory.getRuntimeMXBean()
+    val uptime = stats.addGauge("uptime") { runtime.getUptime() }
+    gauges.add(uptime)
     gauges.add(stats.addGauge("start_time") { runtime.getStartTime() })
-    gauges.add(stats.addGauge("uptime") { runtime.getUptime() })
 
     val os = ManagementFactory.getOperatingSystemMXBean()
     gauges.add(stats.addGauge("num_cpus") { os.getAvailableProcessors().toLong })
@@ -126,18 +128,52 @@ object JvmStats {
     val gcStats = stats.scope("gc")
     gcPool.foreach { gc =>
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
-      gauges.add(gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "cycles") {
-        gc.getCollectionCount
-      })
-      gauges.add(gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "msec") {
+      val poolCycles =
+        gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "cycles") {
+          gc.getCollectionCount
+        }
+      val poolMsec = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "msec") {
         gc.getCollectionTime
-      })
+      }
+
+      ExpressionSchema(s"gc_cycles", Expression(poolCycles.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withLabel("gc_pool", name)
+        .withDescription(
+          s"The total number of collections that have occurred for the $name gc pool")
+        .register()
+      ExpressionSchema(s"gc_latency", Expression(poolMsec.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withLabel("gc_pool", name)
+        .withUnit(Milliseconds)
+        .withDescription(s"The total elapsed time spent doing collections for the $name gc pool")
+        .register()
+
+      gauges.add(poolCycles)
+      gauges.add(poolMsec)
     }
 
     // note, these could be -1 if the collector doesn't have support for it.
-    gauges.add(gcStats.addGauge("cycles") { gcPool.map(_.getCollectionCount).filter(_ > 0).sum })
-    gauges.add(gcStats.addGauge("msec") { gcPool.map(_.getCollectionTime).filter(_ > 0).sum })
+    val cycles = gcStats.addGauge("cycles") { gcPool.map(_.getCollectionCount).filter(_ > 0).sum }
+    val msec = gcStats.addGauge("msec") { gcPool.map(_.getCollectionTime).filter(_ > 0).sum }
 
+    ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withUnit(Milliseconds)
+      .withDescription("The uptime of the JVM in MS")
+      .register()
+    ExpressionSchema("gc_cycles", Expression(cycles.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withDescription("The total number of collections that have occurred")
+      .register()
+    ExpressionSchema("gc_latency", Expression(msec.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withUnit(Milliseconds)
+      .withDescription("The total elapsed time spent doing collections")
+      .register()
+
+    gauges.add(cycles)
+    gauges.add(msec)
     allocations = new Allocations(gcStats)
     allocations.start()
     if (allocations.trackingEden) {
