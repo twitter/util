@@ -7,6 +7,9 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+21.8.0
+------
+
 New Features
 ~~~~~~~~~~~~
 
@@ -32,8 +35,8 @@ Breaking API Changes
   scala3 Manifest is intended for use by the compiler and should not be used in
   client code. ``PHAB_ID=D715129``
 
-21.7.0
-------
+21.7.0 (No Release)
+-------------------
 
 New Features
 ~~~~~~~~~~~~
