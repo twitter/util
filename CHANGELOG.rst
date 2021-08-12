@@ -12,6 +12,8 @@ Unreleased
 
 New Features
 ~~~~~~~~~~~~
+* util-stats: add getAllExpressionsWithLabel utility to InMemoryStatsReceiver.
+``PHAB_ID=D722942``
 
 * util-app: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D714780``
 

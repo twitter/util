@@ -396,4 +396,30 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     assert(sr.expressions
       .get(ExpressionSchemaKey("test_expression", Map(), Nil)).get.expr == expected_expression.expr)
   }
+
+  test("getExpressionsWithLabel") {
+    val sr = new InMemoryStatsReceiver
+
+    val aCounter = sr.scope("test").counter("a")
+
+    ExpressionSchema(
+      "test_expression_0",
+      Expression(aCounter.metadata)
+    ).withLabel(ExpressionSchema.Role, "test").register()
+
+    ExpressionSchema(
+      "test_expression_1",
+      Expression(aCounter.metadata)
+    ).withLabel(ExpressionSchema.Role, "dont appear").register()
+
+    val withLabel = sr.getAllExpressionsWithLabel(ExpressionSchema.Role, "test")
+    assert(withLabel.size == 1)
+
+    assert(
+      !withLabel.contains(
+        ExpressionSchemaKey("test_expression_1", Map((ExpressionSchema.Role, "dont appear")), Nil)))
+
+    assert(sr.getAllExpressionsWithLabel("nonexistent key", "nonexistent value").isEmpty)
+  }
+
 }

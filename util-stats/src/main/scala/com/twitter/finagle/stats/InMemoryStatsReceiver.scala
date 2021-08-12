@@ -5,7 +5,8 @@ import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey}
 import java.io.PrintStream
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.{SortedMap, mutable}
+import scala.collection.{SortedMap, mutable, Map => scalaMap}
+import scala.collection.compat._
 import scala.jdk.CollectionConverters._
 
 object InMemoryStatsReceiver {
@@ -265,6 +266,17 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
     expressions.put(schema.schemaKey, schema)
   }
+
+  /**
+   * Retrieves all expressions with a given label key and value
+   *
+   * @return a Map of expressions ([[ExpressionSchemaKey]] -> [[ExpressionSchema]])
+   */
+  def getAllExpressionsWithLabel(
+    key: String,
+    value: String
+  ): scalaMap[ExpressionSchemaKey, ExpressionSchema] =
+    expressions.view.filterKeys(k => k.labels.get(key) == Some(value)).toMap
 
 }
 
