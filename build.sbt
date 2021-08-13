@@ -138,10 +138,6 @@ val baseSettings = Seq(
     if (scalaVersion.value.startsWith("3")) Seq.empty
     else (Compile / doc / sources).value
   },
-  Compile / packageDoc / publishArtifact := {
-    if (scalaVersion.value.startsWith("3")) false
-    else (Compile / packageDoc / publishArtifact).value
-  },
   ScoverageKeys.coverageHighlighting := true,
   resolvers +=
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
