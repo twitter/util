@@ -7,8 +7,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
-21.8.0
-------
+21.8.0 (No 21.7.0 Release)
+--------------------------
 
 New Features
 ~~~~~~~~~~~~
@@ -29,24 +29,19 @@ New Features
 
 * util-thrift: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D715129``
 
+* util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
+  of a shell command. ``PHAB_ID=D686134``
+
+* util-core: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D694775``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+
 * util-app: Flags and GlobalFlag now use ClassTag instead of Manifest.  ``PHAB_ID=D714780``
 
 * util-thrift: ThriftCodec now uses ClassTag instead of Manifest. In
   scala3 Manifest is intended for use by the compiler and should not be used in
   client code. ``PHAB_ID=D715129``
-
-21.7.0 (No Release)
--------------------
-
-New Features
-~~~~~~~~~~~~
-
-* util-app: Introduce a new `Command` class which provides a `Reader` interface to the output
-  of a shell command. ``PHAB_ID=D686134``
-
-* util-core: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D694775``
 
 * util-core (BREAKING): Remove `AbstractSpool`. Java users should use `Spools` static class or
   the Spool companion object to create instances of `Spool`. ``PHAB_ID=D694775``
@@ -55,9 +50,6 @@ Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * util: Update ScalaCheck to version 1.15.4 ``PHAB_ID=D691691``
-
-Bug Fixes
-~~~~~~~~~
 
 * util-jackson: `JsonDiff#toSortedString` now includes null-type nodes, so that
   `JsonDiff.Result#toString` shows differences in objects due to such nodes. ``PHAB_ID=D707033``
