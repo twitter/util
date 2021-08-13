@@ -158,7 +158,7 @@ final class Pipe[A](timer: Timer) extends Reader[A] with Writer[A] {
           state = State.Writing(buf, p)
           (null, null, p)
 
-        case State.Reading(p) =>
+        case State.Reading(p: Promise[Option[A]]) =>
           // pending reader has enough space for the full write
           state = State.Idle
           // The Scala 3 compiler differentiates between the class type, `A` and the the defined

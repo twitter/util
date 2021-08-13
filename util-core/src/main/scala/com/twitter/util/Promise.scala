@@ -492,7 +492,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
 
   override def toString: String = {
     val theState = state match {
-      case waitq: WaitQueue[A] => s"Waiting($waitq)"
+      case waitq: Promise.WaitQueue[A] => s"Waiting($waitq)"
       case s: Interruptible[A] => s"Interruptible(${s.waitq},${s.handler})"
       case s: Transforming[A] => s"Transforming(${s.waitq},${s.other})"
       case s: Interrupted[A] => s"Interrupted(${s.waitq},${s.signal})"

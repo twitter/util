@@ -2,6 +2,10 @@ package com.twitter.conversions
 
 import scala.annotation.tailrec
 
+abstract class SeqUtilCompanion {
+  def hasKnownSize[A](self: Seq[A]): Boolean
+}
+
 /**
  * Implicits for converting [[Seq]]s.
  *

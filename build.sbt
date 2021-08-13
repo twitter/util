@@ -95,14 +95,6 @@ val defaultScala3EnabledSettings = Seq(
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
 // to account for there differences but should merge these artifacts as they are updated.
 val scalaDependencies = Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4")
-val scala3Dependencies = scalaDependencies ++ Seq(
-  "org.scalatest" %% "scalatest" % "3.2.9" % "test",
-  "org.scalatestplus" %% "junit-4-13" % "3.2.9.0" % "test"
-)
-val scala2Dependencies = scalaDependencies ++ Seq(
-  "org.scalatest" %% "scalatest" % "3.1.2" % "test",
-  "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
-)
 val scala2cOptions = Seq(
   "-target:jvm-1.8",
   // Needs -missing-interpolator due to https://issues.scala-lang.org/browse/SI-8761
@@ -111,6 +103,15 @@ val scala2cOptions = Seq(
 )
 val scala3cOptions = Seq(
   "-Xtarget:8"
+)
+
+val scala3Dependencies = scalaDependencies ++ Seq(
+  "org.scalatest" %% "scalatest" % "3.2.9" % "test",
+  "org.scalatestplus" %% "junit-4-13" % "3.2.9.0" % "test"
+)
+val scala2Dependencies = scalaDependencies ++ Seq(
+  "org.scalatest" %% "scalatest" % "3.1.2" % "test",
+  "org.scalatestplus" %% "junit-4-12" % "3.1.2.0" % "test"
 )
 
 val baseSettings = Seq(
@@ -265,7 +266,7 @@ lazy val utilApp = Project(
   id = "util-app",
   base = file("util-app")
 ).settings(
-   sharedScala3EnabledSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-app",
     libraryDependencies ++= Seq(
@@ -315,15 +316,24 @@ lazy val utilCache = Project(
   id = "util-cache",
   base = file("util-cache")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-cache",
     libraryDependencies ++= Seq(
       caffeineLib,
       jsr305Lib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-    )
+    ) ++ {
+      if (scalaVersion.value.startsWith("2")) {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+        )
+      } else {
+        Seq(
+          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+        )
+      }
+    }
   ).dependsOn(utilCore)
 
 lazy val utilCacheGuava = Project(
