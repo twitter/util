@@ -903,16 +903,18 @@ configured with a `YAMLFactory`.
 `c.t.util.jackson.JsonDiff`
 ---------------------------
 
-The library provides a utility for comparing JSON strings or structures which can be serialized as
-JSON strings via the `c.t.util.jackson.JsonDiff <https://github.com/twitter/util/blob/develop/util-jackson/src/main/scala/com/twitter/util/jackson/JsonDiff.scala>`__ utility.
+The library provides a utility for comparing JSON strings, or structures that can be serialized as
+JSON strings, via the `c.t.util.jackson.JsonDiff <https://github.com/twitter/util/blob/develop/util-jackson/src/main/scala/com/twitter/util/jackson/JsonDiff.scala>`__ utility.
 
 `JsonDiff` provides two functions: `diff` and `assertDiff`. The `diff` method allows the user to
 decide how to handle JSON differences by returning an `Option[JsonDiff.Result]` while `assertDiff`
 throws an `AssertionError` when a difference is encountered.
 
-The `JsonDiff.Result#toString` contains a textual representation meant to show when both the
-`expected` and `actual` JSON strings are sorted lexicographically where the first encountered
-difference occurs. When an `AssertError` is thrown, the `JsonDiff.Result#toString` is used to
+The `JsonDiff.Result#toString` contains a textual representation meant to indicate where the
+`expected` and `actual` differ semantically.  For this representation, both `expected` and `actual`
+are transformed to eliminate insigificant lexical diffences such whitespace, object key ordering,
+and escape sequences.  Only the first difference in this representation is indicated.
+When an `AssertError` is thrown, the `JsonDiff.Result#toString` is used to
 populate the exception message.
 
 For example:
@@ -983,10 +985,34 @@ For example:
     res0: Boolean = true
 
     scala> t.throwable.getMessage
-    res2: String =
-    "                     *
+    res1: String =
+    com.twitter.util.jackson.JsonDiff$ failure
+                         *
     Expected: {"a":1,"b":2}
-    Actual:   {"a":1,"b":3}"
+    Actual:   {"a":1,"b":3}
+
+    scala> val expected = """{"t1": "24\u00B0C"}"""
+    expected: String = {"t1": "24\u00B0C"}
+
+    scala> val actual = """{"t1": "24°F", "t2": null}"""
+    actual: String = {"t1": "24°F", "t2": null}
+
+    scala> val t = Try(JsonDiff.assertDiff(expected, actual))  // throws an AssertionError
+    JSON DIFF FAILED!
+                        *
+    Expected: {"t1":"24°C"}
+    Actual:   {"t1":"24°F","t2":null}
+
+    scala> t.isThrow
+    res0: Boolean = true
+
+    scala> t.throwable.getMessage
+    res1: String =
+    com.twitter.util.jackson.JsonDiff$ failure
+                        *
+    Expected: {"t1":"24°C"}
+    Actual:   {"t1":"24°F","t2":null}
+
 
 Normalization
 ~~~~~~~~~~~~~
