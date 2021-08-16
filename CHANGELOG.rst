@@ -7,11 +7,17 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-zk-test: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D720603``
+
 21.8.0 (No 21.7.0 Release)
 --------------------------
 
 New Features
 ~~~~~~~~~~~~
+
 * util-stats: add getAllExpressionsWithLabel utility to InMemoryStatsReceiver.
 ``PHAB_ID=D722942``
 

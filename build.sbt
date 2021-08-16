@@ -732,7 +732,7 @@ lazy val utilZkTest = Project(
   id = "util-zk-test",
   base = file("util-zk-test")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-zk-test",
     libraryDependencies += zkDependency
