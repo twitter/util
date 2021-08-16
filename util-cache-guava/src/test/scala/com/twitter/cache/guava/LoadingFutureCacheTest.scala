@@ -12,7 +12,7 @@ class LoadingFutureCacheTest extends AbstractLoadingFutureCacheTest {
   // loading cache semantics are sufficiently unique
   // to merit distinct tests.
 
-  def mkCtx: Ctx = new Ctx {
+  def mkCtx(): Ctx = new Ctx {
     val cache = new LoadingFutureCache(
       CacheBuilder
         .newBuilder()

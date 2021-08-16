@@ -217,6 +217,18 @@ lazy val noPublishSettings = Seq(
   publish / skip := true
 )
 
+def scalatestMockitoVersionedDep(scalaVersion: String) = {
+  if (scalaVersion.startsWith("2")) {
+    Seq(
+      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+    )
+  } else {
+    Seq(
+      "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+    )
+  }
+}
+
 lazy val util = Project(
   id = "util",
   base = file(".")
@@ -323,24 +335,14 @@ lazy val utilCache = Project(
       caffeineLib,
       jsr305Lib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ {
-      if (scalaVersion.value.startsWith("2")) {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-        )
-      } else {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
-        )
-      }
-    }
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
   ).dependsOn(utilCore)
 
 lazy val utilCacheGuava = Project(
   id = "util-cache-guava",
   base = file("util-cache-guava")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-cache-guava",
     libraryDependencies ++= Seq(guavaLib, jsr305Lib)

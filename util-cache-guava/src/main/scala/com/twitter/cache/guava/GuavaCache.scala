@@ -53,7 +53,7 @@ object GuavaCache {
    */
   def fromLoadingCache[K, V](cache: LoadingCache[K, Future[V]]): K => Future[V] = {
     val evicting = EvictingCache.lazily(new LoadingFutureCache(cache));
-    { key: K => evicting.get(key).get.interruptible() }
+    { (key: K) => evicting.get(key).get.interruptible() }
   }
 
   /**
