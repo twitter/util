@@ -6,13 +6,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 ----------
+* util-sl4j-api: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D725491``
+
 * util-cache-guava: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D716101``.
 
 * util-cache: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D714304``.
 
 New Features
 ~~~~~~~~~~~~
-
 * util-zk-test: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D720603``
 
 21.8.0 (No 21.7.0 Release)

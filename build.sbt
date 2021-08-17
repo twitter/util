@@ -583,15 +583,15 @@ lazy val utilSlf4jApi = Project(
   id = "util-slf4j-api",
   base = file("util-slf4j-api")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-slf4j-api",
     libraryDependencies ++= Seq(
       slf4jApi,
-      "org.mockito" %% "mockito-scala" % mockitoScalaVersion % "test",
-      "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
-    )
-  ).dependsOn(utilCore % "test", utilMock % "test")
+      "org.mockito" % "mockito-core" % mockitoVersion % "test",
+      "org.slf4j" % "slf4j-simple" % slf4jVersion % "test",
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
+  ).dependsOn(utilCore % "test")
 
 lazy val utilSlf4jJulBridge = Project(
   id = "util-slf4j-jul-bridge",
