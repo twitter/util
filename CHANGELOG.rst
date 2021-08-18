@@ -6,6 +6,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 ----------
+* util-routing: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D727120``
+
 * util-sl4j-api: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D725491``
 
 * util-cache-guava: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D716101``.

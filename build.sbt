@@ -574,7 +574,7 @@ lazy val utilRouting = Project(
   id = "util-routing",
   base = file("util-routing")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-routing"
   ).dependsOn(utilCore, utilSlf4jApi)
