@@ -8,6 +8,8 @@ Unreleased
 ----------
 * util-routing: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D727120``
 
+* util-sl4j-jul-bridge: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D726468``
+
 * util-sl4j-api: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D725491``
 
 * util-cache-guava: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D716101``.

@@ -597,7 +597,7 @@ lazy val utilSlf4jJulBridge = Project(
   id = "util-slf4j-jul-bridge",
   base = file("util-slf4j-jul-bridge")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-slf4j-jul-bridge",
     libraryDependencies ++= Seq(slf4jApi, "org.slf4j" % "jul-to-slf4j" % slf4jVersion)
