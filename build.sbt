@@ -229,6 +229,18 @@ def scalatestMockitoVersionedDep(scalaVersion: String) = {
   }
 }
 
+def scalatestScalacheckVersionedDep(scalaVersion: String) = {
+  if (scalaVersion.startsWith("2")) {
+    Seq(
+      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
+    )
+  } else {
+    Seq(
+      "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test"
+    )
+  }
+}
+ 
 lazy val util = Project(
   id = "util",
   base = file(".")
@@ -629,7 +641,7 @@ lazy val utilStats = Project(
   id = "util-stats",
   base = file("util-stats")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-stats",
     libraryDependencies ++= Seq(
@@ -638,16 +650,16 @@ lazy val utilStats = Project(
       scalacheckLib,
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
-      "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test"
-    ) ++ {
+      ("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")).cross(CrossVersion.for3Use2_13),
+      "org.mockito" % "mockito-core" % mockitoVersion % "test"
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
+    ++ scalatestScalacheckVersionedDep(scalaVersion.value)
+    ++ {
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, major)) if major >= 13 =>
-          Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0" % "test")
-        case _ =>
+        case Some((2, major)) if major <= 12 =>
           Seq()
+        case _ =>
+          Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3" % "test")
       }
     }
   ).dependsOn(utilCore, utilLint)

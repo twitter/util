@@ -199,7 +199,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       p.println("---------")
     }
     for ((k, v) <- sortedCounters)
-      p.print(f"$k%s $v%d\n")
+      p.println(f"$k%s $v%d")
     if (includeHeaders && sortedGauges.nonEmpty) {
       p.println("\nGauges:")
       p.println("-------")
@@ -264,7 +264,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
    * Designed to match the behavior of Metrics::registerExpression().
    */
   override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
-    expressions.put(schema.schemaKey, schema)
+    expressions.put(schema.schemaKey(), schema)
   }
 
   /**

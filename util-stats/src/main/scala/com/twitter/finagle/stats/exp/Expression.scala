@@ -86,25 +86,26 @@ private[twitter] sealed trait Expression {
 /**
  * Represents a constant double number
  */
-case class ConstantExpression private (repr: String) extends Expression
+case class ConstantExpression private[exp] (repr: String) extends Expression
 
 /**
  * Represents compound metrics and their arithmetical(or others) calculations
  */
-case class FunctionExpression private (fnName: String, exprs: Seq[Expression]) extends Expression {
+case class FunctionExpression private[exp] (fnName: String, exprs: Seq[Expression])
+    extends Expression {
   require(exprs.size != 0, "Functions must have at least 1 argument")
 }
 
 /**
  * Represents the leaf metrics
  */
-case class MetricExpression private (metricBuilder: MetricBuilder) extends Expression
+case class MetricExpression private[exp] (metricBuilder: MetricBuilder) extends Expression
 
 /**
  * Represent a histogram expression with specified component, for example the average, or a percentile
  * @param component either a [[HistogramComponent]] or a percentile in Double
  */
-case class HistogramExpression private (
+case class HistogramExpression private[exp] (
   metricBuilder: MetricBuilder,
   component: Either[HistogramComponent, Double])
     extends Expression

@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.compat._
 
 class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
   test("uses label, flags, source, exception chain and rolls up") {
@@ -141,8 +142,8 @@ class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
-    assert(receiver.counters.filterKeys(_.contains("failures")).size == 3)
-    assert(receiver.counters.filterKeys(_.contains("sourcedfailures")).size == 0)
+    assert(receiver.counters.view.filterKeys(_.contains("failures")).size == 3)
+    assert(receiver.counters.view.filterKeys(_.contains("sourcedfailures")).size == 0)
 
     assert(
       keys == Seq(

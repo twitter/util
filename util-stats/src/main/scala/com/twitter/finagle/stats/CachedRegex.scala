@@ -2,6 +2,7 @@ package com.twitter.finagle.stats
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
+import scala.collection.compat._
 import scala.util.matching.Regex
 
 /**
@@ -50,6 +51,6 @@ private[stats] class CachedRegex(regex: Regex)
           }
         }
       })
-    samples.filterKeys(filterFn).toMap
+    samples.view.filterKeys(filterFn).toMap
   }
 }

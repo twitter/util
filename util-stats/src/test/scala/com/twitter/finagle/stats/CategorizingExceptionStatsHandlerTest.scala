@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.compat._
 
 class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
   val categorizer = (t: Throwable) => { "clienterrors" }
@@ -19,9 +20,9 @@ class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
-    assert(receiver.counters.filterKeys(_.contains("failures")).size == 0)
+    assert(receiver.counters.view.filterKeys(_.contains("failures")).size == 0)
 
-    assert(receiver.counters.filterKeys(_.contains("clienterrors")).size == 3)
+    assert(receiver.counters.view.filterKeys(_.contains("clienterrors")).size == 3)
     assert(receiver.counters(Seq("clienterrors")) == 1)
     assert(receiver.counters(Seq("clienterrors", classOf[RuntimeException].getName)) == 1)
     assert(
@@ -30,7 +31,7 @@ class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
       ) == 1
     )
 
-    assert(receiver.counters.filterKeys(_.contains("sourcedfailures")).size == 3)
+    assert(receiver.counters.view.filterKeys(_.contains("sourcedfailures")).size == 3)
     assert(receiver.counters(Seq("sourcedfailures", "service")) == 1)
     assert(
       receiver.counters(Seq("sourcedfailures", "service", classOf[RuntimeException].getName)) == 1
@@ -67,8 +68,8 @@ class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
-    assert(receiver.counters.filterKeys(_.contains("failures")).size == 3)
-    assert(receiver.counters.filterKeys(_.contains("sourcedfailures")).size == 0)
+    assert(receiver.counters.view.filterKeys(_.contains("failures")).size == 3)
+    assert(receiver.counters.view.filterKeys(_.contains("sourcedfailures")).size == 0)
 
     assert(
       keys == Seq(
@@ -90,9 +91,9 @@ class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
-    assert(receiver.counters.filterKeys(_.contains("failures")).size == 0)
+    assert(receiver.counters.view.filterKeys(_.contains("failures")).size == 0)
 
-    assert(receiver.counters.filterKeys(_.contains("clienterrors")).size == 2)
+    assert(receiver.counters.view.filterKeys(_.contains("clienterrors")).size == 2)
     assert(receiver.counters(Seq("clienterrors")) == 1)
     assert(
       receiver.counters(
@@ -100,7 +101,7 @@ class CategorizingExceptionStatsHandlerTest extends AnyFunSuite {
       ) == 1
     )
 
-    assert(receiver.counters.filterKeys(_.contains("sourcedfailures")).size == 2)
+    assert(receiver.counters.view.filterKeys(_.contains("sourcedfailures")).size == 2)
     assert(receiver.counters(Seq("sourcedfailures", "service")) == 1)
     assert(
       receiver.counters(
