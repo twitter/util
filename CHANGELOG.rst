@@ -24,6 +24,11 @@ New Features
 
 * util-zk-test: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D720603``
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Bump version of Jackson to 2.11.4. ``PHAB_ID=D727879``
+
 21.8.0 (No 21.7.0 Release)
 --------------------------
 
