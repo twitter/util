@@ -6,6 +6,10 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 ----------
+New Features
+~~~~~~~~~~~~
+
+* util-stats: Counter, Gauge, and Stat can be instrumented with descriptions. ``PHAB_ID = D615481``
 
 New Features
 ~~~~~~~~~~~~
