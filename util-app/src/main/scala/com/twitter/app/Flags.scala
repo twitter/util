@@ -81,7 +81,7 @@ object Flags {
  * be included during flag parsing. If false, only flags defined in the
  * application itself will be consulted.
  */
-class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean) {
+final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Boolean) {
   import com.twitter.app.Flags._
 
   def this(argv0: String, includeGlobal: Boolean) = this(argv0, includeGlobal, false)

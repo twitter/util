@@ -42,12 +42,15 @@ import scala.util.control.NonFatal
 trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
 
   /** The name of the application, based on the classname */
-  val name: String = getClass.getName.stripSuffix("$")
+  def name: String = getClass.getName.stripSuffix("$")
 
-  /** The [[com.twitter.app.Flags]] instance associated with this application */
   //failfastOnFlagsNotParsed is called in the ctor of App.scala here which is a bad idea
   //as things like this can happen https://stackoverflow.com/questions/18138397/calling-method-from-constructor
-  val flag: Flags = new Flags(name, includeGlobal = true, failfastOnFlagsNotParsed)
+  private[this] val _flag: Flags =
+    new Flags(name, includeGlobal = includeGlobalFlags, failfastOnFlagsNotParsed)
+
+  /** The [[com.twitter.app.Flags]] instance associated with this application */
+  final def flag: Flags = _flag
 
   private var _args = Array[String]()
 
@@ -56,6 +59,9 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
 
   /** Whether or not to accept undefined flags */
   protected def allowUndefinedFlags: Boolean = false
+
+  /** Whether or not to include [[GlobalFlag GlobalFlag's]] when [[Flags]] are parsed */
+  protected def includeGlobalFlags: Boolean = true
 
   /**
    * Users of this code should override this to `true` so that

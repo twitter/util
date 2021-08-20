@@ -29,6 +29,18 @@ Runtime Behavior Changes
 
 * util: Bump version of Jackson to 2.11.4. ``PHAB_ID=D727879``
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-app: the `c.t.app.App#flags` field is now a `final def` instead of a `val` to address
+  `override val` scenarios where the `c.t.app.App#flags` are accessed as part of construction,
+  resulting in a NullPointerException due to access ordering issues.
+  The `c.t.app.Flags` class is now made final. The `c.t.app.App#name` field has changed from
+  a `val` and is now a `def`. A new `c.t.app.App#includeGlobalFlags` def has been exposed, which
+  defaults to `true`. The `c.t.app#includeGlobalFlags` def can be overridden to `false`
+  (ex: `override protected def includeGlobalFlags: Boolean = false`) in order to skip discovery
+  of `GlobalFlag`s during flag parsing. ```PHAB_ID=D723956``
+
 21.8.0 (No 21.7.0 Release)
 --------------------------
 
