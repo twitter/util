@@ -6,13 +6,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 
 Unreleased
 ----------
+
 New Features
 ~~~~~~~~~~~~
 
 * util-stats: Counter, Gauge, and Stat can be instrumented with descriptions. ``PHAB_ID = D615481``
-
-New Features
-~~~~~~~~~~~~
 
 * util-cache: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D714304``.
 
@@ -27,6 +25,12 @@ New Features
 * util-stats: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D720514``
 
 * util-zk-test: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D720603``
+
+* util-app: Flags parsing will now roll-up multiple flag parsing errors into a single
+  error message. When an error is encountered, flag parsing will continue to collect parse error
+  information instead of escaping on the first flag failure. After parsing all flags, if any errors
+  are present, a message containing all of the failed flags and their error reason,
+  along with the `help` usage message will be emitted. ```PHAB_ID=D729700``
 
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~

@@ -165,6 +165,18 @@ class FlagsTest extends AnyFunSuite {
     )
   }
 
+  test("Flag: multiple parse errors roll-up") {
+    val ctx = new Ctx
+    import ctx._
+    flag.parseArgs(Array("-undefined", "-foo", "blah")) match {
+      case Flags.Error(reason) =>
+        assert(reason.contains("Error parsing flag \"undefined\": flag undefined"))
+        assert(reason.contains("Error parsing flag \"foo\": For input string: \"blah\""))
+        assert(reason.contains("usage:"))
+      case other => fail(s"expected a flag error, but received $other")
+    }
+  }
+
   test("formatFlagValues") {
 
     val flagWithGlobal = new Flags("my", includeGlobal = true)

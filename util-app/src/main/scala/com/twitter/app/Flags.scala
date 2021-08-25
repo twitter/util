@@ -49,7 +49,9 @@ object Flags {
    *
    * @param reason A string explaining the error that occurred.
    */
-  case class Error(reason: String) extends FlagParseResult
+  case class Error(reason: String) extends FlagParseResult {
+    override def toString: String = reason
+  }
 }
 
 /**
@@ -128,6 +130,7 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
     synchronized {
       reset()
       val remaining = new ArrayBuffer[String]
+      val errors = new ArrayBuffer[Error]
       var i = 0
       while (i < args.length) {
         val a = args(i)
@@ -144,7 +147,7 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
               if (allowUndefinedFlags)
                 remaining += a
               else
-                return Error(
+                errors += Error(
                   "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
                 )
 
@@ -153,7 +156,7 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
               if (allowUndefinedFlags)
                 remaining += a
               else
-                return Error(
+                errors += Error(
                   "Error parsing flag \"%s\": %s".format(k, FlagUndefinedMessage)
                 )
 
@@ -163,7 +166,7 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
 
             // Mandatory argument without a value and with no more arguments.
             case Array(k) if i == args.length =>
-              return Error(
+              errors += Error(
                 "Error parsing flag \"%s\": %s".format(k, FlagValueRequiredMessage)
               )
 
@@ -173,7 +176,7 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
               try flag(k).parse(args(i - 1))
               catch {
                 case NonFatal(e) =>
-                  return Error(
+                  errors += Error(
                     "Error parsing flag \"%s\": %s".format(k, e.getMessage)
                   )
               }
@@ -182,8 +185,8 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
             case Array(k, v) =>
               try flag(k).parse(v)
               catch {
-                case e: Throwable =>
-                  return Error(
+                case NonFatal(e) =>
+                  errors += Error(
                     "Error parsing flag \"%s\": %s".format(k, e.getMessage)
                   )
               }
@@ -196,6 +199,8 @@ final class Flags(argv0: String, includeGlobal: Boolean, failFastUntilParsed: Bo
 
       if (helpFlag())
         Help(usage)
+      else if (errors.nonEmpty)
+        Error(s"Error parsing flags: ${errors.mkString("[\n  ", ",\n  ", "\n]")}\n\n$usage")
       else
         Ok(remaining.toSeq)
     }
