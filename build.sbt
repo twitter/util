@@ -501,7 +501,7 @@ lazy val utilJackson = Project(
       "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
-      "org.json4s" %% "json4s-core" % "3.6.7",
+      "org.json4s" %% "json4s-core" % "3.6.11",
       "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",

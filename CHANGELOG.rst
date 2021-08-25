@@ -33,6 +33,8 @@ Runtime Behavior Changes
 
 * util: Bump version of Jackson to 2.11.4. ``PHAB_ID=D727879``
 
+* util: Bump version of json4s to 3.6.11. ``PHAB_ID=D729764``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
