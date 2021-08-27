@@ -116,7 +116,7 @@ object CpuProfile {
     val bean = ManagementFactory.getThreadMXBean()
     val elapsed = Stopwatch.start()
     val end = howlong.fromNow
-    val period = (1000000 / frequency).microseconds
+    val period = ((1000000L / frequency)).microseconds
     val myId = Thread.currentThread().getId()
     var next = Time.now
 

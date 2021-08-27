@@ -4,15 +4,16 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.util.Time
 import java.io.ByteArrayOutputStream
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.compat.immutable.LazyList
 
 class CpuProfileTest extends AnyFunSuite {
   test("record") {
 
     // record() calls Time.now 3 times initially, and then 3 times on every loop iteration.
-    val times: Stream[Int] = (0 #:: Stream.from(0)).flatMap(x => List(x, x, x))
+    val times: LazyList[Int] = (0 #:: LazyList.from(0)).flatMap(x => List(x, x, x))
     val iter = times.iterator
     val start = Time.now
-    def nextTime: Time = start + iter.next().milliseconds * 10
+    def nextTime: Time = start + iter.next().toLong.milliseconds * 10
 
     val t = new Thread("CpuProfileTest") {
       override def run(): Unit = {

@@ -22,33 +22,33 @@ object JvmStats {
 
     def heap = mem.getHeapMemoryUsage()
     val heapStats = stats.scope("heap")
-    gauges.add(heapStats.addGauge("committed") { heap.getCommitted() })
-    gauges.add(heapStats.addGauge("max") { heap.getMax() })
-    gauges.add(heapStats.addGauge("used") { heap.getUsed() })
+    gauges.add(heapStats.addGauge("committed") { heap.getCommitted().toFloat })
+    gauges.add(heapStats.addGauge("max") { heap.getMax().toFloat })
+    gauges.add(heapStats.addGauge("used") { heap.getUsed().toFloat })
 
     def nonHeap = mem.getNonHeapMemoryUsage()
     val nonHeapStats = stats.scope("nonheap")
-    gauges.add(nonHeapStats.addGauge("committed") { nonHeap.getCommitted() })
-    gauges.add(nonHeapStats.addGauge("max") { nonHeap.getMax() })
-    gauges.add(nonHeapStats.addGauge("used") { nonHeap.getUsed() })
+    gauges.add(nonHeapStats.addGauge("committed") { nonHeap.getCommitted().toFloat })
+    gauges.add(nonHeapStats.addGauge("max") { nonHeap.getMax().toFloat })
+    gauges.add(nonHeapStats.addGauge("used") { nonHeap.getUsed().toFloat })
 
     val threads = ManagementFactory.getThreadMXBean()
     val threadStats = stats.scope("thread")
-    gauges.add(threadStats.addGauge("daemon_count") { threads.getDaemonThreadCount().toLong })
-    gauges.add(threadStats.addGauge("count") { threads.getThreadCount().toLong })
-    gauges.add(threadStats.addGauge("peak_count") { threads.getPeakThreadCount().toLong })
+    gauges.add(threadStats.addGauge("daemon_count") { threads.getDaemonThreadCount().toFloat })
+    gauges.add(threadStats.addGauge("count") { threads.getThreadCount().toFloat })
+    gauges.add(threadStats.addGauge("peak_count") { threads.getPeakThreadCount().toFloat })
 
     val runtime = ManagementFactory.getRuntimeMXBean()
-    val uptime = stats.addGauge("uptime") { runtime.getUptime() }
+    val uptime = stats.addGauge("uptime") { runtime.getUptime().toFloat }
     gauges.add(uptime)
-    gauges.add(stats.addGauge("start_time") { runtime.getStartTime() })
+    gauges.add(stats.addGauge("start_time") { runtime.getStartTime().toFloat })
 
     val os = ManagementFactory.getOperatingSystemMXBean()
-    gauges.add(stats.addGauge("num_cpus") { os.getAvailableProcessors().toLong })
+    gauges.add(stats.addGauge("num_cpus") { os.getAvailableProcessors().toFloat })
     os match {
       case unix: com.sun.management.UnixOperatingSystemMXBean =>
-        gauges.add(stats.addGauge("fd_count") { unix.getOpenFileDescriptorCount })
-        gauges.add(stats.addGauge("fd_limit") { unix.getMaxFileDescriptorCount })
+        gauges.add(stats.addGauge("fd_count") { unix.getOpenFileDescriptorCount.toFloat })
+        gauges.add(stats.addGauge("fd_limit") { unix.getMaxFileDescriptorCount.toFloat })
       case _ =>
     }
 
@@ -64,15 +64,21 @@ object JvmStats {
       case null =>
       case compilation =>
         val compilationStats = stats.scope("compilation")
-        gauges.add(compilationStats.addGauge("time_msec") { compilation.getTotalCompilationTime() })
+        gauges.add(compilationStats.addGauge("time_msec") {
+          compilation.getTotalCompilationTime().toFloat
+        })
     }
 
     val classes = ManagementFactory.getClassLoadingMXBean()
     val classLoadingStats = stats.scope("classes")
-    gauges.add(classLoadingStats.addGauge("total_loaded") { classes.getTotalLoadedClassCount() })
-    gauges.add(classLoadingStats.addGauge("total_unloaded") { classes.getUnloadedClassCount() })
+    gauges.add(classLoadingStats.addGauge("total_loaded") {
+      classes.getTotalLoadedClassCount().toFloat
+    })
+    gauges.add(classLoadingStats.addGauge("total_unloaded") {
+      classes.getUnloadedClassCount().toFloat
+    })
     gauges.add(
-      classLoadingStats.addGauge("current_loaded") { classes.getLoadedClassCount().toLong }
+      classLoadingStats.addGauge("current_loaded") { classes.getLoadedClassCount().toFloat }
     )
 
     val memPool = ManagementFactory.getMemoryPoolMXBeans.asScala
@@ -83,19 +89,19 @@ object JvmStats {
       val name = pool.getName.regexSub("""[^\w]""".r) { m => "_" }
       if (pool.getCollectionUsage != null) {
         def usage = pool.getCollectionUsage // this is a snapshot, we can't reuse the value
-        gauges.add(postGCStats.addGauge(name, "used") { usage.getUsed })
+        gauges.add(postGCStats.addGauge(name, "used") { usage.getUsed.toFloat })
       }
       if (pool.getUsage != null) {
         def usage = pool.getUsage // this is a snapshot, we can't reuse the value
-        gauges.add(currentMem.addGauge(name, "used") { usage.getUsed })
-        gauges.add(currentMem.addGauge(name, "max") { usage.getMax })
+        gauges.add(currentMem.addGauge(name, "used") { usage.getUsed.toFloat })
+        gauges.add(currentMem.addGauge(name, "max") { usage.getMax.toFloat })
       }
     }
     gauges.add(postGCStats.addGauge("used") {
-      memPool.flatMap(p => Option(p.getCollectionUsage)).map(_.getUsed).sum
+      memPool.flatMap(p => Option(p.getCollectionUsage)).map(_.getUsed).sum.toFloat
     })
     gauges.add(currentMem.addGauge("used") {
-      memPool.flatMap(p => Option(p.getUsage)).map(_.getUsed).sum
+      memPool.flatMap(p => Option(p.getUsage)).map(_.getUsed).sum.toFloat
     })
 
     // the Hotspot JVM exposes the full size that the metaspace can grow to
@@ -103,14 +109,14 @@ object JvmStats {
     val jvm = Jvm()
     jvm.metaspaceUsage.foreach { usage =>
       gauges.add(memStats.scope("metaspace").addGauge("max_capacity") {
-        usage.maxCapacity.inBytes
+        usage.maxCapacity.inBytes.toFloat
       })
     }
 
     val spStats = stats.scope("safepoint")
-    gauges.add(spStats.addGauge("sync_time_millis") { jvm.safepoint.syncTimeMillis })
-    gauges.add(spStats.addGauge("total_time_millis") { jvm.safepoint.totalTimeMillis })
-    gauges.add(spStats.addGauge("count") { jvm.safepoint.count })
+    gauges.add(spStats.addGauge("sync_time_millis") { jvm.safepoint.syncTimeMillis.toFloat })
+    gauges.add(spStats.addGauge("total_time_millis") { jvm.safepoint.totalTimeMillis.toFloat })
+    gauges.add(spStats.addGauge("count") { jvm.safepoint.count.toFloat })
 
     ManagementFactory.getPlatformMXBeans(classOf[BufferPoolMXBean]) match {
       case null =>
@@ -118,9 +124,9 @@ object JvmStats {
         val bufferPoolStats = memStats.scope("buffer")
         jBufferPool.asScala.foreach { bp =>
           val name = bp.getName
-          gauges.add(bufferPoolStats.addGauge(name, "count") { bp.getCount })
-          gauges.add(bufferPoolStats.addGauge(name, "used") { bp.getMemoryUsed })
-          gauges.add(bufferPoolStats.addGauge(name, "max") { bp.getTotalCapacity })
+          gauges.add(bufferPoolStats.addGauge(name, "count") { bp.getCount.toFloat })
+          gauges.add(bufferPoolStats.addGauge(name, "used") { bp.getMemoryUsed.toFloat })
+          gauges.add(bufferPoolStats.addGauge(name, "max") { bp.getTotalCapacity.toFloat })
         }
     }
 
@@ -130,10 +136,10 @@ object JvmStats {
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
       val poolCycles =
         gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "cycles") {
-          gc.getCollectionCount
+          gc.getCollectionCount.toFloat
         }
       val poolMsec = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "msec") {
-        gc.getCollectionTime
+        gc.getCollectionTime.toFloat
       }
 
       ExpressionSchema(s"gc_cycles", Expression(poolCycles.metadata))
@@ -154,8 +160,12 @@ object JvmStats {
     }
 
     // note, these could be -1 if the collector doesn't have support for it.
-    val cycles = gcStats.addGauge("cycles") { gcPool.map(_.getCollectionCount).filter(_ > 0).sum }
-    val msec = gcStats.addGauge("msec") { gcPool.map(_.getCollectionTime).filter(_ > 0).sum }
+    val cycles = gcStats.addGauge("cycles") {
+      gcPool.map(_.getCollectionCount).filter(_ > 0).sum.toFloat
+    }
+    val msec = gcStats.addGauge("msec") {
+      gcPool.map(_.getCollectionTime).filter(_ > 0).sum.toFloat
+    }
 
     ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
       .withLabel(ExpressionSchema.Role, "jvm")
@@ -179,12 +189,12 @@ object JvmStats {
     if (allocations.trackingEden) {
       val allocationStats = memStats.scope("allocations")
       val eden = allocationStats.scope("eden")
-      gauges.add(eden.addGauge("bytes") { allocations.eden })
+      gauges.add(eden.addGauge("bytes") { allocations.eden.toFloat })
     }
 
     // return ms from ns while retaining precision
     gauges.add(stats.addGauge("application_time_millis") { jvm.applicationTime.toFloat / 1000000 })
-    gauges.add(stats.addGauge("tenuring_threshold") { jvm.tenuringThreshold })
+    gauges.add(stats.addGauge("tenuring_threshold") { jvm.tenuringThreshold.toFloat })
   }
 
 }

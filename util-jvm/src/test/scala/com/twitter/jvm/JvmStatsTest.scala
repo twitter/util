@@ -18,7 +18,7 @@ class JvmStatsTest extends AnyFunSuite {
 
     assert(expressions.size == 7)
 
-    expressions.foreach { x: (ExpressionSchemaKey, ExpressionSchema) =>
+    expressions.foreach { (x: (ExpressionSchemaKey, ExpressionSchema)) =>
       assertMetric(x._2)
     }
   }

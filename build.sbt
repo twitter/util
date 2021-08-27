@@ -519,13 +519,12 @@ lazy val utilJvm = Project(
   id = "util-jvm",
   base = file("util-jvm")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-jvm",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-      "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-    )
+   ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
   ).dependsOn(utilApp, utilCore, utilStats)
 
 lazy val utilLint = Project(

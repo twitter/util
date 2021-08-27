@@ -10,6 +10,8 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-jvm: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D728602``
+
 * util-stats: Counter, Gauge, and Stat can be instrumented with descriptions. ``PHAB_ID = D615481``
 
 * util-cache: Experimentally crossbuilds with Scala 3. ``PHAB_ID=D714304``.

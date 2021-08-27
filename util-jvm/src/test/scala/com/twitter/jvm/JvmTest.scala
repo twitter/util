@@ -28,7 +28,7 @@ class JvmTest extends AnyWordSpec with MockitoSugar {
         currentSnap = snap
       }
 
-      override val executor = new MockScheduledExecutorService
+      override val executor: MockScheduledExecutorService = new MockScheduledExecutorService
 
       def snap = currentSnap
 

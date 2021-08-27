@@ -42,7 +42,7 @@ object EstimatorApp extends App {
   var elapsed = 1
   for (List(begin, end) <- states.toList.sliding(2)) {
     val allocated = (end - begin).used
-    estimator.measure(allocated.inBytes)
+    estimator.measure(allocated.inBytes.toDouble)
     val r = end.capacity - end.used
     val i = (r.inBytes / estimator.estimate.toLong) + elapsed
     val j = states.indexWhere(_.numCollections > end.numCollections)
