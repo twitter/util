@@ -8,7 +8,8 @@
 
 A bunch of idiomatic, small, general purpose tools.
 
-See the Scaladoc [here](https://twitter.github.com/util).
+See the Scaladoc [here](https://twitter.github.io/util/docs/#com.twitter.util.package)
+or check out the [user guide](https://twitter.github.io/util).
 
 ## Status
 
