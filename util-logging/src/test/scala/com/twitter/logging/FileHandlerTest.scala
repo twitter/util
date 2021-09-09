@@ -285,7 +285,7 @@ class FileHandlerTest extends AnyWordSpec with TempFolder {
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
-          rollPolicy = Policy.MaxSize(maxSize.bytes),
+          rollPolicy = Policy.MaxSize(maxSize.toLong.bytes),
           append = true,
           formatter = BareFormatter
         ).apply()
@@ -353,7 +353,7 @@ class FileHandlerTest extends AnyWordSpec with TempFolder {
         }
 
         val files = listLogFiles(folderName + "/LogFileDir")
-        files.foreach { f: File =>
+        files.foreach { (f: File) =>
           val len = f.length().bytes
           if (len > fileSizeInMegaBytes.megabytes) {
             fail("Failed to roll over the log file")
