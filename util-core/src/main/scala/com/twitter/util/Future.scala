@@ -28,7 +28,7 @@ import scala.util.control.NoStackTrace
  * [[[[com.twitter.util.Future.collectToTry[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[Seq[com\.twitter\.util\.Try[A]]]* collectToTry(Seq[Future[A]])]]]]
  *
  * @define FutureSelectScaladocLink
- * [[[com.twitter.util.Future.select[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[(com\.twitter\.util\.Try[A],Seq[com\.twitter\.util\.Future[A]])]* select(Seq[Future])]]]
+ * [[[com.twitter.util.Future.select[A](fs:Seq[com\.twitter\.util\.Future[A]]):com\.twitter\.util\.Future[(com\.twitter\.util\.Try[A],Seq[com\.twitter\.util\.Future[A]])]* select(Seq.MethodPerEndpoint)]]]
  */
 object Future {
   val DEFAULT_TIMEOUT: Duration = Duration.Top
