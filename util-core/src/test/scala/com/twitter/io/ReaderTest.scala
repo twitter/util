@@ -3,13 +3,18 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.conversions.DurationOps._
 import com.twitter.conversions.StorageUnitOps._
-import com.twitter.util.{Await, Awaitable, Future, Promise}
+import com.twitter.util.Await
+import com.twitter.util.Awaitable
+import com.twitter.util.Future
+import com.twitter.util.Promise
 import java.io.ByteArrayInputStream
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
 import org.mockito.Mockito._
-import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -465,6 +470,21 @@ class ReaderTest
     intercept[ReaderDiscardedException] {
       await(r2.read())
     }
+  }
+
+  test("Reader.fromFuture - unsatisfied") {
+    val p = Promise[Int]()
+    val r1 = Reader.fromFuture(p)
+
+    val f1 = r1.read()
+    val f2 = f1.flatMap(_ => r1.read())
+
+    p.setValue(1)
+    assert(await(f1) == Some(1))
+    // we already consumed the single item via the operation
+    // in `f1`, so `f2` should be empty since it's strictly
+    // sequenced after `f1`.
+    assert(await(f2) == None)
   }
 
   test("Reader.map") {

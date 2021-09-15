@@ -1,7 +1,10 @@
 package com.twitter.io
 
 import com.twitter.io.FutureReader._
-import com.twitter.util.{Future, Promise, Return, Throw}
+import com.twitter.util.Future
+import com.twitter.util.Promise
+import com.twitter.util.Return
+import com.twitter.util.Throw
 
 /**
  * We want to ensure that this reader always satisfies these invariants:
@@ -21,11 +24,13 @@ private[io] final class FutureReader[A](fa: Future[A]) extends Reader[A] {
     val (updatedState, result) = synchronized {
       val result = state match {
         case State.Idle =>
-          fa.map(Some.apply).respond {
+          fa.transform {
             case Throw(t) =>
               state = State.Failed(t)
-            case Return(_) =>
+              Future.exception(t)
+            case Return(v) =>
               state = State.Read
+              Future.value(Some(v))
           }
         case State.Read =>
           state = State.FullyRead
