@@ -7,6 +7,7 @@ import com.twitter.util.Await
 import com.twitter.util.Awaitable
 import com.twitter.util.Future
 import com.twitter.util.Promise
+import com.twitter.util.TimeoutException
 import java.io.ByteArrayInputStream
 import java.nio.charset.{StandardCharsets => JChar}
 import java.util.concurrent.atomic.AtomicBoolean
@@ -532,5 +533,43 @@ class ReaderTest
       val r = Reader.fromSeq(l)
       assert(await(Reader.readAllItems(r)) == l)
     }
+  }
+
+  test("Reader.readAllItems - propagates interrupts if enabled") {
+    val p = new Promise[Int]()
+    val reader = Reader.fromFuture(p)
+
+    val fut = Reader.readAllItemsInterruptible(reader)
+    fut.raise(new TimeoutException(""))
+
+    assert(Await.result(reader.onClose) == StreamTermination.Discarded)
+  }
+
+  test("Reader.readAllItems - ignores interrupts if disabled") {
+    val p = new Promise[Int]()
+    val reader = Reader.fromFuture(p)
+
+    val fut = Reader.readAllItems(reader)
+    fut.raise(new TimeoutException(""))
+
+    p.setValue(1)
+    assert(await(fut) == Seq(1))
+    assert(await(reader.onClose) == StreamTermination.FullyRead)
+  }
+
+  test("Reader - fails pipe with exception") {
+    val p = new Pipe[Int]()
+    val fut = Reader.readAllItemsInterruptible(p)
+
+    fut.raise(new TimeoutException(""))
+    assertThrows[TimeoutException](await(p.read()))
+  }
+
+  test("Reader - fails non-pipe with discard") {
+    val r = Reader.fromFuture(new Promise[Int]())
+    val fut = Reader.readAllItemsInterruptible(r)
+
+    fut.raise(new TimeoutException(""))
+    assertThrows[ReaderDiscardedException](await(r.read()))
   }
 }

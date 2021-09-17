@@ -3,8 +3,11 @@ package com.twitter.io
 import com.twitter.concurrent.AsyncStream
 import com.twitter.util.Promise.Detachable
 import com.twitter.util._
-import java.io.{File, FileInputStream, InputStream}
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.util.{Collection => JCollection}
+import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
 /**
@@ -192,19 +195,42 @@ object Reader {
    */
   def exception[A](e: Throwable): Reader[A] = fromFuture[A](Future.exception(e))
 
+  private def failOrDiscard(r: Reader[_], t: Throwable): Unit = r match {
+    case p: Pipe[_] => p.fail(t)
+    case r => r.discard()
+  }
+
+  private def consume[A](r: Reader[A], builder: mutable.Builder[A, IndexedSeq[A]]): Future[Seq[A]] =
+    r.read().flatMap {
+      case Some(v) =>
+        builder += v
+        consume(r, builder)
+      case None =>
+        Future.value(builder.result())
+    }
+
   /**
    * Read all items from the Reader r.
+   * @param r The reader to read from
    * @return A Sequence of items.
    */
   def readAllItems[A](r: Reader[A]): Future[Seq[A]] = {
-    val acc = List.newBuilder[A]
-    def loop(): Future[List[A]] = r.read().flatMap {
-      case None => Future.value(acc.result())
-      case Some(t) =>
-        acc += t
-        loop()
+    // This could be implemented as `readAllItemsInterruptable(r).masked`, but doing so would cause multiple extra
+    // promise allocations.
+    consume(r, IndexedSeq.newBuilder)
+  }
+
+  /**
+   * Read all items from the Reader r, interrupting the returned future will discard the reader.
+   * @param r The reader to read from
+   * @return A Sequence of items.
+   */
+  def readAllItemsInterruptible[A](r: Reader[A]): Future[Seq[A]] = {
+    val p = new Promise[Seq[A]] with Promise.InterruptHandler {
+      override protected def onInterrupt(t: Throwable): Unit = failOrDiscard(r, t)
     }
-    loop()
+    consume(r, IndexedSeq.newBuilder).proxyTo(p)
+    p
   }
 
   /**
