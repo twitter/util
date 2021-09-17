@@ -1,6 +1,15 @@
 package com.twitter.finagle.stats.exp
 
-import com.twitter.finagle.stats.{MetricUnit, SourceRole, StatsReceiver, Unspecified}
+import com.twitter.finagle.stats.HistogramFormatter
+import com.twitter.finagle.stats.MetricUnit
+import com.twitter.finagle.stats.SourceRole
+import com.twitter.finagle.stats.StatsReceiver
+import com.twitter.finagle.stats.Unspecified
+import com.twitter.finagle.stats.exp.Expression.Avg
+import com.twitter.finagle.stats.exp.Expression.Count
+import com.twitter.finagle.stats.exp.Expression.Max
+import com.twitter.finagle.stats.exp.Expression.Min
+import com.twitter.finagle.stats.exp.Expression.Sum
 
 /**
  * ExpressionSchema is builder class that construct an expression with its metadata.
@@ -79,14 +88,32 @@ private[twitter] object ExpressionSchema {
   val ServiceName: String = "service_name"
   val ProcessPath: String = "process_path"
 
-  def apply(name: String, expr: Expression): ExpressionSchema =
+  def apply(name: String, expr: Expression): ExpressionSchema = {
+    val preLabels = expr match {
+      case histoExpr: HistogramExpression => histogramLabel(histoExpr)
+      case _ => Map.empty[String, String]
+    }
+
     ExpressionSchema(
       name = name,
-      labels = Map.empty,
+      labels = preLabels,
       namespace = Seq.empty,
       expr = expr,
       bounds = Unbounded.get,
       description = "Unspecified",
       unit = Unspecified,
       exprQuery = "")
+  }
+
+  private def histogramLabel(histoExpr: HistogramExpression): Map[String, String] = {
+    val value = histoExpr.component match {
+      case Right(percentile) => HistogramFormatter.labelPercentile(percentile)
+      case Left(Min) => HistogramFormatter.labelMin
+      case Left(Max) => HistogramFormatter.labelMax
+      case Left(Avg) => HistogramFormatter.labelAverage
+      case Left(Sum) => HistogramFormatter.labelSum
+      case Left(Count) => HistogramFormatter.labelCount
+    }
+    Map("bucket" -> value)
+  }
 }

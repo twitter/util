@@ -1,9 +1,12 @@
 package com.twitter.finagle.stats.exp
 
 import com.twitter.conversions.DurationOps._
-import com.twitter.finagle.stats.MetricBuilder.{CounterType, HistogramType}
+import com.twitter.finagle.stats.MetricBuilder.CounterType
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats._
-import com.twitter.util.{Stopwatch, Time, TimeControl}
+import com.twitter.util.Stopwatch
+import com.twitter.util.Time
+import com.twitter.util.TimeControl
 import scala.util.control.NonFatal
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -72,9 +75,17 @@ class ExpressionSchemaTest extends AnyFunSuite {
         sr.expressions(
             ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).expr == successRate.expr)
       assert(
-        sr.expressions(ExpressionSchemaKey("latency", downstreamLabel, Nil)).name == latency.name)
+        sr.expressions(
+            ExpressionSchemaKey(
+              "latency",
+              downstreamLabel + ("bucket" -> "p99"),
+              Nil)).name == latency.name)
       assert(
-        sr.expressions(ExpressionSchemaKey("latency", downstreamLabel, Nil)).expr == latency.expr)
+        sr.expressions(
+            ExpressionSchemaKey(
+              "latency",
+              downstreamLabel + ("bucket" -> "p99"),
+              Nil)).expr == latency.expr)
 
       assert(sr.counters(Seq("success")) == 1)
       assert(sr.counters(Seq("failures")) == 1)
@@ -93,6 +104,28 @@ class ExpressionSchemaTest extends AnyFunSuite {
       }
 
       assert(e.getMessage.contains("provide a component for histogram"))
+    }
+  }
+
+  test("histogram expressions come with default labels") {
+    new Ctx {
+      val latencyP90 = ExpressionSchema("latency", Expression(latencyMb, Right(0.9))).register()
+      val latencyP99 = ExpressionSchema("latency", Expression(latencyMb, Right(0.99))).register()
+      val latencyAvg =
+        ExpressionSchema("latency", Expression(latencyMb, Left(Expression.Avg))).register()
+
+      val downstreamLabel =
+        Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
+
+      assert(
+        sr.expressions.contains(
+          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "p90"), Nil)))
+      assert(
+        sr.expressions.contains(
+          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "p99"), Nil)))
+      assert(
+        sr.expressions.contains(
+          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "avg"), Nil)))
     }
   }
 
