@@ -211,7 +211,9 @@ class TryTest extends AnyFunSuite {
   }
 
   test("Try to scala.util.Try works") {
-    import scala.util.{Try => STry, Failure, Success}
+    import scala.util.{Try => STry}
+    import scala.util.Failure
+    import scala.util.Success
 
     assert(STry(1) == Try(1).asScala)
     assert(Try(sys.error("boom!")).asScala match {

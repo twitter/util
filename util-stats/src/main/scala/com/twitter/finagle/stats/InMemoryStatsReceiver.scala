@@ -1,12 +1,20 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType}
-import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey}
+import com.twitter.finagle.stats.MetricBuilder.CounterType
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.exp.ExpressionSchema.ExpressionCollisionException
+import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.ExpressionSchemaKey
+import com.twitter.util.Throw
+import com.twitter.util.Try
 import java.io.PrintStream
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.{SortedMap, mutable, Map => scalaMap}
 import scala.collection.compat._
+import scala.collection.SortedMap
+import scala.collection.mutable
+import scala.collection.{Map => scalaMap}
 import scala.jdk.CollectionConverters._
 
 object InMemoryStatsReceiver {
@@ -263,8 +271,12 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Designed to match the behavior of Metrics::registerExpression().
    */
-  override protected[finagle] def registerExpression(schema: ExpressionSchema): Unit = {
-    expressions.put(schema.schemaKey(), schema)
+  override protected[finagle] def registerExpression(schema: ExpressionSchema): Try[Unit] = {
+    if (expressions.contains(schema.schemaKey())) {
+      Throw(
+        ExpressionCollisionException(
+          s"An expression with the key ${schema.schemaKey()} had already been defined."))
+    } else Try { expressions.put(schema.schemaKey(), schema) }
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.util.Try
 
 /**
  * A proxy [[StatsReceiver]] that delegates all calls to the `self` stats receiver.
@@ -15,8 +16,9 @@ trait StatsReceiverProxy extends StatsReceiver with DelegatingStatsReceiver {
   def stat(metricBuilder: MetricBuilder): Stat = self.stat(metricBuilder)
   def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = self.addGauge(metricBuilder)(f)
 
-  override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit =
-    self.registerExpression(expressionSchema)
+  override protected[finagle] def registerExpression(
+    expressionSchema: ExpressionSchema
+  ): Try[Unit] = self.registerExpression(expressionSchema)
 
   def underlying: Seq[StatsReceiver] = Seq(self)
 

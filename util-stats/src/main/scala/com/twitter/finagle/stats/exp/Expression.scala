@@ -2,7 +2,9 @@ package com.twitter.finagle.stats.exp
 
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.exp.Expression.HistogramComponent
-import com.twitter.finagle.stats.{Metadata, MetricBuilder, StatsReceiver}
+import com.twitter.finagle.stats.Metadata
+import com.twitter.finagle.stats.MetricBuilder
+import com.twitter.finagle.stats.StatsReceiver
 import scala.annotation.varargs
 
 private[twitter] object Expression {

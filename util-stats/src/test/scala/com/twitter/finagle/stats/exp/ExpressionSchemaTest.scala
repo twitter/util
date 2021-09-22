@@ -29,6 +29,16 @@ class ExpressionSchemaTest extends AnyFunSuite {
         throw new Exception("boom!")
       }
     }
+
+    val downstreamLabel =
+      Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
+
+    protected[this] def nameToKey(
+      name: String,
+      labels: Map[String, String] = Map(),
+      namespaces: Seq[String] = Seq()
+    ): ExpressionSchemaKey =
+      ExpressionSchemaKey(name, downstreamLabel ++ labels, namespaces)
   }
 
   test("Demonstrate an end to end example of using metric expressions") {
@@ -46,8 +56,8 @@ class ExpressionSchemaTest extends AnyFunSuite {
         .withUnit(Milliseconds)
         .withDescription("The latency of the slow query")
 
-      successRate.register()
-      latency.register()
+      successRate.build()
+      latency.build()
 
       def runTheQuery(succeed: Boolean): Unit = {
         Time.withCurrentTimeFrozen { ctl =>
@@ -66,34 +76,17 @@ class ExpressionSchemaTest extends AnyFunSuite {
       runTheQuery(true)
       runTheQuery(false)
 
-      val downstreamLabel =
-        Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
-      assert(
-        sr.expressions(
-            ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).name == successRate.name)
-      assert(
-        sr.expressions(
-            ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).expr == successRate.expr)
-      assert(
-        sr.expressions(
-            ExpressionSchemaKey(
-              "latency",
-              downstreamLabel + ("bucket" -> "p99"),
-              Nil)).name == latency.name)
-      assert(
-        sr.expressions(
-            ExpressionSchemaKey(
-              "latency",
-              downstreamLabel + ("bucket" -> "p99"),
-              Nil)).expr == latency.expr)
+      assert(sr.expressions(nameToKey("success_rate")).name == successRate.name)
+      assert(sr.expressions(nameToKey("success_rate")).expr == successRate.expr)
+      assert(sr.expressions(nameToKey("latency", Map("bucket" -> "p99"))).name == latency.name)
+      assert(sr.expressions(nameToKey("latency", Map("bucket" -> "p99"))).expr == latency.expr)
 
       assert(sr.counters(Seq("success")) == 1)
       assert(sr.counters(Seq("failures")) == 1)
       assert(sr.stats(Seq("latency")) == Seq(50, 50))
 
       assert(
-        sr.expressions(ExpressionSchemaKey("success_rate", downstreamLabel, Nil)).labels(
-            ExpressionSchema.Role) == Client.toString)
+        sr.expressions(nameToKey("success_rate")).labels(ExpressionSchema.Role) == Client.toString)
     }
   }
 
@@ -109,23 +102,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("histogram expressions come with default labels") {
     new Ctx {
-      val latencyP90 = ExpressionSchema("latency", Expression(latencyMb, Right(0.9))).register()
-      val latencyP99 = ExpressionSchema("latency", Expression(latencyMb, Right(0.99))).register()
+      val latencyP90 = ExpressionSchema("latency", Expression(latencyMb, Right(0.9))).build()
+      val latencyP99 = ExpressionSchema("latency", Expression(latencyMb, Right(0.99))).build()
       val latencyAvg =
-        ExpressionSchema("latency", Expression(latencyMb, Left(Expression.Avg))).register()
+        ExpressionSchema("latency", Expression(latencyMb, Left(Expression.Avg))).build()
 
-      val downstreamLabel =
-        Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
-
-      assert(
-        sr.expressions.contains(
-          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "p90"), Nil)))
-      assert(
-        sr.expressions.contains(
-          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "p99"), Nil)))
-      assert(
-        sr.expressions.contains(
-          ExpressionSchemaKey("latency", downstreamLabel + ("bucket" -> "avg"), Nil)))
+      assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p90"))))
+      assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p99"))))
+      assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "avg"))))
     }
   }
 
@@ -136,14 +120,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
-        .register()
+        .build()
 
       val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
         .withNamespace("section2", "a")
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
-        .register()
+        .build()
 
       assert(sr.expressions.values.size == 2)
       val namespaces = sr.expressions.values.toSeq.map { exprSchema =>
@@ -151,6 +135,33 @@ class ExpressionSchemaTest extends AnyFunSuite {
       }
       assert(namespaces.contains(Seq("section1")))
       assert(namespaces.contains(Seq("section2", "a")))
+    }
+  }
+
+  test("expressions with the same key - name, labels and namespaces") {
+    new Ctx {
+      val successRate1 = ExpressionSchema("success_rate", Expression(successMb))
+        .withNamespace("section1")
+        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+        .withUnit(Percentage)
+        .withDescription("The success rate of the slow query")
+        .build()
+
+      val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+        .withNamespace("section1")
+        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+        .withUnit(Percentage)
+        .withDescription("The success rate of the slow query")
+        .build()
+
+      // only store the first
+      // the second attempt will be a Throw
+      assert(sr.expressions.values.size == 1)
+      assert(
+        sr.expressions(nameToKey("success_rate", Map(), Seq("section1"))).expr == Expression(
+          successMb))
+      assert(successRate1.isReturn)
+      assert(successRate2.isThrow)
     }
   }
 }

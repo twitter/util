@@ -1,14 +1,14 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{
-  CounterType,
-  CounterishGaugeType,
-  GaugeType,
-  HistogramType,
-  MetricType,
-  UnlatchedCounter
-}
+import com.twitter.finagle.stats.MetricBuilder.CounterType
+import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.MetricBuilder.MetricType
+import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.util.Return
+import com.twitter.util.Try
 import java.lang.{Float => JFloat}
 import java.util.concurrent.Callable
 import java.util.function.Supplier
@@ -375,7 +375,8 @@ trait StatsReceiver {
   final def scope(namespaces: String*): StatsReceiver =
     namespaces.foldLeft(this)((statsReceiver, name) => statsReceiver.scope(name))
 
-  protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit = {}
+  protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Try[Unit] =
+    Return.Unit
 
   /**
    * Prepend a suffix value to the next scope.

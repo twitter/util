@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.util.Try
 
 /**
  * A StatsReceiver proxy that configures all counter, stat, and gauge
@@ -27,7 +28,7 @@ case class RoleConfiguredStatsReceiver(
     self.addGauge(metricBuilder.withRole(role))(f)
   }
 
-  override def registerExpression(expressionSchema: ExpressionSchema): Unit = {
+  override def registerExpression(expressionSchema: ExpressionSchema): Try[Unit] = {
     val configuredExprSchema = name match {
       case Some(serviceName) => expressionSchema.withRole(role).withServiceName(serviceName)
       case None => expressionSchema.withRole(role)

@@ -1,10 +1,16 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{CounterType, GaugeType, HistogramType}
-import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema, ExpressionSchemaKey}
-import java.io.{ByteArrayOutputStream, PrintStream}
+import com.twitter.finagle.stats.MetricBuilder.CounterType
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.exp.Expression
+import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.ExpressionSchemaKey
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 import java.nio.charset.StandardCharsets
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.parallel.immutable.ParRange
 
@@ -378,7 +384,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       "test_expression",
       Expression(aCounter.metadata).plus(Expression(bHisto.metadata, Left(Expression.Min))
         .plus(Expression(cGauge.metadata)))
-    ).register()
+    ).build()
 
     // what we expected as hydrated metric builders
     val aaSchema =
@@ -405,12 +411,12 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     ExpressionSchema(
       "test_expression_0",
       Expression(aCounter.metadata)
-    ).withLabel(ExpressionSchema.Role, "test").register()
+    ).withLabel(ExpressionSchema.Role, "test").build()
 
     ExpressionSchema(
       "test_expression_1",
       Expression(aCounter.metadata)
-    ).withLabel(ExpressionSchema.Role, "dont appear").register()
+    ).withLabel(ExpressionSchema.Role, "dont appear").build()
 
     val withLabel = sr.getAllExpressionsWithLabel(ExpressionSchema.Role, "test")
     assert(withLabel.size == 1)

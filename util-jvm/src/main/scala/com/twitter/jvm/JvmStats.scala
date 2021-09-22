@@ -2,9 +2,12 @@ package com.twitter.jvm
 
 import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
-import com.twitter.finagle.stats.{Milliseconds, StatsReceiver}
-import com.twitter.finagle.stats.exp.{Expression, ExpressionSchema}
-import java.lang.management.{BufferPoolMXBean, ManagementFactory}
+import com.twitter.finagle.stats.Milliseconds
+import com.twitter.finagle.stats.StatsReceiver
+import com.twitter.finagle.stats.exp.Expression
+import com.twitter.finagle.stats.exp.ExpressionSchema
+import java.lang.management.BufferPoolMXBean
+import java.lang.management.ManagementFactory
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
@@ -147,13 +150,13 @@ object JvmStats {
         .withLabel("gc_pool", name)
         .withDescription(
           s"The total number of collections that have occurred for the $name gc pool")
-        .register()
+        .build()
       ExpressionSchema(s"gc_latency", Expression(poolMsec.metadata))
         .withLabel(ExpressionSchema.Role, "jvm")
         .withLabel("gc_pool", name)
         .withUnit(Milliseconds)
         .withDescription(s"The total elapsed time spent doing collections for the $name gc pool")
-        .register()
+        .build()
 
       gauges.add(poolCycles)
       gauges.add(poolMsec)
@@ -171,16 +174,16 @@ object JvmStats {
       .withLabel(ExpressionSchema.Role, "jvm")
       .withUnit(Milliseconds)
       .withDescription("The uptime of the JVM in MS")
-      .register()
+      .build()
     ExpressionSchema("gc_cycles", Expression(cycles.metadata))
       .withLabel(ExpressionSchema.Role, "jvm")
       .withDescription("The total number of collections that have occurred")
-      .register()
+      .build()
     ExpressionSchema("gc_latency", Expression(msec.metadata))
       .withLabel(ExpressionSchema.Role, "jvm")
       .withUnit(Milliseconds)
       .withDescription("The total elapsed time spent doing collections")
-      .register()
+      .build()
 
     gauges.add(cycles)
     gauges.add(msec)

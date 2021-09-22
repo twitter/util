@@ -3,13 +3,13 @@ package com.twitter.finagle.stats.exp
 import com.twitter.finagle.stats.HistogramFormatter
 import com.twitter.finagle.stats.MetricUnit
 import com.twitter.finagle.stats.SourceRole
-import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.finagle.stats.Unspecified
 import com.twitter.finagle.stats.exp.Expression.Avg
 import com.twitter.finagle.stats.exp.Expression.Count
 import com.twitter.finagle.stats.exp.Expression.Max
 import com.twitter.finagle.stats.exp.Expression.Min
 import com.twitter.finagle.stats.exp.Expression.Sum
+import com.twitter.util.Try
 
 /**
  * ExpressionSchema is builder class that construct an expression with its metadata.
@@ -57,11 +57,17 @@ case class ExpressionSchema private (
   private[finagle] def withServiceName(name: String): ExpressionSchema =
     withLabel(ExpressionSchema.ServiceName, name)
 
-  def register(): Unit = {
+  /**
+   * Register this ExpressionSchema in StatsReceiver.
+   *
+   * Returns: Unit when the schema is successfully published to StatsReceiver
+   * Throws: [[ExpressionCollisionException]] if the schemaKey has mapped value
+   */
+  def build(): Try[Unit] = {
     Expression.getStatsReceivers(expr).toSeq match {
       case Seq(sr) => sr.registerExpression(this)
-      case srs: Seq[StatsReceiver] if srs.nonEmpty => srs.map(_.registerExpression(this))
-      case _ => // should not happen
+      case first +: _ => first.registerExpression(this)
+      case _ => Try.Unit // should not happen
     }
   }
 
@@ -84,6 +90,9 @@ case class ExpressionSchemaKey(
 
 // expose for testing in twitter-server
 private[twitter] object ExpressionSchema {
+
+  case class ExpressionCollisionException(msg: String) extends IllegalArgumentException(msg)
+
   val Role: String = "role"
   val ServiceName: String = "service_name"
   val ProcessPath: String = "process_path"

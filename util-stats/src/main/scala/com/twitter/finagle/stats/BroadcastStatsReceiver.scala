@@ -1,6 +1,9 @@
 package com.twitter.finagle.stats
 
 import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.util.Return
+import com.twitter.util.Throw
+import com.twitter.util.Try
 
 /**
  * BroadcastStatsReceiver is a helper object that create a StatsReceiver wrapper around multiple
@@ -39,9 +42,16 @@ object BroadcastStatsReceiver {
       def metadata: Metadata = MultiMetadata(Seq(firstGauge.metadata, secondGauge.metadata))
     }
 
-    override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit = {
-      first.registerExpression(expressionSchema)
-      second.registerExpression(expressionSchema)
+    override protected[finagle] def registerExpression(
+      expressionSchema: ExpressionSchema
+    ): Try[Unit] = {
+      Try.collect(
+        Seq(
+          first.registerExpression(expressionSchema),
+          second.registerExpression(expressionSchema))) match {
+        case Return(_) => Return.Unit
+        case Throw(throwable) => Throw(throwable)
+      }
     }
 
     def underlying: Seq[StatsReceiver] = Seq(first, second)
@@ -65,8 +75,13 @@ object BroadcastStatsReceiver {
       def metadata: Metadata = MultiMetadata(gauges.map(_.metadata))
     }
 
-    override protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Unit =
-      srs.map(_.registerExpression(expressionSchema))
+    override protected[finagle] def registerExpression(
+      expressionSchema: ExpressionSchema
+    ): Try[Unit] =
+      Try.collect(srs.map(_.registerExpression(expressionSchema))) match {
+        case Return(_) => Return.Unit
+        case Throw(throwable) => Throw(throwable)
+      }
 
     def underlying: Seq[StatsReceiver] = srs
 
