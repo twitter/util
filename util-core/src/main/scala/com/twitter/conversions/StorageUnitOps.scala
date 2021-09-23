@@ -2,6 +2,8 @@ package com.twitter.conversions
 
 import com.twitter.util.StorageUnit
 
+import scala.language.implicitConversions
+
 /**
  * Implicits for writing readable [[com.twitter.util.StorageUnit]]s.
  *
@@ -34,4 +36,15 @@ object StorageUnitOps {
     def million: Long = numBytes * 1000 * 1000
     def billion: Long = numBytes * 1000 * 1000 * 1000
   }
+
+  /**
+   * Forwarder for Int, as Scala 3.0 doesn't seem to do the implicit conversion to Long anymore.
+   * This is not a bug, as Scala 2.13 already had a flag ("-Ywarn-implicit-widening") to turn on warnings/errors
+   * for that.
+   *
+   * The implicit conversion from Int to Long here doesn't lose precision and keeps backwards source compatibliity
+   * with previous releases.
+   */
+  implicit def richStorageUnitFromInt(numBytes: Int): RichStorageUnit =
+    new RichStorageUnit(numBytes.toLong)
 }

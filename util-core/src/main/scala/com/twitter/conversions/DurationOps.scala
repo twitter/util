@@ -1,7 +1,9 @@
 package com.twitter.conversions
 
 import com.twitter.util.Duration
+
 import java.util.concurrent.TimeUnit
+import scala.language.implicitConversions
 
 /**
  * Implicits for writing readable [[com.twitter.util.Duration]]s.
@@ -36,5 +38,16 @@ object DurationOps {
     def days: Duration = Duration(numNanos, TimeUnit.DAYS)
     def day: Duration = days
   }
+
+  /**
+   * Forwarder for Int, as Scala 3.0 doesn't seem to do the implicit conversion to Long anymore.
+   * This is not a bug, as Scala 2.13 already had a flag ("-Ywarn-implicit-widening") to turn on warnings/errors
+   * for that.
+   *
+   * The implicit conversion from Int to Long here doesn't lose precision and keeps backwards source compatibliity
+   * with previous releases.
+   */
+  implicit def richDurationFromInt(numNanos: Int): RichDuration =
+    new RichDuration(numNanos.toLong)
 
 }
