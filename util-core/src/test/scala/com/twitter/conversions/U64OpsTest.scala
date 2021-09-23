@@ -16,4 +16,10 @@ class U64OpsTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
       assert(s.toU64Long == java.lang.Long.parseUnsignedLong(s, 16))
     }
   }
+
+  test("conversion works for Int values") {
+    forAll { (intValue: Int) =>
+      assert(intValue.toU64HexString == intValue.toLong.toU64HexString)
+    }
+  }
 }

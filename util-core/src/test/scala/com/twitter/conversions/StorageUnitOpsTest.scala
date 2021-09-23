@@ -3,8 +3,9 @@ package com.twitter.conversions
 import com.twitter.util.StorageUnit
 import com.twitter.conversions.StorageUnitOps._
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class StorageUnitOpsTest extends AnyFunSuite {
+class StorageUnitOpsTest extends AnyFunSuite with ScalaCheckPropertyChecks {
 
   test("converts") {
     assert(StorageUnit.fromBytes(1) == 1.byte)
@@ -24,6 +25,12 @@ class StorageUnitOpsTest extends AnyFunSuite {
 
     assert(StorageUnit.fromPetabytes(1) == 1.petabyte)
     assert(StorageUnit.fromPetabytes(7) == 7.petabytes)
+  }
+
+  test("conversion works for Int values") {
+    forAll { (intValue: Int) =>
+      assert(intValue.bytes == intValue.toLong.bytes)
+    }
   }
 
 }
