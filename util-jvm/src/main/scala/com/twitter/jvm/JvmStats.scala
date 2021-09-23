@@ -163,10 +163,10 @@ object JvmStats {
     }
 
     // note, these could be -1 if the collector doesn't have support for it.
-    val cycles = gcStats.addGauge("cycles") {
+    val cycles = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge("cycles") {
       gcPool.map(_.getCollectionCount).filter(_ > 0).sum.toFloat
     }
-    val msec = gcStats.addGauge("msec") {
+    val msec = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge("msec") {
       gcPool.map(_.getCollectionTime).filter(_ > 0).sum.toFloat
     }
 

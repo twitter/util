@@ -1,13 +1,11 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.MetricBuilder.{
-  CounterType,
-  CounterishGaugeType,
-  GaugeType,
-  HistogramType,
-  MetricType,
-  UnlatchedCounter
-}
+import com.twitter.finagle.stats.MetricBuilder.CounterType
+import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
+import com.twitter.finagle.stats.MetricBuilder.GaugeType
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.MetricBuilder.MetricType
+import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import java.util.function.Supplier
 import scala.annotation.varargs
 
@@ -268,8 +266,8 @@ class MetricBuilder private (
    */
   @varargs
   final def counter(name: String*): Counter = {
-    val schema = withName(name: _*).counterSchema
-    this.statsReceiver.counter(schema)
+    this.statsReceiver.validateMetricType(this, CounterType)
+    this.statsReceiver.counter(this.withName(name: _*))
   }
 
   /**
@@ -277,8 +275,8 @@ class MetricBuilder private (
    * @return the gauge created.
    */
   final def gauge(name: String*)(f: => Float): Gauge = {
-    val schema = withName(name: _*).gaugeSchema
-    this.statsReceiver.addGauge(schema)(f)
+    this.statsReceiver.validateMetricType(this, GaugeType)
+    this.statsReceiver.addGauge(this.withName(name: _*))(f)
   }
 
   /**
@@ -288,8 +286,8 @@ class MetricBuilder private (
    */
   @varargs
   final def gauge(f: Supplier[Float], name: String*): Gauge = {
-    val schema = withName(name: _*).gaugeSchema
-    this.statsReceiver.addGauge(schema)(f.get())
+    this.statsReceiver.validateMetricType(this, GaugeType)
+    this.statsReceiver.addGauge(this.withName(name: _*))(f.get())
   }
 
   /**
@@ -298,8 +296,8 @@ class MetricBuilder private (
    */
   @varargs
   final def histogram(name: String*): Stat = {
-    val schema = withName(name: _*).histogramSchema
-    this.statsReceiver.stat(schema)
+    this.statsReceiver.validateMetricType(this, HistogramType)
+    this.statsReceiver.stat(this.withName(name: _*))
   }
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[MetricBuilder]

@@ -404,7 +404,10 @@ trait StatsReceiver {
   private[stats] def counter0(name: String): Counter = counter(name)
   private[stats] def stat0(name: String): Stat = stat(name)
 
-  protected def validateMetricType(metricBuilder: MetricBuilder, expectedType: MetricType): Unit = {
+  private[stats] def validateMetricType(
+    metricBuilder: MetricBuilder,
+    expectedType: MetricType
+  ): Unit = {
     val typeMatch = expectedType match {
       case CounterType =>
         metricBuilder.metricType == CounterType || metricBuilder.metricType == UnlatchedCounter

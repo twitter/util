@@ -33,9 +33,12 @@ public final class MetricBuilderCompilationTest {
   @Test
   public void testConstructingMetrics() {
     StatsReceiver sr = new InMemoryStatsReceiver();
-    MetricBuilder mb = sr.metricBuilder(MetricBuilder.CounterType$.MODULE$);
-    Gauge g = mb.gauge(() -> 3.0f, "my", "cool", "gauge");
-    Stat s = mb.histogram("my", "cool", "histogram");
-    Counter c = mb.counter("my", "cool", "counter");
+    MetricBuilder gmb = sr.metricBuilder(MetricBuilder.GaugeType$.MODULE$);
+    MetricBuilder smb = sr.metricBuilder(MetricBuilder.HistogramType$.MODULE$);
+    MetricBuilder cmb = sr.metricBuilder(MetricBuilder.CounterType$.MODULE$);
+
+    Gauge g = gmb.gauge(() -> 3.0f, "my", "cool", "gauge");
+    Stat s = smb.histogram("my", "cool", "histogram");
+    Counter c = cmb.counter("my", "cool", "counter");
   }
 }

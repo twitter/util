@@ -1,7 +1,9 @@
 package com.twitter.jvm
 
 import com.twitter.finagle.stats.InMemoryStatsReceiver
-import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey, MetricExpression}
+import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.ExpressionSchemaKey
+import com.twitter.finagle.stats.exp.MetricExpression
 import org.scalatest.funsuite.AnyFunSuite
 
 class JvmStatsTest extends AnyFunSuite {
