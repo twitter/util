@@ -52,3 +52,29 @@ illustrates the advantages of `finagle-stats` over the older libraries.
 histograms. This is available on the
 `/admin/histogram <https://twitter.github.io/twitter-server/Admin.html#admin-histograms>`_
 admin page.
+
+Are metric values reset or latched after an observability collection?
+---------------------------------------------------------------------
+``Stats`` are latched by all three implementations.
+This means that for each observability collection window,
+you will see that window’s distribution of values.
+
+There is no notion of latching/resetting a ``Gauge``, as it is
+always a discrete point in time value. This is the case across
+all three implementations, except for CounterishGauges, which 
+creates a gauge that models an unlatched counter.
+
+``Counters`` have different behavior depending on which implementation
+is being used. This in turn has an impact in how you write your
+queries for your dashboards and alerts. Both Commons Metrics :sup:`[1]` and Commons Stats
+are **not** “latched”, which means that their values are monotonically
+increasing (assuming you never call ``incr()`` with a negative value).
+This implies that you use `CQLs rate function <http://go/cql>`_
+if you want to see per minute counts. Ostrich’s ``Counters`` are latched
+when they are collected (think of this as being a “reset”)
+which means that you should not need to use ``rate`` in order
+to see per minute values.
+
+:sup:`[1]` Note that by using ``finagle-stats`` and setting the flag
+``com.twitter.finagle.stats.useCounterDeltas=true`` you can
+get per-minute deltas in Commons Metrics.

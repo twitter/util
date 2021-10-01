@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FAQ &#8212; Util 21.8.0 documentation</title>
+    <title>FAQ &#8212; Util 21.9.0 documentation</title>
     <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -132,6 +132,29 @@ histograms. This is available on the
 <a class="reference external" href="https://twitter.github.io/twitter-server/Admin.html#admin-histograms">/admin/histogram</a>
 admin page.</p>
 </div>
+<div class="section" id="are-metric-values-reset-or-latched-after-an-observability-collection">
+<h2>Are metric values reset or latched after an observability collection?<a class="headerlink" href="#are-metric-values-reset-or-latched-after-an-observability-collection" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Stats</span></code> are latched by all three implementations.
+This means that for each observability collection window,
+you will see that window’s distribution of values.</p>
+<p>There is no notion of latching/resetting a <code class="docutils literal notranslate"><span class="pre">Gauge</span></code>, as it is
+always a discrete point in time value. This is the case across
+all three implementations, except for CounterishGauges, which
+creates a gauge that models an unlatched counter.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Counters</span></code> have different behavior depending on which implementation
+is being used. This in turn has an impact in how you write your
+queries for your dashboards and alerts. Both Commons Metrics <sup>[1]</sup> and Commons Stats
+are <strong>not</strong> “latched”, which means that their values are monotonically
+increasing (assuming you never call <code class="docutils literal notranslate"><span class="pre">incr()</span></code> with a negative value).
+This implies that you use <a class="reference external" href="http://go/cql">CQLs rate function</a>
+if you want to see per minute counts. Ostrich’s <code class="docutils literal notranslate"><span class="pre">Counters</span></code> are latched
+when they are collected (think of this as being a “reset”)
+which means that you should not need to use <code class="docutils literal notranslate"><span class="pre">rate</span></code> in order
+to see per minute values.</p>
+<p><sup>[1]</sup> Note that by using <code class="docutils literal notranslate"><span class="pre">finagle-stats</span></code> and setting the flag
+<code class="docutils literal notranslate"><span class="pre">com.twitter.finagle.stats.useCounterDeltas=true</span></code> you can
+get per-minute deltas in Commons Metrics.</p>
+</div>
 </div>
 
 
@@ -156,6 +179,7 @@ admin page.</p>
 <li><a class="reference internal" href="#why-were-there-three-different-implementations">Why were there three(!) different implementations?</a></li>
 <li><a class="reference internal" href="#why-is-nullstatsreceiver-being-used">Why is <cite>NullStatsReceiver</cite> being used?</a></li>
 <li><a class="reference internal" href="#why-migrate-to-finagle-stats">Why migrate to finagle-stats?</a></li>
+<li><a class="reference internal" href="#are-metric-values-reset-or-latched-after-an-observability-collection">Are metric values reset or latched after an observability collection?</a></li>
 </ul>
 </li>
 </ul>
