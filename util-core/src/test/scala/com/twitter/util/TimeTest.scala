@@ -1,13 +1,20 @@
 package com.twitter.util
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
-import java.util.{Locale, TimeZone}
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
-
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-
 import com.twitter.conversions.DurationOps._
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import org.scalatest.wordspec.AnyWordSpec
 
 trait TimeLikeSpec[T <: TimeLike[T]] extends AnyWordSpec with ScalaCheckDrivenPropertyChecks {
@@ -509,7 +516,9 @@ class TimeTest
         val t = new Thread(r)
         t.start()
         assert(t.isAlive == true)
-        eventually { assert(t.getState == Thread.State.TIMED_WAITING) }
+        eventually {
+          assert(t.getState == Thread.State.TIMED_WAITING)
+        }
         ctl.advance(5.seconds)
         t.join()
         assert(t.isAlive == false)
@@ -710,6 +719,35 @@ class TimeTest
       Time.withCurrentTimeFrozen { _ =>
         val t0 = Time.now - 100.hours
         assert(t0.untilNow == 100.hours)
+      }
+    }
+
+    "toInstant" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val instant = Instant.ofEpochMilli(Time.now.inMilliseconds)
+        assert(instant.toEpochMilli == Time.now.inMillis)
+        // java.time.Instant:getNano returns the nanoseconds of the second
+        assert(instant.getNano == Time.now.inNanoseconds % Duration.NanosPerSecond)
+      }
+    }
+
+    "toZonedDateTime" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val zonedDateTime =
+          ZonedDateTime.ofInstant(Instant.ofEpochMilli(Time.now.inMilliseconds), ZoneOffset.UTC)
+        assert(Time.now.toZonedDateTime == zonedDateTime)
+        // java.time.Instant:getNano returns the nanoseconds of the second
+        assert(zonedDateTime.getNano == Time.now.inNanoseconds % Duration.NanosPerSecond)
+      }
+    }
+
+    "toOffsetDateTime" in {
+      Time.withCurrentTimeFrozen { _ =>
+        val offsetDateTime =
+          OffsetDateTime.ofInstant(Instant.ofEpochMilli(Time.now.inMilliseconds), ZoneOffset.UTC)
+        assert(Time.now.toOffsetDateTime == offsetDateTime)
+        // java.time.Instant:getNano returns the nanoseconds of the second
+        assert(offsetDateTime.getNano == Time.now.inNanoseconds % Duration.NanosPerSecond)
       }
     }
   }

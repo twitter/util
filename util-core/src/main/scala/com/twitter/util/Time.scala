@@ -17,9 +17,15 @@
 package com.twitter.util
 
 import java.io.Serializable
-import java.time.{Clock, Instant}
+import java.time.ZonedDateTime
+import java.time.Clock
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
-import java.util.{Date, Locale, TimeZone}
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * @define now
@@ -687,6 +693,25 @@ sealed class Time private[util] (protected val nanos: Long)
    * Converts this Time object to a java.util.Date
    */
   def toDate: Date = new Date(inMillis)
+
+  /**
+   * Converts this Time object to a java.time.Instant
+   */
+  def toInstant: Instant = {
+    val millis = inMilliseconds
+    val nanos = inNanoseconds - (millis * Duration.NanosPerMillisecond)
+    Instant.ofEpochMilli(millis).plusNanos(nanos)
+  }
+
+  /**
+   * Converts this Time object to a java.time.ZonedDateTime with ZoneId of UTC
+   */
+  def toZonedDateTime: ZonedDateTime = ZonedDateTime.ofInstant(toInstant, ZoneOffset.UTC)
+
+  /**
+   * Converts this Time object to a java.time.OffsetDateTime with ZoneId of UTC
+   */
+  def toOffsetDateTime: OffsetDateTime = OffsetDateTime.ofInstant(toInstant, ZoneOffset.UTC)
 
   private def writeReplace(): Object = TimeBox.Finite(inNanoseconds)
 

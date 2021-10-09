@@ -7,6 +7,14 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Add convenience methods to convert to java.time.ZonedDateTime and
+  java.time.OffsetDateTime. `toInstant`, `toZonedDateTime`, and `toOffsetDateTime` also preserve
+  nanosecond resolution. ``PHAB_ID=D757636``
+
+
 21.9.0
 ------
 
