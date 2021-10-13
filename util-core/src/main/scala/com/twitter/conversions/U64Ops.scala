@@ -1,5 +1,7 @@
 package com.twitter.conversions
 
+import scala.language.implicitConversions
+
 object U64Ops {
 
   /**
@@ -18,5 +20,16 @@ object U64Ops {
   implicit class RichU64Long(val self: Long) extends AnyVal {
     def toU64HexString: String = "%016x".format(self)
   }
+
+  /**
+   * Forwarder for Int, as Scala 3.0 doesn't seem to do the implicit conversion to Long anymore.
+   * This is not a bug, as Scala 2.13 already had a flag ("-Ywarn-implicit-widening") to turn on warnings/errors
+   * for that.
+   *
+   * The implicit conversion from Int to Long here doesn't lose precision and keeps backwards source compatibliity
+   * with previous releases.
+   */
+  implicit def richU64LongFromInt(self: Int): RichU64Long =
+    new RichU64Long(self.toLong)
 
 }
