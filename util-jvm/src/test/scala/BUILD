@@ -15,11 +15,15 @@ junit_tests(
         "**/*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    strict_deps = True,
     tags = [
         "bazel-compatible",
         "non-exclusive",
     ],
-    dependencies = COMMON_DEPS + ["3rdparty/jvm/org/scalatestplus:junit"],
+    dependencies = COMMON_DEPS + [
+        "3rdparty/jvm/org/scalatestplus:junit",
+        "util/util-stats/src/main/scala/com/twitter/finagle/stats:stats",
+    ],
 )
 
 scala_library(
@@ -32,8 +36,9 @@ scala_library(
     #    does not strictly enforce it.
     sources = ["**/*.scala"],
     compiler_option_sets = ["fatal_warnings"],
+    strict_deps = True,
     tags = ["bazel-compatible"],
-    dependencies = COMMON_DEPS,
+    dependencies = COMMON_DEPS + ["util/util-stats/src/main/scala/com/twitter/finagle/stats:stats"],
 )
 
 jvm_binary(

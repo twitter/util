@@ -5,6 +5,7 @@ scala_library(
         name = "util-slf4j",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/slf4j:slf4j-api",

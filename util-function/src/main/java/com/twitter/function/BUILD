@@ -5,5 +5,6 @@ java_library(
         name = "util-function-java",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
 )

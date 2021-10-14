@@ -1,5 +1,6 @@
 junit_tests(
     sources = ["**/*.java"],
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",

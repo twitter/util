@@ -5,6 +5,7 @@ scala_library(
         "*.java",
         "*.scala",
     ],
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/mockito:mockito-core",
@@ -27,6 +28,7 @@ scala_library(
 
 junit_tests(
     compiler_option_sets = ["fatal_warnings"],
+    strict_deps = True,
     tags = [
         "bazel-compatible",
         "non-exclusive",
@@ -36,6 +38,7 @@ junit_tests(
         "3rdparty/jvm/org/mockito:mockito-scala",
         "3rdparty/jvm/org/scalatest",
         "3rdparty/jvm/org/scalatestplus:junit",
+        "3rdparty/src/jvm/org/scalatestplus/mockito",
         scoped(
             "3rdparty/jvm/org/slf4j:slf4j-simple",
             scope = "runtime",

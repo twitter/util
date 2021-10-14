@@ -5,6 +5,7 @@ scala_library(
         name = "util-tunable",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-annotations",

@@ -5,6 +5,7 @@ scala_library(
         name = "util-zk-test",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/apache/zookeeper:zookeeper-server",

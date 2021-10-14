@@ -6,6 +6,7 @@ scala_library(
         name = "util-test",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "util/util-test/src/main/scala/com/twitter/logging",

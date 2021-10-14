@@ -5,6 +5,7 @@ scala_library(
         name = "util-codec",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core/src/main/scala/com/twitter/io",

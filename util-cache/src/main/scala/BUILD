@@ -6,6 +6,7 @@ scala_library(
         name = "util-cache",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "util/util-cache/src/main/scala/com/twitter/cache",

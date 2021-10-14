@@ -32,6 +32,7 @@ scala_library(
         name = "util-core-util",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/org/scala-lang:scala-reflect",
@@ -55,6 +56,7 @@ scala_library(
         name = "util-core",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         ":util-core-util",

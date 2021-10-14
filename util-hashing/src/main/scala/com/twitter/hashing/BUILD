@@ -5,5 +5,6 @@ scala_library(
         name = "util-hashing",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
 )

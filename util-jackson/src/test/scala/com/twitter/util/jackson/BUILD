@@ -5,6 +5,7 @@ junit_tests(
         "caseclass/*.scala",
         "serde/*.scala",
     ],
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/fasterxml/jackson/core:jackson-annotations",

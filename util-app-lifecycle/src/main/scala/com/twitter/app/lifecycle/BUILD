@@ -6,6 +6,7 @@ scala_library(
         name = "util-app-lifecycle",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "util/util-core:util-core-util",

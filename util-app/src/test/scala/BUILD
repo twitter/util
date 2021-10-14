@@ -1,6 +1,7 @@
 junit_tests(
     sources = ["**/*.scala"],
     compiler_option_sets = ["fatal_warnings"],
+    strict_deps = True,
     tags = [
         "bazel-compatible",
         "non-exclusive",
@@ -14,6 +15,7 @@ junit_tests(
         "util/util-app/src/main/scala",
         "util/util-app/src/test/resources",
         "util/util-core:util-core-util",
+        "util/util-core/src/main/scala/com/twitter/concurrent",
         "util/util-registry/src/main/scala/com/twitter/util/registry",
     ],
 )

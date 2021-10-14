@@ -5,6 +5,7 @@ scala_library(
         name = "util-cache-caffeine",
         repo = artifactory,
     ),
+    strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
         "3rdparty/jvm/com/github/ben-manes/caffeine",
