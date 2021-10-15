@@ -285,7 +285,7 @@ class FileHandlerTest extends AnyWordSpec with TempFolder {
 
         val handler = FileHandler(
           filename = folderName + "/test.log",
-          rollPolicy = Policy.MaxSize(maxSize.toLong.bytes),
+          rollPolicy = Policy.MaxSize(maxSize.bytes),
           append = true,
           formatter = BareFormatter
         ).apply()
