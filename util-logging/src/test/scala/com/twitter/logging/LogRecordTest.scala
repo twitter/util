@@ -6,7 +6,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class LogRecordTest extends AnyFunSuite {
   test("LogRecord should getMethod properly") {
     Logger.withLoggers(Nil) {
-      new LogRecordTestHelper({ r: JRecord => r.getSourceMethodName() }) {
+      new LogRecordTestHelper({ (r: JRecord) => r.getSourceMethodName() }) {
         def makingLogRecord() = {
           logger.log(Level.INFO, "OK")
           assert(handler.get == "makingLogRecord")
@@ -34,7 +34,7 @@ abstract class LogRecordTestHelper(formats: JRecord => String) {
   logger.addHandler(handler)
 }
 
-class Foo extends LogRecordTestHelper({ r: JRecord => r.getSourceClassName() }) {
+class Foo extends LogRecordTestHelper({ (r: JRecord) => r.getSourceClassName }) {
   def makingLogRecord(): Unit = {
     logger.log(Level.INFO, "OK")
   }

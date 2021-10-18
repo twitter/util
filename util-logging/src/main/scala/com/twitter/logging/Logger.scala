@@ -66,7 +66,7 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
    */
   @varargs
   final def log(level: Level, thrown: Throwable, message: String, items: Any*): Unit = {
-    val myLevel = getLevel
+    val myLevel = getLevel()
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
 
       val record =
@@ -136,7 +136,7 @@ class Logger protected (val name: String, private val wrapped: javalog.Logger) {
    * and attach an exception and stack trace.
    */
   def logLazy(level: Level, thrown: Throwable, message: => AnyRef): Unit = {
-    val myLevel = getLevel
+    val myLevel = getLevel()
     if ((myLevel eq null) || (level.intValue >= myLevel.intValue)) {
       val record = new LazyLogRecord(level, message)
       record.setLoggerName(wrapped.getName)

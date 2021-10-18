@@ -16,7 +16,8 @@
 
 package com.twitter.logging
 
-import java.net.{DatagramPacket, DatagramSocket}
+import java.net.DatagramPacket
+import java.net.DatagramSocket
 import java.util.{logging => javalog}
 
 import org.scalatest.wordspec.AnyWordSpec
@@ -45,7 +46,7 @@ class SyslogHandlerTest extends AnyWordSpec {
       syslog.publish(record1)
       syslog.publish(record2)
 
-      SyslogFuture.sync
+      SyslogFuture.sync()
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
       assert(
@@ -78,7 +79,7 @@ class SyslogHandlerTest extends AnyWordSpec {
       ).apply()
       syslog.publish(record1)
 
-      SyslogFuture.sync
+      SyslogFuture.sync()
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
       assert(
@@ -104,7 +105,7 @@ class SyslogHandlerTest extends AnyWordSpec {
       ).apply()
       syslog.publish(record1)
 
-      SyslogFuture.sync
+      SyslogFuture.sync()
       val p = new DatagramPacket(new Array[Byte](1024), 1024)
       serverSocket.receive(p)
       assert(

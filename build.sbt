@@ -540,7 +540,7 @@ lazy val utilLogging = Project(
   id = "util-logging",
   base = file("util-logging")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-logging"
   ).dependsOn(utilCore, utilApp, utilStats)

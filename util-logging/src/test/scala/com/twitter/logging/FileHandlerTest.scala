@@ -17,13 +17,18 @@
 package com.twitter.logging
 
 import java.io._
-import java.util.{Calendar, Date, UUID, logging => javalog}
+import java.util.Calendar
+import java.util.Date
+import java.util.UUID
+import java.util.{logging => javalog}
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
 import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.function.BiPredicate
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -353,7 +358,7 @@ class FileHandlerTest extends AnyWordSpec with TempFolder {
         }
 
         val files = listLogFiles(folderName + "/LogFileDir")
-        files.foreach { f: File =>
+        files.foreach { (f: File) =>
           val len = f.length().bytes
           if (len > fileSizeInMegaBytes.megabytes) {
             fail("Failed to roll over the log file")

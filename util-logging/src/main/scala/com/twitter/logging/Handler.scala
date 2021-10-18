@@ -150,5 +150,5 @@ class ConsoleHandler(formatter: Formatter = new Formatter(), level: Option[Level
 
   def close(): Unit = {}
 
-  def flush(): Unit = Console.flush
+  def flush(): Unit = Console.flush()
 }

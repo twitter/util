@@ -16,11 +16,21 @@
 
 package com.twitter.logging
 
-import java.io.{File, FileOutputStream, FilenameFilter, OutputStream}
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FilenameFilter
+import java.io.OutputStream
 import java.nio.charset.Charset
-import java.util.{Calendar, Date, logging => javalog}
+import java.util.Calendar
+import java.util.Date
+import java.util.{logging => javalog}
 
-import com.twitter.util.{TwitterDateFormat, HandleSignal, Return, StorageUnit, Time, Try}
+import com.twitter.util.TwitterDateFormat
+import com.twitter.util.HandleSignal
+import com.twitter.util.Return
+import com.twitter.util.StorageUnit
+import com.twitter.util.Time
+import com.twitter.util.Try
 
 sealed abstract class Policy
 object Policy {
@@ -224,9 +234,12 @@ class FileHandler(
       }
       case Policy.Weekly(weekday) => {
         next.set(Calendar.HOUR_OF_DAY, 0)
-        do {
+
+        next.add(Calendar.DAY_OF_MONTH, 1)
+        while (next.get(Calendar.DAY_OF_WEEK) != weekday) {
           next.add(Calendar.DAY_OF_MONTH, 1)
-        } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
+        }
+
         Some(next)
       }
     }
