@@ -1,7 +1,8 @@
 package com.twitter.app
 
 import com.twitter.app.lifecycle.Event._
-import com.twitter.app.lifecycle.{Event, Observer}
+import com.twitter.app.lifecycle.Event
+import com.twitter.app.lifecycle.Observer
 import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
@@ -53,7 +54,7 @@ class WeNeverCloseButWeDoNotCare extends WeNeverClose {
 }
 
 trait ErrorOnExitApp extends App {
-  override val defaultCloseGracePeriod: Duration = 2.seconds
+  override val defaultCloseGracePeriod: Duration = 5.seconds
 
   override def exitOnError(throwable: Throwable): Unit = {
     throw throwable
