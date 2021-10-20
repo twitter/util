@@ -661,7 +661,7 @@ lazy val utilStats = Project(
           Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3" % "test")
       }
     }
-  ).dependsOn(utilCore, utilLint)
+  ).dependsOn(utilApp, utilCore, utilLint)
 
 lazy val utilTest = Project(
   id = "util-test",

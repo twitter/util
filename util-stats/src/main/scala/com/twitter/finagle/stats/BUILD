@@ -16,6 +16,7 @@ scala_library(
         "3rdparty/jvm/com/fasterxml/jackson/module:jackson-module-scala",
         "3rdparty/jvm/com/github/ben-manes/caffeine",
         "3rdparty/jvm/com/google/code/findbugs:jsr305",
+        "util/util-app/src/main/scala",
         "util/util-core:util-core-util",
         "util/util-lint/src/main/scala/com/twitter/util/lint",
     ],

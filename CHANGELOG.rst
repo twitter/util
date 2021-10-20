@@ -14,6 +14,8 @@ New Features
   java.time.OffsetDateTime. `toInstant`, `toZonedDateTime`, and `toOffsetDateTime` also preserve
   nanosecond resolution. ``PHAB_ID=D757636``
 
+* util-stats: Moved `c.t.finagle.stats.LoadedStatsReceiver` and `c.t.finagle.stats.DefaultStatsReceiver`
+  from the finagle-core module to util-stats.  ``PHAB_ID=D763497``
 
 21.9.0
 ------
