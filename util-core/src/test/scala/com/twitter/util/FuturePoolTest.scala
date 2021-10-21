@@ -1,10 +1,13 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{Scheduler, ForkingScheduler}
+import com.twitter.concurrent.Scheduler
+import com.twitter.concurrent.ForkingScheduler
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.{Future => JFuture, _}
 import org.scalatest.concurrent.Eventually
-import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.time.Millis
+import org.scalatest.time.Seconds
+import org.scalatest.time.Span
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NonFatal
 import org.scalatest.funsuite.AnyFunSuite
@@ -235,7 +238,6 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
   }
 
   class TestForkingScheduler(redirect: Boolean) extends ForkingScheduler {
-    var concurrency = Option.empty[Int]
     var forked = Option.empty[Future[_]]
     override def fork[T](f: => Future[T]) = {
       val r = f
@@ -245,10 +247,6 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
     override def redirectFuturePools(): Boolean = redirect
     override def blocking[T](f: => T)(implicit perm: Awaitable.CanAwait): T = f
     override def flush(): Unit = {}
-    override def withMaxConcurrency(v: Int): ForkingScheduler = {
-      concurrency = Some(v)
-      this
-    }
 
     override def submit(r: Runnable): Unit = r.run()
 
@@ -258,10 +256,9 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
   }
 
   test("FuturePool should be redirected to the forking scheduler if specified by the scheduler") {
-    val concurrency = 1
     val scheduler = new TestForkingScheduler(redirect = true)
     val prevScheduler = Scheduler()
-    val executor = Executors.newFixedThreadPool(concurrency)
+    val executor = Executors.newFixedThreadPool(1)
     Scheduler.setUnsafe(scheduler)
     try {
       val pool = FuturePool(executor)
@@ -273,7 +270,6 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
         }
       assert(Await.result(result, 1.second) == 1)
       assert(Await.result(scheduler.forked.get, 1.second) == 1)
-      assert(scheduler.concurrency == Some(concurrency))
       assert(executed)
     } finally {
       Scheduler.setUnsafe(prevScheduler)
@@ -283,9 +279,8 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
 
   test(
     "FuturePool should not be redirected to the forking scheduler if specified by the scheduler") {
-    val concurrency = 1
     val scheduler = new TestForkingScheduler(redirect = false)
-    val executor = Executors.newFixedThreadPool(concurrency)
+    val executor = Executors.newFixedThreadPool(1)
     val prevScheduler = Scheduler()
     Scheduler.setUnsafe(scheduler)
     try {
@@ -298,7 +293,6 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
         }
       assert(Await.result(result, 1.second) == 1)
       assert(scheduler.forked.isEmpty)
-      assert(scheduler.concurrency.isEmpty)
       assert(executed)
     } finally {
       Scheduler.setUnsafe(prevScheduler)

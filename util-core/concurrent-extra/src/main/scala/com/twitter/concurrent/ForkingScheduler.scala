@@ -1,7 +1,8 @@
 package com.twitter.concurrent
 
 import com.twitter.util.Future
-import java.util.concurrent.{Executor, ExecutorService}
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
 
 /**
  * A scheduler that provides methods to fork the execution of
@@ -31,17 +32,6 @@ trait ForkingScheduler extends Scheduler {
    *         is completed
    */
   def fork[T](executor: Executor)(f: => Future[T]): Future[T]
-
-  /**
-   * Creates a wrapper of this scheduler with a fixed max
-   * concurrency. The original forking scheduler remains
-   * unchanged and is used as the underlying implementation
-   * of the returned scheduler.
-   *
-   * @param v the max concurrency
-   * @return the wrapper with a fixed max concurrency
-   */
-  def withMaxConcurrency(v: Int): ForkingScheduler
 
   /**
    * Creates an `ExecutorService` wrapper for this forking

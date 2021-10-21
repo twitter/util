@@ -1,6 +1,7 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{ForkingScheduler, NamedPoolThreadFactory}
+import com.twitter.concurrent.ForkingScheduler
+import com.twitter.concurrent.NamedPoolThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{Future => _, _}
 import scala.runtime.NonLocalReturnControl
@@ -138,14 +139,7 @@ class ExecutorServiceFuturePool protected[this] (
   private[this] lazy val forkingScheduler: ForkingScheduler = {
     ForkingScheduler()
       .filter(_.redirectFuturePools())
-      .map { s =>
-        executor match {
-          case e: ThreadPoolExecutor =>
-            s.withMaxConcurrency(e.getMaximumPoolSize)
-          case _ =>
-            s
-        }
-      }.getOrElse(null)
+      .getOrElse(null)
   }
 
   def apply[T](f: => T): Future[T] = {
