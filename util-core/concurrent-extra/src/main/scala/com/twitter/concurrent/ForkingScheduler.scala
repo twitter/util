@@ -11,7 +11,8 @@ import java.util.concurrent.ExecutorService
 trait ForkingScheduler extends Scheduler {
 
   /**
-   * Forks the execution of a `Future` computation.
+   * Forks the execution of a `Future` computation even if
+   * the scheduler is overloaded.
    *
    * @param f the Future computation to be forked
    * @tparam T the type of the `Future` computation
@@ -19,6 +20,18 @@ trait ForkingScheduler extends Scheduler {
    *         is completed
    */
   def fork[T](f: => Future[T]): Future[T]
+
+  /**
+   * Tries to fork the execution of a `Future` computation and
+   * returns empty in case the scheduler is overloaded.
+   *
+   * @param f the Future computation to be forked
+   * @tparam T the type of the `Future` computation
+   * @return A `Future` with `None` if the scheduler is overloaded
+   *         or `Some[T]` if the task is successfully forked and
+   *         executed.
+   */
+  def tryFork[T](f: => Future[T]): Future[Option[T]]
 
   /**
    * Forks the execution of a `Future` computation using the

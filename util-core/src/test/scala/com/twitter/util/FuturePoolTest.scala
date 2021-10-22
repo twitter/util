@@ -244,6 +244,7 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
       forked = Some(r)
       r
     }
+    override def tryFork[T](f: => Future[T]): Future[Option[T]] = ???
     override def redirectFuturePools(): Boolean = redirect
     override def blocking[T](f: => T)(implicit perm: Awaitable.CanAwait): T = f
     override def flush(): Unit = {}
