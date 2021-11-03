@@ -45,6 +45,7 @@ object JvmStats {
     val uptime = stats.addGauge("uptime") { runtime.getUptime().toFloat }
     gauges.add(uptime)
     gauges.add(stats.addGauge("start_time") { runtime.getStartTime().toFloat })
+    gauges.add(stats.addGauge("spec_version") { runtime.getSpecVersion.toFloat })
 
     val os = ManagementFactory.getOperatingSystemMXBean()
     gauges.add(stats.addGauge("num_cpus") { os.getAvailableProcessors().toFloat })
@@ -67,19 +68,22 @@ object JvmStats {
       case null =>
       case compilation =>
         val compilationStats = stats.scope("compilation")
-        gauges.add(compilationStats.addGauge("time_msec") {
-          compilation.getTotalCompilationTime().toFloat
-        })
+        gauges.add(
+          compilationStats.metricBuilder(GaugeType).withCounterishGauge.gauge("time_msec") {
+            compilation.getTotalCompilationTime().toFloat
+          })
     }
 
     val classes = ManagementFactory.getClassLoadingMXBean()
     val classLoadingStats = stats.scope("classes")
-    gauges.add(classLoadingStats.addGauge("total_loaded") {
-      classes.getTotalLoadedClassCount().toFloat
-    })
-    gauges.add(classLoadingStats.addGauge("total_unloaded") {
-      classes.getUnloadedClassCount().toFloat
-    })
+    gauges.add(
+      classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_loaded") {
+        classes.getTotalLoadedClassCount().toFloat
+      })
+    gauges.add(
+      classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_unloaded") {
+        classes.getUnloadedClassCount().toFloat
+      })
     gauges.add(
       classLoadingStats.addGauge("current_loaded") { classes.getLoadedClassCount().toFloat }
     )
@@ -117,9 +121,15 @@ object JvmStats {
     }
 
     val spStats = stats.scope("safepoint")
-    gauges.add(spStats.addGauge("sync_time_millis") { jvm.safepoint.syncTimeMillis.toFloat })
-    gauges.add(spStats.addGauge("total_time_millis") { jvm.safepoint.totalTimeMillis.toFloat })
-    gauges.add(spStats.addGauge("count") { jvm.safepoint.count.toFloat })
+    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("sync_time_millis") {
+      jvm.safepoint.syncTimeMillis.toFloat
+    })
+    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_time_millis") {
+      jvm.safepoint.totalTimeMillis.toFloat
+    })
+    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("count") {
+      jvm.safepoint.count.toFloat
+    })
 
     ManagementFactory.getPlatformMXBeans(classOf[BufferPoolMXBean]) match {
       case null =>

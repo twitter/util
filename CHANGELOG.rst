@@ -25,6 +25,9 @@ New Features
 * util-stats: Moved `c.t.finagle.stats.LoadedStatsReceiver` and `c.t.finagle.stats.DefaultStatsReceiver`
   from the finagle-core module to util-stats.  ``PHAB_ID=D763497``
 
+* util-jvm: Update exported metric schemas to properly reflect their underlying counter types
+  ``PHAB_ID=D710019``
+
 21.9.0
 ------
 
