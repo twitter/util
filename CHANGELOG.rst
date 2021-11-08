@@ -7,10 +7,17 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-jackson: The error message when failing to deserialize a character now correctly prints the non-character string. ``PHAB_ID=D744627``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * util-cache: Update Caffeine cache library to version 2.9.2 ``PHAB_ID=D771893``
+
+* util: Bump version of Jackson to 2.13.0. ``PHAB_ID=D744627``
 
 21.10.0
 -------

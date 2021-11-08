@@ -1,44 +1,39 @@
 package com.twitter.util.jackson
 
-import com.fasterxml.jackson.core.{JsonFactory, JsonParser}
+import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.node.{IntNode, TreeTraversingParser}
-import com.fasterxml.jackson.databind.{
-  DeserializationContext,
-  DeserializationFeature,
-  JsonDeserializer,
-  JsonMappingException,
-  JsonNode,
-  MapperFeature,
-  PropertyNamingStrategy,
-  ObjectMapper => JacksonObjectMapper
-}
+import com.fasterxml.jackson.databind.node.IntNode
+import com.fasterxml.jackson.databind.node.TreeTraversingParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper}
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.scala.{
-  DefaultScalaModule,
-  ScalaObjectMapper => JacksonScalaObjectMapper
-}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.module.scala.{ScalaObjectMapper => JacksonScalaObjectMapper}
 import com.twitter.io.Buf
 import com.twitter.util.Duration
-import com.twitter.util.jackson.Obj.{
-  NestedCaseClassInObject,
-  NestedCaseClassInObjectWithNestedCaseClassInObjectParam
-}
+import com.twitter.util.jackson.Obj.NestedCaseClassInObject
+import com.twitter.util.jackson.Obj.NestedCaseClassInObjectWithNestedCaseClassInObjectParam
 import com.twitter.util.jackson.TypeAndCompanion.NestedCaseClassInCompanion
-import com.twitter.util.jackson.caseclass.exceptions.CaseClassFieldMappingException.{
-  Unspecified,
-  ValidationError
-}
+import com.twitter.util.jackson.caseclass.exceptions.CaseClassFieldMappingException.Unspecified
+import com.twitter.util.jackson.caseclass.exceptions.CaseClassFieldMappingException.ValidationError
 import com.twitter.util.jackson.caseclass.exceptions.CaseClassMappingException
-import com.twitter.util.jackson.internal.{
-  SimplePersonInPackageObject,
-  SimplePersonInPackageObjectWithoutConstructorParams
-}
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import com.twitter.util.jackson.internal.SimplePersonInPackageObject
+import com.twitter.util.jackson.internal.SimplePersonInPackageObjectWithoutConstructorParams
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDateTime, ZoneId}
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.concurrent.TimeUnit
-import java.util.{TimeZone, UUID}
+import java.util.TimeZone
+import java.util.UUID
 import org.junit.Assert.assertNotNull
 import org.junit.runner.RunWith
 import org.scalatest.BeforeAndAfterAll
@@ -828,7 +823,7 @@ class ScalaObjectMapperTest
         |}
       """.stripMargin,
       withErrors = Seq(
-        "c: '' is not a valid Character"
+        "c: '-1' is not a valid Character"
       )
     )
   }
