@@ -1,8 +1,12 @@
 package com.twitter.util
 
-import com.twitter.concurrent.{Offer, Tx}
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-import java.util.concurrent.{CancellationException, CompletableFuture, Future => JavaFuture}
+import com.twitter.concurrent.Offer
+import com.twitter.concurrent.Tx
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.CancellationException
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.{Future => JavaFuture}
 import java.util.function.BiConsumer
 import java.util.{List => JList}
 import scala.collection.compat.immutable.ArraySeq
@@ -2164,23 +2168,27 @@ abstract class Future[+A] extends Awaitable[A] { self =>
    * https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
    */
   def toCompletableFuture[B >: A]: CompletableFuture[B] = {
-    if (self.isDefined) {
-      return CompletableFuture.completedFuture(Await.result(self))
-    }
+    val f = new CompletableFuture[B]() with (Try[A] => Unit) with BiConsumer[B, Throwable] {
+      // Complete the Java future from a Try
+      def apply(t: Try[A]): Unit =
+        t match {
+          case Return(result) => complete(result)
+          case Throw(t) => completeExceptionally(t)
+        }
 
-    val f = new CompletableFuture[B]()
-    this.respond {
-      case Return(result) => f.complete(result)
-      case Throw(t) => f.completeExceptionally(t)
-    }
-
-    f.whenComplete(new BiConsumer[B, Throwable] {
-      def accept(result: B, t: Throwable): Unit = {
-        if (t != null && t.isInstanceOf[CancellationException]) {
+      // For propagating cancellation
+      def accept(r: B, t: Throwable): Unit =
+        if (t.isInstanceOf[CancellationException]) {
           self.raise(t)
         }
-      }
-    })
+    }
+
+    poll match {
+      case Some(t) => f(t) // complete
+      case None =>
+        this.respond(f) // propagate completion forward
+        f.whenComplete(f) // propagate cancellation backwards
+    }
 
     // we have to return the original one because cancellation isn't propagated
     // by CompletionStages

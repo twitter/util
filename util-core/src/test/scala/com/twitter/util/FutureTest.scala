@@ -1,13 +1,19 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import java.util.concurrent.{ConcurrentLinkedQueue, ExecutionException, Future => JFuture}
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.{Future => JFuture}
 import java.util.concurrent.atomic.AtomicInteger
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{never, times, verify, when}
+import org.mockito.Mockito.never
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.when
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.jdk.CollectionConverters._
@@ -879,11 +885,21 @@ class FutureTest extends AnyWordSpec with MockitoSugar with ScalaCheckDrivenProp
             }
           }
 
-          "java future should throw an exception" in {
+          "java future should throw an exception when failed later" in {
             val f = new Promise[Int]
             val jf = fn(f)
             val e = new RuntimeException()
             f.setException(e)
+            val actual = intercept[ExecutionException] { jf.get() }
+            val cause = intercept[RuntimeException] { throw actual.getCause }
+            assert(cause == e)
+          }
+
+          "java future should throw an exception when failed early" in {
+            val f = new Promise[Int]
+            val e = new RuntimeException()
+            f.setException(e)
+            val jf = fn(f)
             val actual = intercept[ExecutionException] { jf.get() }
             val cause = intercept[RuntimeException] { throw actual.getCause }
             assert(cause == e)
