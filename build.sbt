@@ -7,7 +7,7 @@ Global / excludeLintKeys += scalacOptions // might be actually unused in util-do
 val releaseVersion = "21.11.0-SNAPSHOT"
 
 val slf4jVersion = "1.7.30"
-val jacksonVersion = "2.13.0"
+val jacksonVersion = "2.11.4"
 val mockitoVersion = "3.3.3"
 val mockitoScalaVersion = "1.14.8"
 

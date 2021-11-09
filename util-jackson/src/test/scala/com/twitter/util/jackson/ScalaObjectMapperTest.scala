@@ -823,7 +823,7 @@ class ScalaObjectMapperTest
         |}
       """.stripMargin,
       withErrors = Seq(
-        "c: '-1' is not a valid Character"
+        "c: '' is not a valid Character"
       )
     )
   }
