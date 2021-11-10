@@ -2,9 +2,10 @@
 
 owners:
   - banderson
-  - ccoco
   - ibennett
   - koliver
   - mnakamura
   - roanta
   - vkostyukov
+watchers:
+  - csl-team@twitter.com
