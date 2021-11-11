@@ -140,14 +140,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("expressions with the same key - name, labels and namespaces") {
     new Ctx {
-      val successRate1 = ExpressionSchema("success_rate", Expression(successMb))
+      val successRate1 = ExpressionSchema("success", Expression(successMb))
         .withNamespace("section1")
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
         .build()
 
-      val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+      val successRate2 = ExpressionSchema("success", Expression(successMb).divide(sum))
         .withNamespace("section1")
         .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
         .withUnit(Percentage)
@@ -158,10 +158,29 @@ class ExpressionSchemaTest extends AnyFunSuite {
       // the second attempt will be a Throw
       assert(sr.expressions.values.size == 1)
       assert(
-        sr.expressions(nameToKey("success_rate", Map(), Seq("section1"))).expr == Expression(
-          successMb))
+        sr.expressions(nameToKey("success", Map(), Seq("section1"))).expr == Expression(successMb))
       assert(successRate1.isReturn)
       assert(successRate2.isThrow)
     }
+  }
+
+  test("StringExpression nested in FunctionExpression") {
+    val loadedSr = LoadedStatsReceiver.self
+    val sr = new InMemoryStatsReceiver
+    LoadedStatsReceiver.self = sr
+    val successRate = ExpressionSchema(
+      "success_rate",
+      Expression(100).multiply(Expression(Seq("clnt", "aclient", "success")).divide(Expression(
+        Seq("clnt", "aclient", "success")).plus(Expression(Seq("clnt", "aclient", "failures")))))
+    ).withRole(Client).withServiceName("aclient").build()
+
+    assert(sr.expressions.values.size == 1)
+    assert(
+      sr.expressions.contains(
+        ExpressionSchemaKey(
+          "success_rate",
+          Map("role" -> "Client", "service_name" -> "aclient"),
+          Seq())))
+    LoadedStatsReceiver.self = loadedSr
   }
 }

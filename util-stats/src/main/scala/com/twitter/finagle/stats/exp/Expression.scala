@@ -1,10 +1,11 @@
 package com.twitter.finagle.stats.exp
 
-import com.twitter.finagle.stats.MetricBuilder.HistogramType
-import com.twitter.finagle.stats.exp.Expression.HistogramComponent
+import com.twitter.finagle.stats.LoadedStatsReceiver
 import com.twitter.finagle.stats.Metadata
 import com.twitter.finagle.stats.MetricBuilder
+import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.StatsReceiver
+import com.twitter.finagle.stats.exp.Expression.HistogramComponent
 import scala.annotation.varargs
 
 private[twitter] object Expression {
@@ -25,6 +26,7 @@ private[twitter] object Expression {
     case MetricExpression(metricBuilder) => Set(metricBuilder.statsReceiver)
     case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case ConstantExpression(_) => Set.empty
+    case StringExpression(_) => Set(LoadedStatsReceiver)
     case NoExpression => Set.empty
   }
 
@@ -65,6 +67,20 @@ private[twitter] object Expression {
         NoExpression
     }
   }
+
+  /**
+   * Represent an expression constructed from metrics in strings, user would need to provide
+   * role and service name if needed to the [[ExpressionSchema]], otherwise remain unspecified.
+   *
+   * @note [[StringExpression]] is for conveniently creating expressions without getting a hold of
+   *       [[StatsReceiver]] or [[MetricBuilder]], if they present or easy to access, users should
+   *       prefer creating expression via Metric instances.
+   *       StringExpressions are not guaranteed to be real metrics, please proceed with proper
+   *       validation and testing.
+   *
+   * @param exprs a sequence of metrics in strings
+   */
+  def apply(exprs: Seq[String]): Expression = StringExpression(exprs)
 }
 
 /**
@@ -111,6 +127,12 @@ case class HistogramExpression private[exp] (
   metricBuilder: MetricBuilder,
   component: Either[HistogramComponent, Double])
     extends Expression
+
+/**
+ * Represent an expression constructed from metrics in strings
+ * @see Expression#apply
+ */
+case class StringExpression private[exp] (exprs: Seq[String]) extends Expression
 
 case object NoExpression extends Expression {
   @varargs
