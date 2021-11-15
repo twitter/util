@@ -3,21 +3,27 @@ package com.twitter.util.jackson
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.core.json.JsonWriteFeature
-import com.fasterxml.jackson.core.util.{DefaultIndenter, DefaultPrettyPrinter}
-import com.fasterxml.jackson.core.{JsonFactory, JsonFactoryBuilder, JsonParser, TSFBuilder}
+import com.fasterxml.jackson.core.util.DefaultIndenter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.JsonFactoryBuilder
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.TSFBuilder
 import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream
 import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper, _}
-import com.fasterxml.jackson.dataformat.yaml.{YAMLFactory, YAMLFactoryBuilder}
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.scala.{
-  DefaultScalaModule,
-  ScalaObjectMapper => JacksonScalaObjectMapper
-}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.module.scala.{ScalaObjectMapper => JacksonScalaObjectMapper}
 import com.twitter.io.Buf
 import com.twitter.util.jackson.caseclass.CaseClassJacksonModule
-import com.twitter.util.jackson.serde.{DefaultSerdeModule, LongKeyDeserializers}
+import com.twitter.util.jackson.serde.DefaultSerdeModule
+import com.twitter.util.jackson.serde.LongKeyDeserializers
 import com.twitter.util.validation.ScalaValidator
-import java.io.{ByteArrayOutputStream, InputStream, OutputStream}
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.nio.ByteBuffer
 
 object ScalaObjectMapper {
@@ -392,6 +398,11 @@ object ScalaObjectMapper {
       this.additionalMapperConfigurationFns.foreach(_(underlying))
 
       underlying.setPropertyNamingStrategy(this.propertyNamingStrategy)
+      // Block use of a set of "unsafe" base types such as java.lang.Object
+      // to prevent exploitation of Remote Code Execution (RCE) vulnerability
+      // This line can be removed when this feature is enabled by default in Jackson 3
+      underlying.enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+
       this.jacksonModules.foreach(underlying.registerModule)
 
       underlying

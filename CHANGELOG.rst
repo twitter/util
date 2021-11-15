@@ -12,6 +12,10 @@ Runtime Behavior Changes
 
 * util-cache: Update Caffeine cache library to version 2.9.2 ``PHAB_ID=D771893``
 
+* util-jackson: Enable `BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES` in ScalaObjectMapper to
+  guard against Remote Code Execution (RCE) security vulnerability. This blocks 
+  polymorphic deserialization from unsafe base types. ``PHAB_ID=D780863``
+
 21.10.0
 -------
 
