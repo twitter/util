@@ -7,5 +7,6 @@ owners:
   - bdimmick
   - roanta
   - vkostyukov
+  - yufang
   - csl-core-security:phab
   - platform-security:ldap
