@@ -10,15 +10,11 @@ The code was moved to `util <https://twitter.github.io/util/>`_
 in order to allow usage without depending on finagle-core.
 To ease the transition, the package namespace was left as is.
 
-Why were there three(!) different implementations?
+Why were there two(!) different implementations?
 --------------------------------------------------
-This is somewhat historical, as early on in Twitter, Commons Stats
-was created for Java developers and Ostrich was created for Scala developers.
-Code initially was written directly to the implementations and there were
-(and still are) some subtle differences in their behavior.
-``StatsReceiver`` was written in order to bridge the gap between the
-two implementations. `finagle-stats` was written quite a bit later in order to
-improve upon both of these implementations in terms of
+This is somewhat historical, as early on in Twitter, Ostrich was created for Scala developers.
+`finagle-stats` was written quite a bit later in order to
+improve upon its implementation in terms of
 allocation efficiency and histogram precision.
 
 Why is `NullStatsReceiver` being used?
@@ -34,19 +30,19 @@ and `Maven Central <https://search.maven.org/#search%7Cga%7C1%7Cfinagle-stats>`_
 
 Why migrate to finagle-stats?
 -----------------------------
-The `finagle-stats` library is designed to replace the other two libraries
-formerly supported by Twitter: Ostrich and Commons Stats. The comparison table below
-illustrates the advantages of `finagle-stats` over the older libraries.
+The `finagle-stats` library is designed to replace Ostrich which was
+formerly supported by Twitter. The comparison table below
+illustrates the advantages of `finagle-stats` over Ostrich.
 
-+------------------------------+---------------+----------+-----------------+
-|                              | Commons Stats | Ostrich  | finagle-stats   |
-+==============================+===============+==========+=================+
-| Allocations per `Stat.add`   | 16 bytes      | 0 bytes  | 0 bytes         |
-+------------------------------+---------------+----------+-----------------+
-| Highest histogram resolution | p99           | p9999    | p9999           |
-+------------------------------+---------------+----------+-----------------+
-| Sampling error               | N/A           |  ±5%     | ±0.5%           |
-+------------------------------+---------------+----------+-----------------+
++------------------------------+----------+-----------------+
+|                              | Ostrich  | finagle-stats   |
++==============================+==========+=================+
+| Allocations per `Stat.add`   | 0 bytes  | 0 bytes         |
++------------------------------+----------+-----------------+
+| Highest histogram resolution | p9999    | p9999           |
++------------------------------+----------+-----------------+
+| Sampling error               |  ±5%     | ±0.5%           |
++------------------------------+----------+-----------------+
 
 `finagle-stats` allows you to visualize and download the full details of `Stat`
 histograms. This is available on the
@@ -55,7 +51,7 @@ admin page.
 
 Are metric values reset or latched after an observability collection?
 ---------------------------------------------------------------------
-``Stats`` are latched by all three implementations.
+``Stats`` are latched by all two implementations.
 This means that for each observability collection window,
 you will see that window’s distribution of values.
 
