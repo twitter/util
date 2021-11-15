@@ -1,10 +1,12 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.{AtomicLong, AtomicReference, AtomicReferenceArray}
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
 import java.util.{List => JList}
 import scala.annotation.tailrec
 import scala.collection.compat._
 import scala.collection.immutable
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Buffer
 import scala.jdk.CollectionConverters._
 import scala.language.higherKinds
@@ -328,16 +330,11 @@ object Var {
         } yield left ++ right
       }
 
-    tree(0, vs.length).map { ts =>
-      val b = factory.newBuilder
-      b ++= ts
-      b.result()
-    }
+    tree(0, vs.length).map(_.to(factory))
   }
 
   /**
    * Collect a collection of Vars into a Var of collection.
-   * Var.collect can result in a stack overflow if called with a large sequence.
    * Var.collectIndependent breaks composition with respect to update propagation.
    * That is, collectIndependent can fail to correctly update interdependent vars,
    * but is safe for independent vars.
@@ -362,33 +359,40 @@ object Var {
   )(
     implicit factory: Factory[T, CC[T]]
   ): Var[CC[T]] =
-    async(factory.newBuilder.result()) { v =>
+    async(factory.newBuilder.result()) { u =>
       val N = vars.size
-      val cur = new AtomicReferenceArray[T](N)
+
+      // `filling` represents whether or not we have gone through our collection
+      // of `Var`s and added observations. Once we have "filled" the `cur` array
+      // for the first time, we can publish an initial update to `u`. Subsequent,
+      // updates to each constintuent Var are guarded by a lock on the `cur` and
+      // we ensure that we publish the update before any new updates can come
+      // through.
+      //
+      // @note there is still a subtle race where we can be in the middle
+      // of "filling" and receive updates on previously filled Vars. However, this
+      // is an acceptable race since technically we haven't added observations to all
+      // of the constituent Vars yet.
+      //
+      // @note "filling" only works with the guarantee that the initial `observe` is
+      // synchronous. This should be the case with Vars since they have an initial value.
       @volatile var filling = true
-      def build() = {
-        val b = factory.newBuilder
-        var i = 0
-        while (i < N) {
-          b += cur.get(i)
-          i += 1
-        }
-        b.result()
+      val cur = new Array[T](N)
+
+      def publish(i: Int, newValue: T): Unit = cur.synchronized {
+        cur(i) = newValue
+        if (!filling) u() = cur.to(factory)
       }
 
-      def publish(i: Int, newValue: T) = {
-        cur.set(i, newValue)
-        if (!filling) v() = build()
+      val closables = new ArrayBuffer[Closable](N)
+      val iter = vars.iterator.zipWithIndex
+      while (iter.hasNext) {
+        val (v, i) = iter.next()
+        if (i == N - 1) filling = false
+        closables += v.observe(newValue => publish(i, newValue))
       }
 
-      val closes = vars.iterator.zipWithIndex.map {
-        case (v, i) => v.observe(0, Observer(newValue => publish(i, newValue)))
-      }.toSeq
-
-      filling = false
-      v() = build()
-
-      Closable.all(closes: _*)
+      Closable.all(closables: _*)
     }
 
   /**

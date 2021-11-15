@@ -274,18 +274,52 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     assert(ref.get == Seq((1, 2), (2, 4)))
   }
 
-  test("Var.collectIndependent: not overflowing the stack") {
-    val vars: Seq[Var[Int]] = for (i <- 1 to 10000) yield {
-      Var(i) // vars(i-1).map(_+2)
-    }
+  test("Var.collect overflows the stack") {
+    val vars: Seq[Var[Int]] = for (i <- 1 to 10 * 1000) yield Var(i)
 
     intercept[java.lang.StackOverflowError] {
       val v = Var.collect(vars)
-      v.observe { x => }
+      v.observe { x => /* do nothing */ }
     }
+  }
 
+  test("Var.collectIndependent does NOT overflow the stack") {
+    val vars: Seq[Var[Int]] = for (i <- 1 to 10 * 1000) yield Var(i)
     val v = Var.collectIndependent(vars)
-    v.observe { x => }
+    v.observe { x => /* do nothing */ }
+    assert(v.sample == Seq.tabulate(10 * 1000)(i => i + 1))
+  }
+
+  test("Var.collectIndependent") {
+    val v1 = Var(10)
+    val v2 = Var(5)
+    val v3 = Var.collectIndependent(Seq[Var[Int]](v1, v2))
+
+    assert(v3.sample == Seq(10, 5))
+
+    v1() = 11
+    assert(v3.sample == Seq(11, 5))
+
+    v2() = 6
+    assert(v3.sample == Seq(11, 6))
+  }
+
+  test("difference between collect and collectIndependent") {
+    val v1 = Var(1)
+    val v2 = v1.map(_ * 2)
+    val vCollect = Var.collect(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+    val vCollectIndependent = Var.collectIndependent(Seq(v1, v2)).map { case Seq(a, b) => (a, b) }
+
+    val refCollect = new AtomicReference[Seq[(Int, Int)]]
+    vCollect.changes.build.register(Witness(refCollect))
+
+    val refCollectIndependent = new AtomicReference[Seq[(Int, Int)]]
+    vCollectIndependent.changes.build.register(Witness(refCollectIndependent))
+
+    v1() = 2
+
+    assert(refCollect.get == Vector((1, 2), (2, 4)))
+    assert(refCollectIndependent.get == Vector((1, 2), (2, 2), (2, 4)))
   }
 
   /**
