@@ -392,7 +392,7 @@ object Var {
         closables += v.observe(newValue => publish(i, newValue))
       }
 
-      Closable.all(closables: _*)
+      Closable.all(closables.toSeq: _*)
     }
 
   /**

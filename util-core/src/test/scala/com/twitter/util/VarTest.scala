@@ -287,7 +287,7 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     val vars: Seq[Var[Int]] = for (i <- 1 to 10 * 1000) yield Var(i)
     val v = Var.collectIndependent(vars)
     v.observe { x => /* do nothing */ }
-    assert(v.sample == Seq.tabulate(10 * 1000)(i => i + 1))
+    assert(v.sample() == Seq.tabulate(10 * 1000)(i => i + 1))
   }
 
   test("Var.collectIndependent") {
@@ -295,13 +295,13 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     val v2 = Var(5)
     val v3 = Var.collectIndependent(Seq[Var[Int]](v1, v2))
 
-    assert(v3.sample == Seq(10, 5))
+    assert(v3.sample() == Seq(10, 5))
 
     v1() = 11
-    assert(v3.sample == Seq(11, 5))
+    assert(v3.sample() == Seq(11, 5))
 
     v2() = 6
-    assert(v3.sample == Seq(11, 6))
+    assert(v3.sample() == Seq(11, 6))
   }
 
   test("difference between collect and collectIndependent") {
