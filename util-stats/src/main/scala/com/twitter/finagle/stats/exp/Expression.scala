@@ -23,7 +23,7 @@ private[twitter] object Expression {
         case (acc, expr) =>
           getStatsReceivers(expr) ++ acc
       }
-    case MetricExpression(metricBuilder) => Set(metricBuilder.statsReceiver)
+    case MetricExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case ConstantExpression(_) => Set.empty
     case StringExpression(_) => Set(LoadedStatsReceiver)
@@ -57,12 +57,14 @@ private[twitter] object Expression {
 
   /**
    * Create an single expression wrapping a counter or gauge.
+   * @param metadata  MetricBuilder instance
+   * @param showRollup  If set true, inform the expression handler to render all tail metrics
    */
-  def apply(metadata: Metadata): Expression = {
+  def apply(metadata: Metadata, showRollup: Boolean = false): Expression = {
     metadata.toMetricBuilder match {
       case Some(metricBuilder) =>
         require(metricBuilder.metricType != HistogramType, "provide a component for histogram")
-        MetricExpression(metricBuilder)
+        MetricExpression(metricBuilder, showRollup)
       case None =>
         NoExpression
     }
@@ -117,7 +119,8 @@ case class FunctionExpression private[exp] (fnName: String, exprs: Seq[Expressio
 /**
  * Represents the leaf metrics
  */
-case class MetricExpression private[exp] (metricBuilder: MetricBuilder) extends Expression
+case class MetricExpression private[exp] (metricBuilder: MetricBuilder, showRollup: Boolean)
+    extends Expression
 
 /**
  * Represent a histogram expression with specified component, for example the average, or a percentile
