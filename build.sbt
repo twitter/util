@@ -676,7 +676,7 @@ lazy val utilTest = Project(
       "org.scalatestplus" %% "junit-4-12" % "3.1.2.0",
       "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0"
     )
-  ).dependsOn(utilCore, utilLogging)
+  ).dependsOn(utilCore, utilLogging, utilStats)
 
 lazy val utilThrift = Project(
   id = "util-thrift",

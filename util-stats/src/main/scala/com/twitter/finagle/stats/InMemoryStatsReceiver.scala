@@ -236,7 +236,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   }
 
   /**
-   * Clears all registered counters, gauges, stats, and their metadata.
+   * Clears all registered counters, gauges, stats, expressions, and their metadata.
    * @note this is not atomic. If new metrics are added while this method is executing, those metrics may remain.
    */
   def clear(): Unit = {
@@ -244,6 +244,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     stats.clear()
     gauges.clear()
     schemas.clear()
+    expressions.clear()
   }
 
   private[this] def toHistogramDetail(addedValues: Seq[Float]): HistogramDetail = {
