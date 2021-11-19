@@ -8,6 +8,7 @@ scala_library(
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
+        "3rdparty/jvm/org/yaml:snakeyaml",
         "util/util-core:util-core-util",
         "util/util-logging/src/main/scala/com/twitter/logging",
     ],

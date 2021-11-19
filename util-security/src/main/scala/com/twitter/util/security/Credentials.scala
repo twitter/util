@@ -16,48 +16,36 @@
 
 package com.twitter.util.security
 
-import java.io.{File, IOException}
-
+import java.io.File
+import org.yaml.snakeyaml.Yaml
+import scala.collection.JavaConverters._
 import scala.io.Source
-import scala.jdk.CollectionConverters._
-import scala.util.parsing.combinator._
-import scala.util.matching.Regex
 
 /**
  * Simple helper to read authentication credentials from a text file.
  *
- * The file's format is assumed to be trivialized yaml, containing lines of the form ``key: value``.
- * Keys can be any word character or '-' and values can be any character except new lines.
+ * The file's format is assumed to be yaml, containing string keys and values.
  */
 object Credentials {
-  object parser extends RegexParsers {
-
-    override val whiteSpace: Regex = "(?:\\s+|#.*\\r?\\n)+".r
-
-    private[this] val key = "[\\w-]+".r
-    private[this] val value = ".+".r
-
-    def auth: Parser[Tuple2[String, String]] = key ~ ":" ~ value ^^ {
-      case k ~ ":" ~ v => (k, v)
-      case _ => throw new MatchError("Failed case matching on auth parser")
-    }
-    def content: Parser[Map[String, String]] = rep(auth) ^^ { auths => Map(auths: _*) }
-
-    def apply(in: String): Map[String, String] = {
-      parseAll(content, in) match {
-        case Success(result, _) => result
-        case x: Failure => throw new IOException(x.toString)
-        case x: Error => throw new IOException(x.toString)
-      }
-    }
+  private[this] val parser: ThreadLocal[Yaml] = new ThreadLocal[Yaml] {
+    override def initialValue(): Yaml = new Yaml()
   }
 
-  def apply(file: File): Map[String, String] = parser(Source.fromFile(file).mkString)
-
-  def apply(data: String): Map[String, String] = parser(data)
-
   def byName(name: String): Map[String, String] = {
-    apply(new File(System.getenv().asScala.getOrElse("KEY_FOLDER", "/etc/keys"), name))
+    apply(new File(sys.env.getOrElse("KEY_FOLDER", "/etc/keys"), name))
+  }
+
+  def apply(file: File): Map[String, String] = {
+    val fileSource = Source.fromFile(file)
+    try apply(fileSource.mkString)
+    finally fileSource.close()
+  }
+
+  def apply(data: String): Map[String, String] = {
+    val result: java.util.Map[String, Any] = parser.get.load(data)
+    Option(result)
+      .map(_.asScala.toMap.mapValues(v => if (v == null) "null" else v.toString)).getOrElse(
+        Map.empty)
   }
 }
 

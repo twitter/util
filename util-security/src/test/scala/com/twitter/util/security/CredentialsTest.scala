@@ -21,48 +21,48 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class CredentialsTest extends AnyFunSuite with Checkers {
   test("parse a simple auth file") {
-    val content = "username: root\npassword: hellokitty\n"
+    val content = "username: root\npassword: not_a_password\n"
     val result = Credentials(content)
-    assert(result == Map("username" -> "root", "password" -> "hellokitty"))
+    assert(result == Map("username" -> "root", "password" -> "not_a_password"))
   }
 
   test("parse a more complex auth file") {
     val content = """# random comment
 
-username:root
-password  : last_0f-the/international:playboys
+username: root
+password: not_a-real/pr0d:password
 # more stuff
-   moar :ok
+moar: ok
 
         """
     assert(
       Credentials(content) == Map(
         "username" -> "root",
-        "password" -> "last_0f-the/international:playboys",
+        "password" -> "not_a-real/pr0d:password",
         "moar" -> "ok"
       )
     )
   }
 
   test("work for java peeps too") {
-    val content = "username: root\npassword: hellokitty\n"
+    val content = "username: root\npassword: not_a_password\n"
     val jmap = new Credentials().read(content)
     assert(jmap.size() == 2)
     assert(jmap.get("username") == "root")
-    assert(jmap.get("password") == "hellokitty")
+    assert(jmap.get("password") == "not_a_password")
   }
 
   test("handle \r\n line breaks") {
-    val content = "username: root\r\npassword: hellokitty\r\n"
-    assert(Credentials(content) == Map("username" -> "root", "password" -> "hellokitty"))
+    val content = "username: root\r\npassword: not_a_password\r\n"
+    assert(Credentials(content) == Map("username" -> "root", "password" -> "not_a_password"))
   }
 
   test("handle special chars") {
-    val pass = (0 to 127)
+    val pass = (32 to 126)
       .map(_.toChar)
-      .filter(c => c != '\r' && c != '\n')
+      .filter(c => c != '\r' && c != '\n' && c != '\'')
       .mkString
-    val content = s"username: root\npassword: $pass\n"
+    val content = s"username: root\npassword: '$pass'\n"
     assert(Credentials(content) == Map("username" -> "root", "password" -> pass))
   }
 }

@@ -7,6 +7,18 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+* util-security: Use snakeyaml to parse yaml instead of a buggy custom yaml
+  parser. This means that thrown IOExceptions have been replaced by
+  YAMLExceptions. Additionally, the parser member has been limited to private visibility. ``PHAB_ID=D617641``
+
+New Features
+~~~~~~~~~~~~
+
+* util-security: Any valid yaml / json file with string keys and values can
+  be loaded with `com.twitter.util.security.Credentials`. ``PHAB_ID=D617641``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
