@@ -44,7 +44,7 @@ object Credentials {
   def apply(data: String): Map[String, String] = {
     val result: java.util.Map[String, Any] = parser.get.load(data)
     Option(result)
-      .map(_.asScala.toMap.mapValues(v => if (v == null) "null" else v.toString)).getOrElse(
+      .map(_.asScala.toMap.mapValues(v => if (v == null) "null" else v.toString).toMap).getOrElse(
         Map.empty)
   }
 }
