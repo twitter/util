@@ -7,6 +7,9 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+21.11.0
+-------
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 * util-security: Use snakeyaml to parse yaml instead of a buggy custom yaml
