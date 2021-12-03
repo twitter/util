@@ -213,7 +213,9 @@ val sharedSettings =
 val sharedScala3EnabledSettings =
   baseSettings ++
     defaultScala3EnabledSettings ++
-    Seq(libraryDependencies ++= scala3Dependencies)
+    Seq(libraryDependencies ++= scala3Dependencies) ++ 
+    Seq(excludeDependencies ++= Seq("org.scala-lang.modules" % "scala-collection-compat_3"))
+
 
 lazy val noPublishSettings = Seq(
   publish / skip := true
