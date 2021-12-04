@@ -8,6 +8,7 @@ val releaseVersion = "21.12.0-SNAPSHOT"
 
 val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.11.4"
+val json4sVersion = "4.0.3"
 val mockitoVersion = "3.3.3"
 val mockitoScalaVersion = "1.14.8"
 
@@ -505,7 +506,7 @@ lazy val utilJackson = Project(
       "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"),
       "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
-      "org.json4s" %% "json4s-core" % "3.6.11",
+      "org.json4s" %% "json4s-core" % json4sVersion,
       "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
       scalacheckLib,
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
@@ -725,7 +726,7 @@ lazy val utilValidator = Project(
       "jakarta.validation" % "jakarta.validation-api" % "3.0.0",
       "org.hibernate.validator" % "hibernate-validator" % "7.0.1.Final",
       "org.glassfish" % "jakarta.el" % "4.0.0",
-      "org.json4s" %% "json4s-core" % "3.6.7",
+      "org.json4s" %% "json4s-core" % json4sVersion,
       "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion % "test",
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
