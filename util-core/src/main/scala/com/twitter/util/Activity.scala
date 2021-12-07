@@ -1,14 +1,11 @@
 package com.twitter.util
 
 import java.util.{List => JList}
-
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Buffer
 import scala.jdk.CollectionConverters._
-import scala.language.higherKinds
-import scala.reflect.ClassTag
 import scala.util.control.NonFatal
-import scala.Iterable
-import scala.collection.compat._
+import scala.collection.{Seq => AnySeq}
 
 /**
  * Activity, like [[com.twitter.util.Var Var]], is a value that varies over
@@ -195,11 +192,7 @@ object Activity {
    *
    * @example def collect[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
-  def collect[T: ClassTag, CC[X] <: Iterable[X]](
-    acts: CC[Activity[T]]
-  )(
-    implicit factory: Factory[T, CC[T]]
-  ): Activity[CC[T]] = {
+  def collect[T](acts: AnySeq[Activity[T]]): Activity[Seq[T]] = {
     collect(acts, false)
   }
 
@@ -213,32 +206,26 @@ object Activity {
    *
    * @example def collectIndependent[T](activities: Coll[Activity[T]]): Activity[Coll[T]]
    */
-  def collectIndependent[T: ClassTag, CC[X] <: Iterable[X]](
-    acts: CC[Activity[T]]
-  )(
-    implicit factory: Factory[T, CC[T]]
-  ): Activity[CC[T]] = {
+  def collectIndependent[T](acts: AnySeq[Activity[T]]): Activity[Seq[T]] = {
     collect(acts, true)
   }
 
-  private[this] def collect[T: ClassTag, CC[X] <: Iterable[X]](
-    acts: CC[Activity[T]],
+  private[this] def collect[T](
+    acts: AnySeq[Activity[T]],
     collectIndependent: Boolean
-  )(
-    implicit factory: Factory[T, CC[T]]
-  ): Activity[CC[T]] = {
+  ): Activity[Seq[T]] = {
     if (acts.isEmpty)
-      return Activity.value(factory.fromSpecific(Nil))
+      return Activity.value(Seq.empty[T])
 
-    val states: Iterable[Var[State[T]]] = acts.map(_.run)
-    val stateVar: Var[Iterable[State[T]]] = if (collectIndependent) {
+    val states: AnySeq[Var[State[T]]] = acts.map(_.run)
+    val stateVar: Var[Seq[State[T]]] = if (collectIndependent) {
       Var.collectIndependent(states)
     } else {
       Var.collect(states)
     }
 
-    def flip(states: Iterable[State[T]]): State[CC[T]] = {
-      val notOk = states find {
+    def flip(states: AnySeq[State[T]]): State[Seq[T]] = {
+      val notOk = states.find {
         case Pending | Failed(_) => true
         case Ok(_) => false
       }
@@ -250,16 +237,16 @@ object Activity {
         case Some(_) => assert(false)
       }
 
-      val ts = factory.newBuilder
-      states foreach {
+      val ts = new ArrayBuffer[T](states.size)
+      states.foreach {
         case Ok(t) => ts += t
         case _ => assert(false)
       }
 
-      Ok(ts.result())
+      Ok(ts.toSeq)
     }
 
-    Activity(stateVar map flip)
+    Activity(stateVar.map(flip))
   }
 
   /**

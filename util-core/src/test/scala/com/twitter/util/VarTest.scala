@@ -243,23 +243,6 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     }
   }
 
-  // This is either very neat or very horrendous,
-  // depending on your point of view.
-  test("Var.collect[Set]") {
-    val vars = Seq(Var(1), Var(2), Var(3))
-
-    val coll = Var.collect(vars.map { v => v: Var[Int] }.toSet)
-    val ref = new AtomicReference[Set[Int]]
-    coll.changes.register(Witness(ref))
-    assert(ref.get == Set(1, 2, 3))
-
-    vars(1).update(1)
-    assert(ref.get == Set(1, 3))
-
-    vars(1).update(999)
-    assert(ref.get == Set(1, 999, 3))
-  }
-
   test("Var.collect: ordering") {
     val v1 = Var(1)
     val v2 = v1.map(_ * 2)

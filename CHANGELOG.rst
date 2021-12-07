@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+* util-core: `Activity.collect*` and `Var.collect*` are now implemented in terms of known collection
+  type `scala.collection.Seq` versus HKT `CC[X]` before. This allows for certain performance
+  enhancements as well as makes it more aligned with the `Future.collect` APIs.
+  ``PHAB_ID=D795123``
+
 21.11.0
 -------
 

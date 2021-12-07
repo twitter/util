@@ -4,14 +4,13 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.{List => JList}
 import scala.annotation.tailrec
-import scala.collection.compat._
+import scala.collection.{Seq => AnySeq}
+import scala.collection.compat.immutable.ArraySeq
 import scala.collection.immutable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Buffer
 import scala.jdk.CollectionConverters._
 import scala.language.higherKinds
-import scala.reflect.ClassTag
-import scala.Iterable
 
 /**
  * Vars are values that vary over time. To create one, you must give it an
@@ -311,12 +310,8 @@ object Var {
    *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
    * }}}
    */
-  def collect[T: ClassTag, CC[X] <: Iterable[X]](
-    vars: CC[Var[T]]
-  )(
-    implicit factory: Factory[T, CC[T]]
-  ): Var[CC[T]] = {
-    val vs = vars.toArray
+  def collect[T](vars: AnySeq[Var[T]]): Var[Seq[T]] = {
+    val vs = vars.toIndexedSeq
 
     def tree(begin: Int, end: Int): Var[Seq[T]] =
       if (begin == end) Var(Seq.empty)
@@ -330,7 +325,7 @@ object Var {
         } yield left ++ right
       }
 
-    tree(0, vs.length).map(_.to(factory))
+    tree(0, vs.length)
   }
 
   /**
@@ -354,12 +349,8 @@ object Var {
    *  // refCollectIndependent == Vector((1,2), (2,2), (2,4))
    * }}}
    */
-  def collectIndependent[T: ClassTag, CC[X] <: Iterable[X]](
-    vars: CC[Var[T]]
-  )(
-    implicit factory: Factory[T, CC[T]]
-  ): Var[CC[T]] =
-    async(factory.newBuilder.result()) { u =>
+  def collectIndependent[T](vars: AnySeq[Var[T]]): Var[Seq[T]] =
+    async(Seq.empty[T]) { u =>
       val N = vars.size
 
       // `filling` represents whether or not we have gone through our collection
@@ -377,19 +368,25 @@ object Var {
       // @note "filling" only works with the guarantee that the initial `observe` is
       // synchronous. This should be the case with Vars since they have an initial value.
       @volatile var filling = true
-      val cur = new Array[T](N)
+      val cur = new Array[Any](N)
 
-      def publish(i: Int, newValue: T): Unit = cur.synchronized {
-        cur(i) = newValue
-        if (!filling) u() = cur.to(factory)
+      def publishAt(i: Int): T => Unit = { newValue =>
+        cur.synchronized {
+          cur(i) = newValue
+          if (!filling) {
+            u() = ArraySeq.unsafeWrapArray(cur).asInstanceOf[ArraySeq[T]]
+          }
+        }
       }
 
       val closables = new ArrayBuffer[Closable](N)
-      val iter = vars.iterator.zipWithIndex
+      var i = 0
+      val iter = vars.iterator
       while (iter.hasNext) {
-        val (v, i) = iter.next()
+        val v = iter.next()
         if (i == N - 1) filling = false
-        closables += v.observe(newValue => publish(i, newValue))
+        closables += v.observe(publishAt(i))
+        i += 1
       }
 
       Closable.all(closables.toSeq: _*)
