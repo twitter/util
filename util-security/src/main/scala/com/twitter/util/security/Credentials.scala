@@ -19,6 +19,7 @@ package com.twitter.util.security
 import java.io.File
 import org.yaml.snakeyaml.Yaml
 import scala.collection.JavaConverters._
+import scala.collection.immutable.HashMap
 import scala.io.Source
 
 /**
@@ -27,9 +28,6 @@ import scala.io.Source
  * The file's format is assumed to be yaml, containing string keys and values.
  */
 object Credentials {
-  private[this] val parser: ThreadLocal[Yaml] = new ThreadLocal[Yaml] {
-    override def initialValue(): Yaml = new Yaml()
-  }
 
   def byName(name: String): Map[String, String] = {
     apply(new File(sys.env.getOrElse("KEY_FOLDER", "/etc/keys"), name))
@@ -42,10 +40,16 @@ object Credentials {
   }
 
   def apply(data: String): Map[String, String] = {
-    val result: java.util.Map[String, Any] = parser.get.load(data)
-    Option(result)
-      .map(_.asScala.toMap.mapValues(v => if (v == null) "null" else v.toString).toMap).getOrElse(
-        Map.empty)
+    val parser = new Yaml()
+    val result: java.util.Map[String, Any] = parser.load(data)
+    if (result == null) Map.empty
+    else {
+      val builder = HashMap.newBuilder[String, String]
+      result.forEach { (k, v) =>
+        builder += k -> String.valueOf(v)
+      }
+      builder.result()
+    }
   }
 }
 
