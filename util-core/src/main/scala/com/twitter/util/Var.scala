@@ -7,7 +7,6 @@ import scala.annotation.tailrec
 import scala.collection.{Seq => AnySeq}
 import scala.collection.compat.immutable.ArraySeq
 import scala.collection.immutable
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Buffer
 import scala.jdk.CollectionConverters._
 import scala.language.higherKinds
@@ -379,17 +378,17 @@ object Var {
         }
       }
 
-      val closables = new ArrayBuffer[Closable](N)
+      val closables = new Array[Any](N)
       var i = 0
       val iter = vars.iterator
       while (iter.hasNext) {
         val v = iter.next()
         if (i == N - 1) filling = false
-        closables += v.observe(publishAt(i))
+        closables(i) = v.observe(publishAt(i))
         i += 1
       }
 
-      Closable.all(closables.toSeq: _*)
+      Closable.all(ArraySeq.unsafeWrapArray(closables).asInstanceOf[ArraySeq[Closable]]: _*)
     }
 
   /**
@@ -485,15 +484,17 @@ private object UpdatableVar {
     def :=(newv: T): State[T] = copy(value = newv, version = version + 1)
   }
 
-  implicit def order[T]: Ordering[Party[T]] = new Ordering[Party[T]] {
+  private val anyOrder: Ordering[Party[Any]] = new Ordering[Party[Any]] {
     // This is safe because observers are compared
     // only from the same counter.
-    def compare(a: Party[T], b: Party[T]): Int = {
-      val c1 = a.depth compare b.depth
+    def compare(a: Party[Any], b: Party[Any]): Int = {
+      val c1 = java.lang.Integer.compare(a.depth, b.depth)
       if (c1 != 0) return c1
-      a.n compare b.n
+      java.lang.Long.compare(a.n, b.n)
     }
   }
+
+  implicit def order[T]: Ordering[Party[T]] = anyOrder.asInstanceOf[Ordering[Party[T]]]
 }
 
 private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] with Extractable[T] {
