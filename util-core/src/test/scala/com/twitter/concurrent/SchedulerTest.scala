@@ -150,7 +150,6 @@ abstract class LocalSchedulerTest(lifo: Boolean) extends AnyFunSuite with Matche
     val record = sampleBlockingFraction(0.0)
     assert(record == null)
   }
-
 }
 
 class LocalSchedulerFifoTest extends LocalSchedulerTest(false)

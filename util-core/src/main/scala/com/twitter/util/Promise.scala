@@ -92,8 +92,11 @@ object Promise {
       loop(this, WaitQueue.empty)
     }
 
-    final def runInScheduler(t: Try[A]): Unit =
-      Scheduler.submit(new Runnable() { def run(): Unit = WaitQueue.this.run(t) })
+    final def runInScheduler(t: Try[A]): Unit = {
+      if (this ne WaitQueue.Empty) {
+        Scheduler.submit(() => WaitQueue.this.run(t))
+      }
+    }
 
     @tailrec
     private def run(t: Try[A]): Unit =
@@ -107,7 +110,7 @@ object Promise {
 
   private[util] object WaitQueue {
 
-    val Empty: WaitQueue[Nothing] = new WaitQueue[Nothing] {
+    object Empty extends WaitQueue[Nothing] {
       final def first: K[Nothing] =
         throw new IllegalStateException("WaitQueue.Empty")
 

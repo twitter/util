@@ -1,9 +1,19 @@
 package com.twitter.util
 
+import com.twitter.concurrent.Scheduler
+import com.twitter.concurrent.LocalScheduler
 import com.twitter.conversions.DurationOps._
 import org.scalatest.funsuite.AnyFunSuite
 
 class PromiseTest extends AnyFunSuite {
+
+  class TrackingScheduler extends LocalScheduler(false) {
+    @volatile var submitted: Int = 0
+    override def submit(r: Runnable): Unit = {
+      submitted = submitted + 1
+      super.submit(r)
+    }
+  }
 
   test("Promise.detach should not detach other attached promises") {
     val p = new Promise[Unit]
@@ -304,5 +314,33 @@ class PromiseTest extends AnyFunSuite {
 
     assert("main thread" == Await.result(p2, 3.seconds))
     assert("main thread" == Await.result(p, 3.seconds))
+  }
+
+  test("promise with no continuations is not submitted to the scheduler") {
+    val old = Scheduler()
+    try {
+      val sched = new TrackingScheduler()
+      Scheduler.setUnsafe(sched)
+      val p = new Promise[Unit]()
+      p.setDone()
+      assert(sched.submitted == 0)
+    } finally {
+      Scheduler.setUnsafe(old)
+    }
+  }
+
+  test("registered continuation on satisfied promise is submitted to the scheduler") {
+    val old = Scheduler()
+    try {
+      val sched = new TrackingScheduler()
+      Scheduler.setUnsafe(sched)
+      val p = new Promise[Unit]()
+      p.setDone()
+
+      p.ensure(())
+      assert(sched.submitted == 1)
+    } finally {
+      Scheduler.setUnsafe(old)
+    }
   }
 }
