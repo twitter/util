@@ -1,10 +1,15 @@
 package com.twitter.util
 
-import java.lang.ref.{PhantomReference, Reference, ReferenceQueue}
+import java.lang.ref.PhantomReference
+import java.lang.ref.Reference
+import java.lang.ref.ReferenceQueue
 import java.{util => ju}
-import java.util.concurrent.atomic.{AtomicBoolean, AtomicReference}
-import java.util.logging.{Level, Logger}
-import scala.annotation.{tailrec, varargs}
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.logging.Level
+import java.util.logging.Logger
+import scala.annotation.tailrec
+import scala.annotation.varargs
 import scala.util.control.{NonFatal => NF}
 
 /**
@@ -96,6 +101,34 @@ object Closable {
         }
       }
       checkNext()
+    }
+  }
+
+  /**
+   * Sequential composition: create a new Closable which, when
+   * closed, closes all of the underlying ones in sequence: that is,
+   * resource ''n+1'' is not closed until resource ''n'' is.
+   *
+   * @return the first failed [[Future]] should any of the `Closables`
+   *         result in a failed [[Future]].
+   *
+   * @note as with all `Closables`, the `deadline` passed to `close`
+   *       is advisory.
+   */
+  def sequence(a: Closable, b: Closable): Closable = new Closable {
+    def close(deadline: Time): Future[Unit] = {
+      val first = safeClose(a, deadline)
+
+      def onFirstComplete(t: Try[Unit]): Future[Unit] = {
+        val second = safeClose(b, deadline)
+        if (t.isThrow) if (second.isDefined) first else second.transform(_ => first)
+        else second
+      }
+
+      first.poll match {
+        case Some(t) => onFirstComplete(t)
+        case None => first.transform(onFirstComplete)
+      }
     }
   }
 

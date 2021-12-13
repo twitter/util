@@ -1,7 +1,8 @@
 package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.funsuite.AnyFunSuite
 
 class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience {
@@ -105,13 +106,40 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     )
   }
 
+  test("Cloasable.make catches NonFatals and translates to failed Futures") {
+    val throwing = Closable.make { _ => throw new Exception("lolz") }
+
+    var failed = 0
+    val f = throwing.close().respond {
+      case Throw(_) => failed = -1
+      case _ => failed = 1
+    }
+
+    val ex = intercept[Exception] {
+      Await.result(f, 2.seconds)
+    }
+    assert(ex.getMessage.contains("lolz"))
+    assert(failed == -1)
+  }
+}
+
+abstract class ClosableSequenceTest extends AnyFunSuite with Eventually with IntegrationPatience {
+
+  def sequenceTwo(a: Closable, b: Closable): Closable
+
+  private[this] def assertIsDone(f: Future[Unit]): Unit =
+    assert(f.isDefined)
+
+  private[this] def assertIsNotDone(f: Future[Unit]): Unit =
+    assert(!f.isDefined)
+
   test("Closable.sequence") {
     val p1, p2 = new Promise[Unit]
     var n1, n2 = 0
     val c1 = Closable.make(_ => { n1 += 1; p1 })
     val c2 = Closable.make(_ => { n2 += 1; p2 })
 
-    val c = Closable.sequence(c1, c2)
+    val c = sequenceTwo(c1, c2)
     assert(n1 == 0)
     assert(n2 == 0)
 
@@ -143,7 +171,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     }
 
     // test with a failed close first
-    val f1 = Closable.sequence(c1, c2).close()
+    val f1 = sequenceTwo(c1, c2).close()
     assert(n1 == 1)
     assert(n2 == 1)
     val x1 = intercept[RuntimeException] {
@@ -152,7 +180,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     assert(x1.getMessage.contains("n1=1"))
 
     // then test in reverse order, failed close last
-    val f2 = Closable.sequence(c2, c1).close()
+    val f2 = sequenceTwo(c2, c1).close()
     assert(n1 == 2)
     assert(n2 == 2)
     val x2 = intercept[RuntimeException] {
@@ -161,7 +189,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     assert(x2.getMessage.contains("n1=2"))
 
     // multiple failures, returns the first failure
-    val f3 = Closable.sequence(c1, c1).close()
+    val f3 = sequenceTwo(c1, c1).close()
     assert(n1 == 4)
     val x3 = intercept[RuntimeException] {
       Await.result(f3, 5.seconds)
@@ -172,7 +200,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     // last closable is satisfied
     val p = new Promise[Unit]()
     val c3 = Closable.make(_ => p)
-    val f4 = Closable.sequence(c1, c3).close()
+    val f4 = sequenceTwo(c1, c3).close()
     assert(n1 == 5)
     assert(!f4.isDefined)
     p.setDone()
@@ -184,7 +212,7 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
 
   test("Closable.sequence lifts synchronous exceptions") {
     val throwing = Closable.make(_ => sys.error("lolz"))
-    val f = Closable.sequence(Closable.nop, throwing).close()
+    val f = sequenceTwo(Closable.nop, throwing).close()
     val ex = intercept[Exception] {
       Await.result(f, 5.seconds)
     }
@@ -195,25 +223,17 @@ class ClosableTest extends AnyFunSuite with Eventually with IntegrationPatience 
     assert(
       Future
         .value(1)
-        .map(_ => Closable.sequence(Closable.nop, Closable.nop).close().isDefined)
+        .map(_ => sequenceTwo(Closable.nop, Closable.nop).close().isDefined)
         .poll
         .contains(Return.True)
     )
   }
+}
 
-  test("Cloasable.make catches NonFatals and translates to failed Futures") {
-    val throwing = Closable.make { _ => throw new Exception("lolz") }
+final class ClosableSequence2Test extends ClosableSequenceTest {
+  def sequenceTwo(a: Closable, b: Closable): Closable = Closable.sequence(a, b)
+}
 
-    var failed = 0
-    val f = throwing.close().respond {
-      case Throw(_) => failed = -1
-      case _ => failed = 1
-    }
-
-    val ex = intercept[Exception] {
-      Await.result(f, 2.seconds)
-    }
-    assert(ex.getMessage.contains("lolz"))
-    assert(failed == -1)
-  }
+final class ClosableSequenceNTest extends ClosableSequenceTest {
+  def sequenceTwo(a: Closable, b: Closable): Closable = Closable.sequence(Seq(a, b): _*)
 }
