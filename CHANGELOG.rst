@@ -7,6 +7,9 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+21.12.0
+-------
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 * util-core: `Activity.collect*` and `Var.collect*` are now implemented in terms of known collection
