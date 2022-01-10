@@ -94,8 +94,8 @@ object Closable {
       def checkNext(): Future[Unit] = {
         if (!iter.hasNext) Future.Done
         else {
-          iter.next().poll match {
-            case Some(Return(_)) => checkNext()
+          iter.next() match {
+            case Future.Done => checkNext()
             case _ => Future.join(fs)
           }
         }
@@ -125,10 +125,8 @@ object Closable {
         else second
       }
 
-      first.poll match {
-        case Some(t) => onFirstComplete(t)
-        case None => first.transform(onFirstComplete)
-      }
+      if (first eq Future.Done) onFirstComplete(Try.Unit)
+      else first.transform(onFirstComplete)
     }
   }
 
@@ -170,10 +168,8 @@ object Closable {
 
         val firstClose = safeClose(hd, deadline)
         // eagerness is needed by `Var`, see RB_ID=557464
-        firstClose.poll match {
-          case Some(t) => onTry(t)
-          case None => firstClose.transform(onTry)
-        }
+        if (firstClose eq Future.Done) onTry(Try.Unit)
+        else firstClose.transform(onTry)
     }
 
     def close(deadline: Time): Future[Unit] =
