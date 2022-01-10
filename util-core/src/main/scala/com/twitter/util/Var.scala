@@ -1,13 +1,11 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.atomic.AtomicReference
 import java.util.{List => JList}
 import scala.annotation.tailrec
 import scala.collection.{Seq => AnySeq}
 import scala.collection.compat.immutable.ArraySeq
-import scala.collection.immutable
 import scala.collection.mutable.Buffer
+import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 import scala.language.higherKinds
 
@@ -474,72 +472,123 @@ object Var {
 private object UpdatableVar {
   import Var.Observer
 
-  case class Party[T](obs: Observer[T], depth: Int, n: Long) {
+  final case class Party[T](observer: Observer[T], depth: Int, sequence: Long) {
     @volatile var active: Boolean = true
   }
 
-  case class State[T](value: T, version: Long, parties: immutable.SortedSet[Party[T]]) {
-    def -(p: Party[T]): State[T] = copy(parties = parties - p)
-    def +(p: Party[T]): State[T] = copy(parties = parties + p)
-    def :=(newv: T): State[T] = copy(value = newv, version = version + 1)
-  }
-
-  private val anyOrder: Ordering[Party[Any]] = new Ordering[Party[Any]] {
-    // This is safe because observers are compared
-    // only from the same counter.
-    def compare(a: Party[Any], b: Party[Any]): Int = {
+  val partyOrder: Ordering[Party[_]] = new Ordering[Party[_]] {
+    def compare(a: Party[_], b: Party[_]): Int = {
       val c1 = java.lang.Integer.compare(a.depth, b.depth)
       if (c1 != 0) return c1
-      java.lang.Long.compare(a.n, b.n)
+      java.lang.Long.compare(a.sequence, b.sequence)
     }
   }
-
-  implicit def order[T]: Ordering[Party[T]] = anyOrder.asInstanceOf[Ordering[Party[T]]]
 }
 
 private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] with Extractable[T] {
   import UpdatableVar._
   import Var.Observer
 
-  private[this] val n = new AtomicLong(0)
-  private[this] val state = new AtomicReference(State[T](init, 0, immutable.SortedSet.empty))
+  // The state must be mutated or read under a synchronized block on 'this'. The value can be read
+  // w/o an external synchronization.
+  @volatile private[this] var value = init
+  private[this] var version = 0L
+  private[this] var partySequence = 0L
+  // Exposed for testing.
+  //
+  // Parties is a sorted set. We implement it ourselves (out top of vanilla list) at the cost
+  // of O(n) insert/remove in order to save on memory footprint. Similar to Future's WaitQueue,
+  // there just a handful of observers registering to each Var so plain old linked list works
+  // the best.
+  @volatile private[util] var parties = List.empty[Party[T]]
 
-  @tailrec
-  private[this] def cas(next: State[T] => State[T]): State[T] = {
-    val from = state.get
-    val to = next(from)
-    if (state.compareAndSet(from, to)) to else cas(next)
-  }
+  def apply(): T = value
 
-  def apply(): T = state.get.value
+  def update(newValue: T): Unit = {
+    val v = synchronized {
+      version += 1
+      value = newValue
+      version
+    }
 
-  def update(newv: T): Unit = synchronized {
-    val State(value, version, parties) = cas(_ := newv)
-    for (p @ Party(obs, _, _) <- parties) {
+    // Another party maybe be racing to register while we're updating with the new value.
+    // This is not a big deal b/c observers prevent double-updates by design (via versions).
+    parties.foreach { p =>
       // An antecedent update may have closed the current
       // party (e.g. flatMap does this); we need to check that
       // the party is active here in order to prevent stale updates.
-      if (p.active)
-        obs.publish(this, value, version)
+      if (p.active) p.observer.publish(this, newValue, v)
     }
   }
 
   protected def observe(depth: Int, obs: Observer[T]): Closable = {
     obs.claim(this)
-    val party = Party(obs, depth, n.getAndIncrement())
-    val State(value, version, _) = cas(_ + party)
-    obs.publish(this, value, version)
+
+    val (p, curValue, curVersion) = synchronized {
+      val party = Party(obs, depth, partySequence)
+      insertParty(party)
+      partySequence += 1
+      (party, value, version)
+    }
+
+    obs.publish(this, curValue, curVersion)
 
     new Closable {
       def close(deadline: Time): Future[Unit] = {
-        party.active = false
-        cas(_ - party)
+        p.active = false
+        UpdatableVar.this.synchronized {
+          removeParty(p)
+        }
         Future.Done
       }
     }
   }
 
-  override def toString: String = "Var(" + state.get.value + ")@" + hashCode
+  // Must be called while synchronized on this.
+  def removeParty(p: Party[T]): Unit = {
+    @tailrec
+    def loop(current: List[Party[T]], result: ListBuffer[Party[T]]): List[Party[T]] =
+      current match {
+        case Nil => result.toList
+        case q :: next =>
+          if (q eq p) (result ++= next).toList
+          else loop(next, result += q)
+      }
+
+    parties = parties match {
+      case q :: next if q eq p => next
+      case ps => loop(ps, ListBuffer.empty)
+    }
+  }
+
+  // Must be called while synchronized on this.
+  def insertParty(p: Party[T]): Unit = {
+    @tailrec
+    def loop(current: List[Party[T]], result: ListBuffer[Party[T]]): List[Party[T]] =
+      current match {
+        case Nil => (result += p).toList
+        case q :: next =>
+          val order = partyOrder.compare(p, q)
+          if (order < 0) {
+            // p < q, insert here
+            result += p
+            (result ++= current).toList
+          } else if (order > 0) {
+            // p > q, the insert position is not found yet
+            loop(next, result += q)
+          } else {
+            // p == q, ignore p and return the original queue
+            parties
+          }
+      }
+
+    parties = parties match {
+      case Nil => p :: Nil
+      case ps => loop(ps, ListBuffer.empty)
+    }
+  }
+
+  override def toString: String = "Var(" + value + ")@" + hashCode
 }
 
 /**
