@@ -7,11 +7,22 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-jackson: The error message when failing to deserialize a character now correctly prints the non-character string. ``PHAB_ID=D808049``
+
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Bump version of Jackson to 2.13.1. ``PHAB_ID=D808049``
+
 21.12.0
 -------
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+
 * util-core: `Activity.collect*` and `Var.collect*` are now implemented in terms of known collection
   type `scala.collection.Seq` versus HKT `CC[X]` before. This allows for certain performance
   enhancements as well as makes it more aligned with the `Future.collect` APIs.
@@ -22,6 +33,7 @@ Breaking API Changes
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
+
 * util-security: Use snakeyaml to parse yaml instead of a buggy custom yaml
   parser. This means that thrown IOExceptions have been replaced by
   YAMLExceptions. Additionally, the parser member has been limited to private visibility. ``PHAB_ID=D617641``
