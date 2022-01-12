@@ -110,7 +110,8 @@ object Closable {
    * resource ''n+1'' is not closed until resource ''n'' is.
    *
    * @return the first failed [[Future]] should any of the `Closables`
-   *         result in a failed [[Future]].
+   *         result in a failed [[Future]]. Any subsequent failures are
+   *         included as suppressed exceptions.
    *
    * @note as with all `Closables`, the `deadline` passed to `close`
    *       is advisory.
@@ -121,8 +122,17 @@ object Closable {
 
       def onFirstComplete(t: Try[Unit]): Future[Unit] = {
         val second = safeClose(b, deadline)
-        if (t.isThrow) if (second.isDefined) first else second.transform(_ => first)
-        else second
+        if (t.isThrow) {
+          if (second eq Future.Done) first
+          else {
+            second.transform {
+              case Return(_) => first
+              case Throw(secondThrow) =>
+                t.throwable.addSuppressed(secondThrow)
+                first
+            }
+          }
+        } else second
       }
 
       if (first eq Future.Done) onFirstComplete(Try.Unit)
@@ -136,7 +146,8 @@ object Closable {
    * resource ''n+1'' is not closed until resource ''n'' is.
    *
    * @return the first failed [[Future]] should any of the `Closables`
-   *         result in a failed [[Future]].
+   *         result in a failed [[Future]]. Any subsequent failures are
+   *         included as suppressed exceptions.
    *
    * @note as with all `Closables`, the `deadline` passed to `close`
    *       is advisory.
@@ -146,11 +157,11 @@ object Closable {
     private final def closeSeq(
       deadline: Time,
       closables: Seq[Closable],
-      firstFailure: Option[Future[Unit]]
+      firstFailure: Option[Throw[Unit]]
     ): Future[Unit] = closables match {
       case Seq() =>
         firstFailure match {
-          case Some(f) => f
+          case Some(t) => Future.const(t)
           case None => Future.Done
         }
       case Seq(hd, tl @ _*) =>
@@ -159,8 +170,10 @@ object Closable {
             case Return(_) => firstFailure
             case t @ Throw(_) =>
               firstFailure match {
-                case Some(_) => firstFailure
-                case None => Some(Future.const(t))
+                case Some(firstThrow) =>
+                  firstThrow.throwable.addSuppressed(t.throwable)
+                  firstFailure
+                case None => Some(t)
               }
           }
           closeSeq(deadline, tl, failure)

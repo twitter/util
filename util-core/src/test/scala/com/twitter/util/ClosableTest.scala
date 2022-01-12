@@ -188,13 +188,14 @@ abstract class ClosableSequenceTest extends AnyFunSuite with Eventually with Int
     }
     assert(x2.getMessage.contains("n1=2"))
 
-    // multiple failures, returns the first failure
+    // multiple failures, returns the first failure, and a list of suppressed failures.
     val f3 = sequenceTwo(c1, c1).close()
     assert(n1 == 4)
     val x3 = intercept[RuntimeException] {
       Await.result(f3, 5.seconds)
     }
     assert(x3.getMessage.contains("n1=3"))
+    assert(x3.getSuppressed.head.getMessage.contains("n1=4"))
 
     // verify that first failure is returned, but only after the
     // last closable is satisfied

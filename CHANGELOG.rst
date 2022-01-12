@@ -20,6 +20,8 @@ Runtime Behavior Changes
 
 * util: Bump version of Jackson to 2.13.1. ``PHAB_ID=D808049``
 
+* util-core: Return suppressed exception information in Closable.sequence ``PHAB_ID=D809561``
+
 21.12.0
 -------
 
