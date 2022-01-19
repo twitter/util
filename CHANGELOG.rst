@@ -7,6 +7,11 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util: Bump version of Caffeine to 2.9.3. ``PHAB_ID=D815761``
+
 22.1.0
 ------
 
