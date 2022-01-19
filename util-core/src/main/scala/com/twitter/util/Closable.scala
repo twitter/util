@@ -88,19 +88,19 @@ object Closable {
    */
   @varargs def all(closables: Closable*): Closable = new Closable {
     def close(deadline: Time): Future[Unit] = {
-      val fs = closables.map { closable => safeClose(closable, deadline) }
-      val iter = fs.iterator
+      val iter = closables.iterator
       @tailrec
-      def checkNext(): Future[Unit] = {
-        if (!iter.hasNext) Future.Done
+      def checkNext(async: List[Future[Unit]]): List[Future[Unit]] = {
+        if (!iter.hasNext) async
         else {
-          iter.next() match {
-            case Future.Done => checkNext()
-            case _ => Future.join(fs)
+          safeClose(iter.next(), deadline) match {
+            case Future.Done => checkNext(async)
+            case f => checkNext(f :: async)
           }
         }
       }
-      checkNext()
+
+      Future.join(checkNext(Nil))
     }
   }
 
