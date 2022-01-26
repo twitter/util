@@ -139,7 +139,14 @@ class ExecutorServiceFuturePool protected[this] (
   private[this] lazy val forkingScheduler: ForkingScheduler = {
     ForkingScheduler()
       .filter(_.redirectFuturePools())
-      .getOrElse(null)
+      .map { s =>
+        executor match {
+          case e: ThreadPoolExecutor =>
+            s.withMaxSyncConcurrency(e.getMaximumPoolSize, e.getQueue.remainingCapacity())
+          case _ =>
+            s
+        }
+      }.getOrElse(null)
   }
 
   def apply[T](f: => T): Future[T] = {

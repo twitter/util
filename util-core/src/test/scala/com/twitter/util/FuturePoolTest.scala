@@ -238,6 +238,8 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
   }
 
   class TestForkingScheduler(redirect: Boolean) extends ForkingScheduler {
+    var concurrency = Option.empty[Int]
+    var maxWaiters = Option.empty[Int]
     var forked = Option.empty[Future[_]]
     override def fork[T](f: => Future[T]) = {
       val r = f
@@ -248,6 +250,11 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
     override def redirectFuturePools(): Boolean = redirect
     override def blocking[T](f: => T)(implicit perm: Awaitable.CanAwait): T = f
     override def flush(): Unit = {}
+    override def withMaxSyncConcurrency(v: Int, w: Int): ForkingScheduler = {
+      concurrency = Some(v)
+      maxWaiters = Some(w)
+      this
+    }
 
     override def submit(r: Runnable): Unit = r.run()
 
@@ -256,10 +263,12 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
     override def numDispatches: Long = ???
   }
 
-  test("FuturePool should be redirected to the forking scheduler if specified by the scheduler") {
+  test(
+    "FuturePool should be redirected to the forking scheduler if specified by the scheduler - unbounded queue") {
+    val concurrency = 1
     val scheduler = new TestForkingScheduler(redirect = true)
     val prevScheduler = Scheduler()
-    val executor = Executors.newFixedThreadPool(1)
+    val executor = Executors.newFixedThreadPool(concurrency)
     Scheduler.setUnsafe(scheduler)
     try {
       val pool = FuturePool(executor)
@@ -271,6 +280,41 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
         }
       assert(Await.result(result, 1.second) == 1)
       assert(Await.result(scheduler.forked.get, 1.second) == 1)
+      assert(scheduler.concurrency == Some(concurrency))
+      assert(scheduler.maxWaiters == Some(Int.MaxValue))
+      assert(executed)
+    } finally {
+      Scheduler.setUnsafe(prevScheduler)
+      executor.shutdown()
+    }
+  }
+
+  test(
+    "FuturePool should be redirected to the forking scheduler if specified by the scheduler - bounded queue") {
+    val concurrency = 1
+    val maxWaiters = 10
+    val scheduler = new TestForkingScheduler(redirect = true)
+    val prevScheduler = Scheduler()
+    val executor =
+      new ThreadPoolExecutor(
+        concurrency,
+        concurrency,
+        0L,
+        TimeUnit.MILLISECONDS,
+        new LinkedBlockingQueue(maxWaiters))
+    Scheduler.setUnsafe(scheduler)
+    try {
+      val pool = FuturePool(executor)
+      var executed = false
+      val result =
+        pool {
+          executed = true
+          1
+        }
+      assert(Await.result(result, 1.second) == 1)
+      assert(Await.result(scheduler.forked.get, 1.second) == 1)
+      assert(scheduler.concurrency == Some(concurrency))
+      assert(scheduler.maxWaiters == Some(maxWaiters))
       assert(executed)
     } finally {
       Scheduler.setUnsafe(prevScheduler)
@@ -280,8 +324,9 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
 
   test(
     "FuturePool should not be redirected to the forking scheduler if specified by the scheduler") {
+    val concurrency = 1
     val scheduler = new TestForkingScheduler(redirect = false)
-    val executor = Executors.newFixedThreadPool(1)
+    val executor = Executors.newFixedThreadPool(concurrency)
     val prevScheduler = Scheduler()
     Scheduler.setUnsafe(scheduler)
     try {
@@ -294,6 +339,8 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
         }
       assert(Await.result(result, 1.second) == 1)
       assert(scheduler.forked.isEmpty)
+      assert(scheduler.concurrency.isEmpty)
+      assert(scheduler.maxWaiters.isEmpty)
       assert(executed)
     } finally {
       Scheduler.setUnsafe(prevScheduler)

@@ -47,6 +47,26 @@ trait ForkingScheduler extends Scheduler {
   def fork[T](executor: Executor)(f: => Future[T]): Future[T]
 
   /**
+   * Creates a wrapper of this scheduler with a fixed max
+   * synchronous concurrency. The concurrency limit is
+   * applied to synchronous execution so tasks can be
+   * running in parallel if they're suspended at asynchronous
+   * boundaries but once they are scheduled for execution
+   * only `concurrency` tasks can be running in parallel.
+   *
+   * The original forking scheduler remains
+   * unchanged and is used as the underlying implementation
+   * of the returned scheduler.
+   *
+   * @param concurrency the max concurrency
+   * @param maxWaiters max number of pending tasks. When this limit
+   *                   is reached, the scheduler starts to return
+   *                   `RejectedExecutionException`s
+   * @return the wrapper with a fixed max concurrency
+   */
+  def withMaxSyncConcurrency(concurrency: Int, maxWaiters: Int): ForkingScheduler
+
+  /**
    * Creates an `ExecutorService` wrapper for this forking
    * scheduler. The original forking scheduler remains
    * unchanged and is used as the underlying implementation
