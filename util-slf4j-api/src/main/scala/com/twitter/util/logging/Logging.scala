@@ -1,6 +1,6 @@
 package com.twitter.util.logging
 
-import org.slf4j.{LoggerFactory, Marker}
+import org.slf4j.Marker
 import scala.language.implicitConversions
 
 /**
@@ -56,8 +56,7 @@ import scala.language.implicitConversions
  */
 trait Logging {
 
-  private[this] final lazy val _logger: Logger =
-    Logger(LoggerFactory.getLogger(getClass))
+  private[this] final lazy val _logger: Logger = Logger(getClass)
 
   /**
    * Return the underlying [[com.twitter.util.logging.Logger]]

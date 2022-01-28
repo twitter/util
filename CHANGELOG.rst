@@ -10,6 +10,13 @@ Unreleased
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* util-slf4j-api: Update the `Logger` API to include "call-by-name" method
+  variations akin to the `Logging` trait. When creating a `Logger` from a
+  Scala singleton object class, the resultant logger name will no longer include
+  the `$` suffix. Remove the deprecated `Loggers` object which is no longer
+  needed for Java compatibility as users can now directly use the `Logger` 
+  apply functions with no additional ceremony. ``PHAB_ID=D820252``
+
 * util: Bump version of Caffeine to 2.9.3. ``PHAB_ID=D815761``
 
 22.1.0

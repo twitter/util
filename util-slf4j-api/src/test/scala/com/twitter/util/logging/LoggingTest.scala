@@ -363,7 +363,7 @@ class LoggingTest extends AnyFunSuite with Matchers with MockitoSugar {
     val message = "msg"
     val cause = new RuntimeException("TEST EXCEPTION")
     val arg1 = "arg1"
-    val arg2 = Integer.valueOf(1)
+    val arg2: Integer = Integer.valueOf(1)
     val arg3 = "arg3"
     val underlying: org.slf4j.Logger = mock[org.slf4j.Logger]
     when(isEnabledFn(underlying)).thenReturn(isEnabled)

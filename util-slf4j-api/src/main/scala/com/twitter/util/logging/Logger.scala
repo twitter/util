@@ -1,8 +1,10 @@
 package com.twitter.util.logging
 
 import org.slf4j
-import org.slf4j.{LoggerFactory, Marker}
-import scala.reflect.{ClassTag, classTag}
+import org.slf4j.LoggerFactory
+import org.slf4j.Marker
+import scala.reflect.ClassTag
+import scala.reflect.classTag
 
 /**
  * Companion object for [[com.twitter.util.logging.Logger]] which provides
@@ -56,14 +58,18 @@ object Logger {
   /**
    * Create a [[com.twitter.util.logging.Logger]] named for the given class.
    * @param clazz class to use for naming the underlying Logger.
-   * @see Java users see $GetLoggerClassScaldocLink
+   * @note Scala singleton object classes are converted to loggers named without the `$` suffix.
+   * @see Java users see $GetLoggerClassScaladocLink
+   * @see [[https://docs.scala-lang.org/tour/singleton-objects.html]]
    *
    * {{{
    *    val logger = Logger(classOf[MyClass])
    * }}}
    */
   def apply(clazz: Class[_]): Logger = {
-    new Logger(LoggerFactory.getLogger(clazz))
+    if (isSingletonObject(clazz))
+      new Logger(LoggerFactory.getLogger(objectClazzName(clazz)))
+    else new Logger(LoggerFactory.getLogger(clazz))
   }
 
   /**
@@ -82,13 +88,18 @@ object Logger {
    * Create a [[com.twitter.util.logging.Logger]] for the runtime class wrapped
    * by the implicit `scala.reflect.ClassTag` denoting the runtime class `T`.
    * @tparam T the runtime class type
+   * @note Scala singleton object classes are converted to loggers named without the `$` suffix.
+   * @see [[https://docs.scala-lang.org/tour/singleton-objects.html]]
    *
    * {{{
    *    val logger = Logger[MyClass]
    * }}}
    */
   def apply[T: ClassTag]: Logger = {
-    new Logger(LoggerFactory.getLogger(classTag[T].runtimeClass))
+    val clazz = classTag[T].runtimeClass
+    if (isSingletonObject(clazz))
+      new Logger(LoggerFactory.getLogger(objectClazzName(clazz)))
+    else new Logger(LoggerFactory.getLogger(clazz))
   }
 
   /**
@@ -117,6 +128,34 @@ object Logger {
    */
   def getLogger(underlying: slf4j.Logger): Logger =
     Logger(underlying)
+
+  /**
+   * Returns true if the given instance is a Scala singleton object, false otherwise.
+   * EXPOSED FOR TESTING
+   * @see [[https://docs.scala-lang.org/tour/singleton-objects.html]]
+   */
+  private[logging] def isSingletonObject(clazz: Class[_]): Boolean = {
+    // While Scala's reflection utilities offer this in a succinct and convenient
+    // method, the startup costs are quite high and in testing, the results not always
+    // accurate. The approach used here, while fragile to Scala internal changes, was
+    // deemed worth the tradeoff. This assumes that singleton objects have class names that
+    // end with $ and have a field on them called MODULE$. For example `object Foo`
+    // has the class name `Foo` and a `MODULE$` field.
+    // This works as of Scala 2.12, 2.13 and 3.0.2-RC1.
+    val className = clazz.getName
+    if (!className.endsWith("$"))
+      return false
+
+    try {
+      clazz.getField("MODULE$") // this throws if the field doesn't exist
+      true
+    } catch {
+      case _: NoSuchFieldException => false
+    }
+  }
+
+  // EXPOSED FOR TESTING
+  private[logging] def objectClazzName(clazz: Class[_]) = clazz.getName.stripSuffix("$")
 }
 
 /**
@@ -125,6 +164,8 @@ object Logger {
  * The Logger extends [[https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html java.io.Serializable]]
  * to support it's usage through the [[com.twitter.util.logging.Logging]] trait when the trait is mixed
  * into a [[https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html java.io.Serializable]] class.
+ *
+ * Note, logging methods have a call-by-name variation which are intended for use from Scala.
  *
  * @define isLevelEnabled
  *
@@ -153,6 +194,18 @@ object Logger {
  *
  * Log the given parameterized message at the named log level using the given
  * args taking into consideration the given `org.slf4j.Marker` data. See [[https://www.slf4j.org/faq.html#logging_performance Parameterized Message Logging]]
+ *
+ * @define logResult
+ *
+ * Log the given message at the named log level formatted with the result of the
+ * passed in function using the underlying logger. The incoming string message should
+ * contain a single `%s` which will be replaced with the result[T] of the given function.
+ *
+ * Example:
+ *
+ * {{{
+ *   infoResult("The answer is: %s") {"42"}
+ * }}}
  */
 @SerialVersionUID(1L)
 final class Logger private (underlying: slf4j.Logger) extends Serializable {
@@ -181,16 +234,32 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     if (underlying.isTraceEnabled) underlying.trace(message)
 
   /** $log */
+  def trace(message: => Any): Unit =
+    if (underlying.isTraceEnabled) underlying.trace(toString(message))
+
+  /** $log */
   def trace(message: String, cause: Throwable): Unit =
     if (underlying.isTraceEnabled) underlying.trace(message, cause)
+
+  /** $log */
+  def trace(message: => Any, cause: Throwable): Unit =
+    if (underlying.isTraceEnabled) underlying.trace(toString(message), cause)
 
   /** $logMarker */
   def trace(marker: Marker, message: String): Unit =
     if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message)
 
   /** $logMarker */
+  def trace(marker: Marker, message: => Any): Unit =
+    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, toString(message))
+
+  /** $logMarker */
   def trace(marker: Marker, message: String, cause: Throwable): Unit =
     if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message, cause)
+
+  /** $logMarker */
+  def trace(marker: Marker, message: => Any, cause: Throwable): Unit =
+    if (underlying.isTraceEnabled(marker)) underlying.trace(marker, toString(message), cause)
 
   /** $logWith */
   def traceWith(message: String, args: AnyRef*): Unit =
@@ -200,6 +269,14 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
       if (underlying.isTraceEnabled) underlying.trace(message, args: _*)
     }
 
+  /** $logWith */
+  def traceWith(message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isTraceEnabled) underlying.trace(toString(message))
+    } else {
+      if (underlying.isTraceEnabled) underlying.trace(toString(message), args: _*)
+    }
+
   /** $logWithMarker */
   def traceWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
@@ -207,6 +284,21 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     } else {
       if (underlying.isTraceEnabled(marker)) underlying.trace(marker, message, args: _*)
     }
+
+  /** $logWithMarker */
+  def traceWith(marker: Marker, message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isTraceEnabled(marker)) underlying.trace(marker, toString(message))
+    } else {
+      if (underlying.isTraceEnabled(marker)) underlying.trace(marker, toString(message), args: _*)
+    }
+
+  /** $logResult */
+  def traceResult[T](message: => String)(fn: => T): T = {
+    val result = fn
+    trace(message.format(result))
+    result
+  }
 
   /* Debug */
 
@@ -222,16 +314,32 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     if (underlying.isDebugEnabled) underlying.debug(message)
 
   /** $log */
+  def debug(message: => Any): Unit =
+    if (underlying.isDebugEnabled) underlying.debug(toString(message))
+
+  /** $log */
   def debug(message: String, cause: Throwable): Unit =
     if (underlying.isDebugEnabled) underlying.debug(message, cause)
+
+  /** $log */
+  def debug(message: => Any, cause: Throwable): Unit =
+    if (underlying.isDebugEnabled) underlying.debug(toString(message), cause)
 
   /** $logMarker */
   def debug(marker: Marker, message: String): Unit =
     if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message)
 
   /** $logMarker */
+  def debug(marker: Marker, message: => Any): Unit =
+    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, toString(message))
+
+  /** $logMarker */
   def debug(marker: Marker, message: String, cause: Throwable): Unit =
     if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message, cause)
+
+  /** $logMarker */
+  def debug(marker: Marker, message: => Any, cause: Throwable): Unit =
+    if (underlying.isDebugEnabled(marker)) underlying.debug(marker, toString(message), cause)
 
   /** $logWith */
   def debugWith(message: String, args: AnyRef*): Unit =
@@ -241,6 +349,14 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
       if (underlying.isDebugEnabled) underlying.debug(message, args: _*)
     }
 
+  /** $logWith */
+  def debugWith(message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isDebugEnabled) underlying.debug(toString(message))
+    } else {
+      if (underlying.isDebugEnabled) underlying.debug(toString(message), args: _*)
+    }
+
   /** $logWithMarker */
   def debugWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
@@ -248,6 +364,21 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     } else {
       if (underlying.isDebugEnabled(marker)) underlying.debug(marker, message, args: _*)
     }
+
+  /** $logWithMarker */
+  def debugWith(marker: Marker, message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isDebugEnabled(marker)) underlying.debug(marker, toString(message))
+    } else {
+      if (underlying.isDebugEnabled(marker)) underlying.debug(marker, toString(message), args: _*)
+    }
+
+  /** $logResult */
+  def debugResult[T](message: => String)(fn: => T): T = {
+    val result = fn
+    debug(message.format(result))
+    result
+  }
 
   /* Info */
 
@@ -263,16 +394,32 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     if (underlying.isInfoEnabled) underlying.info(message)
 
   /** $log */
+  def info(message: => Any): Unit =
+    if (underlying.isInfoEnabled) underlying.info(toString(message))
+
+  /** $log */
   def info(message: String, cause: Throwable): Unit =
     if (underlying.isInfoEnabled) underlying.info(message, cause)
+
+  /** $log */
+  def info(message: => Any, cause: Throwable): Unit =
+    if (underlying.isInfoEnabled) underlying.info(toString(message), cause)
 
   /** $logMarker */
   def info(marker: Marker, message: String): Unit =
     if (underlying.isInfoEnabled(marker)) underlying.info(marker, message)
 
   /** $logMarker */
+  def info(marker: Marker, message: => Any): Unit =
+    if (underlying.isInfoEnabled(marker)) underlying.info(marker, toString(message))
+
+  /** $logMarker */
   def info(marker: Marker, message: String, cause: Throwable): Unit =
     if (underlying.isInfoEnabled(marker)) underlying.info(marker, message, cause)
+
+  /** $logMarker */
+  def info(marker: Marker, message: => Any, cause: Throwable): Unit =
+    if (underlying.isInfoEnabled(marker)) underlying.info(marker, toString(message), cause)
 
   /** $logWith */
   def infoWith(message: String, args: AnyRef*): Unit =
@@ -282,6 +429,14 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
       if (underlying.isInfoEnabled) underlying.info(message, args: _*)
     }
 
+  /** $logWith */
+  def infoWith(message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isInfoEnabled) underlying.info(toString(message))
+    } else {
+      if (underlying.isInfoEnabled) underlying.info(toString(message), args: _*)
+    }
+
   /** $logWithMarker */
   def infoWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
@@ -289,6 +444,21 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     } else {
       if (underlying.isInfoEnabled(marker)) underlying.info(marker, message, args: _*)
     }
+
+  /** $logWithMarker */
+  def infoWith(marker: Marker, message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isInfoEnabled(marker)) underlying.info(marker, toString(message))
+    } else {
+      if (underlying.isInfoEnabled(marker)) underlying.info(marker, toString(message), args: _*)
+    }
+
+  /** $logResult */
+  def infoResult[T](message: => String)(fn: => T): T = {
+    val result = fn
+    info(message.format(result))
+    result
+  }
 
   /* Warn */
 
@@ -304,16 +474,32 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     if (underlying.isWarnEnabled) underlying.warn(message)
 
   /** $log */
+  def warn(message: => Any): Unit =
+    if (underlying.isWarnEnabled) underlying.warn(toString(message))
+
+  /** $log */
   def warn(message: String, cause: Throwable): Unit =
     if (underlying.isWarnEnabled) underlying.warn(message, cause)
+
+  /** $log */
+  def warn(message: => Any, cause: Throwable): Unit =
+    if (underlying.isWarnEnabled) underlying.warn(toString(message), cause)
 
   /** $logMarker */
   def warn(marker: Marker, message: String): Unit =
     if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message)
 
   /** $logMarker */
+  def warn(marker: Marker, message: => Any): Unit =
+    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, toString(message))
+
+  /** $logMarker */
   def warn(marker: Marker, message: String, cause: Throwable): Unit =
     if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message, cause)
+
+  /** $logMarker */
+  def warn(marker: Marker, message: => Any, cause: Throwable): Unit =
+    if (underlying.isWarnEnabled(marker)) underlying.warn(marker, toString(message), cause)
 
   /** $logWith */
   def warnWith(message: String, args: AnyRef*): Unit =
@@ -323,6 +509,14 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
       if (underlying.isWarnEnabled) underlying.warn(message, args: _*)
     }
 
+  /** $logWith */
+  def warnWith(message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isWarnEnabled) underlying.warn(toString(message))
+    } else {
+      if (underlying.isWarnEnabled) underlying.warn(toString(message), args: _*)
+    }
+
   /** $logWithMarker */
   def warnWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
@@ -330,6 +524,21 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     } else {
       if (underlying.isWarnEnabled(marker)) underlying.warn(marker, message, args: _*)
     }
+
+  /** $logWithMarker */
+  def warnWith(marker: Marker, message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isWarnEnabled(marker)) underlying.warn(marker, toString(message))
+    } else {
+      if (underlying.isWarnEnabled(marker)) underlying.warn(marker, toString(message), args: _*)
+    }
+
+  /** $logResult */
+  def warnResult[T](message: => String)(fn: => T): T = {
+    val result = fn
+    warn(message.format(result))
+    result
+  }
 
   /* Error */
 
@@ -345,16 +554,32 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     if (underlying.isErrorEnabled) underlying.error(message)
 
   /** $log */
+  def error(message: => Any): Unit =
+    if (underlying.isErrorEnabled) underlying.error(toString(message))
+
+  /** $log */
   def error(message: String, cause: Throwable): Unit =
     if (underlying.isErrorEnabled) underlying.error(message, cause)
+
+  /** $log */
+  def error(message: => Any, cause: Throwable): Unit =
+    if (underlying.isErrorEnabled) underlying.error(toString(message), cause)
 
   /** $logMarker */
   def error(marker: Marker, message: String): Unit =
     if (underlying.isErrorEnabled(marker)) underlying.error(marker, message)
 
   /** $logMarker */
+  def error(marker: Marker, message: => Any): Unit =
+    if (underlying.isErrorEnabled(marker)) underlying.error(marker, toString(message))
+
+  /** $logMarker */
   def error(marker: Marker, message: String, cause: Throwable): Unit =
     if (underlying.isErrorEnabled(marker)) underlying.error(marker, message, cause)
+
+  /** $logMarker */
+  def error(marker: Marker, message: => Any, cause: Throwable): Unit =
+    if (underlying.isErrorEnabled(marker)) underlying.error(marker, toString(message), cause)
 
   /** $logWith */
   def errorWith(message: String, args: AnyRef*): Unit =
@@ -364,6 +589,14 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
       if (underlying.isErrorEnabled) underlying.error(message, args: _*)
     }
 
+  /** $logWith */
+  def errorWith(message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isErrorEnabled) underlying.error(toString(message))
+    } else {
+      if (underlying.isErrorEnabled) underlying.error(toString(message), args: _*)
+    }
+
   /** $logWithMarker */
   def errorWith(marker: Marker, message: String, args: AnyRef*): Unit =
     if (args.isEmpty) {
@@ -371,4 +604,29 @@ final class Logger private (underlying: slf4j.Logger) extends Serializable {
     } else {
       if (underlying.isErrorEnabled(marker)) underlying.error(marker, message, args: _*)
     }
+
+  /** $logWithMarker */
+  def errorWith(marker: Marker, message: => Any, args: AnyRef*): Unit =
+    if (args.isEmpty) {
+      if (underlying.isErrorEnabled(marker)) underlying.error(marker, toString(message))
+    } else {
+      if (underlying.isErrorEnabled(marker)) underlying.error(marker, toString(message), args: _*)
+    }
+
+  /** $logResult */
+  def errorResult[T](message: => String)(fn: => T): T = {
+    val result = fn
+    error(message.format(result))
+    result
+  }
+
+  /* Private */
+
+  /**
+   * Convert [[Any]] type to [[String]] to safely deal with nulls in the above functions.
+   */
+  private[this] def toString(obj: Any): String = obj match {
+    case null => "null"
+    case _ => obj.toString
+  }
 }
