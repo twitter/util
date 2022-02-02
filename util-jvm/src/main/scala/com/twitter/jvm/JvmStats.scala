@@ -2,6 +2,7 @@ package com.twitter.jvm
 
 import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
+import com.twitter.finagle.stats.Bytes
 import com.twitter.finagle.stats.Milliseconds
 import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.finagle.stats.exp.Expression
@@ -25,9 +26,10 @@ object JvmStats {
 
     def heap = mem.getHeapMemoryUsage()
     val heapStats = stats.scope("heap")
+    val heapUsedGauge = heapStats.addGauge("used") { heap.getUsed().toFloat }
     gauges.add(heapStats.addGauge("committed") { heap.getCommitted().toFloat })
     gauges.add(heapStats.addGauge("max") { heap.getMax().toFloat })
-    gauges.add(heapStats.addGauge("used") { heap.getUsed().toFloat })
+    gauges.add(heapUsedGauge)
 
     def nonHeap = mem.getNonHeapMemoryUsage()
     val nonHeapStats = stats.scope("nonheap")
@@ -51,8 +53,17 @@ object JvmStats {
     gauges.add(stats.addGauge("num_cpus") { os.getAvailableProcessors().toFloat })
     os match {
       case unix: com.sun.management.UnixOperatingSystemMXBean =>
-        gauges.add(stats.addGauge("fd_count") { unix.getOpenFileDescriptorCount.toFloat })
+        val fileDescriptorCountGauge = stats.addGauge("fd_count") {
+          unix.getOpenFileDescriptorCount.toFloat
+        }
+        gauges.add(fileDescriptorCountGauge)
         gauges.add(stats.addGauge("fd_limit") { unix.getMaxFileDescriptorCount.toFloat })
+        // register expression
+        ExpressionSchema("file_descriptors", Expression(fileDescriptorCountGauge.metadata))
+          .withLabel(ExpressionSchema.Role, "jvm")
+          .withDescription(
+            "Total file descriptors used by the service. If it continuously increasing over time, then potentially files or connections aren't being closed")
+          .build()
       case _ =>
     }
 
@@ -100,8 +111,18 @@ object JvmStats {
       }
       if (pool.getUsage != null) {
         def usage = pool.getUsage // this is a snapshot, we can't reuse the value
-        gauges.add(currentMem.addGauge(name, "used") { usage.getUsed.toFloat })
+        val usageGauge = currentMem.addGauge(name, "used") { usage.getUsed.toFloat }
+        gauges.add(usageGauge)
         gauges.add(currentMem.addGauge(name, "max") { usage.getMax.toFloat })
+
+        // register memory usage expression
+        ExpressionSchema("memory_pool", Expression(usageGauge.metadata))
+          .withLabel(ExpressionSchema.Role, "jvm")
+          .withLabel("kind", name)
+          .withUnit(Bytes)
+          .withDescription(
+            s"The current estimate of the amount of space within the $name memory pool holding allocated objects in bytes")
+          .build()
       }
     }
     gauges.add(postGCStats.addGauge("used") {
@@ -165,7 +186,8 @@ object JvmStats {
         .withLabel(ExpressionSchema.Role, "jvm")
         .withLabel("gc_pool", name)
         .withUnit(Milliseconds)
-        .withDescription(s"The total elapsed time spent doing collections for the $name gc pool")
+        .withDescription(
+          s"The total elapsed time spent doing collections for the $name gc pool in milliseconds")
         .build()
 
       gauges.add(poolCycles)
@@ -180,21 +202,6 @@ object JvmStats {
       gcPool.map(_.getCollectionTime).filter(_ > 0).sum.toFloat
     }
 
-    ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withUnit(Milliseconds)
-      .withDescription("The uptime of the JVM in MS")
-      .build()
-    ExpressionSchema("gc_cycles", Expression(cycles.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withDescription("The total number of collections that have occurred")
-      .build()
-    ExpressionSchema("gc_latency", Expression(msec.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withUnit(Milliseconds)
-      .withDescription("The total elapsed time spent doing collections")
-      .build()
-
     gauges.add(cycles)
     gauges.add(msec)
     allocations = new Allocations(gcStats)
@@ -208,6 +215,27 @@ object JvmStats {
     // return ms from ns while retaining precision
     gauges.add(stats.addGauge("application_time_millis") { jvm.applicationTime.toFloat / 1000000 })
     gauges.add(stats.addGauge("tenuring_threshold") { jvm.tenuringThreshold.toFloat })
-  }
 
+    // register metric expressions
+    ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withUnit(Milliseconds)
+      .withDescription("The uptime of the JVM in milliseconds")
+      .build()
+    ExpressionSchema("gc_cycles", Expression(cycles.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withDescription("The total number of collections that have occurred")
+      .build()
+    ExpressionSchema("gc_latency", Expression(msec.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withUnit(Milliseconds)
+      .withDescription("The total elapsed time spent doing collections in milliseconds")
+      .build()
+    ExpressionSchema("memory_pool", Expression(heapUsedGauge.metadata))
+      .withLabel(ExpressionSchema.Role, "jvm")
+      .withLabel("kind", "Heap")
+      .withUnit(Bytes)
+      .withDescription("Heap in use in bytes")
+      .build()
+  }
 }

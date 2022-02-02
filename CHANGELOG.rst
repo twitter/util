@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-jvm: Register JVM expression including memory pool usages (including code cache, compressed class space,
+  eden space, sheap, metaspace, survivor space, and old gen) and open file descriptors count in StatsReceiver.
+  ``PHAB_ID=D820472``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
