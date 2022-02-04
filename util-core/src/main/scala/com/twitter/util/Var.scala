@@ -364,29 +364,32 @@ object Var {
       //
       // @note "filling" only works with the guarantee that the initial `observe` is
       // synchronous. This should be the case with Vars since they have an initial value.
-      @volatile var filling = true
+      var filling = true
       val cur = new Array[Any](N)
 
       def publishAt(i: Int): T => Unit = { newValue =>
         cur.synchronized {
           cur(i) = newValue
+          if (filling && i == N - 1) filling = false
           if (!filling) {
-            u() = ArraySeq.unsafeWrapArray(cur).asInstanceOf[ArraySeq[T]]
+            // toSeq does not do a deep copy until 2.13
+            val copy = new Array[Any](N)
+            Array.copy(cur, 0, copy, 0, cur.length)
+            u() = ArraySeq.unsafeWrapArray(copy).asInstanceOf[Seq[T]]
           }
         }
       }
 
-      val closables = new Array[Any](N)
+      val closables = new Array[Closable](N)
       var i = 0
       val iter = vars.iterator
       while (iter.hasNext) {
         val v = iter.next()
-        if (i == N - 1) filling = false
         closables(i) = v.observe(publishAt(i))
         i += 1
       }
 
-      Closable.all(ArraySeq.unsafeWrapArray(closables).asInstanceOf[ArraySeq[Closable]]: _*)
+      Closable.all(ArraySeq.unsafeWrapArray(closables): _*)
     }
 
   /**
