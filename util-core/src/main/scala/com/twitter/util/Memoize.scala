@@ -164,4 +164,21 @@ object Memoize {
           case _ => missing(a)
         }
     }
+
+  /**
+   * Thread-safe memoization for a function taking Class objects,
+   * using [[java.lang.ClassValue]].
+   *
+   * @param f the function to memoize using a `ClassValue`
+   * @tparam T the return type of the function
+   * @return a memoized function over classes that stores memoized values
+   *         in a `ClassValue`
+   */
+  def classValue[T](f: Class[_] => T): Class[_] => T = {
+    val cv = new ClassValue[T] {
+      def computeValue(c: Class[_]): T = f(c)
+    }
+
+    cv.get
+  }
 }

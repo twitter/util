@@ -10,6 +10,8 @@ Unreleased
 New Features
 ~~~~~~~~~~~~
 
+* util-core: Added `Memoize.classValue` as a Scala-friendly API for `java.lang.ClassValue`. ``PHAB_ID=D825673``
+
 * util-jvm: Register JVM expression including memory pool usages (including code cache, compressed class space,
   eden space, sheap, metaspace, survivor space, and old gen) and open file descriptors count in StatsReceiver.
   ``PHAB_ID=D820472``

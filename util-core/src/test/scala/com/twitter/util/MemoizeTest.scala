@@ -2,7 +2,9 @@ package com.twitter.util
 
 import com.twitter.conversions.DurationOps._
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.{TimeUnit, CountDownLatch => JavaCountDownLatch}
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.{CountDownLatch => JavaCountDownLatch}
+import java.util.concurrent.TimeUnit
 import org.mockito.Mockito._
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -184,5 +186,47 @@ class MemoizeTest extends AnyFunSuite {
     assertResult(Map(1 -> 2))(memoizer.snap)
     assert(memoizer.size == memoizer.snap.size)
     assert(memoizer.snap.size == 1)
+  }
+
+  test("Memoize.classValue: returns the same value for the same input") {
+    val cv = Memoize.classValue { _ =>
+      new Object()
+    }
+    // just some anonymous classes
+    val clazz1 = new Object() {}.getClass
+    val clazz2 = new Object() {}.getClass
+    assert(clazz1 ne clazz2)
+
+    val o11 = cv(clazz1)
+    val o12 = cv(clazz1)
+    val o21 = cv(clazz2)
+    val o22 = cv(clazz2)
+    assert(o11 eq o12)
+    assert(o21 eq o22)
+    assert(o11 ne o21)
+  }
+
+  test("Memoize.classValue: racing threads observe the same value") {
+    val Concurrency = 16
+    val ready = new JavaCountDownLatch(Concurrency)
+    val cv = Memoize.classValue { _ =>
+      ready.await(1, TimeUnit.SECONDS)
+      new Object()
+    }
+
+    val clazz = new Object() {}.getClass
+
+    val values = new Array[AtomicReference[Object]](Concurrency)
+    val threads = (0 until Concurrency).map { i =>
+      new Thread(() => {
+        ready.countDown()
+        values(i) = new AtomicReference(cv(clazz))
+      })
+    }
+    threads.foreach { _.start() }
+    threads.foreach { _.join(1000L) }
+
+    val v0 = values(0).get()
+    assert(values.forall(_.get eq v0))
   }
 }
