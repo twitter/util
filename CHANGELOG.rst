@@ -16,6 +16,10 @@ New Features
   eden space, sheap, metaspace, survivor space, and old gen) and open file descriptors count in StatsReceiver.
   ``PHAB_ID=D820472``
 
+* util-slf4j-jul-bridge: Add `Slf4jBridge` trait which can be mixed into extensions of `c.t.app.App` in
+  order to attempt installation of the `SLF4JBridgeHandler` via the `Slf4jBridgeUtility` in the constructor
+  of the `c.t.app.App` instance. ``PHAB_ID=D827493``
+
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

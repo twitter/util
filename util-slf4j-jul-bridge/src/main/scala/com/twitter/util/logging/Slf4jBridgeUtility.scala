@@ -17,6 +17,8 @@ import org.slf4j.bridge.SLF4JBridgeHandler
  * manner. However, using the [[https://logback.qos.ch/manual/configuration.html#LevelChangePropagator Logback LevelChangePropagator]]
  * (> 0.9.25) can eliminate this performance impact.
  *
+ * @see [[org.slf4j.bridge.SLF4JBridgeHandler]]
+ * @see [[https://www.slf4j.org/legacy.html Bridging legacy APIs]]
  * @see [[https://www.slf4j.org/legacy.html#jul-to-slf4j SLF4J: jul-to-slf4j bridge]]
  */
 object Slf4jBridgeUtility extends Logging {
@@ -30,7 +32,7 @@ object Slf4jBridgeUtility extends Logging {
 
   /* Private */
 
-  private val install = Once {
+  private[this] val install = Once {
     if (!SLF4JBridgeHandler.isInstalled && canInstallBridgeHandler) {
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
@@ -42,7 +44,7 @@ object Slf4jBridgeUtility extends Logging {
    * We do not want to install the bridge handler if the
    * `org.slf4j.impl.JDK14LoggerFactory` exists on the classpath.
    */
-  private def canInstallBridgeHandler: Boolean = {
+  private[this] def canInstallBridgeHandler: Boolean = {
     try {
       Class.forName("org.slf4j.impl.JDK14LoggerFactory", false, this.getClass.getClassLoader)
       LoggerFactory
@@ -53,7 +55,7 @@ object Slf4jBridgeUtility extends Logging {
         )
       false
     } catch {
-      case e: ClassNotFoundException =>
+      case _: ClassNotFoundException =>
         true
     }
   }

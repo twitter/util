@@ -28,7 +28,6 @@ val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
 val snakeyaml = "org.yaml" % "snakeyaml" % "1.24"
 
-
 def travisTestJavaOptions: Seq[String] = {
   // We have some custom configuration for the Travis environment
   // https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
@@ -214,9 +213,8 @@ val sharedSettings =
 val sharedScala3EnabledSettings =
   baseSettings ++
     defaultScala3EnabledSettings ++
-    Seq(libraryDependencies ++= scala3Dependencies) ++ 
+    Seq(libraryDependencies ++= scala3Dependencies) ++
     Seq(excludeDependencies ++= Seq("org.scala-lang.modules" % "scala-collection-compat_3"))
-
 
 lazy val noPublishSettings = Seq(
   publish / skip := true
@@ -245,7 +243,7 @@ def scalatestScalacheckVersionedDep(scalaVersion: String) = {
     )
   }
 }
- 
+
 lazy val util = Project(
   id = "util",
   base = file(".")
@@ -529,7 +527,7 @@ lazy val utilJvm = Project(
     name := "util-jvm",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-   ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
   ).dependsOn(utilApp, utilCore, utilStats)
 
 lazy val utilLint = Project(
@@ -617,7 +615,7 @@ lazy val utilSlf4jJulBridge = Project(
   ).settings(
     name := "util-slf4j-jul-bridge",
     libraryDependencies ++= Seq(slf4jApi, "org.slf4j" % "jul-to-slf4j" % slf4jVersion)
-  ).dependsOn(utilCore, utilSlf4jApi)
+  ).dependsOn(utilCore, utilApp, utilSlf4jApi)
 
 lazy val utilSecurity = Project(
   id = "util-security",
@@ -655,18 +653,19 @@ lazy val utilStats = Project(
       scalacheckLib,
       "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      ("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava")).cross(CrossVersion.for3Use2_13),
+      ("com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion exclude ("com.google.guava", "guava"))
+        .cross(CrossVersion.for3Use2_13),
       "org.mockito" % "mockito-core" % mockitoVersion % "test"
     ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
-    ++ scalatestScalacheckVersionedDep(scalaVersion.value)
-    ++ {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, major)) if major <= 12 =>
-          Seq()
-        case _ =>
-          Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3" % "test")
+      ++ scalatestScalacheckVersionedDep(scalaVersion.value)
+      ++ {
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, major)) if major <= 12 =>
+            Seq()
+          case _ =>
+            Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3" % "test")
+        }
       }
-    }
   ).dependsOn(utilApp, utilCore, utilLint)
 
 lazy val utilTest = Project(
