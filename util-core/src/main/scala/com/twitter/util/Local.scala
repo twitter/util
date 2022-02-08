@@ -4858,6 +4858,7 @@ object Local {
    * Key used in [[Context]], internal.
    */
   private[util] final class Key
+  private final class ContextRef(var ctx: Context)
 
   /**
    * Represents the current state of all [[Local locals]] for a given
@@ -4866,43 +4867,73 @@ object Local {
    * This should be treated as an opaque value and direct modifications
    * and access are considered verboten.
    */
-  private[this] val localCtx = new ThreadLocal[Context] {
-    override def initialValue(): Context = Context.empty
+  private[this] val localContextRef = new ThreadLocal[ContextRef] {
+    override def initialValue() = new ContextRef(Context.empty)
   }
 
   /**
    * Return a snapshot of the current Local state.
    */
-  def save(): Context = localCtx.get
+  def save(): Context = saveRef().ctx
 
   /**
    * Restore the Local state to a given Context of values.
    */
-  def restore(saved: Context): Unit = localCtx.set(saved)
+  def restore(saved: Context): Unit = saveRef().ctx = saved
+
+  private def saveRef(): ContextRef = localContextRef.get()
 
   private def set(key: Key, value: Some[_]): Unit = {
-    localCtx.set(localCtx.get.set(key, value))
+    val ref = saveRef()
+    ref.ctx = ref.ctx.set(key, value)
   }
 
   private def get(key: Key): Option[_] =
-    localCtx.get.get(key)
+    save().get(key)
 
-  private def clear(key: Key): Unit =
-    localCtx.set(localCtx.get.remove(key))
+  private def clear(key: Key): Unit = {
+    val ref = saveRef()
+    ref.ctx = ref.ctx.remove(key)
+  }
+
+  /**
+   * A lightweight getter scoped to a specific thread.
+   *
+   * IMPORTANT: *MUST* be used only by the thread that
+   * creates it.
+   */
+  final class ThreadLocalGetter[T] private[Local] (key: Key) {
+    private[this] val owner = Thread.currentThread()
+    private[this] val ref = saveRef()
+    private[this] var contextCache = ref.ctx
+    private[this] var valueCache = contextCache.get(key)
+    def apply(): Option[T] = {
+      assert(Thread.currentThread() == owner)
+      val curr = ref.ctx
+      if (curr ne contextCache) {
+        contextCache = curr
+        valueCache = contextCache.get(key)
+      }
+      valueCache.asInstanceOf[Option[T]]
+    }
+  }
 
   /**
    * Clear all locals in the current context.
    */
-  def clear(): Unit = localCtx.set(Context.empty)
+  def clear(): Unit = restore(Context.empty)
 
   /**
    * Execute a block with the given Locals, restoring current values upon completion.
    */
   def let[U](ctx: Context)(f: => U): U = {
-    val saved = save()
-    restore(ctx)
+    val ref = saveRef()
+    val saved = ref.ctx
+    ref.ctx = ctx
     try f
-    finally restore(saved)
+    finally {
+      ref.ctx = saved
+    }
   }
 
   /**
@@ -4919,10 +4950,13 @@ object Local {
   def closed[R](fn: () => R): () => R = {
     val closure = Local.save()
     () => {
-      val save = Local.save()
-      Local.restore(closure)
+      val ref = saveRef()
+      val save = ref.ctx
+      ref.ctx = closure
       try fn()
-      finally Local.restore(save)
+      finally {
+        ref.ctx = save
+      }
     }
   }
 }
@@ -4969,26 +5003,40 @@ final class Local[T] {
   def apply(): Option[T] = Local.get(key).asInstanceOf[Option[T]]
 
   /**
+   * Creates a lightweight getter for the current thread.
+   *
+   * IMPORTANT: The returned getter *MUST* be used only by
+   * the thread that creates it.
+   *
+   * This method is useful to avoid performance overhead if
+   * a local needs to be accessed several times by the same
+   * thread.
+   */
+  def threadLocalGetter(): Local.ThreadLocalGetter[T] =
+    new Local.ThreadLocalGetter(key)
+
+  /**
    * Execute a block with a specific Local value, restoring the current state
    * upon completion.
    */
   def let[U](value: T)(f: => U): U = {
-    val oldCtx = Local.save()
+    val ref = Local.saveRef()
+    val oldCtx = ref.ctx
     val newCtx = oldCtx.set(key, Some(value))
-    Local.restore(newCtx)
+    ref.ctx = newCtx
     try f
     finally {
-      val now = Local.save()
+      val now = ref.ctx
       if (newCtx eq now) {
         // Fast path: no other ctx modifications to worry about
-        Local.restore(oldCtx)
+        ref.ctx = oldCtx
       } else {
         // Another element was updated in the meantime. We just have to set the old value.
         val next = oldCtx.get(key) match {
           case s @ Some(_) => now.set(key, s)
           case None => now.remove(key)
         }
-        Local.restore(next)
+        ref.ctx = next
       }
     }
   }
@@ -4998,22 +5046,23 @@ final class Local[T] {
    * completion.
    */
   def letClear[U](f: => U): U = {
-    val oldCtx = Local.save()
+    val ref = Local.saveRef()
+    val oldCtx = ref.ctx
     val newCtx = oldCtx.remove(key)
-    Local.restore(newCtx)
+    ref.ctx = newCtx
     try f
     finally {
-      val now = Local.save()
+      val now = ref.ctx
       if (newCtx eq now) {
         // Fast path: no other ctx modifications to worry about
-        Local.restore(oldCtx)
+        ref.ctx = oldCtx
       } else {
         // Another element was updated in the meantime. We just have to set the old value.
         val next = oldCtx.get(key) match {
           case s @ Some(_) => now.set(key, s)
           case None => now.remove(key)
         }
-        Local.restore(next)
+        ref.ctx = next
       }
     }
   }

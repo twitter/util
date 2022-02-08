@@ -196,6 +196,57 @@ class LocalTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
     assert(fn() == 101)
   }
 
+  test("Local.threadLocalGetter returns the same value as local.apply") {
+    val l = new Local[Int]
+    val getter = l.threadLocalGetter()
+    l() = 1
+    assert(getter() == l())
+    val adder: () => Int = { () =>
+      val rv = 100 + getter().get
+      l() = 10000
+      assert(getter() == l())
+      rv
+    }
+    val fn = Local.closed(adder)
+    l() = 100
+    assert(getter() == l())
+    assert(fn() == 101)
+    assert(getter() == l())
+    assert(l() == Some(100))
+    assert(fn() == 101)
+  }
+
+  test("Local.threadLocalGetter should have a per-thread state") {
+    val local = new Local[Int]
+    val getter = local.threadLocalGetter()
+    var threadValue: Option[Int] = null
+
+    local() = 123
+
+    val t = new Thread {
+      override def run() = {
+        val getter2 = local.threadLocalGetter()
+        assert(getter2() == None)
+        local() = 333
+        threadValue = getter2()
+      }
+    }
+
+    t.start()
+    t.join()
+
+    assert(local() == Some(123))
+    assert(getter() == Some(123))
+    assert(threadValue == Some(333))
+  }
+
+  test("Local.threadLocalGetter asserts that it used by its owner") {
+    val l = new Local[Int]
+    val getter =
+      Await.result(FuturePool.unboundedPool(l.threadLocalGetter()))
+    intercept[AssertionError](getter())
+  }
+
   implicit lazy val arbKey: Arbitrary[Local.Key] = Arbitrary(new Local.Key)
 
   test("Context should have the same behavior with Map") {

@@ -2,12 +2,14 @@ package com.twitter.util
 
 import org.openjdk.jmh.annotations._
 
-@State(Scope.Benchmark)
+@State(Scope.Thread)
+@Threads(1)
 class LocalBenchmark extends StdBenchAnnotations {
   // We've sampled some service instances and get the result that usually
   // 10 Locals are constructed and 3 Locals are set.
   val size = 10
   private[this] val locals = Array.fill(size)(new Local[String])
+  private[this] val getter = locals(1).threadLocalGetter()
 
   @Benchmark
   def let1(): String =
@@ -41,4 +43,7 @@ class LocalBenchmark extends StdBenchAnnotations {
 
   @Benchmark
   def get(): Option[String] = locals(1)()
+
+  @Benchmark
+  def getThreadLocal(): Option[String] = getter()
 }
