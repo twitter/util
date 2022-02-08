@@ -323,45 +323,6 @@ object Promise {
 
   private val AlwaysUnit: Any => Unit = _ => ()
 
-  sealed trait Responder[A] { this: Future[A] =>
-    protected final def continueAll(wq: WaitQueue[A]): Unit = {
-      var ks = wq
-      while (ks ne WaitQueue.Empty) {
-        continue(ks.first)
-        ks = ks.rest
-      }
-    }
-
-    protected def continue(k: K[A]): Unit
-
-    /**
-     * Note: exceptions in responds are monitored.  That is, if the
-     * computation `k` throws a raw (ie.  not encoded in a Future)
-     * exception, it is handled by the current monitor, see
-     * [[Monitor]] for details.
-     */
-    def respond(k: Try[A] => Unit): Future[A] = {
-      continue(new Monitored(Local.save(), k))
-      this
-    }
-
-    def transform[B](f: Try[A] => Future[B]): Future[B] = {
-      val promise = interrupts[B](this)
-
-      continue(new FutureTransformer(Local.save(), f, promise))
-
-      promise
-    }
-
-    protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {
-      val promise = interrupts[B](this)
-
-      continue(new TryTransformer(Local.save(), f, promise))
-
-      promise
-    }
-  }
-
   // PUBLIC API
 
   /**
@@ -465,8 +426,43 @@ object Promise {
  * space leak is incurred from `flatMap` in the tail position since
  * intermediate promises are merged into the root promise.
  */
-class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[A]] {
+class Promise[A] extends Future[A] with Updatable[Try[A]] {
   import Promise._
+
+  private final def continueAll(wq: WaitQueue[A]): Unit = {
+    var ks = wq
+    while (ks ne WaitQueue.Empty) {
+      continue(ks.first)
+      ks = ks.rest
+    }
+  }
+
+  /**
+   * Note: exceptions in responds are monitored.  That is, if the
+   * computation `k` throws a raw (ie.  not encoded in a Future)
+   * exception, it is handled by the current monitor, see
+   * [[Monitor]] for details.
+   */
+  final def respond(k: Try[A] => Unit): Future[A] = {
+    continue(new Monitored(Local.save(), k))
+    this
+  }
+
+  final def transform[B](f: Try[A] => Future[B]): Future[B] = {
+    val promise = interrupts[B](this)
+
+    continue(new FutureTransformer(Local.save(), f, promise))
+
+    promise
+  }
+
+  final protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {
+    val promise = interrupts[B](this)
+
+    continue(new TryTransformer(Local.save(), f, promise))
+
+    promise
+  }
 
   // Note: this will always be one of:
   // - WaitQueue (Waiting)
@@ -776,7 +772,7 @@ class Promise[A] extends Future[A] with Promise.Responder[A] with Updatable[Try[
    *
    * @throws Promise.ImmutableResult if the Promise is already populated
    */
-  def update(result: Try[A]): Unit = {
+  final def update(result: Try[A]): Unit = {
     updateIfEmpty(result) || {
       val current = Await.result(liftToTry)
       throw ImmutableResult(s"Result set multiple times. Value='$current', New='$result'")

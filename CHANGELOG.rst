@@ -32,6 +32,11 @@ Runtime Behavior Changes
 
 * util: Bump version of Caffeine to 2.9.3. ``PHAB_ID=D815761``
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-core: The `c.t.util.Responder` trait has been removed. ``PHAB_ID=D824830``
+
 22.1.0
 ------
 
