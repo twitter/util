@@ -170,8 +170,10 @@ class ExpressionSchemaTest extends AnyFunSuite {
     LoadedStatsReceiver.self = sr
     val successRate = ExpressionSchema(
       "success_rate",
-      Expression(100).multiply(Expression(Seq("clnt", "aclient", "success")).divide(Expression(
-        Seq("clnt", "aclient", "success")).plus(Expression(Seq("clnt", "aclient", "failures")))))
+      Expression(100).multiply(
+        Expression(Seq("clnt", "aclient", "success"), isCounter = true).divide(
+          Expression(Seq("clnt", "aclient", "success"), isCounter = true).plus(
+            Expression(Seq("clnt", "aclient", "failures"), isCounter = true))))
     ).withRole(Client).withServiceName("aclient").build()
 
     assert(sr.expressions.values.size == 1)

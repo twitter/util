@@ -26,7 +26,7 @@ private[twitter] object Expression {
     case MetricExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
     case ConstantExpression(_) => Set.empty
-    case StringExpression(_) => Set(LoadedStatsReceiver)
+    case StringExpression(_, _) => Set(LoadedStatsReceiver)
     case NoExpression => Set.empty
   }
 
@@ -82,7 +82,7 @@ private[twitter] object Expression {
    *
    * @param exprs a sequence of metrics in strings
    */
-  def apply(exprs: Seq[String]): Expression = StringExpression(exprs)
+  def apply(exprs: Seq[String], isCounter: Boolean): Expression = StringExpression(exprs, isCounter)
 }
 
 /**
@@ -135,7 +135,7 @@ case class HistogramExpression private[exp] (
  * Represent an expression constructed from metrics in strings
  * @see Expression#apply
  */
-case class StringExpression private[exp] (exprs: Seq[String]) extends Expression
+case class StringExpression private[exp] (exprs: Seq[String], isCounter: Boolean) extends Expression
 
 case object NoExpression extends Expression {
   @varargs
