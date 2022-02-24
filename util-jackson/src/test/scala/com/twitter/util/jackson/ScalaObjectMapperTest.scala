@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper}
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
@@ -384,7 +385,7 @@ class ScalaObjectMapperTest
     val jacksonScalaObjectMapper: JacksonScalaObjectMapperType = new JacksonObjectMapper()
       with JacksonScalaObjectMapper
     jacksonScalaObjectMapper.registerModule(DefaultScalaModule)
-    jacksonScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+    jacksonScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
 
     // default for ScalaObjectMapper#Builder is snake_case which should not get applied here
     // since this method only wraps and does not mutate the underlying mapper
@@ -454,7 +455,7 @@ class ScalaObjectMapperTest
     // test with default scala module
     val defaultScalaObjectMapper = new JacksonObjectMapper with JacksonScalaObjectMapper
     defaultScalaObjectMapper.registerModule(DefaultScalaModule)
-    defaultScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+    defaultScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
     deserialize[BasicDate](defaultScalaObjectMapper, expectedStr) should equal(expectedInstance)
 
     // case insensitive mapper feature does not pertain to scala enumerations (only Java enums)
@@ -566,7 +567,7 @@ class ScalaObjectMapperTest
     // test with default scala module
     val defaultScalaObjectMapper = new JacksonObjectMapper with JacksonScalaObjectMapper
     defaultScalaObjectMapper.registerModule(DefaultScalaModule)
-    defaultScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+    defaultScalaObjectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
     deserialize[Page[Person]](defaultScalaObjectMapper, input) should equal(result)
 
     // test with ScalaObjectMapper
@@ -934,7 +935,7 @@ class ScalaObjectMapperTest
   ) {
     val objMapper = new JacksonObjectMapper with JacksonScalaObjectMapper
     objMapper.registerModule(DefaultScalaModule)
-    objMapper.setPropertyNamingStrategy(new PropertyNamingStrategy.SnakeCaseStrategy)
+    objMapper.setPropertyNamingStrategy(new PropertyNamingStrategies.SnakeCaseStrategy)
 
     val response = objMapper.writeValueAsString(NamingStrategyJsonProperty("abc"))
     response should equal("""{"long_field_name":"abc"}""")

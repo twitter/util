@@ -5,25 +5,27 @@ import com.fasterxml.jackson.annotation._
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.`type`.TypeReference
 import com.fasterxml.jackson.databind._
-import com.fasterxml.jackson.databind.annotation.{JsonDeserialize, JsonNaming}
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.{
-  BigDecimalDeserializer,
-  NumberDeserializer
-}
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonNaming
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BigDecimalDeserializer
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.NumberDeserializer
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.node.ValueNode
 import com.fasterxml.jackson.module.scala.JsonScalaEnumeration
-import com.twitter.util.{Time, WrappedValue}
+import com.twitter.util.Time
+import com.twitter.util.WrappedValue
 import com.twitter.util.jackson.caseclass.SerdeLogging
 import com.twitter.util.validation.MethodValidation
-import com.twitter.util.validation.constraints.{OneOf, UUID}
+import com.twitter.util.validation.constraints.OneOf
+import com.twitter.util.validation.constraints.UUID
 import com.twitter.util.validation.engine.MethodValidationResult
 import com.twitter.{util => ctu}
 import jakarta.validation.Payload
 import jakarta.validation.constraints._
 import java.time.format.DateTimeFormatter
 import java.time.temporal.Temporal
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
+import java.time.LocalDateTime
 import scala.math.BigDecimal.RoundingMode
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -829,10 +831,10 @@ case class ItemSomeViews(
 
 case class ItemNoDefaultForView(@JsonView(Array(classOf[Views.Public])) name: String)
 
-@JsonNaming(classOf[PropertyNamingStrategy.KebabCaseStrategy])
+@JsonNaming(classOf[PropertyNamingStrategies.KebabCaseStrategy])
 case class CaseClassWithKebabCase(pleaseUseKebabCase: Boolean)
 
-@JsonNaming(classOf[PropertyNamingStrategy.KebabCaseStrategy])
+@JsonNaming(classOf[PropertyNamingStrategies.KebabCaseStrategy])
 trait KebabCaseMixin
 
 case class CaseClassShouldUseKebabCaseFromMixin(willThisGetTheRightCasing: Boolean)

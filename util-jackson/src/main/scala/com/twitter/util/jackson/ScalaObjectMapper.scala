@@ -40,7 +40,7 @@ object ScalaObjectMapper {
 
   /** The default [[PropertyNamingStrategy]] for a [[ScalaObjectMapper]] */
   private[twitter] val DefaultPropertyNamingStrategy: PropertyNamingStrategy =
-    PropertyNamingStrategy.SNAKE_CASE
+    PropertyNamingStrategies.SNAKE_CASE
 
   /** The default [[JsonInclude.Include]] for serialization for a [[ScalaObjectMapper]] */
   private[twitter] val DefaultSerializationInclude: JsonInclude.Include =
@@ -125,29 +125,29 @@ object ScalaObjectMapper {
 
   /**
    * Utility to create a new [[ScalaObjectMapper]] explicitly configured with
-   * [[PropertyNamingStrategy.LOWER_CAMEL_CASE]] as a `PropertyNamingStrategy` wrapping the
+   * [[PropertyNamingStrategies.LOWER_CAMEL_CASE]] as a `PropertyNamingStrategy` wrapping the
    * given [[JacksonScalaObjectMapperType]].
    *
    * @note the `underlying` mapper is copied (not mutated) to produce the new [[ScalaObjectMapper]]
-   *       with a [[PropertyNamingStrategy.LOWER_CAMEL_CASE]] PropertyNamingStrategy.
+   *       with a [[PropertyNamingStrategies.LOWER_CAMEL_CASE]] PropertyNamingStrategy.
    */
   def camelCaseObjectMapper(underlying: JacksonScalaObjectMapperType): ScalaObjectMapper = {
     val objectMapperCopy = ObjectMapperCopier.copy(underlying)
-    objectMapperCopy.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+    objectMapperCopy.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
     new ScalaObjectMapper(objectMapperCopy)
   }
 
   /**
    * Utility to create a new [[ScalaObjectMapper]] explicitly configured with
-   * [[PropertyNamingStrategy.SNAKE_CASE]] as a `PropertyNamingStrategy` wrapping the
+   * [[PropertyNamingStrategies.SNAKE_CASE]] as a `PropertyNamingStrategy` wrapping the
    * given [[JacksonScalaObjectMapperType]].
    *
    * @note the `underlying` mapper is copied (not mutated) to produce the new [[ScalaObjectMapper]]
-   *       with a [[PropertyNamingStrategy.SNAKE_CASE]] PropertyNamingStrategy.
+   *       with a [[PropertyNamingStrategies.SNAKE_CASE]] PropertyNamingStrategy.
    */
   def snakeCaseObjectMapper(underlying: JacksonScalaObjectMapperType): ScalaObjectMapper = {
     val objectMapperCopy = ObjectMapperCopier.copy(underlying)
-    objectMapperCopy.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+    objectMapperCopy.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
     new ScalaObjectMapper(objectMapperCopy)
   }
 
@@ -158,7 +158,7 @@ object ScalaObjectMapper {
    * For example,
    * {{{
    *   ScalaObjectMapper.builder
-   *    .withPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy)
+   *    .withPropertyNamingStrategy(new PropertyNamingStrategies.UpperCamelCaseStrategy)
    *    .withNumbersAsStrings(true)
    *    .withAdditionalJacksonModules(...)
    *    .objectMapper
@@ -169,7 +169,7 @@ object ScalaObjectMapper {
    * {{{
    *   val builder =
    *    ScalaObjectMapper.builder
-   *      .withPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy)
+   *      .withPropertyNamingStrategy(new PropertyNamingStrategies.UpperCamelCaseStrategy)
    *      .withNumbersAsStrings(true)
    *      .withAdditionalJacksonModules(...)
    *
@@ -187,7 +187,7 @@ object ScalaObjectMapper {
    * For example,
    * {{{
    *   ScalaObjectMapper.builder
-   *     .withPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy)
+   *     .withPropertyNamingStrategy(new PropertyNamingStrategies.UpperCamelCaseStrategy)
    *     .withNumbersAsStrings(true)
    *     .withAdditionalJacksonModules(...)
    *     .objectMapper
@@ -198,7 +198,7 @@ object ScalaObjectMapper {
    * {{{
    *   val builder =
    *     ScalaObjectMapper.builder
-   *       .withPropertyNamingStrategy(new PropertyNamingStrategy.UpperCamelCaseStrategy)
+   *       .withPropertyNamingStrategy(new PropertyNamingStrategies.UpperCamelCaseStrategy)
    *       .withNumbersAsStrings(true)
    *       .withAdditionalJacksonModules(...)
    *
@@ -240,14 +240,14 @@ object ScalaObjectMapper {
 
     /**
      * Creates a new [[ScalaObjectMapper]] explicitly configured with
-     * [[PropertyNamingStrategy.LOWER_CAMEL_CASE]] as a `PropertyNamingStrategy`.
+     * [[PropertyNamingStrategies.LOWER_CAMEL_CASE]] as a `PropertyNamingStrategy`.
      */
     final def camelCaseObjectMapper: ScalaObjectMapper =
       ScalaObjectMapper.camelCaseObjectMapper(jacksonScalaObjectMapper)
 
     /**
      * Creates a new [[ScalaObjectMapper]] explicitly configured with
-     * [[PropertyNamingStrategy.SNAKE_CASE]] as a `PropertyNamingStrategy`.
+     * [[PropertyNamingStrategies.SNAKE_CASE]] as a `PropertyNamingStrategy`.
      */
     final def snakeCaseObjectMapper: ScalaObjectMapper =
       ScalaObjectMapper.snakeCaseObjectMapper(jacksonScalaObjectMapper)
@@ -256,7 +256,7 @@ object ScalaObjectMapper {
 
     /**
      * Configure a [[PropertyNamingStrategy]] for this [[Builder]].
-     * @note the default is [[PropertyNamingStrategy.SNAKE_CASE]]
+     * @note the default is [[PropertyNamingStrategies.SNAKE_CASE]]
      * @see [[ScalaObjectMapper.DefaultPropertyNamingStrategy]]
      */
     final def withPropertyNamingStrategy(propertyNamingStrategy: PropertyNamingStrategy): Builder =
