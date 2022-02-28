@@ -3,9 +3,14 @@ package com.twitter.util
 import com.twitter.concurrent.Scheduler
 import com.twitter.concurrent.LocalScheduler
 import com.twitter.conversions.DurationOps._
+import java.util.concurrent.atomic.AtomicBoolean
 import org.scalatest.funsuite.AnyFunSuite
 
 class PromiseTest extends AnyFunSuite {
+
+  final class LinkablePromise[A] extends Promise[A] {
+    def link1(target: Promise[A]): Unit = link(target)
+  }
 
   class TrackingScheduler extends LocalScheduler(false) {
     @volatile var submitted: Int = 0
@@ -102,6 +107,58 @@ class PromiseTest extends AnyFunSuite {
       p.become(new Promise[String]())
     }
     assert(ex.getMessage.contains(value))
+  }
+
+  test("interrupted.link(done) runs interrupted waitqueue") {
+    val q = new LinkablePromise[String] // interrupted with a waitqueue
+    val run = new AtomicBoolean(false)
+    q.respond(_ => run.set(true))
+    q.raise(new Exception("boom"))
+
+    val p = new Promise[String](Return("foo")) // satisfied
+
+    q.link1(p)
+    assert(run.get())
+  }
+
+  test("transforming(never).link(done) runs transforming waitqueue") {
+    val q = new LinkablePromise[String] // interrupted with a waitqueue
+    val deadend = Future.never
+    val run = new AtomicBoolean(false)
+    q.respond(_ => run.set(true))
+    q.forwardInterruptsTo(deadend)
+
+    val p = new Promise[String](Return("foo")) // satisfied
+
+    q.link1(p)
+    assert(run.get())
+  }
+
+  test("transforming(done).link(done) runs transforming waitqueue") {
+    val q = new LinkablePromise[String] // interrupted with a waitqueue
+    val deadend = new Promise[Unit]
+    val run = new AtomicBoolean(false)
+    q.respond(_ => run.set(true))
+    q.forwardInterruptsTo(deadend)
+
+    val p = new Promise[String](Return("foo")) // satisfied
+    deadend.setDone()
+
+    q.link1(p)
+    assert(run.get())
+  }
+
+  test("interruptible.link(done) runs interruptible waitqueue") {
+    val q = new LinkablePromise[String] // interrupted with a waitqueue
+    val deadend = Future.Done
+    val run = new AtomicBoolean(false)
+    q.respond(_ => run.set(true))
+    q.setInterruptHandler { case _ => () }
+
+    val p = new Promise[String](Return("foo")) // satisfied
+
+    q.link1(p)
+    assert(run.get())
   }
 
   test("Updating a Promise more than once should fail") {

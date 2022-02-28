@@ -4,11 +4,15 @@ import com.twitter.util.Promise.Detachable
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Benchmark)
+@Warmup(iterations = 5)
+@Measurement(iterations = 5)
 class PromiseBenchmark extends StdBenchAnnotations {
 
   private[this] val StringFuture = Future.value("hi")
 
   private[this] val Value = Return("okok")
+
+  private[this] val NoopCallback: Try[String] => Unit = _ => ()
 
   @Benchmark
   def attached(): Promise[String] = {
@@ -68,6 +72,17 @@ class PromiseBenchmark extends StdBenchAnnotations {
     val ret = state.promises(state.i).poll
     state.i += 1
     ret
+  }
+
+  @Benchmark
+  def become(state: PromiseBenchmark.PromiseState): Promise[String] = {
+    val p = new Promise[String](state.f)
+    p.respond(NoopCallback)
+
+    val q = new Promise[String]
+
+    q.become(p) // p.link(q)
+    p
   }
 }
 
