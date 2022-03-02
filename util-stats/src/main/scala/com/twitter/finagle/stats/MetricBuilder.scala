@@ -98,14 +98,32 @@ object MetricBuilder {
    * @note [[CounterishGaugeType]] will also create a [[Gauge]], but specifically one that
    *       models a [[Counter]].
    */
-  sealed trait MetricType
-  case object CounterType extends MetricType
-  case object CounterishGaugeType extends MetricType
-  case object GaugeType extends MetricType
-  case object HistogramType extends MetricType
+  sealed trait MetricType {
+    def toPrometheusString: String
+    def toJsonString: String
+  }
+  case object CounterType extends MetricType {
+    def toJsonString: String = "counter"
+    def toPrometheusString: String = toJsonString
+  }
+  case object CounterishGaugeType extends MetricType {
+    def toJsonString: String = "counterish_gauge"
+    def toPrometheusString: String = "gauge"
+  }
+  case object GaugeType extends MetricType {
+    def toJsonString: String = "gauge"
+    def toPrometheusString: String = toJsonString
+  }
+  case object HistogramType extends MetricType {
+    def toJsonString: String = "histogram"
+    def toPrometheusString: String = toJsonString
+  }
 
   /** Counter type that will be always unlatched */
-  case object UnlatchedCounter extends MetricType
+  case object UnlatchedCounter extends MetricType {
+    def toJsonString: String = "unlatched_counter"
+    def toPrometheusString: String = "counter"
+  }
 }
 
 sealed trait Metadata {
