@@ -67,6 +67,7 @@ object MetricBuilder {
     verbosity: Verbosity = Verbosity.Default,
     sourceClass: Option[String] = None,
     name: Seq[String] = Seq.empty,
+    labels: Map[String, String] = Map.empty,
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
@@ -82,6 +83,7 @@ object MetricBuilder {
       verbosity,
       sourceClass,
       name,
+      labels,
       relativeName,
       processPath,
       percentiles,
@@ -158,6 +160,7 @@ class MetricBuilder private (
   val verbosity: Verbosity,
   val sourceClass: Option[String],
   val name: Seq[String],
+  val labels: Map[String, String],
   val relativeName: Seq[String],
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
@@ -194,6 +197,7 @@ class MetricBuilder private (
       verbosity = verbosity,
       sourceClass = sourceClass,
       name = name,
+      labels = labels,
       relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
@@ -322,7 +326,7 @@ class MetricBuilder private (
 
   override def equals(other: Any): Boolean = other match {
     case that: MetricBuilder =>
-      (that.canEqual(this)) &&
+      that.canEqual(this) &&
         keyIndicator == that.keyIndicator &&
         description == that.description &&
         units == that.units &&
@@ -330,6 +334,7 @@ class MetricBuilder private (
         verbosity == that.verbosity &&
         sourceClass == that.sourceClass &&
         name == that.name &&
+        labels == that.labels &&
         relativeName == that.relativeName &&
         processPath == that.processPath &&
         percentiles == that.percentiles &&
@@ -339,19 +344,20 @@ class MetricBuilder private (
 
   override def hashCode(): Int = {
     val state =
-      Seq[AnyRef](
+      Array[AnyRef](
         description,
         units,
         role,
         verbosity,
         sourceClass,
         name,
+        labels,
         relativeName,
         processPath,
         percentiles,
         metricType)
-    val hashCodes = keyIndicator.hashCode() +: state.map(_.hashCode())
-    hashCodes.foldLeft(0)((a, b) => 31 * a + b)
+
+    state.foldLeft(keyIndicator.hashCode())((a, b) => 31 * a + b.hashCode())
   }
 
   override def toString(): String = {
