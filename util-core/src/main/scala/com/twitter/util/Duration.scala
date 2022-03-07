@@ -318,6 +318,8 @@ sealed class Duration private[util] (protected val nanos: Long)
 
   def inNanoseconds: Long = nanos
 
+  def isNegative: Boolean = this.inNanoseconds < 0
+
   /**
    * Returns the length of the duration in the given TimeUnit.
    *
