@@ -1,5 +1,14 @@
-package com.twitter.finagle.stats;
+package com.twitter.compiletest;
 
+import com.twitter.finagle.stats.AbstractStatsReceiver;
+import com.twitter.finagle.stats.Counter;
+import com.twitter.finagle.stats.Gauge;
+import com.twitter.finagle.stats.InMemoryStatsReceiver;
+import com.twitter.finagle.stats.JStats;
+import com.twitter.finagle.stats.NullStatsReceiver;
+import com.twitter.finagle.stats.Stat;
+import com.twitter.finagle.stats.StatsReceiver;
+import com.twitter.finagle.stats.Verbosity;
 import com.twitter.util.Future;
 
 import org.junit.Test;
@@ -9,7 +18,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import scala.Function0;
-import scala.collection.immutable.Seq;
 
 /**
  * Java compatibility test for {@link com.twitter.finagle.stats.StatsReceiver}.

@@ -10,6 +10,7 @@ junit_tests(
         "3rdparty/jvm/junit",
         "3rdparty/jvm/org/scalatestplus:junit",
         "util/util-core:util-core-util",
+        "util/util-stats/src/main/java",
         "util/util-stats/src/main/scala/com/twitter/finagle/stats",
     ],
 )

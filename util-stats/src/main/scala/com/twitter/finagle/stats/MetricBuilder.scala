@@ -57,6 +57,8 @@ object MetricBuilder {
    * @param relativeName the relative metric name which will be appended to the scope of the StatsReceiver prior to long term storage
    * @param processPath a universal coordinate for the resource
    * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
+   * @param metricType the type of the metric being constructed
+   * @param isStandard whether the metric should the standard path separator or defer to the metrics store for the separator
    * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
    */
   def apply(
@@ -92,6 +94,19 @@ object MetricBuilder {
       statsReceiver
     )
   }
+
+  /**
+   * Construct a new `MetricBuilder`
+   *
+   * Simpler method for constructing a `MetricBuilder`. This API is a little more friendly for java
+   * users as they can bootstrap a `MetricBuilder` and then proceed to use with `.with` API's rather
+   * than being forced to use the mega apply method.
+   *
+   * @param metricType the type of the metric being constructed.
+   * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder.
+   */
+  def newBuilder(metricType: MetricType, statsReceiver: StatsReceiver): MetricBuilder =
+    apply(metricType = metricType, statsReceiver = statsReceiver)
 
   /**
    * Indicate the Metric type, [[CounterType]] will create a [[Counter]],
