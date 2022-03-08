@@ -175,7 +175,7 @@ class MetricBuilder private (
   val verbosity: Verbosity,
   val sourceClass: Option[String],
   val name: Seq[String],
-  val labels: Map[String, String],
+  private[finagle] val labels: Map[String, String],
   val relativeName: Seq[String],
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
@@ -198,6 +198,7 @@ class MetricBuilder private (
     verbosity: Verbosity = this.verbosity,
     sourceClass: Option[String] = this.sourceClass,
     name: Seq[String] = this.name,
+    labels: Map[String, String] = this.labels,
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
     isStandard: Boolean = this.isStandard,
@@ -250,6 +251,10 @@ class MetricBuilder private (
 
   @varargs
   def withName(name: String*): MetricBuilder = this.copy(name = name)
+
+  // Temporarily private while API's are under development
+  private[finagle] def withLabels(labels: Map[String, String]): MetricBuilder =
+    this.copy(labels = labels)
 
   @varargs
   def withRelativeName(relativeName: String*): MetricBuilder =
