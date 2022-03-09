@@ -24,15 +24,6 @@ trait DurationOps { val ops: Duration.type = Duration }
 class DurationTest extends AnyWordSpec with DurationOps with TimeLikeSpec[Duration] {
 
   "Duration" should {
-    "isNegative" in {
-      assert((-1.second).isNegative)
-      assert(!1.second.isNegative)
-      assert((-100.milliseconds).isNegative)
-      assert(!100.milliseconds.isNegative)
-      assert((-100.nanosecond).isNegative)
-      assert(!100.nanosecond.isNegative)
-    }
-
     "*" in {
       assert(1.second * 2 == 2.seconds)
       assert(1.second * Long.MaxValue == Duration.Top)
