@@ -133,7 +133,7 @@ object MetricBuilder {
   }
   case object HistogramType extends MetricType {
     def toJsonString: String = "histogram"
-    def toPrometheusString: String = toJsonString
+    def toPrometheusString: String = "summary"
   }
 
   /** Counter type that will be always unlatched */
