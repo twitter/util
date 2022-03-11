@@ -26,6 +26,8 @@ New Features
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* util: Bump version of Jackson to 2.13.2. ``PHAB_ID=D848592``
+
 * util-slf4j-api: Update the `Logger` API to include "call-by-name" method
   variations akin to the `Logging` trait. When creating a `Logger` from a
   Scala singleton object class, the resultant logger name will no longer include
