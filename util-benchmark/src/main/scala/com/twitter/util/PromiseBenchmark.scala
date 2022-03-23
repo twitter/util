@@ -7,10 +7,21 @@ import org.openjdk.jmh.annotations._
 @Warmup(iterations = 5)
 @Measurement(iterations = 5)
 class PromiseBenchmark extends StdBenchAnnotations {
+  import PromiseBenchmark._
 
-  private[this] val StringFuture = Future.value("hi")
+  @Benchmark
+  def responder(state: ResponderState): Int = {
+    import state._
+    initPromise.updateIfEmpty(UpdateValue)
+    Await.result(promise)
+  }
 
-  private[this] val Value = Return("okok")
+  @Benchmark
+  def responderWithResourceUsage(state: ResourceTrackedResponderState): Int = {
+    import state._
+    initPromise.updateIfEmpty(UpdateValue)
+    Await.result(promise)
+  }
 
   private[this] val NoopCallback: Try[String] => Unit = _ => ()
 
@@ -20,13 +31,13 @@ class PromiseBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def detach(state: PromiseBenchmark.PromiseDetachState): Unit = {
+  def detach(state: PromiseDetachState): Unit = {
     import state._
     promise.detach()
   }
 
   @Benchmark
-  def detachDetachableFuture(state: PromiseBenchmark.PromiseDetachState): Unit = {
+  def detachDetachableFuture(state: PromiseDetachState): Unit = {
     import state._
     detachableFuture.detach()
   }
@@ -44,22 +55,22 @@ class PromiseBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def interrupts1(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+  def interrupts1(state: InterruptsState): Promise[String] = {
     Promise.interrupts(state.a)
   }
 
   @Benchmark
-  def interrupts2(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+  def interrupts2(state: InterruptsState): Promise[String] = {
     Promise.interrupts(state.a, state.b)
   }
 
   @Benchmark
-  def interruptsN(state: PromiseBenchmark.InterruptsState): Promise[String] = {
+  def interruptsN(state: InterruptsState): Promise[String] = {
     Promise.interrupts(state.futures: _*)
   }
 
   @Benchmark
-  def promiseIsDefined(state: PromiseBenchmark.PromiseState): Boolean = {
+  def promiseIsDefined(state: PromiseState): Boolean = {
     if (state.i == state.len) state.i = 0
     val ret = state.promises(state.i).isDefined
     state.i += 1
@@ -67,7 +78,7 @@ class PromiseBenchmark extends StdBenchAnnotations {
   }
 
   @Benchmark
-  def promisePoll(state: PromiseBenchmark.PromiseState): Option[Try[Unit]] = {
+  def promisePoll(state: PromiseState): Option[Try[Unit]] = {
     if (state.i == state.len) state.i = 0
     val ret = state.promises(state.i).poll
     state.i += 1
@@ -87,6 +98,44 @@ class PromiseBenchmark extends StdBenchAnnotations {
 }
 
 object PromiseBenchmark {
+  final val StringFuture = Future.value("hi")
+  final val Value = Return("okok")
+
+  @State(Scope.Thread)
+  class ResponderState {
+    val UpdateValue = Return(1)
+
+    @Param(Array("1", "10", "100", "1000"))
+    var numK: Int = _
+
+    var initPromise: Promise[Int] = _
+    var promise: Future[Int] = _
+
+    @Setup(Level.Invocation)
+    def prepare(): Unit = {
+      initPromise = new Promise[Int]()
+      promise = (0 to numK).foldLeft[Future[Int]](initPromise) { (p, i) =>
+        p.map(num => num + i)
+      }
+    }
+  }
+
+  @State(Scope.Thread)
+  class ResourceTrackedResponderState extends ResponderState {
+    val resourceTracker = new ResourceTracker()
+
+    @Setup(Level.Invocation)
+    override def prepare(): Unit = {
+      ResourceTracker.set(resourceTracker)
+      super.prepare()
+    }
+
+    @TearDown(Level.Invocation)
+    def tearDown(): Unit = {
+      ResourceTracker.clear()
+    }
+  }
+
   @State(Scope.Thread)
   class PromiseDetachState {
 

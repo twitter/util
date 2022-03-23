@@ -20,6 +20,62 @@ class PromiseTest extends AnyFunSuite {
     }
   }
 
+  class MockTracker(var updates: Long = 0) extends ResourceTracker {
+    override def addCpuTime(time: Long): Unit = {
+      updates = updates + 1
+    }
+  }
+
+  test("ResourceTracker when set, updates per completed continuation") {
+    if (ResourceTracker.threadCpuTimeSupported) {
+      val mockTracker = new MockTracker()
+      val p1 = new Promise[Unit]()
+      val p = ResourceTracker.let(mockTracker) {
+        // 2 continuations
+        p1.map(_ => ()).respond(_ => ())
+
+        // 1 continuation
+        //
+        // **Note**: Because [[ConstFuture]] implements `transformTry` synchronously,
+        // the cpuTime is not updated since on `Future.Unit#map`, instead accounted for
+        // by the saved context of the parent continuation, `flatMap`.
+        p1.flatMap(_ => Future.Unit.map(_ => ()))
+      }
+      p1.setDone()
+      assert(mockTracker.updates == 3)
+    }
+  }
+
+  test("ResourceTracker updates in the presence of exceptions") {
+    if (ResourceTracker.threadCpuTimeSupported) {
+      val mockTracker = new MockTracker()
+      val p = ResourceTracker.let(mockTracker) {
+        Future.Unit.transform(_ => throw new Exception("boom again"))
+      }
+      assert(mockTracker.updates == 1)
+    }
+  }
+
+  test("ResourceTracker handles nested promise") {
+    if (ResourceTracker.threadCpuTimeSupported) {
+      val mockTracker = new MockTracker()
+      val p1 = new Promise[Unit]()
+      val p2 = new Promise[Unit]()
+
+      val p = ResourceTracker.let(mockTracker) {
+        p1.flatMap { _ =>
+          p2.map(_ => ())
+        }
+      }
+
+      p1.setDone()
+      assert(mockTracker.updates == 1)
+
+      p2.setDone(); Await.result(p)
+      assert(mockTracker.updates == 2)
+    }
+  }
+
   test("Promise.detach should not detach other attached promises") {
     val p = new Promise[Unit]
     val attached1 = Promise.attached(p)

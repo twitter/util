@@ -150,14 +150,17 @@ class ExecutorServiceFuturePool protected[this] (
   }
 
   def apply[T](f: => T): Future[T] = {
-    if (forkingScheduler != null) {
-      forkingScheduler.fork(Future.value(f))
-    } else {
+    val saved = Local.save()
+    val tracker = saved.resourceTracker
+    val applyF =
+      if (tracker eq None) () => f
+      else ResourceTracker.wrapAndMeasureUsage[T](f, tracker.get)
+
+    if (forkingScheduler != null) forkingScheduler.fork(Future.value(applyF()))
+    else {
       val runOk = new AtomicBoolean(true)
       val p = new Promise[T]
       val task = new Runnable {
-        private[this] val saved = Local.save()
-
         def run(): Unit = {
           // Make an effort to skip work in the case the promise
           // has been cancelled or already defined.
@@ -165,9 +168,9 @@ class ExecutorServiceFuturePool protected[this] (
             return
 
           val current = Local.save()
-          Local.restore(saved)
+          if (current ne saved) Local.restore(saved)
 
-          try p.updateIfEmpty(Try(f))
+          try p.updateIfEmpty(Try(applyF()))
           catch {
             case nlrc: NonLocalReturnControl[_] =>
               val fnlrc = new FutureNonLocalReturnControl(nlrc)

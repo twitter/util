@@ -218,6 +218,7 @@ object Promise {
    * provided result
    */
   private final class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A] {
+
     def apply(result: Try[A]): Unit = {
       val current = Local.save()
       if (current ne saved)
@@ -425,6 +426,7 @@ object Promise {
  */
 class Promise[A] extends Future[A] with Updatable[Try[A]] {
   import Promise._
+  import ResourceTracker.wrapAndMeasureUsage
 
   /**
    * Note: exceptions in responds are monitored.  That is, if the
@@ -433,23 +435,28 @@ class Promise[A] extends Future[A] with Updatable[Try[A]] {
    * [[Monitor]] for details.
    */
   final def respond(k: Try[A] => Unit): Future[A] = {
-    continue(new Monitored(Local.save(), k))
+    val saved = Local.save()
+    val tracker = saved.resourceTracker
+    if (tracker eq None) continue(new Monitored(saved, k))
+    else continue(new Monitored(saved, wrapAndMeasureUsage(k, tracker.get)))
     this
   }
 
   final def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val promise = interrupts[B](this)
-
-    continue(new FutureTransformer(Local.save(), f, promise))
-
+    val saved = Local.save()
+    val tracker = saved.resourceTracker
+    if (tracker eq None) continue(new FutureTransformer(saved, f, promise))
+    else continue(new FutureTransformer(saved, wrapAndMeasureUsage(f, tracker.get), promise))
     promise
   }
 
   final protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {
     val promise = interrupts[B](this)
-
-    continue(new TryTransformer(Local.save(), f, promise))
-
+    val saved = Local.save()
+    val tracker = saved.resourceTracker
+    if (tracker eq None) continue(new TryTransformer(saved, f, promise))
+    else continue(new TryTransformer(saved, wrapAndMeasureUsage(f, tracker.get), promise))
     promise
   }
 

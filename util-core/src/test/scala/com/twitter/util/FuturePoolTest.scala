@@ -17,6 +17,28 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
   implicit override val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))
 
+  class MockTracker(var updates: Long = 0) extends ResourceTracker {
+    override def addCpuTime(time: Long): Unit = {
+      updates = updates + 1
+    }
+  }
+
+  test("ResourceTracker, when set -- FuturePool tracks usage on execution") {
+    if (ResourceTracker.threadCpuTimeSupported) {
+      val executor = Executors.newFixedThreadPool(1)
+      val pool = FuturePool(executor)
+
+      val mockTracker = new MockTracker
+      val source = new Promise[Int]
+      val result = ResourceTracker.let(mockTracker) {
+        pool(Await.result(source)) // simulate blocking call
+      }
+
+      source.setValue(1); Await.result(result)
+      assert(mockTracker.updates == 1)
+    }
+  }
+
   test("FuturePool should dispatch to another thread") {
     val executor = Executors.newFixedThreadPool(1)
     val pool = FuturePool(executor)

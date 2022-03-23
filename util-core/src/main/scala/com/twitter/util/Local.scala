@@ -7,7 +7,11 @@ object Local {
    * when the number of elements is less than 16.
    * key - Local.Key, value - Option[_]
    */
-  sealed abstract class Context private () {
+  sealed abstract class Context private (
+    final private[util] val resourceTracker: Option[ResourceTracker]) {
+    private[util] def setResourceTracker(tracker: ResourceTracker): Context
+    private[util] def removeResourceTracker(): Context
+
     private[util] def get(k: Key): Option[_]
     private[util] def remove(k: Key): Context
     private[util] def set(k: Key, v: Some[_]): Context
@@ -18,15 +22,35 @@ object Local {
     /**
      * The empty Context
      */
-    def empty: Context = EmptyContext
+    val empty: Context = EmptyContext
 
-    private object EmptyContext extends Context {
+    private object EmptyContext extends Context(None) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker))
+      def removeResourceTracker(): Context = this
+
       def get(k: Key): Option[_] = None
       def remove(k: Key): Context = this
-      def set(k: Key, v: Some[_]): Context = new Context1(k, v)
+      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, k, v)
     }
 
-    private final class Context1(k1: Key, v1: Some[_]) extends Context {
+    private final class Context0(resourceTracker: Option[ResourceTracker])
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker))
+      def removeResourceTracker(): Context = EmptyContext
+
+      def get(k: Key): Option[_] = None
+      def remove(k: Key): Context = this
+      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, k, v)
+    }
+
+    private final class Context1(
+      resourceTracker: Option[ResourceTracker],
+      k1: Key,
+      v1: Some[_])
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context =
+        new Context1(Some(tracker), k1, v1)
+      def removeResourceTracker(): Context = new Context1(None, k1, v1)
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1 else None
@@ -35,11 +59,20 @@ object Local {
         if (k eq k1) EmptyContext else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context1(k1, v)
-        else new Context2(k1, v1, k, v)
+        if (k eq k1) new Context1(resourceTracker, k1, v)
+        else new Context2(resourceTracker, k1, v1, k, v)
     }
 
-    private final class Context2(k1: Key, v1: Some[_], k2: Key, v2: Some[_]) extends Context {
+    private final class Context2(
+      resourceTracker: Option[ResourceTracker],
+      k1: Key,
+      v1: Some[_],
+      k2: Key,
+      v2: Some[_])
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context =
+        new Context2(Some(tracker), k1, v1, k2, v2)
+      def removeResourceTracker(): Context = new Context2(None, k1, v1, k2, v2)
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -47,14 +80,14 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context1(k2, v2)
-        else if (k eq k2) new Context1(k1, v1)
+        if (k eq k1) new Context1(resourceTracker, k2, v2)
+        else if (k eq k2) new Context1(resourceTracker, k1, v1)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context2(k1, v, k2, v2)
-        else if (k eq k2) new Context2(k1, v1, k2, v)
-        else new Context3(k1, v1, k2, v2, k, v)
+        if (k eq k1) new Context2(resourceTracker, k1, v, k2, v2)
+        else if (k eq k2) new Context2(resourceTracker, k1, v1, k2, v)
+        else new Context3(resourceTracker, k1, v1, k2, v2, k, v)
     }
 
     // Script for generating the ContextN
@@ -63,8 +96,12 @@ object Local {
 
       def mkContext(num: Int): String = {
         s"""private final class Context$num(
+    resourceTracker: Option[ResourceTracker],
     ${fieldList(num)}
-    ) extends Context {
+    ) extends Context(resourceTracker) {
+      ${mkSetResourceTracker(num)}
+
+      ${mkRemoveResourceTracker(num)}
 
       ${mkGet(num)}
 
@@ -82,6 +119,14 @@ object Local {
         }.mkString(", \n")
       }
 
+      def mkSetResourceTracker(num: Int): String = {
+        s"def setResourceTracker(tracker: ResourceTracker): Context = new Context$num(Some(tracker), ${fieldList(num)})"
+      }
+
+      def mkRemoveResourceTracker(num: Int): String = {
+        s"def removeResourceTracker(): Context = new Context$num(None, ${fieldList(num)})"
+      }
+
       def mkGet(num: Int): String = {
         val name = s"def get(k: Key): Option[_] = "
         val content = (1.to(num)).map { i =>
@@ -95,7 +140,7 @@ object Local {
         def newCtx(sum: Int, current: Int): String = {
           (1.to(current - 1) ++: (current + 1).to(sum)).map { i =>
             s"k$i, v$i"
-          }.mkString("(", ", ", ")")
+          }.mkString("(resourceTracker, ", ", ", ")")
         }
         val content = (1.to(num)).map { i =>
           s"k$i) new Context${num - 1}${newCtx(num, i)}"
@@ -110,7 +155,7 @@ object Local {
             if (i == current && last) s"k, v"
             else if (i == current) s"k$i, v"
             else s"k$i, v$i"
-          }.mkString("(", ", ", ")")
+          }.mkString("(resourceTracker, ", ", ", ")")
         }
         val content = (1.to(num)).map { i =>
           s"k$i) new Context$num${newCtx(num, i, false)}"
@@ -119,12 +164,30 @@ object Local {
       }
 
       def main(args: Array[String]) {
-        print(2.to(15).map{ i => mkContext(i)}.mkString)
+        print(3.to(15).map{ i => mkContext(i)}.mkString)
       }
     }
      */
-    private final class Context3(k1: Key, v1: Some[_], k2: Key, v2: Some[_], k3: Key, v3: Some[_])
-        extends Context {
+    private final class Context3(
+      resourceTracker: Option[ResourceTracker],
+      k1: Key,
+      v1: Some[_],
+      k2: Key,
+      v2: Some[_],
+      k3: Key,
+      v3: Some[_])
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context3(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_])
+
+      def removeResourceTracker(): Context =
+        new Context3(None, k1: Key, v1: Some[_], k2: Key, v2: Some[_], k3: Key, v3: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -133,19 +196,20 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context2(k2, v2, k3, v3)
-        else if (k eq k2) new Context2(k1, v1, k3, v3)
-        else if (k eq k3) new Context2(k1, v1, k2, v2)
+        if (k eq k1) new Context2(resourceTracker, k2, v2, k3, v3)
+        else if (k eq k2) new Context2(resourceTracker, k1, v1, k3, v3)
+        else if (k eq k3) new Context2(resourceTracker, k1, v1, k2, v2)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context3(k1, v, k2, v2, k3, v3)
-        else if (k eq k2) new Context3(k1, v1, k2, v, k3, v3)
-        else if (k eq k3) new Context3(k1, v1, k2, v2, k3, v)
-        else new Context4(k1, v1, k2, v2, k3, v3, k, v)
+        if (k eq k1) new Context3(resourceTracker, k1, v, k2, v2, k3, v3)
+        else if (k eq k2) new Context3(resourceTracker, k1, v1, k2, v, k3, v3)
+        else if (k eq k3) new Context3(resourceTracker, k1, v1, k2, v2, k3, v)
+        else new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k, v)
     }
 
     private final class Context4(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -154,7 +218,28 @@ object Local {
       v3: Some[_],
       k4: Key,
       v4: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context4(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_])
+
+      def removeResourceTracker(): Context = new Context4(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -164,21 +249,22 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context3(k2, v2, k3, v3, k4, v4)
-        else if (k eq k2) new Context3(k1, v1, k3, v3, k4, v4)
-        else if (k eq k3) new Context3(k1, v1, k2, v2, k4, v4)
-        else if (k eq k4) new Context3(k1, v1, k2, v2, k3, v3)
+        if (k eq k1) new Context3(resourceTracker, k2, v2, k3, v3, k4, v4)
+        else if (k eq k2) new Context3(resourceTracker, k1, v1, k3, v3, k4, v4)
+        else if (k eq k3) new Context3(resourceTracker, k1, v1, k2, v2, k4, v4)
+        else if (k eq k4) new Context3(resourceTracker, k1, v1, k2, v2, k3, v3)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context4(k1, v, k2, v2, k3, v3, k4, v4)
-        else if (k eq k2) new Context4(k1, v1, k2, v, k3, v3, k4, v4)
-        else if (k eq k3) new Context4(k1, v1, k2, v2, k3, v, k4, v4)
-        else if (k eq k4) new Context4(k1, v1, k2, v2, k3, v3, k4, v)
-        else new Context5(k1, v1, k2, v2, k3, v3, k4, v4, k, v)
+        if (k eq k1) new Context4(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4)
+        else if (k eq k2) new Context4(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4)
+        else if (k eq k3) new Context4(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4)
+        else if (k eq k4) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v)
+        else new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k, v)
     }
 
     private final class Context5(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -189,7 +275,32 @@ object Local {
       v4: Some[_],
       k5: Key,
       v5: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context5(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_])
+
+      def removeResourceTracker(): Context = new Context5(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -200,23 +311,24 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context4(k2, v2, k3, v3, k4, v4, k5, v5)
-        else if (k eq k2) new Context4(k1, v1, k3, v3, k4, v4, k5, v5)
-        else if (k eq k3) new Context4(k1, v1, k2, v2, k4, v4, k5, v5)
-        else if (k eq k4) new Context4(k1, v1, k2, v2, k3, v3, k5, v5)
-        else if (k eq k5) new Context4(k1, v1, k2, v2, k3, v3, k4, v4)
+        if (k eq k1) new Context4(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5)
+        else if (k eq k2) new Context4(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5)
+        else if (k eq k3) new Context4(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5)
+        else if (k eq k4) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5)
+        else if (k eq k5) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context5(k1, v, k2, v2, k3, v3, k4, v4, k5, v5)
-        else if (k eq k2) new Context5(k1, v1, k2, v, k3, v3, k4, v4, k5, v5)
-        else if (k eq k3) new Context5(k1, v1, k2, v2, k3, v, k4, v4, k5, v5)
-        else if (k eq k4) new Context5(k1, v1, k2, v2, k3, v3, k4, v, k5, v5)
-        else if (k eq k5) new Context5(k1, v1, k2, v2, k3, v3, k4, v4, k5, v)
-        else new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k, v)
+        if (k eq k1) new Context5(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5)
+        else if (k eq k2) new Context5(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5)
+        else if (k eq k3) new Context5(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5)
+        else if (k eq k4) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5)
+        else if (k eq k5) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v)
+        else new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k, v)
     }
 
     private final class Context6(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -229,7 +341,36 @@ object Local {
       v5: Some[_],
       k6: Key,
       v6: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context6(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_])
+
+      def removeResourceTracker(): Context = new Context6(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -241,25 +382,31 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context5(k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k2) new Context5(k1, v1, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k3) new Context5(k1, v1, k2, v2, k4, v4, k5, v5, k6, v6)
-        else if (k eq k4) new Context5(k1, v1, k2, v2, k3, v3, k5, v5, k6, v6)
-        else if (k eq k5) new Context5(k1, v1, k2, v2, k3, v3, k4, v4, k6, v6)
-        else if (k eq k6) new Context5(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)
+        if (k eq k1) new Context5(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k2) new Context5(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k3) new Context5(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6)
+        else if (k eq k4) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6)
+        else if (k eq k5) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6)
+        else if (k eq k6) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context6(k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k2) new Context6(k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k3) new Context6(k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6)
-        else if (k eq k4) new Context6(k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6)
-        else if (k eq k5) new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6)
-        else if (k eq k6) new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v)
-        else new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k, v)
+        if (k eq k1) new Context6(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k2)
+          new Context6(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k3)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6)
+        else if (k eq k4)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6)
+        else if (k eq k5)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6)
+        else if (k eq k6)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v)
+        else new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k, v)
     }
 
     private final class Context7(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -274,7 +421,40 @@ object Local {
       v6: Some[_],
       k7: Key,
       v7: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context7(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_])
+
+      def removeResourceTracker(): Context = new Context7(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -287,27 +467,59 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context6(k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k2) new Context6(k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k3) new Context6(k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k4) new Context6(k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7)
-        else if (k eq k5) new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7)
-        else if (k eq k6) new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7)
-        else if (k eq k7) new Context6(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+        if (k eq k1) new Context6(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k2)
+          new Context6(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k3)
+          new Context6(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k4)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7)
+        else if (k eq k5)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7)
+        else if (k eq k6)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7)
+        else if (k eq k7)
+          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context7(k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k2) new Context7(k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k3) new Context7(k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6, k7, v7)
-        else if (k eq k4) new Context7(k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6, k7, v7)
-        else if (k eq k5) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6, k7, v7)
-        else if (k eq k6) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v, k7, v7)
-        else if (k eq k7) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v)
-        else new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k, v)
+        if (k eq k1)
+          new Context7(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k2)
+          new Context7(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k3)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6, k7, v7)
+        else if (k eq k4)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6, k7, v7)
+        else if (k eq k5)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6, k7, v7)
+        else if (k eq k6)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v, k7, v7)
+        else if (k eq k7)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v)
+        else
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k,
+            v)
     }
 
     private final class Context8(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -324,7 +536,44 @@ object Local {
       v7: Some[_],
       k8: Key,
       v8: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context8(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_])
+
+      def removeResourceTracker(): Context = new Context8(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -338,36 +587,202 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context7(k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
-        else if (k eq k2) new Context7(k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
-        else if (k eq k3) new Context7(k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
-        else if (k eq k4) new Context7(k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7, k8, v8)
-        else if (k eq k5) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7, k8, v8)
-        else if (k eq k6) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7, k8, v8)
-        else if (k eq k7) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k8, v8)
-        else if (k eq k8) new Context7(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        if (k eq k1)
+          new Context7(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+        else if (k eq k2)
+          new Context7(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+        else if (k eq k3)
+          new Context7(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+        else if (k eq k4)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7, k8, v8)
+        else if (k eq k5)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7, k8, v8)
+        else if (k eq k6)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7, k8, v8)
+        else if (k eq k7)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k8, v8)
+        else if (k eq k8)
+          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context8(k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+        if (k eq k1)
+          new Context8(
+            resourceTracker,
+            k1,
+            v,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k2)
-          new Context8(k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k3)
-          new Context8(k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k4)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k5)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k6)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k7)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v,
+            k8,
+            v8)
         else if (k eq k8)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v)
-        else new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k, v)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v)
+        else
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k,
+            v)
     }
 
     private final class Context9(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -386,7 +801,48 @@ object Local {
       v8: Some[_],
       k9: Key,
       v9: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context9(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_])
+
+      def removeResourceTracker(): Context = new Context9(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -401,46 +857,372 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context8(k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+        if (k eq k1)
+          new Context8(
+            resourceTracker,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k2)
-          new Context8(k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k3)
-          new Context8(k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k4)
-          new Context8(k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k5)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k6)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k7)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k8, v8, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k8)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k9, v9)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k9,
+            v9)
         else if (k eq k9)
-          new Context8(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context8(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
-          new Context9(k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k2)
-          new Context9(k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k3)
-          new Context9(k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k4)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k5)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k6)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k7)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v,
+            k8,
+            v8,
+            k9,
+            v9)
         else if (k eq k8)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v,
+            k9,
+            v9)
         else if (k eq k9)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v)
         else
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -460,11 +1242,11 @@ object Local {
             k9,
             v9,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context10(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -485,7 +1267,52 @@ object Local {
       v9: Some[_],
       k10: Key,
       v10: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context10(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_])
+
+      def removeResourceTracker(): Context = new Context10(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -502,30 +1329,221 @@ object Local {
 
       def remove(k: Key): Context =
         if (k eq k1)
-          new Context9(k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k2)
-          new Context9(k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k3)
-          new Context9(k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k4)
-          new Context9(k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k5)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k6)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k7)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k8, v8, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k8,
+            v8,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k8)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k9, v9, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k9,
+            v9,
+            k10,
+            v10)
         else if (k eq k9)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k10, v10)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k10,
+            v10)
         else if (k eq k10)
-          new Context9(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9)
+          new Context9(
+            resourceTracker,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8,
+            k9,
+            v9)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context10(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -545,10 +1563,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k2)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -568,10 +1586,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k3)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -591,10 +1609,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k4)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -614,10 +1632,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k5)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -637,10 +1655,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k6)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -660,10 +1678,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k7)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -683,10 +1701,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k8)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -706,10 +1724,10 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k9)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -729,10 +1747,10 @@ object Local {
             k9,
             v,
             k10,
-            v10
-          )
+            v10)
         else if (k eq k10)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -752,10 +1770,10 @@ object Local {
             k9,
             v9,
             k10,
-            v
-          )
+            v)
         else
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -777,11 +1795,11 @@ object Local {
             k10,
             v10,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context11(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -804,7 +1822,56 @@ object Local {
       v10: Some[_],
       k11: Key,
       v11: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context11(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_])
+
+      def removeResourceTracker(): Context = new Context11(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -823,6 +1890,7 @@ object Local {
       def remove(k: Key): Context =
         if (k eq k1)
           new Context10(
+            resourceTracker,
             k2,
             v2,
             k3,
@@ -842,10 +1910,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k2)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k3,
@@ -865,10 +1933,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k3)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -888,10 +1956,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k4)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -911,10 +1979,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k5)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -934,10 +2002,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k6)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -957,10 +2025,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k7)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -980,10 +2048,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k8)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1003,10 +2071,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k9)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1026,10 +2094,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k10)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1049,10 +2117,10 @@ object Local {
             k9,
             v9,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k11)
           new Context10(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1072,13 +2140,13 @@ object Local {
             k9,
             v9,
             k10,
-            v10
-          )
+            v10)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context11(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -1100,10 +2168,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k2)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1125,10 +2193,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k3)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1150,10 +2218,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k4)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1175,10 +2243,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k5)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1200,10 +2268,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k6)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1225,10 +2293,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k7)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1250,10 +2318,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k8)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1275,10 +2343,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k9)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1300,10 +2368,10 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k10)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1325,10 +2393,10 @@ object Local {
             k10,
             v,
             k11,
-            v11
-          )
+            v11)
         else if (k eq k11)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1350,10 +2418,10 @@ object Local {
             k10,
             v10,
             k11,
-            v
-          )
+            v)
         else
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1377,11 +2445,11 @@ object Local {
             k11,
             v11,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context12(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -1406,7 +2474,60 @@ object Local {
       v11: Some[_],
       k12: Key,
       v12: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context12(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_])
+
+      def removeResourceTracker(): Context = new Context12(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -1426,6 +2547,7 @@ object Local {
       def remove(k: Key): Context =
         if (k eq k1)
           new Context11(
+            resourceTracker,
             k2,
             v2,
             k3,
@@ -1447,10 +2569,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k2)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k3,
@@ -1472,10 +2594,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k3)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1497,10 +2619,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k4)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1522,10 +2644,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k5)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1547,10 +2669,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k6)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1572,10 +2694,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k7)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1597,10 +2719,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k8)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1622,10 +2744,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k9)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1647,10 +2769,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k10)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1672,10 +2794,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k11)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1697,10 +2819,10 @@ object Local {
             k10,
             v10,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k12)
           new Context11(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1722,13 +2844,13 @@ object Local {
             k10,
             v10,
             k11,
-            v11
-          )
+            v11)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context12(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -1752,10 +2874,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k2)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1779,10 +2901,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k3)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1806,10 +2928,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k4)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1833,10 +2955,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k5)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1860,10 +2982,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k6)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1887,10 +3009,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k7)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1914,10 +3036,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k8)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1941,10 +3063,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k9)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1968,10 +3090,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k10)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -1995,10 +3117,10 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k11)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2022,10 +3144,10 @@ object Local {
             k11,
             v,
             k12,
-            v12
-          )
+            v12)
         else if (k eq k12)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2049,10 +3171,10 @@ object Local {
             k11,
             v11,
             k12,
-            v
-          )
+            v)
         else
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2078,11 +3200,11 @@ object Local {
             k12,
             v12,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context13(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -2109,7 +3231,64 @@ object Local {
       v12: Some[_],
       k13: Key,
       v13: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context13(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_])
+
+      def removeResourceTracker(): Context = new Context13(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -2130,6 +3309,7 @@ object Local {
       def remove(k: Key): Context =
         if (k eq k1)
           new Context12(
+            resourceTracker,
             k2,
             v2,
             k3,
@@ -2153,10 +3333,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k2)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k3,
@@ -2180,10 +3360,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k3)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2207,10 +3387,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k4)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2234,10 +3414,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k5)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2261,10 +3441,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k6)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2288,10 +3468,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k7)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2315,10 +3495,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k8)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2342,10 +3522,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k9)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2369,10 +3549,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k10)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2396,10 +3576,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k11)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2423,10 +3603,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k12)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2450,10 +3630,10 @@ object Local {
             k11,
             v11,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k13)
           new Context12(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2477,13 +3657,13 @@ object Local {
             k11,
             v11,
             k12,
-            v12
-          )
+            v12)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context13(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -2509,10 +3689,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k2)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2538,10 +3718,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k3)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2567,10 +3747,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k4)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2596,10 +3776,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k5)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2625,10 +3805,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k6)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2654,10 +3834,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k7)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2683,10 +3863,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k8)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2712,10 +3892,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k9)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2741,10 +3921,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k10)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2770,10 +3950,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k11)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2799,10 +3979,10 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k12)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2828,10 +4008,10 @@ object Local {
             k12,
             v,
             k13,
-            v13
-          )
+            v13)
         else if (k eq k13)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2857,10 +4037,10 @@ object Local {
             k12,
             v12,
             k13,
-            v
-          )
+            v)
         else
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -2888,11 +4068,11 @@ object Local {
             k13,
             v13,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context14(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -2921,7 +4101,68 @@ object Local {
       v13: Some[_],
       k14: Key,
       v14: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context14(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_])
+
+      def removeResourceTracker(): Context = new Context14(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -2943,6 +4184,7 @@ object Local {
       def remove(k: Key): Context =
         if (k eq k1)
           new Context13(
+            resourceTracker,
             k2,
             v2,
             k3,
@@ -2968,10 +4210,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k2)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k3,
@@ -2997,10 +4239,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k3)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3026,10 +4268,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k4)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3055,10 +4297,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k5)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3084,10 +4326,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k6)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3113,10 +4355,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k7)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3142,10 +4384,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k8)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3171,10 +4413,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k9)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3200,10 +4442,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k10)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3229,10 +4471,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k11)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3258,10 +4500,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k12)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3287,10 +4529,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k13)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3316,10 +4558,10 @@ object Local {
             k12,
             v12,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k14)
           new Context13(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3345,13 +4587,13 @@ object Local {
             k12,
             v12,
             k13,
-            v13
-          )
+            v13)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context14(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -3379,10 +4621,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k2)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3410,10 +4652,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k3)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3441,10 +4683,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k4)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3472,10 +4714,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k5)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3503,10 +4745,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k6)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3534,10 +4776,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k7)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3565,10 +4807,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k8)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3596,10 +4838,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k9)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3627,10 +4869,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k10)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3658,10 +4900,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k11)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3689,10 +4931,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k12)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3720,10 +4962,10 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k13)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3751,10 +4993,10 @@ object Local {
             k13,
             v,
             k14,
-            v14
-          )
+            v14)
         else if (k eq k14)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3782,10 +5024,10 @@ object Local {
             k13,
             v13,
             k14,
-            v
-          )
+            v)
         else
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3815,11 +5057,11 @@ object Local {
             k14,
             v14,
             k,
-            v
-          )
+            v)
     }
 
     private final class Context15(
+      resourceTracker: Option[ResourceTracker],
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -3850,7 +5092,72 @@ object Local {
       v14: Some[_],
       k15: Key,
       v15: Some[_])
-        extends Context {
+        extends Context(resourceTracker) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context15(
+        Some(tracker),
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_],
+        k15: Key,
+        v15: Some[_])
+
+      def removeResourceTracker(): Context = new Context15(
+        None,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_],
+        k15: Key,
+        v15: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -3873,6 +5180,7 @@ object Local {
       def remove(k: Key): Context =
         if (k eq k1)
           new Context14(
+            resourceTracker,
             k2,
             v2,
             k3,
@@ -3900,10 +5208,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k2)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k3,
@@ -3931,10 +5239,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k3)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3962,10 +5270,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k4)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -3993,10 +5301,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k5)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4024,10 +5332,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k6)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4055,10 +5363,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k7)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4086,10 +5394,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k8)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4117,10 +5425,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k9)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4148,10 +5456,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k10)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4179,10 +5487,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k11)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4210,10 +5518,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k12)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4241,10 +5549,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k13)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4272,10 +5580,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k14)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4303,10 +5611,10 @@ object Local {
             k13,
             v13,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k15)
           new Context14(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4334,13 +5642,13 @@ object Local {
             k13,
             v13,
             k14,
-            v14
-          )
+            v14)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context15(
+            resourceTracker,
             k1,
             v,
             k2,
@@ -4370,10 +5678,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k2)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4403,10 +5711,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k3)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4436,10 +5744,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k4)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4469,10 +5777,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k5)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4502,10 +5810,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k6)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4535,10 +5843,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k7)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4568,10 +5876,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k8)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4601,10 +5909,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k9)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4634,10 +5942,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k10)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4667,10 +5975,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k11)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4700,10 +6008,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k12)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4733,10 +6041,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k13)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4766,10 +6074,10 @@ object Local {
             k14,
             v14,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k14)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4799,10 +6107,10 @@ object Local {
             k14,
             v,
             k15,
-            v15
-          )
+            v15)
         else if (k eq k15)
           new Context15(
+            resourceTracker,
             k1,
             v1,
             k2,
@@ -4832,12 +6140,16 @@ object Local {
             k14,
             v14,
             k15,
-            v
-          )
+            v)
         else new ContextN(k, v, this)
     }
 
-    private final class ContextN(kN: Key, vN: Some[_], rest: Context) extends Context {
+    private final class ContextN(kN: Key, vN: Some[_], rest: Context)
+        extends Context(rest.resourceTracker) {
+
+      def setResourceTracker(tracker: ResourceTracker): Context =
+        new ContextN(kN, vN, rest.setResourceTracker(tracker))
+      def removeResourceTracker(): Context = new ContextN(kN, vN, rest.removeResourceTracker())
 
       def get(k: Key): Option[_] =
         if (k eq kN) vN

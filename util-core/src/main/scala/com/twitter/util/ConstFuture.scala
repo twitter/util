@@ -17,14 +17,19 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   // https://twitter.github.io/util/guide/util-cookbook/futures.html#future-recursion
   // for details. The second is that this keeps the execution order consistent
   // with `Promise`.
-  def respond(k: Try[A] => Unit): Future[A] = {
+  def respond(f: Try[A] => Unit): Future[A] = {
     val saved = Local.save()
     Scheduler.submit(new Runnable {
       def run(): Unit = {
         val current = Local.save()
-        if (current ne saved)
-          Local.restore(saved)
-        try k(result)
+        if (current ne saved) Local.restore(saved)
+
+        val tracker = saved.resourceTracker
+        val run =
+          if (tracker eq None) f
+          else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
+
+        try run(result)
         catch Monitor.catcher
         finally Local.restore(current)
       }
@@ -39,11 +44,14 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
 
   def raise(interrupt: Throwable): Unit = ()
 
-  protected def transformTry[B](f: Try[A] => Try[B]): Future[B] =
+  // NOTE: since `f` is not run by the scheduler, the used cpu time will be tracked by
+  // the continuation that executes this transformation
+  protected def transformTry[B](f: Try[A] => Try[B]): Future[B] = {
     try Future.const(f(result))
     catch {
       case scala.util.control.NonFatal(e) => Future.const(Throw(e))
     }
+  }
 
   def transform[B](f: Try[A] => Future[B]): Future[B] = {
     val p = new Promise[B]
@@ -52,10 +60,15 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
     Scheduler.submit(new Runnable {
       def run(): Unit = {
         val current = Local.save()
-        if (current ne saved)
-          Local.restore(saved)
+        if (current ne saved) Local.restore(saved)
+
+        val tracker = saved.resourceTracker
+        val run =
+          if (tracker eq None) f
+          else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
+
         val computed =
-          try f(result)
+          try run(result)
           catch {
             case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
             case scala.util.control.NonFatal(e) => Future.exception(e)
@@ -63,6 +76,7 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
               Monitor.handle(t)
               throw t
           } finally Local.restore(current)
+
         p.become(computed)
       }
     })
