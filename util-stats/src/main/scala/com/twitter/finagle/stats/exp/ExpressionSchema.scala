@@ -4,11 +4,12 @@ import com.twitter.finagle.stats.HistogramFormatter
 import com.twitter.finagle.stats.MetricUnit
 import com.twitter.finagle.stats.SourceRole
 import com.twitter.finagle.stats.Unspecified
-import com.twitter.finagle.stats.exp.Expression.Avg
-import com.twitter.finagle.stats.exp.Expression.Count
-import com.twitter.finagle.stats.exp.Expression.Max
-import com.twitter.finagle.stats.exp.Expression.Min
-import com.twitter.finagle.stats.exp.Expression.Sum
+import com.twitter.finagle.stats.exp.HistogramComponent.Avg
+import com.twitter.finagle.stats.exp.HistogramComponent.Count
+import com.twitter.finagle.stats.exp.HistogramComponent.Max
+import com.twitter.finagle.stats.exp.HistogramComponent.Min
+import com.twitter.finagle.stats.exp.HistogramComponent.Percentile
+import com.twitter.finagle.stats.exp.HistogramComponent.Sum
 import com.twitter.util.Try
 
 /**
@@ -116,12 +117,12 @@ private[twitter] object ExpressionSchema {
 
   private def histogramLabel(histoExpr: HistogramExpression): Map[String, String] = {
     val value = histoExpr.component match {
-      case Right(percentile) => HistogramFormatter.labelPercentile(percentile)
-      case Left(Min) => HistogramFormatter.labelMin
-      case Left(Max) => HistogramFormatter.labelMax
-      case Left(Avg) => HistogramFormatter.labelAverage
-      case Left(Sum) => HistogramFormatter.labelSum
-      case Left(Count) => HistogramFormatter.labelCount
+      case Percentile(percentile) => HistogramFormatter.labelPercentile(percentile)
+      case Min => HistogramFormatter.labelMin
+      case Max => HistogramFormatter.labelMax
+      case Avg => HistogramFormatter.labelAverage
+      case Sum => HistogramFormatter.labelSum
+      case Count => HistogramFormatter.labelCount
     }
     Map("bucket" -> value)
   }

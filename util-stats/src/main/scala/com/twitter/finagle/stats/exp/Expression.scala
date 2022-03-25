@@ -5,18 +5,9 @@ import com.twitter.finagle.stats.Metadata
 import com.twitter.finagle.stats.MetricBuilder
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.StatsReceiver
-import com.twitter.finagle.stats.exp.Expression.HistogramComponent
 import scala.annotation.varargs
 
 private[twitter] object Expression {
-
-  sealed trait HistogramComponent
-  case object Min extends HistogramComponent
-  case object Max extends HistogramComponent
-  case object Avg extends HistogramComponent
-  case object Sum extends HistogramComponent
-  case object Count extends HistogramComponent
-
   private[exp] def getStatsReceivers(expr: Expression): Set[StatsReceiver] = expr match {
     case FunctionExpression(_, exprs) =>
       exprs.foldLeft(Set.empty[StatsReceiver]) {
@@ -37,12 +28,11 @@ private[twitter] object Expression {
 
   /**
    * Create a histogram expression
-   * @param component the histogram component either a [[HistogramComponent]] for Left
-   *                  or a percentile in Double for Right.
+   * @param component a [[HistogramComponent]]
    */
   def apply(
     metadata: Metadata,
-    component: Either[HistogramComponent, Double]
+    component: HistogramComponent
   ): Expression = {
     metadata.toMetricBuilder match {
       case Some(metricBuilder) =>
@@ -124,11 +114,11 @@ case class MetricExpression private[exp] (metricBuilder: MetricBuilder, showRoll
 
 /**
  * Represent a histogram expression with specified component, for example the average, or a percentile
- * @param component either a [[HistogramComponent]] or a percentile in Double
+ * @param component a [[HistogramComponent]]
  */
 case class HistogramExpression private[exp] (
   metricBuilder: MetricBuilder,
-  component: Either[HistogramComponent, Double])
+  component: HistogramComponent)
     extends Expression
 
 /**

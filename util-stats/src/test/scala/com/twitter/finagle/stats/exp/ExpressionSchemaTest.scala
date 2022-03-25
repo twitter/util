@@ -52,9 +52,10 @@ class ExpressionSchemaTest extends AnyFunSuite {
         .withUnit(Percentage)
         .withDescription("The success rate of the slow query")
 
-      val latency = ExpressionSchema("latency", Expression(latencyMb, Right(0.99)))
-        .withUnit(Milliseconds)
-        .withDescription("The latency of the slow query")
+      val latency =
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.99)))
+          .withUnit(Milliseconds)
+          .withDescription("The latency of the slow query")
 
       successRate.build()
       latency.build()
@@ -102,10 +103,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("histogram expressions come with default labels") {
     new Ctx {
-      val latencyP90 = ExpressionSchema("latency", Expression(latencyMb, Right(0.9))).build()
-      val latencyP99 = ExpressionSchema("latency", Expression(latencyMb, Right(0.99))).build()
+      val latencyP90 =
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.9)))
+          .build()
+      val latencyP99 =
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.99)))
+          .build()
       val latencyAvg =
-        ExpressionSchema("latency", Expression(latencyMb, Left(Expression.Avg))).build()
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Avg)).build()
 
       assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p90"))))
       assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p99"))))
