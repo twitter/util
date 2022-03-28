@@ -42,6 +42,13 @@ Breaking API Changes
 
 * util-core: The `c.t.util.Responder` trait has been removed. ``PHAB_ID=D824830``
 
+Deprecations
+~~~~~~~~~~~~
+
+* util-stats: Deprecated methods on `MetricBuilder` for directly instantiating metrics so that we can
+  eventually remove the `statsReceiever` field from `MetricBuilder` and let it just be the source of
+  truth for defining a metric. ``PHAB_ID=D862244``
+
 22.1.0
 ------
 

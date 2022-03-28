@@ -182,6 +182,7 @@ class MetricBuilder private (
   val percentiles: IndexedSeq[Double],
   val isStandard: Boolean,
   val metricType: MetricType,
+  @deprecated("Being removed to make MetricBuilder strictly a metric definition.", "2022-03-28")
   val statsReceiver: StatsReceiver)
     extends Metadata {
 
@@ -306,6 +307,7 @@ class MetricBuilder private (
    * Produce a counter as described by the builder inside the underlying StatsReceiver.
    * @return the counter created.
    */
+  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
   @varargs
   final def counter(name: String*): Counter = {
     this.statsReceiver.validateMetricType(this, CounterType)
@@ -316,6 +318,7 @@ class MetricBuilder private (
    * Produce a gauge as described by the builder inside the underlying StatsReceiver.
    * @return the gauge created.
    */
+  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
   final def gauge(name: String*)(f: => Float): Gauge = {
     this.statsReceiver.validateMetricType(this, GaugeType)
     this.statsReceiver.addGauge(this.withName(name: _*))(f)
@@ -326,6 +329,7 @@ class MetricBuilder private (
    * This API is for Java compatibility
    * @return the gauge created.
    */
+  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
   @varargs
   final def gauge(f: Supplier[Float], name: String*): Gauge = {
     this.statsReceiver.validateMetricType(this, GaugeType)
@@ -336,6 +340,7 @@ class MetricBuilder private (
    * Produce a histogram as described by the builder inside the underlying StatsReceiver.
    * @return the histogram created.
    */
+  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
   @varargs
   final def histogram(name: String*): Stat = {
     this.statsReceiver.validateMetricType(this, HistogramType)
