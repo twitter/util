@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Breaking API Changes
+~~~~~~~~~~~~~~~~~~~~
+
+* util-stats: The metric instantiation methods have been removed from `MetricBuilder`. Use the methods on
+  `StatsReceiver` to instantiate metrics instead. ``PHAB_ID=D859036``
+
 22.3.0
 ------
 

@@ -6,7 +6,6 @@ import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.MetricBuilder.MetricType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
-import java.util.function.Supplier
 import scala.annotation.varargs
 
 /**
@@ -302,50 +301,6 @@ class MetricBuilder private (
    */
   private[MetricBuilder] final def counterishGaugeSchema: MetricBuilder =
     this.copy(metricType = CounterishGaugeType)
-
-  /**
-   * Produce a counter as described by the builder inside the underlying StatsReceiver.
-   * @return the counter created.
-   */
-  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
-  @varargs
-  final def counter(name: String*): Counter = {
-    this.statsReceiver.validateMetricType(this, CounterType)
-    this.statsReceiver.counter(this.withName(name: _*))
-  }
-
-  /**
-   * Produce a gauge as described by the builder inside the underlying StatsReceiver.
-   * @return the gauge created.
-   */
-  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
-  final def gauge(name: String*)(f: => Float): Gauge = {
-    this.statsReceiver.validateMetricType(this, GaugeType)
-    this.statsReceiver.addGauge(this.withName(name: _*))(f)
-  }
-
-  /**
-   * Produce a gauge as described by the builder inside the underlying StatsReceiver.
-   * This API is for Java compatibility
-   * @return the gauge created.
-   */
-  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
-  @varargs
-  final def gauge(f: Supplier[Float], name: String*): Gauge = {
-    this.statsReceiver.validateMetricType(this, GaugeType)
-    this.statsReceiver.addGauge(this.withName(name: _*))(f.get())
-  }
-
-  /**
-   * Produce a histogram as described by the builder inside the underlying StatsReceiver.
-   * @return the histogram created.
-   */
-  @deprecated("Use the StatsReceiver interface for instantiation.", "2022-03-28")
-  @varargs
-  final def histogram(name: String*): Stat = {
-    this.statsReceiver.validateMetricType(this, HistogramType)
-    this.statsReceiver.stat(this.withName(name: _*))
-  }
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[MetricBuilder]
 

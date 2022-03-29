@@ -80,7 +80,8 @@ object JvmStats {
       case compilation =>
         val compilationStats = stats.scope("compilation")
         gauges.add(
-          compilationStats.metricBuilder(GaugeType).withCounterishGauge.gauge("time_msec") {
+          compilationStats.addGauge(
+            compilationStats.metricBuilder(GaugeType).withCounterishGauge.withName("time_msec")) {
             compilation.getTotalCompilationTime().toFloat
           })
     }
@@ -88,11 +89,13 @@ object JvmStats {
     val classes = ManagementFactory.getClassLoadingMXBean()
     val classLoadingStats = stats.scope("classes")
     gauges.add(
-      classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_loaded") {
+      classLoadingStats.addGauge(
+        classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.withName("total_loaded")) {
         classes.getTotalLoadedClassCount().toFloat
       })
     gauges.add(
-      classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_unloaded") {
+      classLoadingStats.addGauge(
+        classLoadingStats.metricBuilder(GaugeType).withCounterishGauge.withName("total_unloaded")) {
         classes.getUnloadedClassCount().toFloat
       })
     gauges.add(
@@ -142,15 +145,20 @@ object JvmStats {
     }
 
     val spStats = stats.scope("safepoint")
-    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("sync_time_millis") {
-      jvm.safepoint.syncTimeMillis.toFloat
-    })
-    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("total_time_millis") {
-      jvm.safepoint.totalTimeMillis.toFloat
-    })
-    gauges.add(spStats.metricBuilder(GaugeType).withCounterishGauge.gauge("count") {
-      jvm.safepoint.count.toFloat
-    })
+    gauges.add(
+      spStats.addGauge(
+        spStats.metricBuilder(GaugeType).withCounterishGauge.withName("sync_time_millis")) {
+        jvm.safepoint.syncTimeMillis.toFloat
+      })
+    gauges.add(
+      spStats.addGauge(
+        spStats.metricBuilder(GaugeType).withCounterishGauge.withName("total_time_millis")) {
+        jvm.safepoint.totalTimeMillis.toFloat
+      })
+    gauges.add(
+      spStats.addGauge(spStats.metricBuilder(GaugeType).withCounterishGauge.withName("count")) {
+        jvm.safepoint.count.toFloat
+      })
 
     ManagementFactory.getPlatformMXBeans(classOf[BufferPoolMXBean]) match {
       case null =>
@@ -169,10 +177,12 @@ object JvmStats {
     gcPool.foreach { gc =>
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
       val poolCycles =
-        gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "cycles") {
+        gcStats.addGauge(
+          gcStats.metricBuilder(GaugeType).withCounterishGauge.withName(name, "cycles")) {
           gc.getCollectionCount.toFloat
         }
-      val poolMsec = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge(name, "msec") {
+      val poolMsec = gcStats.addGauge(
+        gcStats.metricBuilder(GaugeType).withCounterishGauge.withName(name, "msec")) {
         gc.getCollectionTime.toFloat
       }
 
@@ -195,12 +205,14 @@ object JvmStats {
     }
 
     // note, these could be -1 if the collector doesn't have support for it.
-    val cycles = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge("cycles") {
-      gcPool.map(_.getCollectionCount).filter(_ > 0).sum.toFloat
-    }
-    val msec = gcStats.metricBuilder(GaugeType).withCounterishGauge.gauge("msec") {
-      gcPool.map(_.getCollectionTime).filter(_ > 0).sum.toFloat
-    }
+    val cycles =
+      gcStats.addGauge(gcStats.metricBuilder(GaugeType).withCounterishGauge.withName("cycles")) {
+        gcPool.map(_.getCollectionCount).filter(_ > 0).sum.toFloat
+      }
+    val msec =
+      gcStats.addGauge(gcStats.metricBuilder(GaugeType).withCounterishGauge.withName("msec")) {
+        gcPool.map(_.getCollectionTime).filter(_ > 0).sum.toFloat
+      }
 
     gauges.add(cycles)
     gauges.add(msec)
