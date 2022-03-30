@@ -129,27 +129,41 @@ trait StatsReceiver {
    * Get a [[Counter counter]] with the given `description` and `name`.
    */
   @varargs
-  def counter(description: Some[String], name: String*): Counter =
+  final def counter(description: Some[String], name: String*): Counter =
     counter(description.get, Verbosity.Default, name: _*)
 
   /**
    * Get a [[Counter counter]] with the given `name`.
    */
   @varargs
-  def counter(verbosity: Verbosity, name: String*): Counter =
-    counter(this.metricBuilder(CounterType).withVerbosity(verbosity).withName(name: _*))
+  final def counter(verbosity: Verbosity, name: String*): Counter = {
+    val builder = this
+      .metricBuilder(CounterType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+
+    counter(
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )
+  }
 
   /**
    * Get a [[Counter counter]] with the given `description` and `name`.
    */
   @varargs
-  def counter(description: String, verbosity: Verbosity, name: String*): Counter =
+  final def counter(description: String, verbosity: Verbosity, name: String*): Counter = {
+    val builder = this
+      .metricBuilder(CounterType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+      .withDescription(description)
+
     counter(
-      this
-        .metricBuilder(CounterType)
-        .withVerbosity(verbosity)
-        .withName(name: _*)
-        .withDescription(description))
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )
+  }
 
   /**
    * Get a [[Counter counter]] with the given schema.
@@ -166,27 +180,41 @@ trait StatsReceiver {
    * Get a [[Stat stat]] with the given `description` and `name`.
    */
   @varargs
-  def stat(description: Some[String], name: String*): Stat =
+  final def stat(description: Some[String], name: String*): Stat =
     stat(description.get, Verbosity.Default, name: _*)
 
   /**
    * Get a [[Stat stat]] with the given name.
    */
   @varargs
-  def stat(verbosity: Verbosity, name: String*): Stat =
-    stat(this.metricBuilder(HistogramType).withVerbosity(verbosity).withName(name: _*))
+  final def stat(verbosity: Verbosity, name: String*): Stat = {
+    val builder = this
+      .metricBuilder(HistogramType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+
+    stat(
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )
+  }
 
   /**
    * Get a [[Stat stat]] with the given `description` and `name`.
    */
   @varargs
-  def stat(description: String, verbosity: Verbosity, name: String*): Stat =
+  final def stat(description: String, verbosity: Verbosity, name: String*): Stat = {
+    val builder = this
+      .metricBuilder(HistogramType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+      .withDescription(description)
+
     stat(
-      this
-        .metricBuilder(HistogramType)
-        .withVerbosity(verbosity)
-        .withName(name: _*)
-        .withDescription(description))
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )
+  }
 
   /**
    * Get a [[Stat stat]] with the given schema.
@@ -266,17 +294,39 @@ trait StatsReceiver {
    *
    * @see [[https://docs.oracle.com/javase/7/docs/api/java/lang/ref/WeakReference.html java.lang.ref.WeakReference]]
    */
-  def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge =
-    addGauge(this.metricBuilder(GaugeType).withVerbosity(verbosity).withName(name: _*))(f)
+  final def addGauge(verbosity: Verbosity, name: String*)(f: => Float): Gauge = {
+    val builder = this
+      .metricBuilder(GaugeType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+
+    addGauge(
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )(f)
+  }
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name and description.
    */
-  def addGauge(description: String, verbosity: Verbosity, name: String*)(f: => Float): Gauge =
+  final def addGauge(
+    description: String,
+    verbosity: Verbosity,
+    name: String*
+  )(
+    f: => Float
+  ): Gauge = {
+    val builder = this
+      .metricBuilder(GaugeType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+      .withDescription(description)
+
     addGauge(
-      this
-        .metricBuilder(GaugeType).withVerbosity(verbosity).withName(name: _*).withDescription(
-          description))(f)
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )(f)
+  }
 
   /**
    * Just like $AddGaugeScaladocLink but optimized for better Java experience.
@@ -288,8 +338,17 @@ trait StatsReceiver {
    * Just like $AddVerboseGaugeScaladocLink but optimized for better Java experience.
    */
   @varargs
-  def addGauge(f: Supplier[Float], verbosity: Verbosity, name: String*): Gauge =
-    addGauge(this.metricBuilder(GaugeType).withVerbosity(verbosity).withName(name: _*))(f.get())
+  final def addGauge(f: Supplier[Float], verbosity: Verbosity, name: String*): Gauge = {
+    val builder = this
+      .metricBuilder(GaugeType)
+      .withVerbosity(verbosity)
+      .withName(name: _*)
+
+    addGauge(
+      if (name.length > 1) builder.withHierarchicalOnly
+      else builder.withDimensionalSupport
+    )(f.get())
+  }
 
   /**
    * Add the function `f` as a [[Gauge gauge]] with the given name.

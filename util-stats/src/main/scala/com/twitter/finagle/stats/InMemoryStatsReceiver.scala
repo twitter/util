@@ -83,8 +83,16 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val expressions: mutable.Map[ExpressionSchemaKey, ExpressionSchema] =
     new ConcurrentHashMap[ExpressionSchemaKey, ExpressionSchema]().asScala
 
-  override def counter(name: String*): ReadableCounter =
-    counter(this.metricBuilder(CounterType).withName(name: _*))
+  override def counter(name: String*): ReadableCounter = {
+    val metricBuilder = this
+      .metricBuilder(CounterType)
+      .withName(name: _*)
+
+    counter(
+      if (name.length > 1) metricBuilder.withHierarchicalOnly
+      else metricBuilder.withDimensionalSupport
+    )
+  }
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
@@ -117,8 +125,16 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     }
   }
 
-  override def stat(name: String*): ReadableStat =
-    stat(this.metricBuilder(HistogramType).withName(name: _*))
+  override def stat(name: String*): ReadableStat = {
+    val metricBuilder = this
+      .metricBuilder(HistogramType)
+      .withName(name: _*)
+
+    stat(
+      if (name.length > 1) metricBuilder.withHierarchicalOnly
+      else metricBuilder.withDimensionalSupport
+    )
+  }
 
   /**
    * Creates a [[ReadableStat]] of the given `name`.

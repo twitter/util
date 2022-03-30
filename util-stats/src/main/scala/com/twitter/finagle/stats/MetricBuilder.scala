@@ -4,6 +4,7 @@ import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.MetricBuilder.Identity
 import com.twitter.finagle.stats.MetricBuilder.MetricType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import scala.annotation.varargs
@@ -68,7 +69,6 @@ object MetricBuilder {
     verbosity: Verbosity = Verbosity.Default,
     sourceClass: Option[String] = None,
     name: Seq[String] = Seq.empty,
-    labels: Map[String, String] = Map.empty,
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
@@ -83,8 +83,9 @@ object MetricBuilder {
       role,
       verbosity,
       sourceClass,
-      name,
-      labels,
+      // For now we're not allowing construction with labels.
+      // They need to be added later via `.withLabels`.
+      Identity.Hierarchical(name, Map.empty),
       relativeName,
       processPath,
       percentiles,
@@ -140,6 +141,36 @@ object MetricBuilder {
     def toJsonString: String = "unlatched_counter"
     def toPrometheusString: String = "counter"
   }
+
+  /** Identity information about this metric */
+  sealed abstract class Identity private () {
+    def hierarchicalName: Seq[String]
+    def labels: Map[String, String]
+  }
+
+  /**
+   * Experimental way to represent both hierarchical and dimensional identity information.
+   *
+   * @note this type is expected to undergo some churn as dimensional metric support matures.
+   */
+  object Identity {
+
+    /** Hierarchical only [[Identity]] representation */
+    final case class Hierarchical(hierarchicalName: Seq[String], labels: Map[String, String])
+        extends Identity {
+      override def toString: String = {
+        hierarchicalName.mkString("Hierarchical(", metadataScopeSeparator(), s", $labels)")
+      }
+    }
+
+    /** Full [[Identity]] representation including a [[Hierarchical]] name and dimensional labels */
+    final case class Full(hierarchicalName: Seq[String], labels: Map[String, String])
+        extends Identity {
+      override def toString: String = {
+        hierarchicalName.mkString("Full(", metadataScopeSeparator(), s", $labels)")
+      }
+    }
+  }
 }
 
 sealed trait Metadata {
@@ -173,8 +204,7 @@ class MetricBuilder private (
   val role: SourceRole,
   val verbosity: Verbosity,
   val sourceClass: Option[String],
-  val name: Seq[String],
-  private[finagle] val labels: Map[String, String],
+  val identity: Identity,
   val relativeName: Seq[String],
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
@@ -197,8 +227,7 @@ class MetricBuilder private (
     role: SourceRole = this.role,
     verbosity: Verbosity = this.verbosity,
     sourceClass: Option[String] = this.sourceClass,
-    name: Seq[String] = this.name,
-    labels: Map[String, String] = this.labels,
+    identity: Identity = this.identity,
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
     isStandard: Boolean = this.isStandard,
@@ -212,8 +241,7 @@ class MetricBuilder private (
       role = role,
       verbosity = verbosity,
       sourceClass = sourceClass,
-      name = name,
-      labels = labels,
+      identity = identity,
       relativeName = relativeName,
       processPath = processPath,
       percentiles = percentiles,
@@ -250,11 +278,31 @@ class MetricBuilder private (
   def withRole(role: SourceRole): MetricBuilder = this.copy(role = role)
 
   @varargs
-  def withName(name: String*): MetricBuilder = this.copy(name = name)
+  def withName(name: String*): MetricBuilder = {
+    val nextIdentity = this.identity match {
+      case Identity.Hierarchical(_, labels) => Identity.Hierarchical(name, labels)
+      case Identity.Full(_, labels) => Identity.Full(name, labels)
+    }
+    copy(identity = nextIdentity)
+  }
 
-  // Temporarily private while API's are under development
-  private[finagle] def withLabels(labels: Map[String, String]): MetricBuilder =
-    this.copy(labels = labels)
+  def name: Seq[String] = identity.hierarchicalName
+
+  // Private for now
+  private[twitter] def withLabels(labels: Map[String, String]): MetricBuilder = identity match {
+    case Identity.Hierarchical(name, _) => copy(identity = Identity.Hierarchical(name, labels))
+    case Identity.Full(name, _) => copy(identity = Identity.Full(name, labels))
+  }
+
+  private[twitter] def withHierarchicalOnly: MetricBuilder = identity match {
+    case Identity.Hierarchical(_, _) => this
+    case Identity.Full(name, labels) => this.copy(identity = Identity.Hierarchical(name, labels))
+  }
+
+  private[twitter] def withDimensionalSupport: MetricBuilder = identity match {
+    case Identity.Hierarchical(name, labels) => this.copy(identity = Identity.Full(name, labels))
+    case Identity.Full(_, _) => this
+  }
 
   @varargs
   def withRelativeName(relativeName: String*): MetricBuilder =
@@ -313,8 +361,7 @@ class MetricBuilder private (
         role == that.role &&
         verbosity == that.verbosity &&
         sourceClass == that.sourceClass &&
-        name == that.name &&
-        labels == that.labels &&
+        identity == that.identity &&
         relativeName == that.relativeName &&
         processPath == that.processPath &&
         percentiles == that.percentiles &&
@@ -330,8 +377,7 @@ class MetricBuilder private (
         role,
         verbosity,
         sourceClass,
-        name,
-        labels,
+        identity,
         relativeName,
         processPath,
         percentiles,
@@ -341,7 +387,6 @@ class MetricBuilder private (
   }
 
   override def toString(): String = {
-    val nameString = name.mkString(metadataScopeSeparator())
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $nameString, $relativeName, $processPath, $percentiles, $metricType, $statsReceiver)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $identity, $relativeName, $processPath, $percentiles, $metricType, $statsReceiver)"
   }
 }

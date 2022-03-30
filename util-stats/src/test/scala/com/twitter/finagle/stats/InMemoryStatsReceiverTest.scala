@@ -3,6 +3,7 @@ package com.twitter.finagle.stats
 import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.MetricBuilder.Identity
 import com.twitter.finagle.stats.exp.Expression
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import com.twitter.finagle.stats.exp.ExpressionSchemaKey
@@ -349,8 +350,7 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     val stats = new InMemoryStatsReceiver()
     stats.addGauge("coolGauge") { 3 }
     stats.counter("sweet", "counter")
-    val radSr = stats.scope("rad")
-    radSr.stat("histo")
+    stats.scope("rad").stat("histo")
 
     val baos = new ByteArrayOutputStream()
     val ps = new PrintStream(baos, true, "utf-8")
@@ -362,13 +362,13 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       assert(parts.length == 3)
       assert(
         parts(
-          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, coolGauge, List(), None, Vector(), GaugeType, InMemoryStatsReceiver)")
+          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Full(coolGauge, Map()), List(), None, Vector(), GaugeType, InMemoryStatsReceiver)")
       assert(
         parts(
-          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, rad/histo, List(), None, Vector(), HistogramType, InMemoryStatsReceiver/rad)")
+          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Hierarchical(rad/histo, Map()), List(), None, Vector(), HistogramType, InMemoryStatsReceiver/rad)")
       assert(
         parts(
-          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, sweet/counter, List(), None, Vector(), CounterType, InMemoryStatsReceiver)")
+          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Hierarchical(sweet/counter, Map()), List(), None, Vector(), CounterType, InMemoryStatsReceiver)")
     } finally {
       ps.close()
     }
@@ -389,11 +389,20 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
 
     // what we expected as hydrated metric builders
     val aaSchema =
-      MetricBuilder(name = Seq("test", "a"), metricType = CounterType, statsReceiver = sr)
+      MetricBuilder(
+        name = Seq("test", "a"),
+        metricType = CounterType,
+        statsReceiver = sr).withHierarchicalOnly
     val bbSchema =
-      MetricBuilder(name = Seq("test", "b"), metricType = HistogramType, statsReceiver = sr)
+      MetricBuilder(
+        name = Seq("test", "b"),
+        metricType = HistogramType,
+        statsReceiver = sr).withHierarchicalOnly
     val ccSchema =
-      MetricBuilder(name = Seq("test", "c"), metricType = GaugeType, statsReceiver = sr)
+      MetricBuilder(
+        name = Seq("test", "c"),
+        metricType = GaugeType,
+        statsReceiver = sr).withHierarchicalOnly
 
     val expected_expression = ExpressionSchema(
       "test_expression",
@@ -427,6 +436,145 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
         ExpressionSchemaKey("test_expression_1", Map((ExpressionSchema.Role, "dont appear")), Nil)))
 
     assert(sr.getAllExpressionsWithLabel("nonexistent key", "nonexistent value").isEmpty)
+  }
+
+  private class SupportsDimensionalStatsReceiver extends InMemoryStatsReceiver {
+    var supportsDimensional: java.lang.Boolean = null
+
+    private def hasDimensions(mb: MetricBuilder): Boolean = mb.identity match {
+      case Identity.Hierarchical(_, _) => false
+      case Identity.Full(_, _) => true
+    }
+
+    def reset(): Unit = {
+      supportsDimensional = null
+    }
+
+    override def counter(metricBuilder: MetricBuilder): ReadableCounter = {
+      val c = super.counter(metricBuilder)
+      supportsDimensional = hasDimensions(c.metadata.toMetricBuilder.get)
+      c
+    }
+
+    override def stat(metricBuilder: MetricBuilder): ReadableStat = {
+      val s = super.stat(metricBuilder)
+      supportsDimensional = hasDimensions(s.metadata.toMetricBuilder.get)
+      s
+    }
+
+    override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
+      val g = super.addGauge(metricBuilder)(f)
+      supportsDimensional = hasDimensions(g.metadata.toMetricBuilder.get)
+      g
+    }
+  }
+
+  test("StatsReceiver.scope.counter: dimensional metrics are disabled without a label") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    val scoped = receiver.scope("foo")
+
+    scoped.counter("bar")
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.counter: varargs metrics names longer than 1 disable dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.counter("foo", "bar")
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.counter(Some("description"), "foo", "bar")
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.counter("description", Verbosity.Default, "foo", "bar")
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.counter: varargs metrics names of 1 allow dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.counter("bar")
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.counter(Some("description"), "bar")
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.counter("description", Verbosity.Default, "bar")
+    assert(receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.scope.addGauge: dimensional metrics are disabled without a label") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    val scoped = receiver.scope("foo")
+
+    scoped.addGauge("bar") { 1.0f }
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.addGauge: varargs metrics names longer than 1 disable dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.addGauge("foo", "bar") { 1.0f }
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.addGauge(Some("description"), "foo", "bar") { 1.0f }
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.addGauge("description", Verbosity.Default, "foo", "bar") { 1.0f }
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.addGauge: varargs metrics names of 1 allow dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.addGauge("bar") { 1.0f }
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.addGauge(Some("description"), "bar") { 1.0f }
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.addGauge("description", Verbosity.Default, "bar") { 1.0f }
+    assert(receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.scope.stat: dimensional metrics are disabled without a label") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    val scoped = receiver.scope("foo")
+
+    scoped.stat("bar")
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.stat: varargs metrics names longer than 1 disable dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.stat("foo", "bar")
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.stat(Some("description"), "foo", "bar")
+    assert(!receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.stat("description", Verbosity.Default, "foo", "bar")
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.stat: varargs metrics names of 1 allow dimensional metrics") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    receiver.stat("bar")
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.stat(Some("description"), "bar")
+    assert(receiver.supportsDimensional)
+    receiver.reset()
+
+    receiver.stat("description", Verbosity.Default, "bar")
+    assert(receiver.supportsDimensional)
   }
 
 }
