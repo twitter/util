@@ -7,7 +7,8 @@ private[twitter] object HistogramComponent {
   case object Sum extends HistogramComponent
   case object Count extends HistogramComponent
   case class Percentile(percentile: Double) extends HistogramComponent
-  val defaultPercentiles: Seq[HistogramComponent] =
+
+  val DefaultPercentiles: Seq[HistogramComponent] =
     Seq(Percentile(50), Percentile(99), Percentile(999), Percentile(9999))
 }
 

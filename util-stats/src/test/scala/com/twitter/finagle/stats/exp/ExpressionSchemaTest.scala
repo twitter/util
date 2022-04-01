@@ -4,6 +4,7 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats._
+import com.twitter.finagle.stats.exp.HistogramComponent.Percentile
 import com.twitter.util.Stopwatch
 import com.twitter.util.Time
 import com.twitter.util.TimeControl
@@ -189,5 +190,51 @@ class ExpressionSchemaTest extends AnyFunSuite {
           Map("role" -> "Client", "service_name" -> "aclient"),
           Seq())))
     LoadedStatsReceiver.self = loadedSr
+  }
+
+  test("use Expression.counter() to create a success rate ExpressionSchema") {
+    val sr = new InMemoryStatsReceiver
+    // create a success rate ExpressionSchema
+    // it is safe to call `.get` since we don't return `None` for now
+    ExpressionSchema(
+      "success_rate",
+      Expression(100).multiply(
+        Expression
+          .counter(sr, showRollup = false, "clnt", "aclient", "success").get.divide(Expression
+            .counter(sr, showRollup = false, "clnt", "aclient", "success").get.plus(
+              Expression.counter(sr, showRollup = true, "clnt", "aclient", "failures").get)))
+    ).withRole(Client).withServiceName("aclient").build()
+
+    assert(sr.expressions.values.size == 1)
+    assert(
+      sr.expressions.contains(
+        ExpressionSchemaKey(
+          "success_rate",
+          Map("role" -> "Client", "service_name" -> "aclient"),
+          Seq())))
+  }
+
+  test(
+    "use Expression.stats() to create a list of ExpressionSchema with default histogram percentiles") {
+    val sr = new InMemoryStatsReceiver
+    // create a list histogram ExpressionSchema with default percentiles
+    val expressions: Seq[Expression] =
+      Expression.stats(sr, HistogramComponent.DefaultPercentiles, "clnt", "aclient", "latencies")
+    expressions.map { expression =>
+      ExpressionSchema("latencies", expression).withRole(Client).withServiceName("aclient").build()
+    }
+
+    assert(sr.expressions.values.size == expressions.size)
+    for (Percentile(p) <- HistogramComponent.DefaultPercentiles) {
+      assert(
+        sr.expressions.contains(
+          ExpressionSchemaKey(
+            "latencies",
+            Map(
+              "bucket" -> HistogramFormatter.labelPercentile(p),
+              "role" -> "Client",
+              "service_name" -> "aclient"),
+            Seq())))
+    }
   }
 }

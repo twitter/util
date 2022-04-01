@@ -73,6 +73,71 @@ private[twitter] object Expression {
    * @param exprs a sequence of metrics in strings
    */
   def apply(exprs: Seq[String], isCounter: Boolean): Expression = StringExpression(exprs, isCounter)
+
+  /**
+   * Create an expression from creating a [[com.twitter.finagle.stats.Counter]]
+   * with a given [[StatsReceiver]].
+   *
+   * @param statsReceiver The [[StatsReceiver]] used by the caller to record metric.
+   * @param showRollup    When true, create an expression with all tail metrics.
+   * @param name          The name to create the [[com.twitter.finagle.stats.Counter]].
+   * @return              An optional [[Expression]] carrying the counter metadata.
+   *                      Return `None` if the metric of name {@code name} is not found
+   *                      in the {@code statsReceiver}.
+   */
+  @varargs
+  def counter(
+    statsReceiver: StatsReceiver,
+    showRollup: Boolean,
+    name: String*
+  ): Option[Expression] =
+    Some(this(statsReceiver.counter(name: _*).metadata, showRollup))
+
+  /**
+   * Create an expression from creating a [[com.twitter.finagle.stats.Stat]] with
+   * a given [[StatsReceiver]].
+   *
+   * @param statsReceiver      The [[StatsReceiver]] used by the caller to record metric.
+   * @param histogramComponent A [[HistogramComponent]] used to create a histogram
+   *                           expression.
+   * @param name               The name to create the [[com.twitter.finagle.stats.Stat]].
+   * @return                   An optional [[Expression]] carrying the stat metadata.
+   *                           Return `None` if the metric of name {@code name} is not
+   *                           found in the {@code statsReceiver}.
+   */
+  @varargs
+  def stat(
+    statsReceiver: StatsReceiver,
+    histogramComponent: HistogramComponent,
+    name: String*
+  ): Option[Expression] =
+    Some(this(statsReceiver.stat(name: _*).metadata, histogramComponent))
+
+  /**
+   * Create a list of expressions from creating a [[com.twitter.finagle.stats.Stat]]
+   * for each [[HistogramComponent]] with a given [[StatsReceiver]].
+   *
+   * @param statsReceiver       The [[StatsReceiver]] used by the caller to record
+   *                            metric.
+   * @param histogramComponents A list of [[HistogramComponent]] used to create a
+   *                            histogram expression.
+   * @param name                The name to create the
+   *                            [[com.twitter.finagle.stats.Stat]].
+   * @return                    A sequence of [[Expression]] carrying the stat metadata.
+   *                            The order of the returned sequence is in correspondence
+   *                            with the oder of the {@code histogramComponents}. Return
+   *                            an empty sequence if the metric of name {@code name} is
+   *                            not found in the {@code statsReceiver}.
+   */
+  @varargs
+  def stats(
+    statsReceiver: StatsReceiver,
+    histogramComponents: Seq[HistogramComponent],
+    name: String*
+  ): Seq[Expression] = {
+    val statMetadata = statsReceiver.stat(name: _*).metadata
+    histogramComponents.map(this(statMetadata, _))
+  }
 }
 
 /**
