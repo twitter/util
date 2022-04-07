@@ -146,6 +146,41 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(!receiver.supportsDimensional)
   }
 
+  test("StatsReceiver.scopeAndLabel: a non-empty label name and label value are required") {
+    val sr = new InMemoryStatsReceiver
+    intercept[IllegalArgumentException] {
+      sr.scopeAndLabel("", "cool")
+    }
+
+    intercept[IllegalArgumentException] {
+      sr.scopeAndLabel("cool", "")
+    }
+  }
+
+  test("StatsReceiver.scopeAndLabel.counter: dimensions are supported") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    val scoped = receiver.scopeAndLabel("scope", "foo")
+
+    scoped.counter("bar")
+    assert(receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.scopeAndLabel.scope.counter: dimensional support isn't magically added") {
+    val receiver = new SupportsDimensionalStatsReceiver
+    val scoped = receiver.scopeAndLabel("scope", "foo").scope("no_dimensions")
+
+    scoped.counter("bar")
+    assert(!receiver.supportsDimensional)
+  }
+
+  test("StatsReceiver.scopeAndLabel: adds both a scope and the labels") {
+    val sr = new InMemoryStatsReceiver
+    val c = sr.scopeAndLabel("scope", "good").counter("stuff")
+    val metricBuilder = c.metadata.toMetricBuilder.get
+    assert(metricBuilder.name == Seq("good", "stuff"))
+    assert(metricBuilder.identity.labels == Map("scope" -> "good"))
+  }
+
   test("StatsReceiver.counter: varargs metrics names longer than 1 disable dimensional metrics") {
     val receiver = new SupportsDimensionalStatsReceiver
     receiver.counter("foo", "bar")

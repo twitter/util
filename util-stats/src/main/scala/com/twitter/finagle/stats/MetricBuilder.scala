@@ -286,6 +286,8 @@ class MetricBuilder private (
     copy(identity = nextIdentity)
   }
 
+  private[finagle] def withIdentity(identity: Identity): MetricBuilder = copy(identity = identity)
+
   def name: Seq[String] = identity.hierarchicalName
 
   // Private for now

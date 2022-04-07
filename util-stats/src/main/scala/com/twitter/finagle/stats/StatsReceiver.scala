@@ -405,6 +405,21 @@ trait StatsReceiver {
   }
 
   /**
+   * Add a label and prepend the label value to the names of the returned [[StatsReceiver]].
+   *
+   * For example:
+   *
+   * {{{
+   *   statsReceiver.scopeAndLabel("client_name", "backend1").counter("requests")
+   * }}}
+   *
+   * will generate a [[Counter]] with both hierarchical name `backend1/requests` and dimensional name
+   * `requests {client_name="backend1"}`
+   */
+  def scopeAndLabel(labelName: String, labelValue: String): StatsReceiver =
+    new ScopeTranslatingStatsReceiver(this, labelName, labelValue)
+
+  /**
    * Prepend `namespace` and `namespaces` to the names of the returned [[StatsReceiver]].
    *
    * For example:
