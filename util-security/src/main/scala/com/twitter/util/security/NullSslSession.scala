@@ -2,7 +2,8 @@ package com.twitter.util.security
 
 import java.security.Principal
 import java.security.cert.Certificate
-import javax.net.ssl.{SSLSession, SSLSessionContext}
+import javax.net.ssl.SSLSession
+import javax.net.ssl.SSLSessionContext
 import javax.security.cert.X509Certificate
 
 /**
@@ -18,7 +19,7 @@ object NullSslSession extends SSLSession {
   def getLocalCertificates: Array[Certificate] = Array.empty
   def getLocalPrincipal: Principal = NullPrincipal
   def getPacketBufferSize: Int = 0
-  def getPeerCertificateChain: Array[X509Certificate] = Array.empty
+  override def getPeerCertificateChain: Array[X509Certificate] = Array.empty
   def getPeerCertificates: Array[Certificate] = Array.empty
   def getPeerHost: String = ""
   def getPeerPort: Int = 0
