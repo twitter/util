@@ -38,7 +38,7 @@ junit_tests(
         "util/util-jackson/src/test/resources",
         "util/util-mock/src/main/scala/com/twitter/util/mock",
         "util/util-slf4j-api/src/main/scala/com/twitter/util/logging",
-        "util/util-validator/src/main/java/com/twitter/util/validation",
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation",
         "util/util-validator/src/main/scala/com/twitter/util/validation",
     ],
 )

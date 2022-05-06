@@ -16,9 +16,10 @@ scala_library(
         "util/util-core:scala",
         "util/util-reflect/src/main/scala/com/twitter/util/reflect",
         "util/util-slf4j-api/src/main/scala",
-        "util/util-validator/src/main/java/com/twitter/util/validation",
-        "util/util-validator/src/main/java/com/twitter/util/validation/constraints",
-        "util/util-validator/src/main/resources",  # loads custom constraint mappings and validation messages
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation",
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation/constraints",
+        "util/util-validator-constraints/src/main/resources",  # loads validation messages
+        "util/util-validator/src/main/resources",  # loads custom constraint mappings
         "util/util-validator/src/main/scala/com/twitter/util/validation/cfg",
         "util/util-validator/src/main/scala/com/twitter/util/validation/constraintvalidation",
         "util/util-validator/src/main/scala/com/twitter/util/validation/conversions",
@@ -38,8 +39,8 @@ scala_library(
     exports = [
         "3rdparty/jvm/jakarta/validation:jakarta.validation-api",
         "3rdparty/jvm/org/json4s:json4s-core",
-        "util/util-validator/src/main/java/com/twitter/util/validation",
-        "util/util-validator/src/main/java/com/twitter/util/validation/constraints",
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation",
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation/constraints",
         "util/util-validator/src/main/scala/com/twitter/util/validation/cfg",
         "util/util-validator/src/main/scala/com/twitter/util/validation/constraintvalidation",
         "util/util-validator/src/main/scala/com/twitter/util/validation/conversions",

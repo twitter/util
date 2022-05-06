@@ -1,6 +1,6 @@
 resources(
     sources = [
-        "**/*.xml",
+        "**/*.properties",
     ],
     tags = ["bazel-compatible"],
 )

@@ -13,7 +13,7 @@ scala_library(
         "3rdparty/jvm/org/hibernate/validator:hibernate-validator",
         "util/util-core:scala",
         "util/util-slf4j-api/src/main/scala",
-        "util/util-validator/src/main/java/com/twitter/util/validation",
+        "util/util-validator-constraints/src/main/java/com/twitter/util/validation",
         "util/util-validator/src/main/scala/com/twitter/util/validation/internal/engine",
         "util/util-validator/src/main/scala/com/twitter/util/validation/internal/metadata/descriptor",
     ],

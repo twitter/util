@@ -216,6 +216,19 @@ val sharedScala3EnabledSettings =
     Seq(libraryDependencies ++= scala3Dependencies) ++
     Seq(excludeDependencies ++= Seq("org.scala-lang.modules" % "scala-collection-compat_3"))
 
+// settings for projects that are cross compiled with scala 2.10
+val settingsCrossCompiledWithTwoTen =
+  baseSettings ++
+    Seq(
+      crossScalaVersions := Seq("2.10.7") ++ _crossScalaVersions,
+      scalaVersion := _scalaVersion,
+      javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked"),
+      doc / javacOptions := Seq("-source", "1.8"),
+      libraryDependencies ++= Seq(
+        "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"
+      )
+    )
+
 lazy val noPublishSettings = Seq(
   publish / skip := true
 )
@@ -285,6 +298,7 @@ lazy val util = Project(
     utilThrift,
     utilTunable,
     utilValidator,
+    utilValidatorConstraint,
     utilZk,
     utilZkTest
   )
@@ -730,7 +744,18 @@ lazy val utilValidator = Project(
       "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
       "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
     )
-  ).dependsOn(utilCore, utilReflect, utilSlf4jApi)
+  ).dependsOn(utilCore, utilReflect, utilSlf4jApi, utilValidatorConstraint)
+
+lazy val utilValidatorConstraint = Project(
+  id = "util-validator-constraints",
+  base = file("util-validator-constraints")
+).settings(
+  settingsCrossCompiledWithTwoTen
+).settings(
+  libraryDependencies ++= Seq(
+    "jakarta.validation" % "jakarta.validation-api" % "3.0.0"
+  )
+)
 
 lazy val utilZk = Project(
   id = "util-zk",
