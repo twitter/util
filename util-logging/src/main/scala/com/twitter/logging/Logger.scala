@@ -362,7 +362,7 @@ object Logger extends Iterable[Logger] {
 
   private def getForClassName(className: String) = {
     if (className.endsWith("$")) {
-      get(className.substring(0, className.length - 1))
+      get(className.dropRight(1)
     } else {
       get(className)
     }
