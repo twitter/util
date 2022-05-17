@@ -44,6 +44,8 @@ object metadataScopeSeparator {
 
 object MetricBuilder {
 
+  val DimensionalNameScopeSeparator: String = "_"
+
   /**
    * Construct a MethodBuilder.
    *
@@ -83,9 +85,9 @@ object MetricBuilder {
       role,
       verbosity,
       sourceClass,
-      // For now we're not allowing construction with labels.
+      // For now we're not allowing construction w"ith labels.
       // They need to be added later via `.withLabels`.
-      Identity.Hierarchical(name, Map.empty),
+      Identity(name, name, Map.empty, false),
       relativeName,
       processPath,
       percentiles,
@@ -142,33 +144,20 @@ object MetricBuilder {
     def toPrometheusString: String = "counter"
   }
 
-  /** Identity information about this metric */
-  sealed abstract class Identity private () {
-    def hierarchicalName: Seq[String]
-    def labels: Map[String, String]
-  }
-
   /**
    * Experimental way to represent both hierarchical and dimensional identity information.
    *
    * @note this type is expected to undergo some churn as dimensional metric support matures.
    */
-  object Identity {
-
-    /** Hierarchical only [[Identity]] representation */
-    final case class Hierarchical(hierarchicalName: Seq[String], labels: Map[String, String])
-        extends Identity {
-      override def toString: String = {
-        hierarchicalName.mkString("Hierarchical(", metadataScopeSeparator(), s", $labels)")
-      }
-    }
-
-    /** Full [[Identity]] representation including a [[Hierarchical]] name and dimensional labels */
-    final case class Full(hierarchicalName: Seq[String], labels: Map[String, String])
-        extends Identity {
-      override def toString: String = {
-        hierarchicalName.mkString("Full(", metadataScopeSeparator(), s", $labels)")
-      }
+  final case class Identity private[stats] (
+    hierarchicalName: Seq[String],
+    dimensionalName: Seq[String],
+    labels: Map[String, String],
+    hierarchicalOnly: Boolean) {
+    override def toString: String = {
+      val hname = hierarchicalName.mkString(metadataScopeSeparator())
+      val dname = dimensionalName.mkString(DimensionalNameScopeSeparator)
+      s"Identity($hname, $dname, $labels, $hierarchicalOnly)"
     }
   }
 }
@@ -279,31 +268,29 @@ class MetricBuilder private (
 
   @varargs
   def withName(name: String*): MetricBuilder = {
-    val nextIdentity = this.identity match {
-      case Identity.Hierarchical(_, labels) => Identity.Hierarchical(name, labels)
-      case Identity.Full(_, labels) => Identity.Full(name, labels)
-    }
-    copy(identity = nextIdentity)
+    copy(identity = identity.copy(hierarchicalName = name, dimensionalName = name))
   }
 
   private[finagle] def withIdentity(identity: Identity): MetricBuilder = copy(identity = identity)
 
+  /**
+   * The hierarchical name of the metric
+   */
   def name: Seq[String] = identity.hierarchicalName
 
   // Private for now
-  private[twitter] def withLabels(labels: Map[String, String]): MetricBuilder = identity match {
-    case Identity.Hierarchical(name, _) => copy(identity = Identity.Hierarchical(name, labels))
-    case Identity.Full(name, _) => copy(identity = Identity.Full(name, labels))
+  private[twitter] def withLabels(labels: Map[String, String]): MetricBuilder = {
+    copy(identity = identity.copy(labels = labels))
   }
 
-  private[twitter] def withHierarchicalOnly: MetricBuilder = identity match {
-    case Identity.Hierarchical(_, _) => this
-    case Identity.Full(name, labels) => this.copy(identity = Identity.Hierarchical(name, labels))
+  private[twitter] def withHierarchicalOnly: MetricBuilder = {
+    if (identity.hierarchicalOnly) this
+    else copy(identity = identity.copy(hierarchicalOnly = true))
   }
 
-  private[twitter] def withDimensionalSupport: MetricBuilder = identity match {
-    case Identity.Hierarchical(name, labels) => this.copy(identity = Identity.Full(name, labels))
-    case Identity.Full(_, _) => this
+  private[twitter] def withDimensionalSupport: MetricBuilder = {
+    if (identity.hierarchicalOnly) copy(identity = identity.copy(hierarchicalOnly = false))
+    else this
   }
 
   @varargs

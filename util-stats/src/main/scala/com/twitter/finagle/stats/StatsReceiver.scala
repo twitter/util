@@ -6,6 +6,8 @@ import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.MetricBuilder.MetricType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
+import com.twitter.finagle.stats.NameTranslatingStatsReceiver.ScopeTranslatingStatsReceiver
+import com.twitter.finagle.stats.TranslatingStatsReceiver.LabelTranslatingStatsReceiver
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import com.twitter.util.Return
 import com.twitter.util.Try
@@ -142,10 +144,7 @@ trait StatsReceiver {
       .withVerbosity(verbosity)
       .withName(name: _*)
 
-    counter(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )
+    counter(builder)
   }
 
   /**
@@ -159,10 +158,7 @@ trait StatsReceiver {
       .withName(name: _*)
       .withDescription(description)
 
-    counter(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )
+    counter(builder)
   }
 
   /**
@@ -193,10 +189,7 @@ trait StatsReceiver {
       .withVerbosity(verbosity)
       .withName(name: _*)
 
-    stat(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )
+    stat(builder)
   }
 
   /**
@@ -210,10 +203,7 @@ trait StatsReceiver {
       .withName(name: _*)
       .withDescription(description)
 
-    stat(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )
+    stat(builder)
   }
 
   /**
@@ -300,10 +290,7 @@ trait StatsReceiver {
       .withVerbosity(verbosity)
       .withName(name: _*)
 
-    addGauge(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )(f)
+    addGauge(builder)(f)
   }
 
   /**
@@ -322,10 +309,7 @@ trait StatsReceiver {
       .withName(name: _*)
       .withDescription(description)
 
-    addGauge(
-      if (name.length > 1) builder.withHierarchicalOnly
-      else builder.withDimensionalSupport
-    )(f)
+    addGauge(builder)(f)
   }
 
   /**
@@ -397,27 +381,47 @@ trait StatsReceiver {
    */
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
-    else {
-      new NameTranslatingStatsReceiver(this, namespace) {
-        protected def translate(name: Seq[String]): Seq[String] = namespace +: name
-      }
-    }
+    else
+      new ScopeTranslatingStatsReceiver(
+        this,
+        namespace,
+        NameTranslatingStatsReceiver.FullTranslation)
   }
 
   /**
-   * Add a label and prepend the label value to the names of the returned [[StatsReceiver]].
-   *
-   * For example:
-   *
-   * {{{
-   *   statsReceiver.scopeAndLabel("client_name", "backend1").counter("requests")
-   * }}}
-   *
-   * will generate a [[Counter]] with both hierarchical name `backend1/requests` and dimensional name
-   * `requests {client_name="backend1"}`
+   * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
+   * emitted in hierarchical form.
    */
-  def scopeAndLabel(labelName: String, labelValue: String): StatsReceiver =
-    new ScopeTranslatingStatsReceiver(this, labelName, labelValue)
+  private[finagle] def hierarchicalScope(namespace: String): StatsReceiver = {
+    if (namespace == "") this
+    else
+      new ScopeTranslatingStatsReceiver(
+        this,
+        namespace,
+        NameTranslatingStatsReceiver.HierarchicalOnly)
+  }
+
+  /**
+   * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
+   * emitted in dimensional form.
+   */
+  private[finagle] def dimensionalScope(namespace: String): StatsReceiver = {
+    if (namespace == "") this
+    else
+      new ScopeTranslatingStatsReceiver(
+        this,
+        namespace,
+        NameTranslatingStatsReceiver.DimensionalOnly)
+  }
+
+  /**
+   * Create a new `StatsReceiver` that will add the specified label to all created metrics.
+   */
+  private[finagle] def label(labelName: String, labelValue: String): StatsReceiver = {
+    require(labelName.nonEmpty)
+    if (labelValue == "") this
+    else new LabelTranslatingStatsReceiver(this, labelName, labelValue)
+  }
 
   /**
    * Prepend `namespace` and `namespaces` to the names of the returned [[StatsReceiver]].

@@ -88,10 +88,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       .metricBuilder(CounterType)
       .withName(name: _*)
 
-    counter(
-      if (name.length > 1) metricBuilder.withHierarchicalOnly
-      else metricBuilder.withDimensionalSupport
-    )
+    counter(metricBuilder)
   }
 
   /**
@@ -130,10 +127,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
       .metricBuilder(HistogramType)
       .withName(name: _*)
 
-    stat(
-      if (name.length > 1) metricBuilder.withHierarchicalOnly
-      else metricBuilder.withDimensionalSupport
-    )
+    stat(metricBuilder)
   }
 
   /**

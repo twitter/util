@@ -5,7 +5,6 @@ import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
-import com.twitter.finagle.stats.MetricBuilder.Identity
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import com.twitter.util.Await
 import com.twitter.util.Future
@@ -99,186 +98,63 @@ class StatsReceiverTest extends AnyFunSuite {
     verify(receiver, times(3)).stat("2", "chainz")
   }
 
-  private class SupportsDimensionalStatsReceiver extends StatsReceiver {
-    var supportsDimensional: java.lang.Boolean = null
-
-    private def hasDimensions(mb: MetricBuilder): Boolean = mb.identity match {
-      case Identity.Hierarchical(_, _) => false
-      case Identity.Full(_, _) => true
-    }
-
-    def reset(): Unit = {
-      supportsDimensional = null
-    }
-
-    def repr: AnyRef = this
-
-    def counter(metricBuilder: MetricBuilder): Counter = {
-      supportsDimensional = hasDimensions(metricBuilder)
-      new Counter {
-        def incr(delta: Long): Unit = ()
-        def metadata: Metadata = metricBuilder
-      }
-    }
-
-    def stat(metricBuilder: MetricBuilder): Stat = {
-      supportsDimensional = hasDimensions(metricBuilder)
-      new Stat {
-        def add(value: Float): Unit = ()
-        def metadata: Metadata = metricBuilder
-      }
-    }
-
-    def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
-      supportsDimensional = hasDimensions(metricBuilder)
-      new Gauge {
-        def remove(): Unit = ()
-        def metadata: Metadata = metricBuilder
-      }
-    }
-  }
-
-  test("StatsReceiver.scope.counter: dimensional metrics are disabled without a label") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    val scoped = receiver.scope("foo")
-
-    scoped.counter("bar")
-    assert(!receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.scopeAndLabel: a non-empty label name and label value are required") {
+  test("StatsReceiver.label: a non-empty label name is required") {
     val sr = new InMemoryStatsReceiver
     intercept[IllegalArgumentException] {
-      sr.scopeAndLabel("", "cool")
-    }
-
-    intercept[IllegalArgumentException] {
-      sr.scopeAndLabel("cool", "")
+      sr.label("", "cool")
     }
   }
 
-  test("StatsReceiver.scopeAndLabel.counter: dimensions are supported") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    val scoped = receiver.scopeAndLabel("scope", "foo")
-
-    scoped.counter("bar")
-    assert(receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.scopeAndLabel.scope.counter: dimensional support isn't magically added") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    val scoped = receiver.scopeAndLabel("scope", "foo").scope("no_dimensions")
-
-    scoped.counter("bar")
-    assert(!receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.scopeAndLabel: adds both a scope and the labels") {
+  test("StatsReceiver.label: empty label values are effectively no-ops") {
     val sr = new InMemoryStatsReceiver
-    val c = sr.scopeAndLabel("scope", "good").counter("stuff")
-    val metricBuilder = c.metadata.toMetricBuilder.get
-    assert(metricBuilder.name == Seq("good", "stuff"))
-    assert(metricBuilder.identity.labels == Map("scope" -> "good"))
+    sr.label("foo", "").counter("bar").incr()
+    assert(sr.counters(Seq("bar")) == 1)
+    assert(sr.schemas(Seq("bar")).identity.labels.isEmpty)
   }
 
-  test("StatsReceiver.counter: varargs metrics names longer than 1 disable dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.counter("foo", "bar")
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
+  test("StatsReceiver.scope: adds a scope to both names and doesn't poison dimensional metrics") {
+    val sr = new InMemoryStatsReceiver
+    val scopedCounter = sr.scope("cool").counter("numbers")
 
-    receiver.counter(Some("description"), "foo", "bar")
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
+    val mb = scopedCounter.metadata.toMetricBuilder.get
 
-    receiver.counter("description", Verbosity.Default, "foo", "bar")
-    assert(!receiver.supportsDimensional)
+    assert(mb.identity.labels.isEmpty)
+    assert(mb.identity.hierarchicalName == Seq("cool", "numbers"))
+    assert(mb.identity.dimensionalName == Seq("cool", "numbers"))
+    assert(!mb.identity.hierarchicalOnly)
   }
 
-  test("StatsReceiver.counter: varargs metrics names of 1 allow dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.counter("bar")
-    assert(receiver.supportsDimensional)
-    receiver.reset()
+  test("StatsReceiver.hierarchicalScope: composes with label correctly") {
+    val sr = new InMemoryStatsReceiver
+    val scopedCounter = sr
+      .hierarchicalScope("clnt")
+      .hierarchicalScope("backend")
+      .label("clnt", "backend")
+      .counter("requests")
 
-    receiver.counter(Some("description"), "bar")
-    assert(receiver.supportsDimensional)
-    receiver.reset()
+    val mb = scopedCounter.metadata.toMetricBuilder.get
 
-    receiver.counter("description", Verbosity.Default, "bar")
-    assert(receiver.supportsDimensional)
+    assert(mb.identity.hierarchicalName == Seq("clnt", "backend", "requests"))
+    assert(mb.identity.dimensionalName == Seq("requests"))
+    assert(mb.identity.labels == Map("clnt" -> "backend"))
+    assert(!mb.identity.hierarchicalOnly)
   }
 
-  test("StatsReceiver.scope.addGauge: dimensional metrics are disabled without a label") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    val scoped = receiver.scope("foo")
+  test("StatsReceiver.dimensionalScope: composes with label correctly") {
+    val sr = new InMemoryStatsReceiver
+    val scopedCounter = sr
+      .dimensionalScope("foo")
+      .dimensionalScope("baz")
+      .hierarchicalScope("bar")
+      .label("clnt", "backend")
+      .counter("requests")
 
-    scoped.addGauge("bar") { 1.0f }
-    assert(!receiver.supportsDimensional)
-  }
+    val mb = scopedCounter.metadata.toMetricBuilder.get
 
-  test("StatsReceiver.addGauge: varargs metrics names longer than 1 disable dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.addGauge("foo", "bar") { 1.0f }
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.addGauge(Some("description"), "foo", "bar") { 1.0f }
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.addGauge("description", Verbosity.Default, "foo", "bar") { 1.0f }
-    assert(!receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.addGauge: varargs metrics names of 1 allow dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.addGauge("bar") { 1.0f }
-    assert(receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.addGauge(Some("description"), "bar") { 1.0f }
-    assert(receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.addGauge("description", Verbosity.Default, "bar") { 1.0f }
-    assert(receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.scope.stat: dimensional metrics are disabled without a label") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    val scoped = receiver.scope("foo")
-
-    scoped.stat("bar")
-    assert(!receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.stat: varargs metrics names longer than 1 disable dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.stat("foo", "bar")
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.stat(Some("description"), "foo", "bar")
-    assert(!receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.stat("description", Verbosity.Default, "foo", "bar")
-    assert(!receiver.supportsDimensional)
-  }
-
-  test("StatsReceiver.stat: varargs metrics names of 1 allow dimensional metrics") {
-    val receiver = new SupportsDimensionalStatsReceiver
-    receiver.stat("bar")
-    assert(receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.stat(Some("description"), "bar")
-    assert(receiver.supportsDimensional)
-    receiver.reset()
-
-    receiver.stat("description", Verbosity.Default, "bar")
-    assert(receiver.supportsDimensional)
+    assert(mb.identity.hierarchicalName == Seq("bar", "requests"))
+    assert(mb.identity.dimensionalName == Seq("foo", "baz", "requests"))
+    assert(mb.identity.labels == Map("clnt" -> "backend"))
+    assert(!mb.identity.hierarchicalOnly)
   }
 
   test("StatsReceiver.scope: prefix stats by a scope string") {
