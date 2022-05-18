@@ -200,9 +200,9 @@ class ExpressionSchemaTest extends AnyFunSuite {
       "success_rate",
       Expression(100).multiply(
         Expression
-          .counter(sr, showRollup = false, "clnt", "aclient", "success").get.divide(Expression
-            .counter(sr, showRollup = false, "clnt", "aclient", "success").get.plus(
-              Expression.counter(sr, showRollup = true, "clnt", "aclient", "failures").get)))
+          .counter(sr, Seq("clnt", "aclient", "success")).get.divide(Expression
+            .counter(sr, Seq("clnt", "aclient", "success")).get.plus(
+              Expression.counter(sr, Seq("clnt", "aclient", "failures"), showRollup = true).get)))
     ).withRole(Client).withServiceName("aclient").build()
 
     assert(sr.expressions.values.size == 1)
@@ -219,7 +219,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val sr = new InMemoryStatsReceiver
     // create a list histogram ExpressionSchema with default percentiles
     val expressions: Seq[Expression] =
-      Expression.stats(sr, HistogramComponent.DefaultPercentiles, "clnt", "aclient", "latencies")
+      Expression.stats(sr, Seq("clnt", "aclient", "latencies"))
     expressions.map { expression =>
       ExpressionSchema("latencies", expression).withRole(Client).withServiceName("aclient").build()
     }

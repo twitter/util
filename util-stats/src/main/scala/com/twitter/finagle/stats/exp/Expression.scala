@@ -78,40 +78,52 @@ private[twitter] object Expression {
    * Create an expression from creating a [[com.twitter.finagle.stats.Counter]]
    * with a given [[StatsReceiver]].
    *
-   * @param statsReceiver The [[StatsReceiver]] used by the caller to record metric.
-   * @param showRollup    When true, create an expression with all tail metrics.
-   * @param name          The name to create the [[com.twitter.finagle.stats.Counter]].
-   * @return              An optional [[Expression]] carrying the counter metadata.
-   *                      Return `None` if the metric of name {@code name} is not found
-   *                      in the {@code statsReceiver}.
+   * @param statsReceiver  The [[StatsReceiver]] used by the caller to record metric.
+   * @param name           The name to create the [[com.twitter.finagle.stats.Counter]].
+   * @param showRollup     When true, create an expression with all tail metrics. The
+   *                       default is false.
+   * @param validateMetric When true, only create an expression if the counter with name
+   *                       {@code name} has been registered with the given
+   *                       {@code statsReceiver}, otherwise return `None`. When false,
+   *                       always return an expression. The default value is false.
+   * @return               An optional [[Expression]] carrying the counter metadata.
+   *                       Return `None` if the metric of name {@code name} is not found
+   *                       in the {@code statsReceiver}.
    */
-  @varargs
   def counter(
     statsReceiver: StatsReceiver,
-    showRollup: Boolean,
-    name: String*
+    name: Seq[String],
+    showRollup: Boolean = false,
+    validateMetric: Boolean = false
   ): Option[Expression] =
-    Some(this(statsReceiver.counter(name: _*).metadata, showRollup))
+    if (validateMetric) None // return None for now, will add the validation in another change
+    else Some(this(statsReceiver.counter(name: _*).metadata, showRollup))
 
   /**
    * Create an expression from creating a [[com.twitter.finagle.stats.Stat]] with
    * a given [[StatsReceiver]].
    *
    * @param statsReceiver      The [[StatsReceiver]] used by the caller to record metric.
+   * @param name               The name to create the [[com.twitter.finagle.stats.Stat]].
    * @param histogramComponent A [[HistogramComponent]] used to create a histogram
    *                           expression.
-   * @param name               The name to create the [[com.twitter.finagle.stats.Stat]].
+   * @param validateMetric     When true, only create an expression if the counter with
+   *                           name {@code name} has been registered with the given
+   *                           {@code statsReceiver}, otherwise return `None`. When
+   *                           false, always return an expression. The default value is
+   *                           false.
    * @return                   An optional [[Expression]] carrying the stat metadata.
    *                           Return `None` if the metric of name {@code name} is not
    *                           found in the {@code statsReceiver}.
    */
-  @varargs
   def stat(
     statsReceiver: StatsReceiver,
+    name: Seq[String],
     histogramComponent: HistogramComponent,
-    name: String*
+    validateMetric: Boolean = false
   ): Option[Expression] =
-    Some(this(statsReceiver.stat(name: _*).metadata, histogramComponent))
+    if (validateMetric) None // return None for now, will add the validation in another change
+    else Some(this(statsReceiver.stat(name: _*).metadata, histogramComponent))
 
   /**
    * Create a list of expressions from creating a [[com.twitter.finagle.stats.Stat]]
@@ -119,25 +131,34 @@ private[twitter] object Expression {
    *
    * @param statsReceiver       The [[StatsReceiver]] used by the caller to record
    *                            metric.
-   * @param histogramComponents A list of [[HistogramComponent]] used to create a
-   *                            histogram expression.
    * @param name                The name to create the
    *                            [[com.twitter.finagle.stats.Stat]].
+   * @param histogramComponents A list of [[HistogramComponent]] used to create a
+   *                            histogram expression. The default is
+   *                            [[DefaultExpression]].
+   * @param validateMetric      When true, only create an expression if the counter with
+   *                            name {@code name} has been registered with the given
+   *                            {@code statsReceiver}, otherwise return `None`. When
+   *                            false, always return an expression. The default value is
+   *                            false.
    * @return                    A sequence of [[Expression]] carrying the stat metadata.
    *                            The order of the returned sequence is in correspondence
    *                            with the oder of the {@code histogramComponents}. Return
    *                            an empty sequence if the metric of name {@code name} is
    *                            not found in the {@code statsReceiver}.
    */
-  @varargs
   def stats(
     statsReceiver: StatsReceiver,
-    histogramComponents: Seq[HistogramComponent],
-    name: String*
-  ): Seq[Expression] = {
-    val statMetadata = statsReceiver.stat(name: _*).metadata
-    histogramComponents.map(this(statMetadata, _))
-  }
+    name: Seq[String],
+    histogramComponents: Seq[HistogramComponent] = HistogramComponent.DefaultPercentiles,
+    validateMetric: Boolean = false
+  ): Seq[Expression] =
+    if (validateMetric) {
+      Seq.empty // return an empty list for now, will add the validation in another change
+    } else {
+      val statMetadata = statsReceiver.stat(name: _*).metadata
+      histogramComponents.map(this(statMetadata, _))
+    }
 }
 
 /**
