@@ -40,7 +40,10 @@ abstract class NameTranslatingStatsReceiver(
     builder.withIdentity(nextIdentity)
   }
 
-  override def toString: String = s"$self/$namespacePrefix"
+  override def toString: String = mode match {
+    case FullTranslation | HierarchicalOnly => s"$self/$namespacePrefix"
+    case DimensionalOnly => self.toString
+  }
 }
 
 private object NameTranslatingStatsReceiver {

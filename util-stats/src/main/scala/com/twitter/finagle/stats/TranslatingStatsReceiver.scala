@@ -23,8 +23,6 @@ abstract class TranslatingStatsReceiver(
   override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
     self.addGauge(translate(metricBuilder))(f)
   }
-
-  override def toString: String = s"Translating($self)"
 }
 
 private object TranslatingStatsReceiver {
@@ -52,8 +50,5 @@ private object TranslatingStatsReceiver {
     private[this] def newIdentity(identity: Identity): Identity = {
       identity.copy(labels = identity.labels + labelPair)
     }
-
-    // We preserve this because unfortunately it is sometimes parsed
-    override def toString: String = s"$self/$labelValue"
   }
 }

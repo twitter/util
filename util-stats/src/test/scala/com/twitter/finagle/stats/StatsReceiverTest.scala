@@ -216,6 +216,13 @@ class StatsReceiverTest extends AnyFunSuite {
     assert("InMemoryStatsReceiver" == inMem.toString)
 
     assert("InMemoryStatsReceiver/scope1" == inMem.scope("scope1").toString)
+
+    assert("InMemoryStatsReceiver/scope1" == inMem.hierarchicalScope("scope1").toString)
+
+    assert("InMemoryStatsReceiver" == inMem.dimensionalScope("scope1").toString)
+
+    assert("InMemoryStatsReceiver" == inMem.label("a", "b").toString)
+
     assert(
       "InMemoryStatsReceiver/scope1/scope2" ==
         inMem.scope("scope1").scope("scope2").toString
