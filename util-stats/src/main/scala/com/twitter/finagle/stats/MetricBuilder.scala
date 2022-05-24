@@ -61,7 +61,6 @@ object MetricBuilder {
    * @param percentiles used to indicate buckets for histograms, to be set by the StatsReceiver
    * @param metricType the type of the metric being constructed
    * @param isStandard whether the metric should the standard path separator or defer to the metrics store for the separator
-   * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder
    */
   def apply(
     keyIndicator: Boolean = false,
@@ -76,7 +75,6 @@ object MetricBuilder {
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
     isStandard: Boolean = false,
     metricType: MetricType,
-    statsReceiver: StatsReceiver
   ): MetricBuilder = {
     new MetricBuilder(
       keyIndicator,
@@ -92,8 +90,7 @@ object MetricBuilder {
       processPath,
       percentiles,
       isStandard,
-      metricType,
-      statsReceiver
+      metricType
     )
   }
 
@@ -107,8 +104,8 @@ object MetricBuilder {
    * @param metricType the type of the metric being constructed.
    * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder.
    */
-  def newBuilder(metricType: MetricType, statsReceiver: StatsReceiver): MetricBuilder =
-    apply(metricType = metricType, statsReceiver = statsReceiver)
+  def newBuilder(metricType: MetricType): MetricBuilder =
+    apply(metricType = metricType)
 
   /**
    * Indicate the Metric type, [[CounterType]] will create a [[Counter]],
@@ -199,9 +196,7 @@ class MetricBuilder private (
   // Only persisted and relevant when building histograms.
   val percentiles: IndexedSeq[Double],
   val isStandard: Boolean,
-  val metricType: MetricType,
-  @deprecated("Being removed to make MetricBuilder strictly a metric definition.", "2022-03-28")
-  val statsReceiver: StatsReceiver)
+  val metricType: MetricType)
     extends Metadata {
 
   /**
@@ -235,7 +230,6 @@ class MetricBuilder private (
       processPath = processPath,
       percentiles = percentiles,
       isStandard = isStandard,
-      statsReceiver = this.statsReceiver,
       metricType = metricType
     )
   }
@@ -376,6 +370,6 @@ class MetricBuilder private (
   }
 
   override def toString(): String = {
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $identity, $relativeName, $processPath, $percentiles, $metricType, $statsReceiver)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $identity, $relativeName, $processPath, $percentiles, $metricType)"
   }
 }

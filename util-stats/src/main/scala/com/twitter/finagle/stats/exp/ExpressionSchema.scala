@@ -10,7 +10,6 @@ import com.twitter.finagle.stats.exp.HistogramComponent.Max
 import com.twitter.finagle.stats.exp.HistogramComponent.Min
 import com.twitter.finagle.stats.exp.HistogramComponent.Percentile
 import com.twitter.finagle.stats.exp.HistogramComponent.Sum
-import com.twitter.util.Try
 
 /**
  * ExpressionSchema is builder class that construct an expression with its metadata.
@@ -58,20 +57,6 @@ case class ExpressionSchema private (
   private[finagle] def withServiceName(name: String): ExpressionSchema =
     withLabel(ExpressionSchema.ServiceName, name)
 
-  /**
-   * Register this ExpressionSchema in StatsReceiver.
-   *
-   * Returns: Unit when the schema is successfully published to StatsReceiver
-   * Throws: [[ExpressionCollisionException]] if the schemaKey has mapped value
-   */
-  def build(): Try[Unit] = {
-    Expression.getStatsReceivers(expr).toSeq match {
-      case Seq(sr) => sr.registerExpression(this)
-      case first +: _ => first.registerExpression(this)
-      case _ => Try.Unit // should not happen
-    }
-  }
-
   def schemaKey(): ExpressionSchemaKey = {
     ExpressionSchemaKey(name, labels, namespace)
   }
@@ -81,7 +66,7 @@ case class ExpressionSchema private (
  * ExpressionSchemaKey is a class that exists to serve as a key into a Map of ExpressionSchemas.
  * It is simply a subset of the fields of the ExpressionSchema. Namely:
  * @param name
- * @param serviceName
+ * @param labels
  * @param namespaces
  */
 case class ExpressionSchemaKey(

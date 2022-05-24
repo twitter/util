@@ -59,11 +59,11 @@ object JvmStats {
         gauges.add(fileDescriptorCountGauge)
         gauges.add(stats.addGauge("fd_limit") { unix.getMaxFileDescriptorCount.toFloat })
         // register expression
-        ExpressionSchema("file_descriptors", Expression(fileDescriptorCountGauge.metadata))
-          .withLabel(ExpressionSchema.Role, "jvm")
-          .withDescription(
-            "Total file descriptors used by the service. If it continuously increasing over time, then potentially files or connections aren't being closed")
-          .build()
+        stats.registerExpression(
+          ExpressionSchema("file_descriptors", Expression(fileDescriptorCountGauge.metadata))
+            .withLabel(ExpressionSchema.Role, "jvm")
+            .withDescription(
+              "Total file descriptors used by the service. If it continuously increasing over time, then potentially files or connections aren't being closed"))
       case _ =>
     }
 
@@ -119,13 +119,13 @@ object JvmStats {
         gauges.add(currentMem.addGauge(name, "max") { usage.getMax.toFloat })
 
         // register memory usage expression
-        ExpressionSchema("memory_pool", Expression(usageGauge.metadata))
-          .withLabel(ExpressionSchema.Role, "jvm")
-          .withLabel("kind", name)
-          .withUnit(Bytes)
-          .withDescription(
-            s"The current estimate of the amount of space within the $name memory pool holding allocated objects in bytes")
-          .build()
+        currentMem.registerExpression(
+          ExpressionSchema("memory_pool", Expression(usageGauge.metadata))
+            .withLabel(ExpressionSchema.Role, "jvm")
+            .withLabel("kind", name)
+            .withUnit(Bytes)
+            .withDescription(
+              s"The current estimate of the amount of space within the $name memory pool holding allocated objects in bytes"))
       }
     }
     gauges.add(postGCStats.addGauge("used") {
@@ -186,19 +186,18 @@ object JvmStats {
         gc.getCollectionTime.toFloat
       }
 
-      ExpressionSchema(s"gc_cycles", Expression(poolCycles.metadata))
-        .withLabel(ExpressionSchema.Role, "jvm")
-        .withLabel("gc_pool", name)
-        .withDescription(
-          s"The total number of collections that have occurred for the $name gc pool")
-        .build()
-      ExpressionSchema(s"gc_latency", Expression(poolMsec.metadata))
+      gcStats.registerExpression(
+        ExpressionSchema(s"gc_cycles", Expression(poolCycles.metadata))
+          .withLabel(ExpressionSchema.Role, "jvm")
+          .withLabel("gc_pool", name)
+          .withDescription(
+            s"The total number of collections that have occurred for the $name gc pool"))
+      gcStats.registerExpression(ExpressionSchema(s"gc_latency", Expression(poolMsec.metadata))
         .withLabel(ExpressionSchema.Role, "jvm")
         .withLabel("gc_pool", name)
         .withUnit(Milliseconds)
         .withDescription(
-          s"The total elapsed time spent doing collections for the $name gc pool in milliseconds")
-        .build()
+          s"The total elapsed time spent doing collections for the $name gc pool in milliseconds"))
 
       gauges.add(poolCycles)
       gauges.add(poolMsec)
@@ -229,25 +228,25 @@ object JvmStats {
     gauges.add(stats.addGauge("tenuring_threshold") { jvm.tenuringThreshold.toFloat })
 
     // register metric expressions
-    ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withUnit(Milliseconds)
-      .withDescription("The uptime of the JVM in milliseconds")
-      .build()
-    ExpressionSchema("gc_cycles", Expression(cycles.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withDescription("The total number of collections that have occurred")
-      .build()
-    ExpressionSchema("gc_latency", Expression(msec.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withUnit(Milliseconds)
-      .withDescription("The total elapsed time spent doing collections in milliseconds")
-      .build()
-    ExpressionSchema("memory_pool", Expression(heapUsedGauge.metadata))
-      .withLabel(ExpressionSchema.Role, "jvm")
-      .withLabel("kind", "Heap")
-      .withUnit(Bytes)
-      .withDescription("Heap in use in bytes")
-      .build()
+    stats.registerExpression(
+      ExpressionSchema("jvm_uptime", Expression(uptime.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withUnit(Milliseconds)
+        .withDescription("The uptime of the JVM in milliseconds"))
+    gcStats.registerExpression(
+      ExpressionSchema("gc_cycles", Expression(cycles.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withDescription("The total number of collections that have occurred"))
+    gcStats.registerExpression(
+      ExpressionSchema("gc_latency", Expression(msec.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withUnit(Milliseconds)
+        .withDescription("The total elapsed time spent doing collections in milliseconds"))
+    heapStats.registerExpression(
+      ExpressionSchema("memory_pool", Expression(heapUsedGauge.metadata))
+        .withLabel(ExpressionSchema.Role, "jvm")
+        .withLabel("kind", "Heap")
+        .withUnit(Bytes)
+        .withDescription("Heap in use in bytes"))
   }
 }

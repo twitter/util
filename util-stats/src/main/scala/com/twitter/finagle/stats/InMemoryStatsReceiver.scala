@@ -282,7 +282,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Designed to match the behavior of Metrics::registerExpression().
    */
-  override protected[finagle] def registerExpression(schema: ExpressionSchema): Try[Unit] = {
+  override def registerExpression(schema: ExpressionSchema): Try[Unit] = {
     if (expressions.contains(schema.schemaKey())) {
       Throw(
         ExpressionCollisionException(

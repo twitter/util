@@ -17,11 +17,11 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
 
     val successMb =
-      MetricBuilder(name = Seq("success"), metricType = CounterType, statsReceiver = clientSR)
+      MetricBuilder(name = Seq("success"), metricType = CounterType)
     val failuresMb =
-      MetricBuilder(name = Seq("failures"), metricType = CounterType, statsReceiver = clientSR)
+      MetricBuilder(name = Seq("failures"), metricType = CounterType)
     val latencyMb =
-      MetricBuilder(name = Seq("latency"), metricType = HistogramType, statsReceiver = clientSR)
+      MetricBuilder(name = Seq("latency"), metricType = HistogramType)
     val sum = Expression(successMb).plus(Expression(failuresMb))
 
     def slowQuery(ctl: TimeControl, succeed: Boolean): Unit = {
@@ -58,8 +58,8 @@ class ExpressionSchemaTest extends AnyFunSuite {
           .withUnit(Milliseconds)
           .withDescription("The latency of the slow query")
 
-      successRate.build()
-      latency.build()
+      clientSR.registerExpression(successRate)
+      clientSR.registerExpression(latency)
 
       def runTheQuery(succeed: Boolean): Unit = {
         Time.withCurrentTimeFrozen { ctl =>
@@ -104,14 +104,12 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("histogram expressions come with default labels") {
     new Ctx {
-      val latencyP90 =
-        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.9)))
-          .build()
-      val latencyP99 =
-        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.99)))
-          .build()
-      val latencyAvg =
-        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Avg)).build()
+      clientSR.registerExpression(
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.9))))
+      clientSR.registerExpression(
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Percentile(0.99))))
+      clientSR.registerExpression(
+        ExpressionSchema("latency", Expression(latencyMb, HistogramComponent.Avg)))
 
       assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p90"))))
       assert(sr.expressions.contains(nameToKey("latency", Map("bucket" -> "p99"))))
@@ -121,19 +119,19 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("expressions with different namespaces are all stored") {
     new Ctx {
-      val successRate1 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-        .withNamespace("section1")
-        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
-        .withUnit(Percentage)
-        .withDescription("The success rate of the slow query")
-        .build()
+      clientSR.registerExpression(
+        ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+          .withNamespace("section1")
+          .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+          .withUnit(Percentage)
+          .withDescription("The success rate of the slow query"))
 
-      val successRate2 = ExpressionSchema("success_rate", Expression(successMb).divide(sum))
-        .withNamespace("section2", "a")
-        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
-        .withUnit(Percentage)
-        .withDescription("The success rate of the slow query")
-        .build()
+      clientSR.registerExpression(
+        ExpressionSchema("success_rate", Expression(successMb).divide(sum))
+          .withNamespace("section2", "a")
+          .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+          .withUnit(Percentage)
+          .withDescription("The success rate of the slow query"))
 
       assert(sr.expressions.values.size == 2)
       val namespaces = sr.expressions.values.toSeq.map { exprSchema =>
@@ -146,19 +144,19 @@ class ExpressionSchemaTest extends AnyFunSuite {
 
   test("expressions with the same key - name, labels and namespaces") {
     new Ctx {
-      val successRate1 = ExpressionSchema("success", Expression(successMb))
-        .withNamespace("section1")
-        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
-        .withUnit(Percentage)
-        .withDescription("The success rate of the slow query")
-        .build()
+      val successRate1 = clientSR.registerExpression(
+        ExpressionSchema("success", Expression(successMb))
+          .withNamespace("section1")
+          .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+          .withUnit(Percentage)
+          .withDescription("The success rate of the slow query"))
 
-      val successRate2 = ExpressionSchema("success", Expression(successMb).divide(sum))
-        .withNamespace("section1")
-        .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
-        .withUnit(Percentage)
-        .withDescription("The success rate of the slow query")
-        .build()
+      val successRate2 = clientSR.registerExpression(
+        ExpressionSchema("success", Expression(successMb).divide(sum))
+          .withNamespace("section1")
+          .withBounds(MonotoneThresholds(GreaterThan, 99.5, 99.75))
+          .withUnit(Percentage)
+          .withDescription("The success rate of the slow query"))
 
       // only store the first
       // the second attempt will be a Throw
@@ -174,13 +172,14 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val loadedSr = LoadedStatsReceiver.self
     val sr = new InMemoryStatsReceiver
     LoadedStatsReceiver.self = sr
-    val successRate = ExpressionSchema(
-      "success_rate",
-      Expression(100).multiply(
-        Expression(Seq("clnt", "aclient", "success"), isCounter = true).divide(
-          Expression(Seq("clnt", "aclient", "success"), isCounter = true).plus(
-            Expression(Seq("clnt", "aclient", "failures"), isCounter = true))))
-    ).withRole(Client).withServiceName("aclient").build()
+    sr.registerExpression(
+      ExpressionSchema(
+        "success_rate",
+        Expression(100).multiply(
+          Expression(Seq("clnt", "aclient", "success"), isCounter = true).divide(
+            Expression(Seq("clnt", "aclient", "success"), isCounter = true).plus(
+              Expression(Seq("clnt", "aclient", "failures"), isCounter = true))))
+      ).withRole(Client).withServiceName("aclient"))
 
     assert(sr.expressions.values.size == 1)
     assert(
@@ -196,14 +195,15 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val sr = new InMemoryStatsReceiver
     // create a success rate ExpressionSchema
     // it is safe to call `.get` since we don't return `None` for now
-    ExpressionSchema(
-      "success_rate",
-      Expression(100).multiply(
-        Expression
-          .counter(sr, Seq("clnt", "aclient", "success")).get.divide(Expression
-            .counter(sr, Seq("clnt", "aclient", "success")).get.plus(
-              Expression.counter(sr, Seq("clnt", "aclient", "failures"), showRollup = true).get)))
-    ).withRole(Client).withServiceName("aclient").build()
+    sr.registerExpression(
+      ExpressionSchema(
+        "success_rate",
+        Expression(100).multiply(
+          Expression
+            .counter(sr, Seq("clnt", "aclient", "success")).get.divide(Expression
+              .counter(sr, Seq("clnt", "aclient", "success")).get.plus(
+                Expression.counter(sr, Seq("clnt", "aclient", "failures"), showRollup = true).get)))
+      ).withRole(Client).withServiceName("aclient"))
 
     assert(sr.expressions.values.size == 1)
     assert(
@@ -221,7 +221,8 @@ class ExpressionSchemaTest extends AnyFunSuite {
     val expressions: Seq[Expression] =
       Expression.stats(sr, Seq("clnt", "aclient", "latencies"))
     expressions.map { expression =>
-      ExpressionSchema("latencies", expression).withRole(Client).withServiceName("aclient").build()
+      sr.registerExpression(
+        ExpressionSchema("latencies", expression).withRole(Client).withServiceName("aclient"))
     }
 
     assert(sr.expressions.values.size == expressions.size)

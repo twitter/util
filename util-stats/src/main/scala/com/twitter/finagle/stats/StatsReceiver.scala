@@ -118,8 +118,9 @@ trait StatsReceiver {
   /**
    * Get a [[MetricBuilder metricBuilder]] for this StatsReceiver.
    */
+  @deprecated("Construct a MetricBuilder using its apply method", "2022-05-11")
   def metricBuilder(metricType: MetricType): MetricBuilder =
-    MetricBuilder(metricType = metricType, statsReceiver = this)
+    MetricBuilder(metricType = metricType)
 
   /**
    * Get a [[Counter counter]] with the given `name`.
@@ -453,7 +454,12 @@ trait StatsReceiver {
   final def scope(namespaces: String*): StatsReceiver =
     namespaces.foldLeft(this)((statsReceiver, name) => statsReceiver.scope(name))
 
-  protected[finagle] def registerExpression(expressionSchema: ExpressionSchema): Try[Unit] =
+  /**
+   * Register an `ExpressionSchema`.
+   *
+   * Implementations that support expressions should override this to consume expressions.
+   */
+  def registerExpression(expressionSchema: ExpressionSchema): Try[Unit] =
     Return.Unit
 
   /**

@@ -1,6 +1,5 @@
 package com.twitter.finagle.stats.exp
 
-import com.twitter.finagle.stats.LoadedStatsReceiver
 import com.twitter.finagle.stats.Metadata
 import com.twitter.finagle.stats.MetricBuilder
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
@@ -8,18 +7,6 @@ import com.twitter.finagle.stats.StatsReceiver
 import scala.annotation.varargs
 
 private[twitter] object Expression {
-  private[exp] def getStatsReceivers(expr: Expression): Set[StatsReceiver] = expr match {
-    case FunctionExpression(_, exprs) =>
-      exprs.foldLeft(Set.empty[StatsReceiver]) {
-        case (acc, expr) =>
-          getStatsReceivers(expr) ++ acc
-      }
-    case MetricExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
-    case HistogramExpression(metricBuilder, _) => Set(metricBuilder.statsReceiver)
-    case ConstantExpression(_) => Set.empty
-    case StringExpression(_, _) => Set(LoadedStatsReceiver)
-    case NoExpression => Set.empty
-  }
 
   /**
    * Create a expression with a constant number in double

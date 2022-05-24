@@ -6,10 +6,8 @@ import org.scalatest.funsuite.AnyFunSuite
 class MetricBuilderTest extends AnyFunSuite {
 
   test("metadataScopeSeparator affects stringification") {
-    val mb = MetricBuilder(
-      name = Seq("foo", "bar"),
-      metricType = CounterType,
-      statsReceiver = new InMemoryStatsReceiver)
+    val mb = MetricBuilder(name = Seq("foo", "bar"), metricType = CounterType)
+
     assert(mb.toString.contains("foo/bar"))
     metadataScopeSeparator.setSeparator("-")
     assert(mb.toString.contains("foo-bar"))

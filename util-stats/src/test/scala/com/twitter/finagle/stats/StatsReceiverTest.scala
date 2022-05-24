@@ -245,13 +245,13 @@ class StatsReceiverTest extends AnyFunSuite {
 
   test("StatsReceiver validate and record metrics") {
     val sr = new InMemoryStatsReceiver()
-    val counter = MetricBuilder(name = Seq("a"), metricType = CounterType, statsReceiver = sr)
+    val counter = MetricBuilder(name = Seq("a"), metricType = CounterType)
     val counterishGauge =
-      MetricBuilder(name = Seq("b"), metricType = CounterishGaugeType, statsReceiver = sr)
-    val gauge = MetricBuilder(name = Seq("c"), metricType = GaugeType, statsReceiver = sr)
-    val stat = MetricBuilder(name = Seq("d"), metricType = HistogramType, statsReceiver = sr)
+      MetricBuilder(name = Seq("b"), metricType = CounterishGaugeType)
+    val gauge = MetricBuilder(name = Seq("c"), metricType = GaugeType)
+    val stat = MetricBuilder(name = Seq("d"), metricType = HistogramType)
     val unlatchedCounter =
-      MetricBuilder(name = Seq("e"), metricType = UnlatchedCounter, statsReceiver = sr)
+      MetricBuilder(name = Seq("e"), metricType = UnlatchedCounter)
 
     sr.addGauge(gauge)(1)
     sr.addGauge(counterishGauge)(1)

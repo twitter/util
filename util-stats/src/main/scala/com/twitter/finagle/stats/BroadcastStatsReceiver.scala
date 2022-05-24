@@ -42,7 +42,7 @@ object BroadcastStatsReceiver {
       def metadata: Metadata = MultiMetadata(Seq(firstGauge.metadata, secondGauge.metadata))
     }
 
-    override protected[finagle] def registerExpression(
+    override def registerExpression(
       expressionSchema: ExpressionSchema
     ): Try[Unit] = {
       Try.collect(
@@ -75,7 +75,7 @@ object BroadcastStatsReceiver {
       def metadata: Metadata = MultiMetadata(gauges.map(_.metadata))
     }
 
-    override protected[finagle] def registerExpression(
+    override def registerExpression(
       expressionSchema: ExpressionSchema
     ): Try[Unit] =
       Try.collect(srs.map(_.registerExpression(expressionSchema))) match {

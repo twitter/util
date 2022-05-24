@@ -130,11 +130,12 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
 
   test("register expressions") {
     val stats = new InMemoryStatsReceiver()
-    ExpressionSchema(
-      "a",
-      Expression(
-        MetricBuilder(name = Seq("counter"), metricType = CounterType, statsReceiver = stats)))
-    stats.expressions.contains(ExpressionSchemaKey("a", Map(), Nil))
+    stats.registerExpression(
+      ExpressionSchema(
+        "a",
+        Expression(MetricBuilder(name = Seq("counter"), metricType = CounterType))))
+
+    assert(stats.expressions.contains(ExpressionSchemaKey("a", Map(), Nil)))
   }
 
   test("print") {
@@ -361,13 +362,13 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       assert(parts.length == 3)
       assert(
         parts(
-          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(coolGauge, coolGauge, Map(), false), List(), None, Vector(), GaugeType, InMemoryStatsReceiver)")
+          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(coolGauge, coolGauge, Map(), false), List(), None, Vector(), GaugeType)")
       assert(
         parts(
-          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(rad/histo, rad_histo, Map(), false), List(), None, Vector(), HistogramType, InMemoryStatsReceiver/rad)")
+          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(rad/histo, rad_histo, Map(), false), List(), None, Vector(), HistogramType)")
       assert(
         parts(
-          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(sweet/counter, sweet_counter, Map(), false), List(), None, Vector(), CounterType, InMemoryStatsReceiver)")
+          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(sweet/counter, sweet_counter, Map(), false), List(), None, Vector(), CounterType)")
     } finally {
       ps.close()
     }
@@ -380,19 +381,20 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
     val bHisto = sr.scope("test").stat("b")
     val cGauge = sr.scope("test").addGauge("c") { 1 }
 
-    val expression = ExpressionSchema(
-      "test_expression",
-      Expression(aCounter.metadata).plus(Expression(bHisto.metadata, HistogramComponent.Min)
-        .plus(Expression(cGauge.metadata)))
-    ).build()
+    val expression = sr.registerExpression(
+      ExpressionSchema(
+        "test_expression",
+        Expression(aCounter.metadata).plus(Expression(bHisto.metadata, HistogramComponent.Min)
+          .plus(Expression(cGauge.metadata)))
+      ))
 
     // what we expected as hydrated metric builders
     val aaSchema =
-      MetricBuilder(name = Seq("test", "a"), metricType = CounterType, statsReceiver = sr)
+      MetricBuilder(name = Seq("test", "a"), metricType = CounterType)
     val bbSchema =
-      MetricBuilder(name = Seq("test", "b"), metricType = HistogramType, statsReceiver = sr)
+      MetricBuilder(name = Seq("test", "b"), metricType = HistogramType)
     val ccSchema =
-      MetricBuilder(name = Seq("test", "c"), metricType = GaugeType, statsReceiver = sr)
+      MetricBuilder(name = Seq("test", "c"), metricType = GaugeType)
 
     val expected_expression = ExpressionSchema(
       "test_expression",
@@ -408,15 +410,17 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
 
     val aCounter = sr.scope("test").counter("a")
 
-    ExpressionSchema(
-      "test_expression_0",
-      Expression(aCounter.metadata)
-    ).withLabel(ExpressionSchema.Role, "test").build()
+    sr.registerExpression(
+      ExpressionSchema(
+        "test_expression_0",
+        Expression(aCounter.metadata)
+      ).withLabel(ExpressionSchema.Role, "test"))
 
-    ExpressionSchema(
-      "test_expression_1",
-      Expression(aCounter.metadata)
-    ).withLabel(ExpressionSchema.Role, "dont appear").build()
+    sr.registerExpression(
+      ExpressionSchema(
+        "test_expression_1",
+        Expression(aCounter.metadata)
+      ).withLabel(ExpressionSchema.Role, "dont appear"))
 
     val withLabel = sr.getAllExpressionsWithLabel(ExpressionSchema.Role, "test")
     assert(withLabel.size == 1)
