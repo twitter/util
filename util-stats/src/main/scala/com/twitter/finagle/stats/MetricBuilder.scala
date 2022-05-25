@@ -146,11 +146,11 @@ object MetricBuilder {
    *
    * @note this type is expected to undergo some churn as dimensional metric support matures.
    */
-  final case class Identity private[stats] (
+  final case class Identity(
     hierarchicalName: Seq[String],
     dimensionalName: Seq[String],
     labels: Map[String, String],
-    hierarchicalOnly: Boolean) {
+    hierarchicalOnly: Boolean = false) {
     override def toString: String = {
       val hname = hierarchicalName.mkString(metadataScopeSeparator())
       val dname = dimensionalName.mkString(DimensionalNameScopeSeparator)
