@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-jackson: Update Jackson library to version 2.13.3 ``PHAB_ID=D906005``
+
+
 22.4.0
 ------
 
