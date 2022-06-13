@@ -16,16 +16,28 @@ import scala.annotation.varargs
  * request to another service). In many cases, there is no relevant role for a metric, in which
  * case NoRole should be used.
  */
-sealed trait SourceRole {
+sealed abstract class SourceRole private () {
 
   /**
    * Java-friendly helper for accessing the object itself.
    */
   def getInstance(): SourceRole = this
 }
-case object NoRoleSpecified extends SourceRole
-case object Client extends SourceRole
-case object Server extends SourceRole
+
+object SourceRole {
+  case object NoRoleSpecified extends SourceRole
+  case object Client extends SourceRole
+  case object Server extends SourceRole
+
+  /**
+   * Java-friendly accessors
+   */
+  def noRoleSpecified(): SourceRole = NoRoleSpecified
+
+  def client(): SourceRole = Client
+
+  def server(): SourceRole = Server
+}
 
 /**
  * finagle-stats has configurable scope separators. As this package is wrapped by finagle-stats, we
@@ -66,7 +78,7 @@ object MetricBuilder {
     keyIndicator: Boolean = false,
     description: String = "No description provided",
     units: MetricUnit = Unspecified,
-    role: SourceRole = NoRoleSpecified,
+    role: SourceRole = SourceRole.NoRoleSpecified,
     verbosity: Verbosity = Verbosity.Default,
     sourceClass: Option[String] = None,
     name: Seq[String] = Seq.empty,
@@ -102,7 +114,6 @@ object MetricBuilder {
    * than being forced to use the mega apply method.
    *
    * @param metricType the type of the metric being constructed.
-   * @param statsReceiver used for the actual metric creation, set by the StatsReceiver when creating a MetricBuilder.
    */
   def newBuilder(metricType: MetricType): MetricBuilder =
     apply(metricType = metricType)

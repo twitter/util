@@ -14,7 +14,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class ExpressionSchemaTest extends AnyFunSuite {
   trait Ctx {
     val sr = new InMemoryStatsReceiver
-    val clientSR = RoleConfiguredStatsReceiver(sr, Client, Some("downstream"))
+    val clientSR = RoleConfiguredStatsReceiver(sr, SourceRole.Client, Some("downstream"))
 
     val successMb =
       MetricBuilder(name = Seq("success"), metricType = CounterType)
@@ -32,7 +32,9 @@ class ExpressionSchemaTest extends AnyFunSuite {
     }
 
     val downstreamLabel =
-      Map(ExpressionSchema.Role -> Client.toString, ExpressionSchema.ServiceName -> "downstream")
+      Map(
+        ExpressionSchema.Role -> SourceRole.Client.toString,
+        ExpressionSchema.ServiceName -> "downstream")
 
     protected[this] def nameToKey(
       name: String,
@@ -88,7 +90,8 @@ class ExpressionSchemaTest extends AnyFunSuite {
       assert(sr.stats(Seq("latency")) == Seq(50, 50))
 
       assert(
-        sr.expressions(nameToKey("success_rate")).labels(ExpressionSchema.Role) == Client.toString)
+        sr.expressions(nameToKey("success_rate")).labels(
+            ExpressionSchema.Role) == SourceRole.Client.toString)
     }
   }
 
@@ -179,7 +182,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
           Expression(Seq("clnt", "aclient", "success"), isCounter = true).divide(
             Expression(Seq("clnt", "aclient", "success"), isCounter = true).plus(
               Expression(Seq("clnt", "aclient", "failures"), isCounter = true))))
-      ).withRole(Client).withServiceName("aclient"))
+      ).withRole(SourceRole.Client).withServiceName("aclient"))
 
     assert(sr.expressions.values.size == 1)
     assert(
@@ -203,7 +206,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
             .counter(sr, Seq("clnt", "aclient", "success")).get.divide(Expression
               .counter(sr, Seq("clnt", "aclient", "success")).get.plus(
                 Expression.counter(sr, Seq("clnt", "aclient", "failures"), showRollup = true).get)))
-      ).withRole(Client).withServiceName("aclient"))
+      ).withRole(SourceRole.Client).withServiceName("aclient"))
 
     assert(sr.expressions.values.size == 1)
     assert(
@@ -222,7 +225,8 @@ class ExpressionSchemaTest extends AnyFunSuite {
       Expression.stats(sr, Seq("clnt", "aclient", "latencies"))
     expressions.map { expression =>
       sr.registerExpression(
-        ExpressionSchema("latencies", expression).withRole(Client).withServiceName("aclient"))
+        ExpressionSchema("latencies", expression)
+          .withRole(SourceRole.Client).withServiceName("aclient"))
     }
 
     assert(sr.expressions.values.size == expressions.size)

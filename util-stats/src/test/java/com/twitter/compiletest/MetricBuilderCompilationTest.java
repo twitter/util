@@ -8,7 +8,7 @@ import com.twitter.finagle.stats.InMemoryStatsReceiver;
 import com.twitter.finagle.stats.MetricBuilder;
 import com.twitter.finagle.stats.MetricTypes;
 import com.twitter.finagle.stats.Microseconds;
-import com.twitter.finagle.stats.NoRoleSpecified;
+import com.twitter.finagle.stats.SourceRole;
 import com.twitter.finagle.stats.StatsReceiver;
 import com.twitter.finagle.stats.Verbosity;
 
@@ -37,7 +37,7 @@ public final class MetricBuilderCompilationTest {
       .withSourceClass(new Some<>("com.twitter.finagle.AwesomeClass"))
       .withIdentifier(new Some<>("/p/foo/bar"))
       .withUnits(Microseconds.getInstance())
-      .withRole(NoRoleSpecified.getInstance())
+      .withRole(SourceRole.noRoleSpecified())
       .withName("my", "very", "cool", "name")
       .withRelativeName("cool", "name")
       .withPercentiles(0.99, 0.88, 0.77);
