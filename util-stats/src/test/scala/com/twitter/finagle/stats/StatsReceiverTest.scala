@@ -112,7 +112,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(sr.schemas(Seq("bar")).identity.labels.isEmpty)
   }
 
-  test("StatsReceiver.scope: adds a scope to both names and doesn't poison dimensional metrics") {
+  test("StatsReceiver.scope: by default has the same behavior has hierarchicalScope") {
     val sr = new InMemoryStatsReceiver
     val scopedCounter = sr.scope("cool").counter("numbers")
 
@@ -120,8 +120,8 @@ class StatsReceiverTest extends AnyFunSuite {
 
     assert(mb.identity.labels.isEmpty)
     assert(mb.identity.hierarchicalName == Seq("cool", "numbers"))
-    assert(mb.identity.dimensionalName == Seq("cool", "numbers"))
-    assert(!mb.identity.hierarchicalOnly)
+    assert(mb.identity.dimensionalName == Seq("numbers"))
+    assert(mb.identity.hierarchicalOnly)
   }
 
   test("StatsReceiver.hierarchicalScope: composes with label correctly") {
@@ -137,7 +137,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mb.identity.hierarchicalName == Seq("clnt", "backend", "requests"))
     assert(mb.identity.dimensionalName == Seq("requests"))
     assert(mb.identity.labels == Map("clnt" -> "backend"))
-    assert(!mb.identity.hierarchicalOnly)
+    assert(mb.identity.hierarchicalOnly)
   }
 
   test("StatsReceiver.dimensionalScope: composes with label correctly") {
@@ -154,7 +154,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mb.identity.hierarchicalName == Seq("bar", "requests"))
     assert(mb.identity.dimensionalName == Seq("foo", "baz", "requests"))
     assert(mb.identity.labels == Map("clnt" -> "backend"))
-    assert(!mb.identity.hierarchicalOnly)
+    assert(mb.identity.hierarchicalOnly)
   }
 
   test("StatsReceiver.scope: prefix stats by a scope string") {

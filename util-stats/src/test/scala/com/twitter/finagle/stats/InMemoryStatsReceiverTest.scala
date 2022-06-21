@@ -362,13 +362,13 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       assert(parts.length == 3)
       assert(
         parts(
-          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(coolGauge, coolGauge, Map(), false), List(), None, Vector(), GaugeType)")
+          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(coolGauge, coolGauge, Map(), true), List(), None, Vector(), GaugeType)")
       assert(
         parts(
-          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(rad/histo, rad_histo, Map(), false), List(), None, Vector(), HistogramType)")
+          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(rad/histo, histo, Map(), true), List(), None, Vector(), HistogramType)")
       assert(
         parts(
-          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(sweet/counter, sweet_counter, Map(), false), List(), None, Vector(), CounterType)")
+          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, Verbosity(default), None, Identity(sweet/counter, sweet_counter, Map(), true), List(), None, Vector(), CounterType)")
     } finally {
       ps.close()
     }
@@ -390,11 +390,28 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
 
     // what we expected as hydrated metric builders
     val aaSchema =
-      MetricBuilder(name = Seq("test", "a"), metricType = CounterType)
+      MetricBuilder(metricType = CounterType)
+        .withIdentity(
+          MetricBuilder.Identity(
+            hierarchicalName = Seq("test", "a"),
+            dimensionalName = Seq("a"),
+            labels = Map.empty))
+
     val bbSchema =
-      MetricBuilder(name = Seq("test", "b"), metricType = HistogramType)
+      MetricBuilder(metricType = HistogramType)
+        .withIdentity(
+          MetricBuilder.Identity(
+            hierarchicalName = Seq("test", "b"),
+            dimensionalName = Seq("b"),
+            labels = Map.empty))
+
     val ccSchema =
-      MetricBuilder(name = Seq("test", "c"), metricType = GaugeType)
+      MetricBuilder(metricType = GaugeType)
+        .withIdentity(
+          MetricBuilder.Identity(
+            hierarchicalName = Seq("test", "c"),
+            dimensionalName = Seq("c"),
+            labels = Map.empty))
 
     val expected_expression = ExpressionSchema(
       "test_expression",

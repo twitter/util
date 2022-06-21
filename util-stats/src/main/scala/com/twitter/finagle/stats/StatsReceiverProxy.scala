@@ -16,6 +16,9 @@ trait StatsReceiverProxy extends StatsReceiver with DelegatingStatsReceiver {
   def stat(metricBuilder: MetricBuilder): Stat = self.stat(metricBuilder)
   def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = self.addGauge(metricBuilder)(f)
 
+  override private[finagle] def scopeTranslation: NameTranslatingStatsReceiver.Mode =
+    self.scopeTranslation
+
   override def registerExpression(
     expressionSchema: ExpressionSchema
   ): Try[Unit] = self.registerExpression(expressionSchema)

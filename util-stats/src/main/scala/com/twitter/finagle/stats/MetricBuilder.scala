@@ -97,7 +97,7 @@ object MetricBuilder {
       sourceClass,
       // For now we're not allowing construction w"ith labels.
       // They need to be added later via `.withLabels`.
-      Identity(name, name, Map.empty, false),
+      Identity(name, name),
       relativeName,
       processPath,
       percentiles,
@@ -160,8 +160,8 @@ object MetricBuilder {
   final case class Identity(
     hierarchicalName: Seq[String],
     dimensionalName: Seq[String],
-    labels: Map[String, String],
-    hierarchicalOnly: Boolean = false) {
+    labels: Map[String, String] = Map.empty,
+    hierarchicalOnly: Boolean = true) {
     override def toString: String = {
       val hname = hierarchicalName.mkString(metadataScopeSeparator())
       val dname = dimensionalName.mkString(DimensionalNameScopeSeparator)
@@ -276,7 +276,7 @@ class MetricBuilder private (
     copy(identity = identity.copy(hierarchicalName = name, dimensionalName = name))
   }
 
-  private[finagle] def withIdentity(identity: Identity): MetricBuilder = copy(identity = identity)
+  private[twitter] def withIdentity(identity: Identity): MetricBuilder = copy(identity = identity)
 
   /**
    * The hierarchical name of the metric

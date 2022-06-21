@@ -6,7 +6,6 @@ package com.twitter.finagle.stats
  *
  * @param self The underlying StatsReceiver to which translated names are passed
  * @param namespacePrefix the namespace used for translations
- * @param mode determines which names to translate: hierarchical, dimensional, or both.
  */
 abstract class NameTranslatingStatsReceiver(
   self: StatsReceiver,
@@ -17,7 +16,7 @@ abstract class NameTranslatingStatsReceiver(
   import NameTranslatingStatsReceiver._
 
   def this(self: StatsReceiver, namespacePrefix: String) =
-    this(self, namespacePrefix, NameTranslatingStatsReceiver.FullTranslation)
+    this(self, namespacePrefix, NameTranslatingStatsReceiver.HierarchicalOnly)
 
   def this(self: StatsReceiver) = this(self, "<namespacePrefix>")
 
@@ -40,13 +39,15 @@ abstract class NameTranslatingStatsReceiver(
     builder.withIdentity(nextIdentity)
   }
 
-  override def toString: String = mode match {
-    case FullTranslation | HierarchicalOnly => s"$self/$namespacePrefix"
-    case DimensionalOnly => self.toString
+  override def toString: String = {
+    mode match {
+      case FullTranslation | HierarchicalOnly => s"$self/$namespacePrefix"
+      case DimensionalOnly => self.toString
+    }
   }
 }
 
-private object NameTranslatingStatsReceiver {
+object NameTranslatingStatsReceiver {
 
   /** The mode with which to translate stats, either hierarchical, dimensional, or both. */
   sealed trait Mode

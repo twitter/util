@@ -382,18 +382,17 @@ trait StatsReceiver {
    */
   def scope(namespace: String): StatsReceiver = {
     if (namespace == "") this
-    else
-      new ScopeTranslatingStatsReceiver(
-        this,
-        namespace,
-        NameTranslatingStatsReceiver.FullTranslation)
+    else new ScopeTranslatingStatsReceiver(this, namespace, scopeTranslation)
   }
+
+  private[finagle] def scopeTranslation: NameTranslatingStatsReceiver.Mode =
+    NameTranslatingStatsReceiver.HierarchicalOnly
 
   /**
    * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
    * emitted in hierarchical form.
    */
-  private[finagle] def hierarchicalScope(namespace: String): StatsReceiver = {
+  private[finagle] final def hierarchicalScope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else
       new ScopeTranslatingStatsReceiver(
@@ -406,7 +405,7 @@ trait StatsReceiver {
    * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
    * emitted in dimensional form.
    */
-  private[finagle] def dimensionalScope(namespace: String): StatsReceiver = {
+  private[finagle] final def dimensionalScope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else
       new ScopeTranslatingStatsReceiver(
@@ -418,7 +417,7 @@ trait StatsReceiver {
   /**
    * Create a new `StatsReceiver` that will add the specified label to all created metrics.
    */
-  private[finagle] def label(labelName: String, labelValue: String): StatsReceiver = {
+  private[finagle] final def label(labelName: String, labelValue: String): StatsReceiver = {
     require(labelName.nonEmpty)
     if (labelValue == "") this
     else new LabelTranslatingStatsReceiver(this, labelName, labelValue)
