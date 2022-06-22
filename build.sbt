@@ -91,7 +91,7 @@ val defaultScalaSettings = Seq(
 )
 val defaultScala3EnabledSettings = Seq(
   scalaVersion := _scalaVersion,
-  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.2-RC1")
+  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.2")
 )
 
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
