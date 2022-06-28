@@ -399,7 +399,9 @@ lazy val utilCore = Project(
       caffeineLib % "test",
       scalacheckLib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ {
+    ) ++
+      scalatestMockitoVersionedDep(scalaVersion.value) ++
+      scalatestScalacheckVersionedDep(scalaVersion.value) ++ {
       if (scalaVersion.value.startsWith("2")) {
         Seq(
           "org.scala-lang" % "scala-reflect" % scalaVersion.value,
@@ -409,8 +411,7 @@ lazy val utilCore = Project(
         Seq(
           "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
         )
-      } ++ scalatestMockitoVersionedDep(scalaVersion.value) ++
-          scalatestScalacheckVersionedDep(scalaVersion.value)
+      }
     },
     Compile / resourceGenerators += Def.task {
       val projectName = name.value
