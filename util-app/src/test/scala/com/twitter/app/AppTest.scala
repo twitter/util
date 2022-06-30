@@ -54,7 +54,8 @@ class WeNeverCloseButWeDoNotCare extends WeNeverClose {
 }
 
 trait ErrorOnExitApp extends App {
-  override val defaultCloseGracePeriod: Duration = 5.seconds
+  // Prevent flaky test in CI due to TimeoutException with this generous timeout
+  override val defaultCloseGracePeriod: Duration = 30.seconds
 
   override def exitOnError(throwable: Throwable): Unit = {
     throw throwable
