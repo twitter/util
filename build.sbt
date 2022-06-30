@@ -82,8 +82,10 @@ def jdk11GcJavaOptions: Seq[String] = {
   )
 }
 
+// Upgrading to a later version requires also upgrading sbt-scoverage, Scalatest, and
+// some modules like util-mock and util-test.
 val _scalaVersion = "2.13.6"
-val _crossScalaVersions = Seq("2.12.12", "2.13.6")
+val _crossScalaVersions = Seq("2.12.15", "2.13.6")
 
 val defaultScalaSettings = Seq(
   scalaVersion := _scalaVersion,
@@ -91,7 +93,7 @@ val defaultScalaSettings = Seq(
 )
 val defaultScala3EnabledSettings = Seq(
   scalaVersion := _scalaVersion,
-  crossScalaVersions := _crossScalaVersions ++ Seq("3.0.2-RC1")
+  crossScalaVersions := _crossScalaVersions ++ Seq("3.1.3")
 )
 
 // Our dependencies or compiler options may differ for both Scala 2 and 3. We branch here
