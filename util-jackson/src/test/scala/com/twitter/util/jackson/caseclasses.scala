@@ -311,6 +311,10 @@ case class CaseClassWithOverloadedField(id: Long) {
 
 case class CaseClassWithOption(value: Option[String] = None)
 
+case class CaseClassWithOptionAndValidation(@Min(100) towingCapacity: Option[Int] = None)
+
+case class CaseClassWithOptionAndIncompatibleValidation(@Min(100) areYou: Option[Boolean] = None)
+
 case class CaseClassWithJsonNode(value: JsonNode)
 
 case class CaseClassWithAllTypes(
