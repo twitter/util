@@ -27,6 +27,7 @@ scala_library(
         "src/main/scala/com/twitter/util/*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-core-util",
@@ -51,6 +52,7 @@ scala_library(
     # This target exists only to act as an aggregator jar.
     name = "scala",
     sources = ["src/main/scala/PantsWorkaroundCore.scala"],
+    platform = "java8",
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-core",
