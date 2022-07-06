@@ -4,6 +4,7 @@ junit_tests(
     strict_deps = True,
     tags = [
         "bazel-compatible",
+        "known-to-fail-jira:CSL-12163",
         "non-exclusive",
     ],
     dependencies = [
