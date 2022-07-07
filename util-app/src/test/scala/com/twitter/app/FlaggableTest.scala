@@ -1,6 +1,7 @@
 package com.twitter.app
 
-import com.twitter.util.{Duration, Time}
+import com.twitter.util.Duration
+import com.twitter.util.Time
 import java.time.LocalTime
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -35,10 +36,10 @@ class FlaggableTest extends AnyFunSuite {
     assert(local.getAddress.isAnyLocalAddress)
     assert(local.getPort == port)
 
-    val ip = "141.211.133.111"
+    val ip = "127.0.0.1"
     val remote = Flaggable.ofInetSocketAddress.parse(s"$ip:$port")
 
-    assert(remote.getHostName == remote.getHostName)
+    assert(remote.getHostName == "localhost")
     assert(remote.getPort == port)
 
     assert(Flaggable.ofInetSocketAddress.show(local) == s":$port")
