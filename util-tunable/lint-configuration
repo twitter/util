@@ -26,4 +26,4 @@ do
 done
 
 args=$(for x in "$@"; do echo "$x"; done)
-./pants run --quiet util/util-tunable/src/main/scala/com/twitter/util/tunable/linter:configuration-linter -- $args
+./bazel run --ui_event_filters=-info,-stdout,-stderr --noshow_progress util/util-tunable/src/main/scala/com/twitter/util/tunable/linter:configuration-linter -- $args
