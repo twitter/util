@@ -312,17 +312,7 @@ lazy val utilApp = Project(
     name := "util-app",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ {
-      if (scalaVersion.value.startsWith("2")) {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
-        )
-      } else {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
-        )
-      }
-    },
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
   ).dependsOn(utilAppLifecycle, utilCore, utilRegistry)
 
 lazy val utilAppLifecycle = Project(
@@ -409,19 +399,17 @@ lazy val utilCore = Project(
       caffeineLib % "test",
       scalacheckLib,
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ {
+    ) ++
+      scalatestMockitoVersionedDep(scalaVersion.value) ++
+      scalatestScalacheckVersionedDep(scalaVersion.value) ++ {
       if (scalaVersion.value.startsWith("2")) {
         Seq(
           "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-          "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
-          "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
-          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test"
+          "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
         )
       } else {
         Seq(
-          "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0",
-          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test",
-          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
+          "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
         )
       }
     },
@@ -482,17 +470,7 @@ lazy val utilHashing = Project(
     name := "util-hashing",
     libraryDependencies ++= Seq(
       scalacheckLib
-    ) ++ {
-      if (scalaVersion.value.startsWith("2")) {
-        Seq(
-          "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
-        )
-      } else {
-        Seq(
-          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.9.0" % "test",
-        )
-      }
-    },
+    ) ++ scalatestScalacheckVersionedDep(scalaVersion.value)
   ).dependsOn(utilCore % "test")
 
 lazy val utilJacksonAnnotations = Project(
@@ -585,17 +563,7 @@ lazy val utilRegistry = Project(
     name := "util-registry",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
-    ) ++ {
-      if (scalaVersion.value.startsWith("2")) {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-3" % "3.1.2.0" % "test",
-        )
-      } else {
-        Seq(
-          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0" % "test"
-        )
-      }
-    }
+    ) ++ scalatestMockitoVersionedDep(scalaVersion.value)
   ).dependsOn(utilCore)
 
 lazy val utilRouting = Project(
@@ -691,8 +659,6 @@ lazy val utilTest = Project(
     name := "util-test",
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-all" % "1.10.19",
-      "org.scalatest" %% "scalatest" % "3.1.2",
-      "org.scalatestplus" %% "junit-4-12" % "3.1.2.0",
       "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0"
     )
   ).dependsOn(utilCore, utilLogging, utilStats)

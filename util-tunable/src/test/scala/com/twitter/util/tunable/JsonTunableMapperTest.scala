@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.twitter.conversions.StorageUnitOps._
 import com.twitter.conversions.DurationOps._
-import com.twitter.util.{Duration, Return, StorageUnit, Throw}
+import com.twitter.util.Duration
+import com.twitter.util.Return
+import com.twitter.util.StorageUnit
+import com.twitter.util.Throw
 import scala.jdk.CollectionConverters._
 import org.scalatest.funsuite.AnyFunSuite
 
-// Used for veryifying custom deserialization
+// Used for verifying custom deserialization
 case class Foo(number: Double)
 
 class JsonTunableMapperTest extends AnyFunSuite {
