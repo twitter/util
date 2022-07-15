@@ -58,6 +58,8 @@ object MetricBuilder {
 
   val DimensionalNameScopeSeparator: String = "_"
 
+  val NoDescription: String = "No description provided"
+
   /**
    * Construct a MethodBuilder.
    *
@@ -76,7 +78,7 @@ object MetricBuilder {
    */
   def apply(
     keyIndicator: Boolean = false,
-    description: String = "No description provided",
+    description: String = NoDescription,
     units: MetricUnit = Unspecified,
     role: SourceRole = SourceRole.NoRoleSpecified,
     verbosity: Verbosity = Verbosity.Default,

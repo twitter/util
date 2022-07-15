@@ -18,6 +18,8 @@ Runtime Behavior Changes
 
 * util-jackson: Update Jackson library to version 2.13.3 ``PHAB_ID=D906005``
 
+* util-jackson: Deserialized case classes with validation on optional fields shouldn't throw an error.
+  ``PHAB_ID=D915377``
 
 22.4.0
 ------

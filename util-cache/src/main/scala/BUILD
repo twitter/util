@@ -1,6 +1,7 @@
 scala_library(
     # This target exists only to act as an aggregator jar.
     sources = ["PantsWorkaroundCache.scala"],
+    platform = "java8",
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-cache",

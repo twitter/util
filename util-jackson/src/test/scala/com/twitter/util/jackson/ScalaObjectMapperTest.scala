@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper}
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
@@ -1357,6 +1356,53 @@ class ScalaObjectMapperTest
     "A case class with an Option[String] member is parsable from a JSON object with a null value for that field"
   ) {
     parse[CaseClassWithOption]("""{"value":null}""") should be(CaseClassWithOption(None))
+  }
+
+  test(
+    "A case class with an Option[Int] member and validation annotation is parsable from a JSON object with value that passes the validation") {
+    parse[CaseClassWithOptionAndValidation]("""{ "towing_capacity": 10000 }""") should be(
+      CaseClassWithOptionAndValidation(Some(10000)))
+  }
+
+  test(
+    "A case class with an Option[Int] member and validation annotation is parsable from a JSON object with null value") {
+    parse[CaseClassWithOptionAndValidation]("""{ "towing_capacity": null }""") should be(
+      CaseClassWithOptionAndValidation(None))
+  }
+
+  test(
+    "A case class with an Option[Int] member and validation annotation is parsable from a JSON without that field") {
+    parse[CaseClassWithOptionAndValidation]("""{}""") should be(
+      CaseClassWithOptionAndValidation(None))
+  }
+
+  test(
+    "A case class with an Option[Int] member and validation annotation is parsable from a JSON object with value that fails the validation") {
+    val e = intercept[CaseClassMappingException] {
+      parse[CaseClassWithOptionAndValidation]("""{ "towing_capacity": 1 }""") should be(
+        CaseClassWithOptionAndValidation(Some(1)))
+    }
+    e.errors.head.getMessage should be("towing_capacity: must be greater than or equal to 100")
+  }
+
+  test(
+    "A case class with an Option[Boolean] member and incompatible validation annotation is not parsable from a JSON object") {
+    val e = intercept[jakarta.validation.UnexpectedTypeException] {
+      parse[CaseClassWithOptionAndIncompatibleValidation]("""{ "are_you": true }""") should be(
+        CaseClassWithOptionAndIncompatibleValidation(Some(true)))
+    }
+  }
+
+  test(
+    "A case class with an Option[Boolean] member and incompatible validation annotation is parsable from a JSON object with null value") {
+    parse[CaseClassWithOptionAndIncompatibleValidation]("""{ "are_you": null }""") should be(
+      CaseClassWithOptionAndIncompatibleValidation(None))
+  }
+
+  test(
+    "A case class with an Option[Boolean] member and incompatible validation annotation is parsable from a JSON object without that field") {
+    parse[CaseClassWithOptionAndIncompatibleValidation]("""{}""") should be(
+      CaseClassWithOptionAndIncompatibleValidation(None))
   }
 
   test("A case class with a JsonNode member generates a field of the given type") {

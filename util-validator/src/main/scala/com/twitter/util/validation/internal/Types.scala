@@ -1,6 +1,7 @@
 package com.twitter.util.validation.internal
 
-import org.json4s.reflect.{Reflector, ScalaType}
+import org.json4s.reflect.Reflector
+import org.json4s.reflect.ScalaType
 
 private[validation] object Types {
 
@@ -28,8 +29,20 @@ private[validation] object Types {
       else
         Reflector.scalaTypeOf(value.getClass)
     } else if (scalaType.isOption) {
-      if (scalaType.typeArgs.nonEmpty) scalaType.typeArgs.head
-      else Reflector.scalaTypeOf(classOf[Object])
+      if (scalaType.typeArgs.nonEmpty) {
+        // When deserializing a case class, we interpret the field
+        // type with the field constructor type. For optional
+        // field, Jackson returns Option[Object] as the constructor
+        // type. However, field validations would require a
+        // specific field type in order to run the constraint
+        // validator. So we use the field value type as the field
+        // type for optional field.
+        if (scalaType.typeArgs.head.erasure.isInstanceOf[Object])
+          Reflector.scalaTypeOf(value.getClass)
+        else scalaType.typeArgs.head
+      } else {
+        Reflector.scalaTypeOf(classOf[Object])
+      }
     } else scalaType
   }
 
