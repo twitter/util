@@ -27,6 +27,12 @@ abstract class TranslatingStatsReceiver(
 
 private object TranslatingStatsReceiver {
 
+  private final class IdentityTranslatingStatsReceiver(sr: StatsReceiver, f: Identity => Identity)
+      extends TranslatingStatsReceiver(sr) {
+    protected def translate(builder: MetricBuilder): MetricBuilder =
+      builder.withIdentity(f(builder.identity))
+  }
+
   /**
    * A [[TranslatingStatsReceiver]] for working with both dimensional and hierarchical metrics.
    *
@@ -51,4 +57,8 @@ private object TranslatingStatsReceiver {
       identity.copy(labels = identity.labels + labelPair)
     }
   }
+
+  /** Translate the identity of a metric */
+  def translateIdentity(sr: StatsReceiver)(f: Identity => Identity): StatsReceiver =
+    new IdentityTranslatingStatsReceiver(sr, f)
 }
