@@ -26,7 +26,7 @@ val caffeineLib = "com.github.ben-manes.caffeine" % "caffeine" % "2.9.3"
 val jsr305Lib = "com.google.code.findbugs" % "jsr305" % "2.0.1"
 val scalacheckLib = "org.scalacheck" %% "scalacheck" % "1.15.4" % "test"
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jVersion
-val snakeyaml = "org.yaml" % "snakeyaml" % "1.24"
+val snakeyaml = "org.yaml" % "snakeyaml" % "1.28"
 
 def travisTestJavaOptions: Seq[String] = {
   // We have some custom configuration for the Travis environment

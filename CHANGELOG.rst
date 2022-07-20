@@ -7,6 +7,8 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+* util: Update snakeyaml to 1.28 ``PHAB_ID=D930268``
+
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
 
