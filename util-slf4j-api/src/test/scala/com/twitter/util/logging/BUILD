@@ -5,6 +5,7 @@ scala_library(
         "*.java",
         "*.scala",
     ],
+    platform = "java8",
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
@@ -28,6 +29,7 @@ scala_library(
 
 junit_tests(
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     strict_deps = True,
     tags = [
         "bazel-compatible",

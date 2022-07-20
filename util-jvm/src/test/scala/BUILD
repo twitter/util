@@ -15,6 +15,7 @@ junit_tests(
         "**/*.scala",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     strict_deps = True,
     tags = [
         "bazel-compatible",
@@ -36,6 +37,7 @@ scala_library(
     #    does not strictly enforce it.
     sources = ["**/*.scala"],
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = COMMON_DEPS + ["util/util-stats/src/main/scala/com/twitter/finagle/stats:stats"],
@@ -44,6 +46,7 @@ scala_library(
 jvm_binary(
     name = "bin",
     main = "com.twitter.jvm.EstimatorApp",
+    platform = "java8",
     tags = ["bazel-compatible"],
     dependencies = [":estimator_app"],
 )

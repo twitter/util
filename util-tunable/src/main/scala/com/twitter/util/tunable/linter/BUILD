@@ -1,5 +1,6 @@
 scala_library(
     name = "scala",
+    platform = "java8",
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
@@ -16,6 +17,7 @@ jvm_binary(
     name = "configuration-linter",
     main = "com.twitter.util.tunable.linter.ConfigurationLinter",
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     tags = ["bazel-compatible"],
     dependencies = [
         ":scala",

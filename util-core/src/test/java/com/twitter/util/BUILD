@@ -2,6 +2,7 @@ java_library(
     name = "object_size_calculator",
     sources = ["ObjectSizeCalculator.java"],
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
@@ -16,6 +17,7 @@ junit_tests(
         "*.java",
     ],
     compiler_option_sets = ["fatal_warnings"],
+    platform = "java8",
     strict_deps = True,
     tags = [
         "bazel-compatible",

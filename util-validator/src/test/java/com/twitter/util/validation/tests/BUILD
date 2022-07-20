@@ -1,5 +1,6 @@
 junit_tests(
     sources = ["**/*.java"],
+    platform = "java8",
     strict_deps = True,
     tags = ["bazel-compatible"],
     dependencies = [
