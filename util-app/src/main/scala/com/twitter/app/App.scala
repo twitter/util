@@ -75,7 +75,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
 
   /** Exit on error with the given Throwable */
   protected def exitOnError(throwable: Throwable): Unit = {
-    throwable.printStackTrace()
+    throwable.printStackTrace(System.out)
     throwable match {
       case _: CloseException =>
         // exception occurred while closing, do not attempt to close again
@@ -104,7 +104,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
     System.err.println(details)
     // if we have gotten here we may not yet have attempted to close, ensure we do.
     try {
-      Await.ready(close(), closeDeadline - Time.now)
+      Await.ready(close(), (closeDeadline + SecondChanceGrace).sinceNow)
     } catch {
       case NonFatal(exc) =>
         exitOnError(newCloseException(Seq(exc)))
@@ -212,6 +212,13 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
   final val MinGrace: Duration = 1.second
 
   /**
+   * Each resource is given a "grace period" to close gracefully. If it's not able to close within
+   * the allowed time, we give a "second chance" and wait a little more before forcefully
+   * terminating the closing.
+   */
+  private[this] final val SecondChanceGrace: Duration = 1.second
+
+  /**
    * Default amount of time to wait for shutdown.
    * This value is not used as a default if `close()` is called without parameters. It simply
    * provides a default value to be passed as `close(grace)`.
@@ -253,7 +260,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
       // after `close()` completes and `closing` is satisfied
       close(closeDeadline)
         .transform { _ => closable.close(closeDeadline) }
-        .by(shutdownTimer, closeDeadline)
+        .by(shutdownTimer, closeDeadline + SecondChanceGrace)
     } else {
       // `close()` not yet called, safe to add it
       lastExits.add(closable)
@@ -347,7 +354,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
     closeDeadline = deadline.max(Time.now + MinGrace)
     Future
       .collectToTry(exits.asScala.toSeq.map(_.close(closeDeadline)))
-      .by(shutdownTimer, closeDeadline)
+      .by(shutdownTimer, closeDeadline + SecondChanceGrace)
       .transform {
         case Return(results) =>
           observeFuture(CloseExitLast) {
@@ -379,7 +386,7 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
   ): Future[Unit] = {
     Future
       .collectToTry(lastExits.asScala.toSeq.map(_.close(deadline)))
-      .by(shutdownTimer, deadline)
+      .by(shutdownTimer, deadline + SecondChanceGrace)
       .transform {
         case Return(results) =>
           val errors = (onExitResults ++ results).collect { case Throw(e) => e }
@@ -449,11 +456,13 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
       // which is the same result that would be returned by an `Await.result` on `this`.
       val closeFuture = close(defaultCloseGracePeriod)
 
-      // The deadline to 'close' is advisory; we enforce it here.
-      if (!suppressGracefulShutdownErrors) Await.result(closeFuture, closeDeadline - Time.now)
+      val waitForIt = (closeDeadline + SecondChanceGrace).sinceNow
+
+      // No need to pass a timeout to Await, close(...) enforces the timeout for us.
+      if (!suppressGracefulShutdownErrors) Await.result(closeFuture, waitForIt)
       else {
         try { // even if we suppress shutdown errors, we give the resources time to close
-          Await.ready(closeFuture, closeDeadline - Time.now)
+          Await.ready(closeFuture, waitForIt)
         } catch {
           case e: TimeoutException =>
             throw e // we want TimeoutExceptions to propagate
