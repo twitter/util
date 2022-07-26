@@ -603,14 +603,13 @@ lazy val utilSecurity = Project(
   id = "util-security",
   base = file("util-security")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-security",
     libraryDependencies ++= Seq(
       scalacheckLib,
-      "org.scalatestplus" %% "scalacheck-1-14" % "3.1.2.0" % "test",
       snakeyaml
-    )
+    ) ++ scalatestScalacheckVersionedDep(scalaVersion.value)
   ).dependsOn(utilCore, utilLogging, utilSecurityTestCerts % "test")
 
 lazy val utilSecurityTestCerts = Project(

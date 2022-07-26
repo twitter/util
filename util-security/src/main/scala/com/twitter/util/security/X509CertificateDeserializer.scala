@@ -3,7 +3,8 @@ package com.twitter.util.security
 import com.twitter.util.Try
 
 import java.io.ByteArrayInputStream
-import java.security.cert.{CertificateFactory, X509Certificate}
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 
 /**
  * A helper object to deserialize PEM-encoded X.509 Certificates.
@@ -15,7 +16,7 @@ import java.security.cert.{CertificateFactory, X509Certificate}
  */
 object X509CertificateDeserializer {
   private[this] val MessageType: String = "CERTIFICATE"
-  private[this] val deserializeX509: Array[Byte] => X509Certificate = { certBytes: Array[Byte] =>
+  private[this] val deserializeX509: Array[Byte] => X509Certificate = { (certBytes: Array[Byte]) =>
     val certFactory = CertificateFactory.getInstance("X.509")
     val certificate = certFactory
       .generateCertificate(new ByteArrayInputStream(certBytes))
