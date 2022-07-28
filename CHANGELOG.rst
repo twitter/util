@@ -7,12 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-core: Introduce Future.fromCompletableFuture ``PHAB_ID=D940686``
+
 22.7.0
 ------
-
-No Changes
-
-* util: Update snakeyaml to 1.28 ``PHAB_ID=D930268``
 
 Breaking API Changes
 ~~~~~~~~~~~~~~~~~~~~
@@ -27,6 +28,8 @@ Runtime Behavior Changes
 
 * util-jackson: Deserialized case classes with validation on optional fields shouldn't throw an error.
   ``PHAB_ID=D915377``
+
+* util: Update snakeyaml to 1.28 ``PHAB_ID=D930268``
 
 22.4.0
 ------

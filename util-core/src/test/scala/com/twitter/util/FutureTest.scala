@@ -1744,6 +1744,13 @@ class FutureTest extends AnyWordSpec with MockitoSugar with ScalaCheckDrivenProp
     new MkConst {
       def apply[A](r: Try[A]): Future[A] = new Promise(r)
     })
+  test(
+    "Future.fromCompletableFuture",
+    new MkConst {
+      def apply[A](r: Try[A]): Future[A] =
+        Future.fromCompletableFuture(new Promise(r).toCompletableFuture[A])
+    }
+  )
 
   "Future.apply" should {
     "fail on NLRC" in {

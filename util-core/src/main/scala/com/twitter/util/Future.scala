@@ -1436,6 +1436,32 @@ def join[%s](%s): Future[(%s)] = join(Seq(%s)).map { _ => (%s) }""".format(
         f.compose(it => it.toSeq))
     )
   }
+
+  /**
+   * Convert a Java native [[CompletableFuture]] to a Twitter [[Future]].
+   *
+   * @note The Twitter Future's cancellation will be propagated to the underlying [[CompletableFuture]]
+   * @see [[https://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)]]
+   */
+  def fromCompletableFuture[T](completableFuture: CompletableFuture[T]): Future[T] = {
+    val p = new Promise[T]
+
+    // ensure that we propagate cancellation/errors from the Promise to the CompletableFuture.
+    // without this propagation, work contained within the CompletableFuture chain will continue,
+    // despite the Promise completing in error. we expect the CompletableFuture chain to reflect
+    // that an error has occurred via cancellation and stop work that would otherwise be wasted.
+    p.setInterruptHandler {
+      case _ => completableFuture.cancel(true)
+    }
+
+    // ensure the state of the CompletableFuture propagates back to the Promise on completion
+    completableFuture.whenComplete {
+      case (_, thrown: Throwable) if thrown != null => p.setException(thrown)
+      case (t, _) => p.setValue(t)
+    }
+
+    p
+  }
 }
 
 /**
