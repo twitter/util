@@ -52,8 +52,4 @@ jobs:
             find ~/.sbt         -name "*.lock"               -delete
           fi
       - name: test
-        run: ${{ format('./sbt ++{0} clean coverage test coverageReport', matrix.scala) }}
-      - name: coverage
-        run: ${{ format('./sbt ++{0} coverageAggregate', matrix.scala) }}
-      - name: upload coverage
-        uses: codecov/codecov-action@v2
+        run: ${{ format('./sbt ++{0} clean test', matrix.scala) }}

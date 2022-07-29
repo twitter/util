@@ -1,5 +1,3 @@
-import scoverage.ScoverageKeys
-
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / excludeLintKeys += scalacOptions // might be actually unused in util-doc module but not sure
 
@@ -141,7 +139,6 @@ val baseSettings = Seq(
     if (scalaVersion.value.startsWith("3")) Seq.empty
     else (Compile / doc / sources).value
   },
-  ScoverageKeys.coverageHighlighting := true,
   resolvers +=
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   scalacOptions := Seq(
