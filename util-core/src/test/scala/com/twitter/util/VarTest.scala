@@ -1,9 +1,7 @@
 package com.twitter.util
 
-import com.twitter.util.UpdatableVar.Party
 import java.util.concurrent.atomic.AtomicReference
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import scala.collection.mutable
 import org.scalatest.funsuite.AnyFunSuite
@@ -482,38 +480,6 @@ class VarTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
         v() = set
         assert(set == w.get)
       }
-    }
-  }
-
-  test("Hand-rolled observers queue behaves exactly like SortedSet") {
-    implicit val anyOrder: Ordering[Party[Any]] =
-      UpdatableVar.partyOrder.asInstanceOf[Ordering[Party[Any]]]
-
-    val arbParties = for {
-      n <- Gen.choose(1, 100)
-      depths <- Gen.listOfN(n, Gen.posNum[Int])
-      seqs <- Gen.listOfN(n, Gen.posNum[Int])
-    } yield {
-      depths.zip(seqs).map {
-        case (d, s) => Party[Any](null, d, s)
-      }
-    }
-
-    forAll(arbParties) { parties =>
-      var expected = scala.collection.immutable.SortedSet.empty[Party[Any]]
-      expected ++= parties
-
-      val v = new UpdatableVar[Any](null)
-      parties.foreach(p => v.insertParty(p))
-
-      // test insert
-      assert(expected.toList == v.parties)
-
-      expected -= parties.head
-      v.removeParty(parties.head)
-
-      // test remove
-      assert(expected.toList == v.parties)
     }
   }
 }

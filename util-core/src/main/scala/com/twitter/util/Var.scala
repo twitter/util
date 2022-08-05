@@ -1,11 +1,10 @@
 package com.twitter.util
 
 import java.util.{List => JList}
-import scala.annotation.tailrec
 import scala.collection.{Seq => AnySeq}
 import scala.collection.compat.immutable.ArraySeq
+import scala.collection.immutable.SortedSet
 import scala.collection.mutable.Buffer
-import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 import scala.language.higherKinds
 
@@ -475,11 +474,11 @@ object Var {
 private object UpdatableVar {
   import Var.Observer
 
-  final case class Party[T](observer: Observer[T], depth: Int, sequence: Long) {
+  private final class Party[T](val observer: Observer[T], val depth: Int, val sequence: Long) {
     @volatile var active: Boolean = true
   }
 
-  val partyOrder: Ordering[Party[_]] = new Ordering[Party[_]] {
+  private val partyOrder: Ordering[Party[_]] = new Ordering[Party[_]] {
     def compare(a: Party[_], b: Party[_]): Int = {
       val c1 = java.lang.Integer.compare(a.depth, b.depth)
       if (c1 != 0) return c1
@@ -497,13 +496,8 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
   @volatile private[this] var value = init
   private[this] var version = 0L
   private[this] var partySequence = 0L
-  // Exposed for testing.
-  //
-  // Parties is a sorted set. We implement it ourselves (out top of vanilla list) at the cost
-  // of O(n) insert/remove in order to save on memory footprint. Similar to Future's WaitQueue,
-  // there just a handful of observers registering to each Var so plain old linked list works
-  // the best.
-  @volatile private[util] var parties = List.empty[Party[T]]
+  @volatile private[this] var parties =
+    SortedSet.empty[Party[T]](partyOrder.asInstanceOf[Ordering[Party[T]]])
 
   def apply(): T = value
 
@@ -528,8 +522,8 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
     obs.claim(this)
 
     val (p, curValue, curVersion) = synchronized {
-      val party = Party(obs, depth, partySequence)
-      insertParty(party)
+      val party = new Party(obs, depth, partySequence)
+      parties = parties + party
       partySequence += 1
       (party, value, version)
     }
@@ -540,54 +534,10 @@ private[util] class UpdatableVar[T](init: T) extends Var[T] with Updatable[T] wi
       def close(deadline: Time): Future[Unit] = {
         p.active = false
         UpdatableVar.this.synchronized {
-          removeParty(p)
+          parties = parties - p
         }
         Future.Done
       }
-    }
-  }
-
-  // Must be called while synchronized on this.
-  def removeParty(p: Party[T]): Unit = {
-    @tailrec
-    def loop(current: List[Party[T]], result: ListBuffer[Party[T]]): List[Party[T]] =
-      current match {
-        case Nil => result.toList
-        case q :: next =>
-          if (q eq p) (result ++= next).toList
-          else loop(next, result += q)
-      }
-
-    parties = parties match {
-      case q :: next if q eq p => next
-      case ps => loop(ps, ListBuffer.empty)
-    }
-  }
-
-  // Must be called while synchronized on this.
-  def insertParty(p: Party[T]): Unit = {
-    @tailrec
-    def loop(current: List[Party[T]], result: ListBuffer[Party[T]]): List[Party[T]] =
-      current match {
-        case Nil => (result += p).toList
-        case q :: next =>
-          val order = partyOrder.compare(p, q)
-          if (order < 0) {
-            // p < q, insert here
-            result += p
-            (result ++= current).toList
-          } else if (order > 0) {
-            // p > q, the insert position is not found yet
-            loop(next, result += q)
-          } else {
-            // p == q, ignore p and return the original queue
-            parties
-          }
-      }
-
-    parties = parties match {
-      case Nil => p :: Nil
-      case ps => loop(ps, ListBuffer.empty)
     }
   }
 
