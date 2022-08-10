@@ -3,7 +3,7 @@ package com.twitter.util
 import com.twitter.concurrent.Offer
 import org.openjdk.jmh.annotations._
 
-// ./sbt 'project util-benchmark' 'jmh:run FutureBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'FutureBenchmark'
 class FutureBenchmark extends StdBenchAnnotations {
 
   import FutureBenchmark._

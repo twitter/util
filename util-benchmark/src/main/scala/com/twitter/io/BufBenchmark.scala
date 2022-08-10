@@ -6,7 +6,7 @@ import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 import scala.util.Random
 
-// ./sbt 'project util-benchmark' 'jmh:run BufBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'BufBenchmark'
 @State(Scope.Benchmark)
 class BufBenchmark extends StdBenchAnnotations {
 

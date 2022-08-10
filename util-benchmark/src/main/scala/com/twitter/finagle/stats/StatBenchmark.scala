@@ -1,10 +1,14 @@
 package com.twitter.finagle.stats
 
-import com.twitter.util.{Await, Future, StdBenchAnnotations}
+import com.twitter.util.Await
+import com.twitter.util.Future
+import com.twitter.util.StdBenchAnnotations
 import java.util.concurrent.TimeUnit
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
+import org.openjdk.jmh.annotations.Benchmark
+import org.openjdk.jmh.annotations.Scope
+import org.openjdk.jmh.annotations.State
 
-// ./sbt 'project util-benchmark' 'jmh:run StatBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'StatBenchmark'
 @State(Scope.Benchmark)
 class StatBenchmark extends StdBenchAnnotations {
 

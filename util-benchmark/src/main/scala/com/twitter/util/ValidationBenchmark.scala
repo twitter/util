@@ -1,10 +1,14 @@
 package com.twitter.util
 
-import com.twitter.util.validation.{MethodValidation, ScalaValidator}
+import com.twitter.util.validation.MethodValidation
+import com.twitter.util.validation.ScalaValidator
 import com.twitter.util.validation.engine.MethodValidationResult
 import jakarta.validation.ValidationException
-import jakarta.validation.constraints.{Min, NotEmpty}
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotEmpty
+import org.openjdk.jmh.annotations.Benchmark
+import org.openjdk.jmh.annotations.Scope
+import org.openjdk.jmh.annotations.State
 import scala.util.control.NonFatal
 
 private object ValidationBenchmark {
@@ -19,7 +23,7 @@ private object ValidationBenchmark {
   }
 }
 
-// ./sbt 'project util-benchmark' 'jmh:run ValidationBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'ValidationBenchmark'
 @State(Scope.Benchmark)
 class ValidationBenchmark extends StdBenchAnnotations {
   import ValidationBenchmark._

@@ -1,9 +1,14 @@
 package com.twitter.io
 
-import com.twitter.util.{Future, StdBenchAnnotations}
-import org.openjdk.jmh.annotations.{Benchmark, Measurement, Scope, State, Warmup}
+import com.twitter.util.Future
+import com.twitter.util.StdBenchAnnotations
+import org.openjdk.jmh.annotations.Benchmark
+import org.openjdk.jmh.annotations.Measurement
+import org.openjdk.jmh.annotations.Scope
+import org.openjdk.jmh.annotations.State
+import org.openjdk.jmh.annotations.Warmup
 
-// sbt 'project util-benchmark' 'jmh:run PipeBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'PipeBenchmark'
 @State(Scope.Benchmark)
 @Warmup(iterations = 2)
 @Measurement(iterations = 2)

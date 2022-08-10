@@ -1,9 +1,11 @@
 package com.twitter.util
 
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
+import org.openjdk.jmh.annotations.Benchmark
+import org.openjdk.jmh.annotations.Scope
+import org.openjdk.jmh.annotations.State
 import scala.util.control.NoStackTrace
 
-// ./sbt 'project util-benchmark' 'jmh:run MonitorBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'MonitorBenchmark'
 @State(Scope.Benchmark)
 class MonitorBenchmark extends StdBenchAnnotations {
 

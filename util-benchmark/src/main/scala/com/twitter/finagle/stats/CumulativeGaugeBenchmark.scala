@@ -5,7 +5,7 @@ import java.util
 import java.util.concurrent.TimeUnit
 import org.openjdk.jmh.annotations._
 
-// ./sbt 'project util-benchmark' 'jmh:run CumulativeGaugeBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'CumulativeGaugeBenchmark'
 @State(Scope.Benchmark)
 class CumulativeGaugeBenchmark extends StdBenchAnnotations {
   import CumulativeGaugeBenchmark._

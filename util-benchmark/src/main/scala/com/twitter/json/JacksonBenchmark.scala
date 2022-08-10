@@ -24,7 +24,7 @@ object JacksonBenchmark {
 
 }
 
-// ./sbt 'project util-benchmark' 'jmh:run JacksonBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'JacksonBenchmark'
 @State(Scope.Benchmark)
 class JacksonBenchmark extends StdBenchAnnotations {
   import JacksonBenchmark._

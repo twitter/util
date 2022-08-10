@@ -2,7 +2,7 @@ package com.twitter.util
 
 import org.openjdk.jmh.annotations._
 
-// ./sbt 'project util-benchmark' 'jmh:run TryBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'TryBenchmark'
 @State(Scope.Benchmark)
 class TryBenchmark extends StdBenchAnnotations {
 

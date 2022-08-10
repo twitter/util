@@ -5,7 +5,7 @@ import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 
 // Run this via:
-// ./sbt 'project util-benchmark' 'jmh:run SchedulerBenchmark -i 10 -wi 5 -f 1 -t 8 -bm avgt -tu ns'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'SchedulerBenchmark' -i 10 -wi 5 -f 1 -t 8 -bm avgt -tu ns
 //
 // Notes:
 //  - threads, -t, should be 2x number of logical cores.

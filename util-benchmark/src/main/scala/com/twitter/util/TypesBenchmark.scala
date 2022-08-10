@@ -13,7 +13,7 @@ private object TypesBenchmark {
   case class IsCaseClass(a: String, b: String)
 }
 
-// ./sbt 'project util-benchmark' 'jmh:run TypesBenchmark'
+// ./bazel run //util/util-benchmark/src/main/scala:jmh -- 'TypesBenchmark'
 @State(Scope.Benchmark)
 class TypesBenchmark extends StdBenchAnnotations {
   import TypesBenchmark._
