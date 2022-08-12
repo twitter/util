@@ -11,4 +11,7 @@ scala_library(
     dependencies = [
         "util/util-core:util-core-util",
     ],
+    exports = [
+        "util/util-core:util-core-util",
+    ],
 )
