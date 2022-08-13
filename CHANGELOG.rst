@@ -12,6 +12,9 @@ New Features
 
 * util-core: Introduce Future.fromCompletableFuture ``PHAB_ID=D940686``
 
+* util-stats: `MetricBuilder` now has API to configure a format in which histograms are exported.
+  Use `.withHistogramFormat` to access it.  ``PHAB_ID=D908189``
+
 22.7.0
 ------
 

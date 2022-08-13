@@ -40,6 +40,23 @@ object SourceRole {
 }
 
 /**
+ * A format for when histogram is exported. A few formats are supported:
+ *
+ *   - `NoSummary`: only percentiles (p50, ..., p9999) are exported
+ *   - `ShortSummary`: percentiles and `count`, and `sum` are exported
+ *   - `FullSummary`: percentiles, `count`, `sum`, `avg`, `min`, and `max` are exported
+ *   - `Default`: let the exporting sub-system (usually, TwitterServer) decide
+ */
+sealed abstract class HistogramFormat private (override val toString: String)
+
+object HistogramFormat {
+  case object Default extends HistogramFormat("default")
+  case object NoSummary extends HistogramFormat("no_summary")
+  case object ShortSummary extends HistogramFormat("short_summary")
+  case object FullSummary extends HistogramFormat("full_summary")
+}
+
+/**
  * finagle-stats has configurable scope separators. As this package is wrapped by finagle-stats, we
  * cannot retrieve it from finagle-stats. Consequently, we created this object so that the
  * scope-separator can be passed in for stringification of the MetricBuilder objects.
@@ -86,6 +103,7 @@ object MetricBuilder {
     name: Seq[String] = Seq.empty,
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
+    histogramFormat: HistogramFormat = HistogramFormat.Default,
     percentiles: IndexedSeq[Double] = IndexedSeq.empty,
     isStandard: Boolean = false,
     metricType: MetricType,
@@ -102,6 +120,7 @@ object MetricBuilder {
       Identity(name, name),
       relativeName,
       processPath,
+      histogramFormat,
       percentiles,
       isStandard,
       metricType
@@ -119,6 +138,24 @@ object MetricBuilder {
    */
   def newBuilder(metricType: MetricType): MetricBuilder =
     apply(metricType = metricType)
+
+  /**
+   * Construct a new `MetricBuilder` that will build counters. The result is the same as calling
+   * `newBuilder(CounterType)`.
+   */
+  val forCounter: MetricBuilder = newBuilder(MetricBuilder.CounterType)
+
+  /**
+   * Construct a new `MetricBuilder` that will build stats (histograms). The result is the same as
+   * calling `newBuilder(HistogramType)`.
+   */
+  val forStat: MetricBuilder = newBuilder(MetricBuilder.HistogramType)
+
+  /**
+   * Construct a new `MetricBuilder` that will build gauges. The result is the same as calling
+   * `newBuilder(GaugeType)`.
+   */
+  val forGauge: MetricBuilder = newBuilder(MetricBuilder.GaugeType)
 
   /**
    * Indicate the Metric type, [[CounterType]] will create a [[Counter]],
@@ -207,6 +244,7 @@ class MetricBuilder private (
   val relativeName: Seq[String],
   val processPath: Option[String],
   // Only persisted and relevant when building histograms.
+  val histogramFormat: HistogramFormat,
   val percentiles: IndexedSeq[Double],
   val isStandard: Boolean,
   val metricType: MetricType)
@@ -228,6 +266,7 @@ class MetricBuilder private (
     relativeName: Seq[String] = this.relativeName,
     processPath: Option[String] = this.processPath,
     isStandard: Boolean = this.isStandard,
+    histogramFormat: HistogramFormat = this.histogramFormat,
     percentiles: IndexedSeq[Double] = this.percentiles,
     metricType: MetricType = this.metricType
   ): MetricBuilder = {
@@ -241,6 +280,7 @@ class MetricBuilder private (
       identity = identity,
       relativeName = relativeName,
       processPath = processPath,
+      histogramFormat = histogramFormat,
       percentiles = percentiles,
       isStandard = isStandard,
       metricType = metricType
@@ -304,6 +344,9 @@ class MetricBuilder private (
   def withRelativeName(relativeName: String*): MetricBuilder =
     if (this.relativeName == Seq.empty) this.copy(relativeName = relativeName) else this
 
+  def withHistogramFormat(histogramFormat: HistogramFormat): MetricBuilder =
+    this.copy(histogramFormat = histogramFormat)
+
   @varargs
   def withPercentiles(percentiles: Double*): MetricBuilder =
     this.copy(percentiles = percentiles.toIndexedSeq)
@@ -360,6 +403,7 @@ class MetricBuilder private (
         identity == that.identity &&
         relativeName == that.relativeName &&
         processPath == that.processPath &&
+        histogramFormat == histogramFormat &&
         percentiles == that.percentiles &&
         metricType == that.metricType
     case _ => false
@@ -376,6 +420,7 @@ class MetricBuilder private (
         identity,
         relativeName,
         processPath,
+        histogramFormat,
         percentiles,
         metricType)
 
@@ -383,6 +428,6 @@ class MetricBuilder private (
   }
 
   override def toString(): String = {
-    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $identity, $relativeName, $processPath, $percentiles, $metricType)"
+    s"MetricBuilder($keyIndicator, $description, $units, $role, $verbosity, $sourceClass, $identity, $relativeName, $processPath, $histogramFormat, $percentiles, $metricType)"
   }
 }
