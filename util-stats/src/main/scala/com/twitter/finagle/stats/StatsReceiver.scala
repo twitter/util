@@ -26,12 +26,21 @@ object Verbosity {
   /**
    * Indicates that a given metric is for standard operations.
    */
-  val Default: Verbosity = new Verbosity("Verbosity(default)")
+  val Default: Verbosity = new Verbosity("default")
 
   /**
    * Indicates that a given metric may only be useful for a debugging/troubleshooting purposes.
    */
-  val Debug: Verbosity = new Verbosity("Verbosity(debug)")
+  val Debug: Verbosity = new Verbosity("debug")
+
+  /**
+   * Indicates that the metrics value is short lived and the backend metric store is free to
+   * drop it more eagerly than normal metrics.
+   *
+   * @note there is no guarantee as to how or if the metrics store will honor the designation
+   *       and if not implementations should interpret it the same as `Default`.
+   */
+  val ShortLived: Verbosity = new Verbosity("short_lived")
 }
 
 object StatsReceiver {
