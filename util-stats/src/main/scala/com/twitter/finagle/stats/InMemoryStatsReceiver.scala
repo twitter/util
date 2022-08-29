@@ -83,6 +83,18 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   val expressions: mutable.Map[ExpressionSchemaKey, ExpressionSchema] =
     new ConcurrentHashMap[ExpressionSchemaKey, ExpressionSchema]().asScala
 
+  // duplicate metric name -> duplication times
+  val duplicatedMetrics: mutable.Map[Seq[String], Long] =
+    new ConcurrentHashMap[Seq[String], Long]().asScala
+
+  private def recordDup(metricBuilder: MetricBuilder): Unit = {
+    if (!duplicatedMetrics.contains(metricBuilder.name)) {
+      duplicatedMetrics(metricBuilder.name) = 1
+    } else {
+      duplicatedMetrics(metricBuilder.name) = duplicatedMetrics(metricBuilder.name) + 1
+    }
+  }
+
   override def counter(name: String*): ReadableCounter = {
     val metricBuilder = this
       .metricBuilder(CounterType)
@@ -105,6 +117,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         if (!counters.contains(metricBuilder.name)) {
           counters(metricBuilder.name) = 0
           schemas(metricBuilder.name) = metricBuilder
+        } else {
+          recordDup(metricBuilder)
         }
       }
 
@@ -144,6 +158,8 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
         if (!stats.contains(metricBuilder.name)) {
           stats(metricBuilder.name) = Nil
           schemas(metricBuilder.name) = metricBuilder
+        } else {
+          recordDup(metricBuilder)
         }
       }
 
