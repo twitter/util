@@ -1,6 +1,8 @@
 package com.twitter.app
 
-import com.twitter.util.registry.{Entry, GlobalRegistry, SimpleRegistry}
+import com.twitter.util.registry.Entry
+import com.twitter.util.registry.GlobalRegistry
+import com.twitter.util.registry.SimpleRegistry
 import org.scalatest.funsuite.AnyFunSuite
 
 class FlagsTest extends AnyFunSuite {
@@ -170,7 +172,7 @@ class FlagsTest extends AnyFunSuite {
     import ctx._
     flag.parseArgs(Array("-undefined", "-foo", "blah")) match {
       case Flags.Error(reason) =>
-        assert(reason.contains("Error parsing flag \"undefined\": flag undefined"))
+        assert(reason.contains("Error parsing flag \"undefined\": " + Flags.FlagUndefinedMessage))
         assert(reason.contains("Error parsing flag \"foo\": For input string: \"blah\""))
         assert(reason.contains("usage:"))
       case other => fail(s"expected a flag error, but received $other")

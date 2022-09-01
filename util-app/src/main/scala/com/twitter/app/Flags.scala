@@ -26,7 +26,7 @@ class FlagUndefinedException extends Exception(Flags.FlagUndefinedMessage)
 
 object Flags {
   private[app] val FlagValueRequiredMessage = "flag value is required"
-  private[app] val FlagUndefinedMessage = "flag undefined"
+  private[app] val FlagUndefinedMessage = "flag instance (c.t.app.Flag) is not defined"
 
   sealed trait FlagParseResult
 
