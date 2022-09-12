@@ -92,18 +92,13 @@ object Promise {
       loop(this, WaitQueue.empty)
     }
 
+    @tailrec
     final def runInScheduler(t: Try[A]): Unit = {
       if (this ne WaitQueue.Empty) {
-        Scheduler.submit(() => WaitQueue.this.run(t))
+        Scheduler.submit(() => first(t))
+        rest.runInScheduler(t)
       }
     }
-
-    @tailrec
-    private def run(t: Try[A]): Unit =
-      if (this ne WaitQueue.Empty) {
-        first(t)
-        rest.run(t)
-      }
 
     final override def toString: String = s"WaitQueue(size=$size)"
   }
