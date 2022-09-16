@@ -1,4 +1,15 @@
+# workaround for https://github.com/bazelbuild/bazel/issues/3864
+alias(
+    name = "logging",
+    target = ":internal",
+    tags = [
+        "bazel-compatible",
+        "visibility://codestructure/packages/util-logging:legal",
+    ],
+)
+
 scala_library(
+    name = "internal",
     sources = ["**/*.scala"],
     compiler_option_sets = ["fatal_warnings"],
     platform = "java8",
@@ -8,7 +19,9 @@ scala_library(
         repo = artifactory,
     ),
     strict_deps = True,
-    tags = ["bazel-compatible"],
+    tags = [
+        "bazel-compatible",
+    ],
     dependencies = [
         "util/util-app/src/main/scala",
         "util/util-core:util-core-util",
