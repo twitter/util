@@ -6,7 +6,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class WaitQueueTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
-  private class EmptyK[A] extends Promise.K[A] {
+  private class EmptyK[A] extends Promise.K[A](Local.Context.empty) {
     protected[util] def depth: Short = 0
     def apply(ta: Try[A]): Unit = ()
   }

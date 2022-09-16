@@ -1,6 +1,5 @@
 package com.twitter.util
 
-import com.twitter.concurrent.Scheduler
 import scala.runtime.NonLocalReturnControl
 
 /**
@@ -19,20 +18,18 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
   // with `Promise`.
   def respond(f: Try[A] => Unit): Future[A] = {
     val saved = Local.save()
-    Scheduler.submit(new Runnable {
-      def run(): Unit = {
-        val current = Local.save()
-        if (current ne saved) Local.restore(saved)
+    saved.fiber.submitTask(() => {
+      val current = Local.save()
+      if (current ne saved) Local.restore(saved)
 
-        val tracker = saved.resourceTracker
-        val run =
-          if (tracker eq None) f
-          else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
+      val tracker = saved.resourceTracker
+      val run =
+        if (tracker eq None) f
+        else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
 
-        try run(result)
-        catch Monitor.catcher
-        finally Local.restore(current)
-      }
+      try run(result)
+      catch Monitor.catcher
+      finally Local.restore(current)
     })
     this
   }
@@ -57,28 +54,26 @@ class ConstFuture[A](result: Try[A]) extends Future[A] {
     val p = new Promise[B]
     // see the note on `respond` for an explanation of why `Scheduler` is used.
     val saved = Local.save()
-    Scheduler.submit(new Runnable {
-      def run(): Unit = {
-        val current = Local.save()
-        if (current ne saved) Local.restore(saved)
+    saved.fiber.submitTask(() => {
+      val current = Local.save()
+      if (current ne saved) Local.restore(saved)
 
-        val tracker = saved.resourceTracker
-        val run =
-          if (tracker eq None) f
-          else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
+      val tracker = saved.resourceTracker
+      val run =
+        if (tracker eq None) f
+        else ResourceTracker.wrapAndMeasureUsage(f, tracker.get)
 
-        val computed =
-          try run(result)
-          catch {
-            case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
-            case scala.util.control.NonFatal(e) => Future.exception(e)
-            case t: Throwable =>
-              Monitor.handle(t)
-              throw t
-          } finally Local.restore(current)
+      val computed =
+        try run(result)
+        catch {
+          case e: NonLocalReturnControl[_] => Future.exception(new FutureNonLocalReturnControl(e))
+          case scala.util.control.NonFatal(e) => Future.exception(e)
+          case t: Throwable =>
+            Monitor.handle(t)
+            throw t
+        } finally Local.restore(current)
 
-        p.become(computed)
-      }
+      p.become(computed)
     })
     p
   }

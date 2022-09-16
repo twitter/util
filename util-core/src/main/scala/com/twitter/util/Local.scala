@@ -8,9 +8,12 @@ object Local {
    * key - Local.Key, value - Option[_]
    */
   sealed abstract class Context private (
-    final private[util] val resourceTracker: Option[ResourceTracker]) {
+    final private[util] val resourceTracker: Option[ResourceTracker],
+    final private[util] val fiber: Fiber) {
     private[util] def setResourceTracker(tracker: ResourceTracker): Context
     private[util] def removeResourceTracker(): Context
+
+    private[util] def setFiber(f: Fiber): Context
 
     private[util] def get(k: Key): Option[_]
     private[util] def remove(k: Key): Context
@@ -24,33 +27,40 @@ object Local {
      */
     val empty: Context = EmptyContext
 
-    private object EmptyContext extends Context(None) {
-      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker))
-      def removeResourceTracker(): Context = this
+    private object EmptyContext extends Context(None, Fiber.Global) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker), fiber)
+      def removeResourceTracker(): Context = new Context0(None, fiber)
+
+      def setFiber(f: Fiber): Context = new Context0(resourceTracker, f)
 
       def get(k: Key): Option[_] = None
       def remove(k: Key): Context = this
-      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, k, v)
+      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, fiber, k, v)
     }
 
-    private final class Context0(resourceTracker: Option[ResourceTracker])
-        extends Context(resourceTracker) {
-      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker))
-      def removeResourceTracker(): Context = EmptyContext
+    private final class Context0(resourceTracker: Option[ResourceTracker], fiber: Fiber)
+        extends Context(resourceTracker, fiber) {
+      def setResourceTracker(tracker: ResourceTracker): Context = new Context0(Some(tracker), fiber)
+      def removeResourceTracker(): Context = new Context0(None, fiber)
+
+      def setFiber(f: Fiber): Context = new Context0(resourceTracker, f)
 
       def get(k: Key): Option[_] = None
       def remove(k: Key): Context = this
-      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, k, v)
+      def set(k: Key, v: Some[_]): Context = new Context1(resourceTracker, fiber, k, v)
     }
 
     private final class Context1(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context =
-        new Context1(Some(tracker), k1, v1)
-      def removeResourceTracker(): Context = new Context1(None, k1, v1)
+        new Context1(Some(tracker), fiber, k1, v1)
+      def removeResourceTracker(): Context = new Context1(None, fiber, k1, v1)
+
+      def setFiber(f: Fiber): Context = new Context1(resourceTracker, f, k1, v1)
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1 else None
@@ -59,20 +69,24 @@ object Local {
         if (k eq k1) EmptyContext else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context1(resourceTracker, k1, v)
-        else new Context2(resourceTracker, k1, v1, k, v)
+        if (k eq k1) new Context1(resourceTracker, fiber, k1, v)
+        else new Context2(resourceTracker, fiber, k1, v1, k, v)
     }
 
     private final class Context2(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
       v2: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context =
-        new Context2(Some(tracker), k1, v1, k2, v2)
-      def removeResourceTracker(): Context = new Context2(None, k1, v1, k2, v2)
+        new Context2(Some(tracker), fiber, k1, v1, k2, v2)
+      def removeResourceTracker(): Context = new Context2(None, fiber, k1, v1, k2, v2)
+
+      def setFiber(f: Fiber): Context =
+        new Context2(resourceTracker, f, k1, v1, k2, v2)
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -80,14 +94,14 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context1(resourceTracker, k2, v2)
-        else if (k eq k2) new Context1(resourceTracker, k1, v1)
+        if (k eq k1) new Context1(resourceTracker, fiber, k2, v2)
+        else if (k eq k2) new Context1(resourceTracker, fiber, k1, v1)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context2(resourceTracker, k1, v, k2, v2)
-        else if (k eq k2) new Context2(resourceTracker, k1, v1, k2, v)
-        else new Context3(resourceTracker, k1, v1, k2, v2, k, v)
+        if (k eq k1) new Context2(resourceTracker, fiber, k1, v, k2, v2)
+        else if (k eq k2) new Context2(resourceTracker, fiber, k1, v1, k2, v)
+        else new Context3(resourceTracker, fiber, k1, v1, k2, v2, k, v)
     }
 
     // Script for generating the ContextN
@@ -97,11 +111,16 @@ object Local {
       def mkContext(num: Int): String = {
         s"""private final class Context$num(
     resourceTracker: Option[ResourceTracker],
+    fiber: Fiber,
     ${fieldList(num)}
-    ) extends Context(resourceTracker) {
+    ) extends Context(resourceTracker, fiber) {
       ${mkSetResourceTracker(num)}
 
       ${mkRemoveResourceTracker(num)}
+
+      ${mkSetFiber(num)}
+
+      ${mkRemoveFiber(num)}
 
       ${mkGet(num)}
 
@@ -120,11 +139,15 @@ object Local {
       }
 
       def mkSetResourceTracker(num: Int): String = {
-        s"def setResourceTracker(tracker: ResourceTracker): Context = new Context$num(Some(tracker), ${fieldList(num)})"
+        s"def setResourceTracker(tracker: ResourceTracker): Context = new Context$num(Some(tracker), fiber, ${fieldList(num)})"
       }
 
       def mkRemoveResourceTracker(num: Int): String = {
-        s"def removeResourceTracker(): Context = new Context$num(None, ${fieldList(num)})"
+        s"def removeResourceTracker(): Context = new Context$num(None, fiber, ${fieldList(num)})"
+      }
+
+      def mkSetFiber(num: Int): String = {
+        s"def setFiber(f: Fiber): Context = new Context$num(resourceTracker, f, ${fieldList(num)})"
       }
 
       def mkGet(num: Int): String = {
@@ -140,7 +163,7 @@ object Local {
         def newCtx(sum: Int, current: Int): String = {
           (1.to(current - 1) ++: (current + 1).to(sum)).map { i =>
             s"k$i, v$i"
-          }.mkString("(resourceTracker, ", ", ", ")")
+          }.mkString("(resourceTracker, fiber, ", ", ", ")")
         }
         val content = (1.to(num)).map { i =>
           s"k$i) new Context${num - 1}${newCtx(num, i)}"
@@ -155,7 +178,7 @@ object Local {
             if (i == current && last) s"k, v"
             else if (i == current) s"k$i, v"
             else s"k$i, v$i"
-          }.mkString("(resourceTracker, ", ", ", ")")
+          }.mkString("(resourceTracker, fiber, ", ", ", ")")
         }
         val content = (1.to(num)).map { i =>
           s"k$i) new Context$num${newCtx(num, i, false)}"
@@ -170,15 +193,17 @@ object Local {
      */
     private final class Context3(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
       v2: Some[_],
       k3: Key,
       v3: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context3(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -187,7 +212,17 @@ object Local {
         v3: Some[_])
 
       def removeResourceTracker(): Context =
-        new Context3(None, k1: Key, v1: Some[_], k2: Key, v2: Some[_], k3: Key, v3: Some[_])
+        new Context3(None, fiber, k1: Key, v1: Some[_], k2: Key, v2: Some[_], k3: Key, v3: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context3(
+        resourceTracker,
+        f,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_])
 
       def get(k: Key): Option[_] =
         if (k eq k1) v1
@@ -196,20 +231,21 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context2(resourceTracker, k2, v2, k3, v3)
-        else if (k eq k2) new Context2(resourceTracker, k1, v1, k3, v3)
-        else if (k eq k3) new Context2(resourceTracker, k1, v1, k2, v2)
+        if (k eq k1) new Context2(resourceTracker, fiber, k2, v2, k3, v3)
+        else if (k eq k2) new Context2(resourceTracker, fiber, k1, v1, k3, v3)
+        else if (k eq k3) new Context2(resourceTracker, fiber, k1, v1, k2, v2)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context3(resourceTracker, k1, v, k2, v2, k3, v3)
-        else if (k eq k2) new Context3(resourceTracker, k1, v1, k2, v, k3, v3)
-        else if (k eq k3) new Context3(resourceTracker, k1, v1, k2, v2, k3, v)
-        else new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k, v)
+        if (k eq k1) new Context3(resourceTracker, fiber, k1, v, k2, v2, k3, v3)
+        else if (k eq k2) new Context3(resourceTracker, fiber, k1, v1, k2, v, k3, v3)
+        else if (k eq k3) new Context3(resourceTracker, fiber, k1, v1, k2, v2, k3, v)
+        else new Context4(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k, v)
     }
 
     private final class Context4(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -218,9 +254,10 @@ object Local {
       v3: Some[_],
       k4: Key,
       v4: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context4(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -232,6 +269,19 @@ object Local {
 
       def removeResourceTracker(): Context = new Context4(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context4(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -249,22 +299,23 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context3(resourceTracker, k2, v2, k3, v3, k4, v4)
-        else if (k eq k2) new Context3(resourceTracker, k1, v1, k3, v3, k4, v4)
-        else if (k eq k3) new Context3(resourceTracker, k1, v1, k2, v2, k4, v4)
-        else if (k eq k4) new Context3(resourceTracker, k1, v1, k2, v2, k3, v3)
+        if (k eq k1) new Context3(resourceTracker, fiber, k2, v2, k3, v3, k4, v4)
+        else if (k eq k2) new Context3(resourceTracker, fiber, k1, v1, k3, v3, k4, v4)
+        else if (k eq k3) new Context3(resourceTracker, fiber, k1, v1, k2, v2, k4, v4)
+        else if (k eq k4) new Context3(resourceTracker, fiber, k1, v1, k2, v2, k3, v3)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context4(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4)
-        else if (k eq k2) new Context4(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4)
-        else if (k eq k3) new Context4(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4)
-        else if (k eq k4) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v)
-        else new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k, v)
+        if (k eq k1) new Context4(resourceTracker, fiber, k1, v, k2, v2, k3, v3, k4, v4)
+        else if (k eq k2) new Context4(resourceTracker, fiber, k1, v1, k2, v, k3, v3, k4, v4)
+        else if (k eq k3) new Context4(resourceTracker, fiber, k1, v1, k2, v2, k3, v, k4, v4)
+        else if (k eq k4) new Context4(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v)
+        else new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k, v)
     }
 
     private final class Context5(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -275,9 +326,10 @@ object Local {
       v4: Some[_],
       k5: Key,
       v5: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context5(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -291,6 +343,21 @@ object Local {
 
       def removeResourceTracker(): Context = new Context5(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context5(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -311,24 +378,29 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context4(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5)
-        else if (k eq k2) new Context4(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5)
-        else if (k eq k3) new Context4(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5)
-        else if (k eq k4) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5)
-        else if (k eq k5) new Context4(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4)
+        if (k eq k1) new Context4(resourceTracker, fiber, k2, v2, k3, v3, k4, v4, k5, v5)
+        else if (k eq k2) new Context4(resourceTracker, fiber, k1, v1, k3, v3, k4, v4, k5, v5)
+        else if (k eq k3) new Context4(resourceTracker, fiber, k1, v1, k2, v2, k4, v4, k5, v5)
+        else if (k eq k4) new Context4(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k5, v5)
+        else if (k eq k5) new Context4(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context5(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5)
-        else if (k eq k2) new Context5(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5)
-        else if (k eq k3) new Context5(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5)
-        else if (k eq k4) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5)
-        else if (k eq k5) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v)
-        else new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k, v)
+        if (k eq k1) new Context5(resourceTracker, fiber, k1, v, k2, v2, k3, v3, k4, v4, k5, v5)
+        else if (k eq k2)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v, k3, v3, k4, v4, k5, v5)
+        else if (k eq k3)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v, k4, v4, k5, v5)
+        else if (k eq k4)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v, k5, v5)
+        else if (k eq k5)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v)
+        else new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k, v)
     }
 
     private final class Context6(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -341,9 +413,10 @@ object Local {
       v5: Some[_],
       k6: Key,
       v6: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context6(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -359,6 +432,23 @@ object Local {
 
       def removeResourceTracker(): Context = new Context6(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context6(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -382,31 +472,39 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context5(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k2) new Context5(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6)
-        else if (k eq k3) new Context5(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6)
-        else if (k eq k4) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6)
-        else if (k eq k5) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6)
-        else if (k eq k6) new Context5(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)
+        if (k eq k1) new Context5(resourceTracker, fiber, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k2)
+          new Context5(resourceTracker, fiber, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6)
+        else if (k eq k3)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6)
+        else if (k eq k4)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6)
+        else if (k eq k5)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6)
+        else if (k eq k6)
+          new Context5(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)
         else this
 
       def set(k: Key, v: Some[_]): Context =
-        if (k eq k1) new Context6(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+        if (k eq k1)
+          new Context6(resourceTracker, fiber, k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
         else if (k eq k2)
-          new Context6(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6)
         else if (k eq k3)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6)
         else if (k eq k4)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6)
         else if (k eq k5)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6)
         else if (k eq k6)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v)
-        else new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k, v)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v)
+        else
+          new Context7(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k, v)
     }
 
     private final class Context7(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -421,9 +519,10 @@ object Local {
       v6: Some[_],
       k7: Key,
       v7: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context7(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -441,6 +540,25 @@ object Local {
 
       def removeResourceTracker(): Context = new Context7(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context7(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -467,39 +585,153 @@ object Local {
         else None
 
       def remove(k: Key): Context =
-        if (k eq k1) new Context6(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+        if (k eq k1)
+          new Context6(resourceTracker, fiber, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
         else if (k eq k2)
-          new Context6(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context6(resourceTracker, fiber, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
         else if (k eq k3)
-          new Context6(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7)
         else if (k eq k4)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7)
         else if (k eq k5)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7)
         else if (k eq k6)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7)
         else if (k eq k7)
-          new Context6(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
+          new Context6(resourceTracker, fiber, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
-          new Context7(resourceTracker, k1, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7)
         else if (k eq k2)
-          new Context7(resourceTracker, k1, v1, k2, v, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7)
         else if (k eq k3)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7)
         else if (k eq k4)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v, k5, v5, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7)
         else if (k eq k5)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v,
+            k6,
+            v6,
+            k7,
+            v7)
         else if (k eq k6)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v,
+            k7,
+            v7)
         else if (k eq k7)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v)
         else
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -520,6 +752,7 @@ object Local {
 
     private final class Context8(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -536,9 +769,10 @@ object Local {
       v7: Some[_],
       k8: Key,
       v8: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context8(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -558,6 +792,27 @@ object Local {
 
       def removeResourceTracker(): Context = new Context8(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context8(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -588,27 +843,156 @@ object Local {
 
       def remove(k: Key): Context =
         if (k eq k1)
-          new Context7(resourceTracker, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k2)
-          new Context7(resourceTracker, k1, v1, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k3)
-          new Context7(resourceTracker, k1, v1, k2, v2, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k4)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k5, v5, k6, v6, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k5)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k6, v6, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k6,
+            v6,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k6)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k7, v7, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k7,
+            v7,
+            k8,
+            v8)
         else if (k eq k7)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k8, v8)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k8,
+            v8)
         else if (k eq k8)
-          new Context7(resourceTracker, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7)
+          new Context7(
+            resourceTracker,
+            fiber,
+            k1,
+            v1,
+            k2,
+            v2,
+            k3,
+            v3,
+            k4,
+            v4,
+            k5,
+            v5,
+            k6,
+            v6,
+            k7,
+            v7)
         else this
 
       def set(k: Key, v: Some[_]): Context =
         if (k eq k1)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -628,6 +1012,7 @@ object Local {
         else if (k eq k2)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -647,6 +1032,7 @@ object Local {
         else if (k eq k3)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -666,6 +1052,7 @@ object Local {
         else if (k eq k4)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -685,6 +1072,7 @@ object Local {
         else if (k eq k5)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -704,6 +1092,7 @@ object Local {
         else if (k eq k6)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -723,6 +1112,7 @@ object Local {
         else if (k eq k7)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -742,6 +1132,7 @@ object Local {
         else if (k eq k8)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -761,6 +1152,7 @@ object Local {
         else
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -783,6 +1175,7 @@ object Local {
 
     private final class Context9(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -801,9 +1194,10 @@ object Local {
       v8: Some[_],
       k9: Key,
       v9: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context9(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -825,6 +1219,29 @@ object Local {
 
       def removeResourceTracker(): Context = new Context9(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context9(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -860,6 +1277,7 @@ object Local {
         if (k eq k1)
           new Context8(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -879,6 +1297,7 @@ object Local {
         else if (k eq k2)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -898,6 +1317,7 @@ object Local {
         else if (k eq k3)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -917,6 +1337,7 @@ object Local {
         else if (k eq k4)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -936,6 +1357,7 @@ object Local {
         else if (k eq k5)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -955,6 +1377,7 @@ object Local {
         else if (k eq k6)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -974,6 +1397,7 @@ object Local {
         else if (k eq k7)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -993,6 +1417,7 @@ object Local {
         else if (k eq k8)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1012,6 +1437,7 @@ object Local {
         else if (k eq k9)
           new Context8(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1034,6 +1460,7 @@ object Local {
         if (k eq k1)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -1055,6 +1482,7 @@ object Local {
         else if (k eq k2)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1076,6 +1504,7 @@ object Local {
         else if (k eq k3)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1097,6 +1526,7 @@ object Local {
         else if (k eq k4)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1118,6 +1548,7 @@ object Local {
         else if (k eq k5)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1139,6 +1570,7 @@ object Local {
         else if (k eq k6)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1160,6 +1592,7 @@ object Local {
         else if (k eq k7)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1181,6 +1614,7 @@ object Local {
         else if (k eq k8)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1202,6 +1636,7 @@ object Local {
         else if (k eq k9)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1223,6 +1658,7 @@ object Local {
         else
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1247,6 +1683,7 @@ object Local {
 
     private final class Context10(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -1267,9 +1704,10 @@ object Local {
       v9: Some[_],
       k10: Key,
       v10: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context10(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -1293,6 +1731,31 @@ object Local {
 
       def removeResourceTracker(): Context = new Context10(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context10(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -1331,6 +1794,7 @@ object Local {
         if (k eq k1)
           new Context9(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -1352,6 +1816,7 @@ object Local {
         else if (k eq k2)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -1373,6 +1838,7 @@ object Local {
         else if (k eq k3)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1394,6 +1860,7 @@ object Local {
         else if (k eq k4)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1415,6 +1882,7 @@ object Local {
         else if (k eq k5)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1436,6 +1904,7 @@ object Local {
         else if (k eq k6)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1457,6 +1926,7 @@ object Local {
         else if (k eq k7)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1478,6 +1948,7 @@ object Local {
         else if (k eq k8)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1499,6 +1970,7 @@ object Local {
         else if (k eq k9)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1520,6 +1992,7 @@ object Local {
         else if (k eq k10)
           new Context9(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1544,6 +2017,7 @@ object Local {
         if (k eq k1)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -1567,6 +2041,7 @@ object Local {
         else if (k eq k2)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1590,6 +2065,7 @@ object Local {
         else if (k eq k3)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1613,6 +2089,7 @@ object Local {
         else if (k eq k4)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1636,6 +2113,7 @@ object Local {
         else if (k eq k5)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1659,6 +2137,7 @@ object Local {
         else if (k eq k6)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1682,6 +2161,7 @@ object Local {
         else if (k eq k7)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1705,6 +2185,7 @@ object Local {
         else if (k eq k8)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1728,6 +2209,7 @@ object Local {
         else if (k eq k9)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1751,6 +2233,7 @@ object Local {
         else if (k eq k10)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1774,6 +2257,7 @@ object Local {
         else
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1800,6 +2284,7 @@ object Local {
 
     private final class Context11(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -1822,9 +2307,10 @@ object Local {
       v10: Some[_],
       k11: Key,
       v11: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context11(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -1850,6 +2336,33 @@ object Local {
 
       def removeResourceTracker(): Context = new Context11(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context11(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -1891,6 +2404,7 @@ object Local {
         if (k eq k1)
           new Context10(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -1914,6 +2428,7 @@ object Local {
         else if (k eq k2)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -1937,6 +2452,7 @@ object Local {
         else if (k eq k3)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1960,6 +2476,7 @@ object Local {
         else if (k eq k4)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -1983,6 +2500,7 @@ object Local {
         else if (k eq k5)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2006,6 +2524,7 @@ object Local {
         else if (k eq k6)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2029,6 +2548,7 @@ object Local {
         else if (k eq k7)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2052,6 +2572,7 @@ object Local {
         else if (k eq k8)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2075,6 +2596,7 @@ object Local {
         else if (k eq k9)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2098,6 +2620,7 @@ object Local {
         else if (k eq k10)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2121,6 +2644,7 @@ object Local {
         else if (k eq k11)
           new Context10(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2147,6 +2671,7 @@ object Local {
         if (k eq k1)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -2172,6 +2697,7 @@ object Local {
         else if (k eq k2)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2197,6 +2723,7 @@ object Local {
         else if (k eq k3)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2222,6 +2749,7 @@ object Local {
         else if (k eq k4)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2247,6 +2775,7 @@ object Local {
         else if (k eq k5)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2272,6 +2801,7 @@ object Local {
         else if (k eq k6)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2297,6 +2827,7 @@ object Local {
         else if (k eq k7)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2322,6 +2853,7 @@ object Local {
         else if (k eq k8)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2347,6 +2879,7 @@ object Local {
         else if (k eq k9)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2372,6 +2905,7 @@ object Local {
         else if (k eq k10)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2397,6 +2931,7 @@ object Local {
         else if (k eq k11)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2422,6 +2957,7 @@ object Local {
         else
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2450,6 +2986,7 @@ object Local {
 
     private final class Context12(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -2474,9 +3011,10 @@ object Local {
       v11: Some[_],
       k12: Key,
       v12: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context12(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -2504,6 +3042,35 @@ object Local {
 
       def removeResourceTracker(): Context = new Context12(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context12(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -2548,6 +3115,7 @@ object Local {
         if (k eq k1)
           new Context11(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -2573,6 +3141,7 @@ object Local {
         else if (k eq k2)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -2598,6 +3167,7 @@ object Local {
         else if (k eq k3)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2623,6 +3193,7 @@ object Local {
         else if (k eq k4)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2648,6 +3219,7 @@ object Local {
         else if (k eq k5)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2673,6 +3245,7 @@ object Local {
         else if (k eq k6)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2698,6 +3271,7 @@ object Local {
         else if (k eq k7)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2723,6 +3297,7 @@ object Local {
         else if (k eq k8)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2748,6 +3323,7 @@ object Local {
         else if (k eq k9)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2773,6 +3349,7 @@ object Local {
         else if (k eq k10)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2798,6 +3375,7 @@ object Local {
         else if (k eq k11)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2823,6 +3401,7 @@ object Local {
         else if (k eq k12)
           new Context11(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2851,6 +3430,7 @@ object Local {
         if (k eq k1)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -2878,6 +3458,7 @@ object Local {
         else if (k eq k2)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2905,6 +3486,7 @@ object Local {
         else if (k eq k3)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2932,6 +3514,7 @@ object Local {
         else if (k eq k4)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2959,6 +3542,7 @@ object Local {
         else if (k eq k5)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -2986,6 +3570,7 @@ object Local {
         else if (k eq k6)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3013,6 +3598,7 @@ object Local {
         else if (k eq k7)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3040,6 +3626,7 @@ object Local {
         else if (k eq k8)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3067,6 +3654,7 @@ object Local {
         else if (k eq k9)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3094,6 +3682,7 @@ object Local {
         else if (k eq k10)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3121,6 +3710,7 @@ object Local {
         else if (k eq k11)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3148,6 +3738,7 @@ object Local {
         else if (k eq k12)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3175,6 +3766,7 @@ object Local {
         else
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3205,6 +3797,7 @@ object Local {
 
     private final class Context13(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -3231,9 +3824,10 @@ object Local {
       v12: Some[_],
       k13: Key,
       v13: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context13(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -3263,6 +3857,37 @@ object Local {
 
       def removeResourceTracker(): Context = new Context13(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context13(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -3310,6 +3935,7 @@ object Local {
         if (k eq k1)
           new Context12(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -3337,6 +3963,7 @@ object Local {
         else if (k eq k2)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -3364,6 +3991,7 @@ object Local {
         else if (k eq k3)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3391,6 +4019,7 @@ object Local {
         else if (k eq k4)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3418,6 +4047,7 @@ object Local {
         else if (k eq k5)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3445,6 +4075,7 @@ object Local {
         else if (k eq k6)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3472,6 +4103,7 @@ object Local {
         else if (k eq k7)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3499,6 +4131,7 @@ object Local {
         else if (k eq k8)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3526,6 +4159,7 @@ object Local {
         else if (k eq k9)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3553,6 +4187,7 @@ object Local {
         else if (k eq k10)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3580,6 +4215,7 @@ object Local {
         else if (k eq k11)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3607,6 +4243,7 @@ object Local {
         else if (k eq k12)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3634,6 +4271,7 @@ object Local {
         else if (k eq k13)
           new Context12(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3664,6 +4302,7 @@ object Local {
         if (k eq k1)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -3693,6 +4332,7 @@ object Local {
         else if (k eq k2)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3722,6 +4362,7 @@ object Local {
         else if (k eq k3)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3751,6 +4392,7 @@ object Local {
         else if (k eq k4)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3780,6 +4422,7 @@ object Local {
         else if (k eq k5)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3809,6 +4452,7 @@ object Local {
         else if (k eq k6)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3838,6 +4482,7 @@ object Local {
         else if (k eq k7)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3867,6 +4512,7 @@ object Local {
         else if (k eq k8)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3896,6 +4542,7 @@ object Local {
         else if (k eq k9)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3925,6 +4572,7 @@ object Local {
         else if (k eq k10)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3954,6 +4602,7 @@ object Local {
         else if (k eq k11)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -3983,6 +4632,7 @@ object Local {
         else if (k eq k12)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4012,6 +4662,7 @@ object Local {
         else if (k eq k13)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4041,6 +4692,7 @@ object Local {
         else
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4073,6 +4725,7 @@ object Local {
 
     private final class Context14(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -4101,9 +4754,10 @@ object Local {
       v13: Some[_],
       k14: Key,
       v14: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context14(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -4135,6 +4789,39 @@ object Local {
 
       def removeResourceTracker(): Context = new Context14(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context14(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -4185,6 +4872,7 @@ object Local {
         if (k eq k1)
           new Context13(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -4214,6 +4902,7 @@ object Local {
         else if (k eq k2)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -4243,6 +4932,7 @@ object Local {
         else if (k eq k3)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4272,6 +4962,7 @@ object Local {
         else if (k eq k4)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4301,6 +4992,7 @@ object Local {
         else if (k eq k5)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4330,6 +5022,7 @@ object Local {
         else if (k eq k6)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4359,6 +5052,7 @@ object Local {
         else if (k eq k7)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4388,6 +5082,7 @@ object Local {
         else if (k eq k8)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4417,6 +5112,7 @@ object Local {
         else if (k eq k9)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4446,6 +5142,7 @@ object Local {
         else if (k eq k10)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4475,6 +5172,7 @@ object Local {
         else if (k eq k11)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4504,6 +5202,7 @@ object Local {
         else if (k eq k12)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4533,6 +5232,7 @@ object Local {
         else if (k eq k13)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4562,6 +5262,7 @@ object Local {
         else if (k eq k14)
           new Context13(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4594,6 +5295,7 @@ object Local {
         if (k eq k1)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -4625,6 +5327,7 @@ object Local {
         else if (k eq k2)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4656,6 +5359,7 @@ object Local {
         else if (k eq k3)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4687,6 +5391,7 @@ object Local {
         else if (k eq k4)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4718,6 +5423,7 @@ object Local {
         else if (k eq k5)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4749,6 +5455,7 @@ object Local {
         else if (k eq k6)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4780,6 +5487,7 @@ object Local {
         else if (k eq k7)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4811,6 +5519,7 @@ object Local {
         else if (k eq k8)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4842,6 +5551,7 @@ object Local {
         else if (k eq k9)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4873,6 +5583,7 @@ object Local {
         else if (k eq k10)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4904,6 +5615,7 @@ object Local {
         else if (k eq k11)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4935,6 +5647,7 @@ object Local {
         else if (k eq k12)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4966,6 +5679,7 @@ object Local {
         else if (k eq k13)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -4997,6 +5711,7 @@ object Local {
         else if (k eq k14)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5028,6 +5743,7 @@ object Local {
         else
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5062,6 +5778,7 @@ object Local {
 
     private final class Context15(
       resourceTracker: Option[ResourceTracker],
+      fiber: Fiber,
       k1: Key,
       v1: Some[_],
       k2: Key,
@@ -5092,9 +5809,10 @@ object Local {
       v14: Some[_],
       k15: Key,
       v15: Some[_])
-        extends Context(resourceTracker) {
+        extends Context(resourceTracker, fiber) {
       def setResourceTracker(tracker: ResourceTracker): Context = new Context15(
         Some(tracker),
+        fiber,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -5128,6 +5846,41 @@ object Local {
 
       def removeResourceTracker(): Context = new Context15(
         None,
+        fiber,
+        k1: Key,
+        v1: Some[_],
+        k2: Key,
+        v2: Some[_],
+        k3: Key,
+        v3: Some[_],
+        k4: Key,
+        v4: Some[_],
+        k5: Key,
+        v5: Some[_],
+        k6: Key,
+        v6: Some[_],
+        k7: Key,
+        v7: Some[_],
+        k8: Key,
+        v8: Some[_],
+        k9: Key,
+        v9: Some[_],
+        k10: Key,
+        v10: Some[_],
+        k11: Key,
+        v11: Some[_],
+        k12: Key,
+        v12: Some[_],
+        k13: Key,
+        v13: Some[_],
+        k14: Key,
+        v14: Some[_],
+        k15: Key,
+        v15: Some[_])
+
+      def setFiber(f: Fiber): Context = new Context15(
+        resourceTracker,
+        f,
         k1: Key,
         v1: Some[_],
         k2: Key,
@@ -5181,6 +5934,7 @@ object Local {
         if (k eq k1)
           new Context14(
             resourceTracker,
+            fiber,
             k2,
             v2,
             k3,
@@ -5212,6 +5966,7 @@ object Local {
         else if (k eq k2)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k3,
@@ -5243,6 +5998,7 @@ object Local {
         else if (k eq k3)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5274,6 +6030,7 @@ object Local {
         else if (k eq k4)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5305,6 +6062,7 @@ object Local {
         else if (k eq k5)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5336,6 +6094,7 @@ object Local {
         else if (k eq k6)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5367,6 +6126,7 @@ object Local {
         else if (k eq k7)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5398,6 +6158,7 @@ object Local {
         else if (k eq k8)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5429,6 +6190,7 @@ object Local {
         else if (k eq k9)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5460,6 +6222,7 @@ object Local {
         else if (k eq k10)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5491,6 +6254,7 @@ object Local {
         else if (k eq k11)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5522,6 +6286,7 @@ object Local {
         else if (k eq k12)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5553,6 +6318,7 @@ object Local {
         else if (k eq k13)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5584,6 +6350,7 @@ object Local {
         else if (k eq k14)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5615,6 +6382,7 @@ object Local {
         else if (k eq k15)
           new Context14(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5649,6 +6417,7 @@ object Local {
         if (k eq k1)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v,
             k2,
@@ -5682,6 +6451,7 @@ object Local {
         else if (k eq k2)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5715,6 +6485,7 @@ object Local {
         else if (k eq k3)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5748,6 +6519,7 @@ object Local {
         else if (k eq k4)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5781,6 +6553,7 @@ object Local {
         else if (k eq k5)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5814,6 +6587,7 @@ object Local {
         else if (k eq k6)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5847,6 +6621,7 @@ object Local {
         else if (k eq k7)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5880,6 +6655,7 @@ object Local {
         else if (k eq k8)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5913,6 +6689,7 @@ object Local {
         else if (k eq k9)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5946,6 +6723,7 @@ object Local {
         else if (k eq k10)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -5979,6 +6757,7 @@ object Local {
         else if (k eq k11)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -6012,6 +6791,7 @@ object Local {
         else if (k eq k12)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -6045,6 +6825,7 @@ object Local {
         else if (k eq k13)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -6078,6 +6859,7 @@ object Local {
         else if (k eq k14)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -6111,6 +6893,7 @@ object Local {
         else if (k eq k15)
           new Context15(
             resourceTracker,
+            fiber,
             k1,
             v1,
             k2,
@@ -6145,11 +6928,13 @@ object Local {
     }
 
     private final class ContextN(kN: Key, vN: Some[_], rest: Context)
-        extends Context(rest.resourceTracker) {
+        extends Context(rest.resourceTracker, rest.fiber) {
 
       def setResourceTracker(tracker: ResourceTracker): Context =
         new ContextN(kN, vN, rest.setResourceTracker(tracker))
       def removeResourceTracker(): Context = new ContextN(kN, vN, rest.removeResourceTracker())
+
+      def setFiber(f: Fiber): Context = new ContextN(kN, vN, rest.setFiber(f))
 
       def get(k: Key): Option[_] =
         if (k eq kN) vN

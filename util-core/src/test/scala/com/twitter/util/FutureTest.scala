@@ -985,7 +985,7 @@ class FutureTest extends AnyWordSpec with MockitoSugar with ScalaCheckDrivenProp
               val inner1 = new Promise[String]
               val inner2 = new Promise[String]
               val f: Future[String] = Future.monitored { inner2.ensure(()); inner1 }
-              val s: String = "." * 1024
+              val s: String = "." * 1024 * 10
               val sSize: Long = ObjectSizeCalculator.getObjectSize(s)
               inner1.setValue(s)
               val inner2Size: Long = ObjectSizeCalculator.getObjectSize(inner2)

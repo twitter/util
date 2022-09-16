@@ -95,7 +95,7 @@ object Promise {
     @tailrec
     final def runInScheduler(t: Try[A]): Unit = {
       if (this ne WaitQueue.Empty) {
-        Scheduler.submit(() => first(t))
+        this.first.saved.fiber.submitTask(() => first(t))
         rest.runInScheduler(t)
       }
     }
@@ -138,7 +138,7 @@ object Promise {
    *       it will make "Linked" and "Waiting" state cases ambiguous. This, however,
    *       may change following the further performance improvements.
    */
-  private[util] abstract class K[-A] extends WaitQueue[A] {
+  private[util] abstract class K[-A](val saved: Local.Context) extends WaitQueue[A] {
     final def first: K[A] = this
     final def rest: WaitQueue[A] = WaitQueue.empty
     def apply(r: Try[A]): Unit
@@ -168,7 +168,7 @@ object Promise {
 
     // It's not possible (yet) to embed K[A] into Promise because
     // Promise[A] (Linked) and WaitQueue (Waiting) states become ambiguous.
-    private[this] val k = new K[A] {
+    private[this] val k = new K[A](Local.Context.empty) {
       // This is only called after the underlying has been successfully satisfied
       def apply(result: Try[A]): Unit = self.update(result)
     }
@@ -212,7 +212,7 @@ object Promise {
    * @param k the closure to invoke in the saved context, with the
    * provided result
    */
-  private final class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A] {
+  private final class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A](saved) {
 
     def apply(result: Try[A]): Unit = {
       val current = Local.save()
@@ -224,7 +224,7 @@ object Promise {
     }
   }
 
-  private abstract class Transformer[A, B](saved: Local.Context) extends K[A] {
+  private abstract class Transformer[A](saved: Local.Context) extends K[A](saved) {
 
     protected[this] def k(r: Try[A]): Unit
 
@@ -252,7 +252,7 @@ object Promise {
     saved: Local.Context,
     f: Try[A] => Future[B],
     promise: Promise[B])
-      extends Transformer[A, B](saved) {
+      extends Transformer[A](saved) {
 
     protected[this] def k(r: Try[A]): Unit =
       // The promise can be fulfilled only by the transformer, so it's safe to use `become` here
@@ -269,7 +269,7 @@ object Promise {
     saved: Local.Context,
     f: Try[A] => Try[B],
     promise: Promise[B])
-      extends Transformer[A, B](saved) {
+      extends Transformer[A](saved) {
 
     protected[this] def k(r: Try[A]): Unit = {
       // The promise can be fulfilled only by the transformer, so it's safe to use `update` here
