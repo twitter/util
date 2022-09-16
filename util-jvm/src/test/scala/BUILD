@@ -6,7 +6,6 @@ COMMON_DEPS = [
     "util/util-app/src/main/scala",
     "util/util-core:util-core-util",
     "util/util-jvm/src/main/scala/com/twitter/jvm",
-    "util/util-logging/src/main/scala",
 ]
 
 junit_tests(
