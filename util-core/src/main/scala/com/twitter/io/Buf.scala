@@ -1,8 +1,10 @@
 package com.twitter.io
 
-import com.twitter.io.Buf.{IndexedThree, IndexedTwo}
+import com.twitter.io.Buf.IndexedThree
+import com.twitter.io.Buf.IndexedTwo
 import java.nio.ReadOnlyBufferException
-import java.nio.charset.{Charset, StandardCharsets => JChar}
+import java.nio.charset.Charset
+import java.nio.charset.{StandardCharsets => JChar}
 import scala.annotation.switch
 import scala.collection.immutable.VectorBuilder
 
@@ -323,7 +325,10 @@ object Buf {
       checkSliceArgs(from, until)
       this
     }
-    protected def unsafeByteArrayBuf: Option[Buf.ByteArray] = None
+    protected val unsafeByteArrayBuf: Option[Buf.ByteArray] = Some(
+      new ByteArray(Array.emptyByteArray, 0, 0))
+    override def unsafeByteArray: Array[Byte] = Array.emptyByteArray
+
     def get(index: Int): Byte =
       throw new IndexOutOfBoundsException(s"Index out of bounds: $index")
     def process(from: Int, until: Int, processor: Processor): Int = {
@@ -610,6 +615,17 @@ object Buf {
     private[Buf] val begin: Int,
     private[Buf] val end: Int)
       extends Buf {
+
+    /**
+     * The backing byte[]. The array is only valid from [unsafeArrayOffset, unsafeArrayOffset + length), any data
+     * outside of those bounds is undefined.
+     */
+    def unsafeRawByteArray: Array[Byte] = bytes
+
+    /**
+     * The start offset of the data in the array returned by `unsafeRawByteArray`.
+     */
+    def unsafeArrayOffset: Int = begin
 
     def get(index: Int): Byte = {
       val off = begin + index
