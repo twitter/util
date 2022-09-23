@@ -20,6 +20,16 @@ private[twitter] object Fiber {
     }
   }
 
+  // Create fiber that captures the current Scheduler to avoid the volatile lookup on each
+  // submission
+  def newCachedSchedulerFiber(): Fiber = new Fiber {
+    // Just cache it so we don't have to keep looking at the volatile var each time.
+    private val scheduler = Scheduler()
+    def submitTask(r: FiberTask): Unit = {
+      scheduler.submit(r)
+    }
+  }
+
   def let[T](fiber: Fiber)(f: => T): T = {
     val oldCtx = Local.save()
     val newCtx = oldCtx.setFiber(fiber)
