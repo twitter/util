@@ -5,6 +5,7 @@ import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
+import com.twitter.finagle.stats.MetricBuilder.IdentityType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import com.twitter.util.Await
 import com.twitter.util.Future
@@ -121,7 +122,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mb.identity.labels.isEmpty)
     assert(mb.identity.hierarchicalName == Seq("cool", "numbers"))
     assert(mb.identity.dimensionalName == Seq("numbers"))
-    assert(mb.identity.hierarchicalOnly)
+    assert(mb.identity.identityType == IdentityType.NonDeterminate)
   }
 
   test("StatsReceiver.hierarchicalScope: composes with label correctly") {
@@ -137,7 +138,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mb.identity.hierarchicalName == Seq("clnt", "backend", "requests"))
     assert(mb.identity.dimensionalName == Seq("requests"))
     assert(mb.identity.labels == Map("clnt" -> "backend"))
-    assert(mb.identity.hierarchicalOnly)
+    assert(mb.identity.identityType == IdentityType.NonDeterminate)
   }
 
   test("StatsReceiver.dimensionalScope: composes with label correctly") {
@@ -154,7 +155,7 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mb.identity.hierarchicalName == Seq("bar", "requests"))
     assert(mb.identity.dimensionalName == Seq("foo", "baz", "requests"))
     assert(mb.identity.labels == Map("clnt" -> "backend"))
-    assert(mb.identity.hierarchicalOnly)
+    assert(mb.identity.identityType == IdentityType.NonDeterminate)
   }
 
   test("StatsReceiver.scope: prefix stats by a scope string") {

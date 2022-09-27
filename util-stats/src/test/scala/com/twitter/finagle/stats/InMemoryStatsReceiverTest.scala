@@ -362,13 +362,13 @@ class InMemoryStatsReceiverTest extends AnyFunSuite with Eventually with Integra
       assert(parts.length == 3)
       assert(
         parts(
-          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(coolGauge, coolGauge, Map(), true), List(), None, default, Vector(), GaugeType)")
+          0) == "coolGauge MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(coolGauge, coolGauge, Map(), NonDeterminate), List(), None, default, Vector(), GaugeType)")
       assert(
         parts(
-          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(rad/histo, histo, Map(), true), List(), None, default, Vector(), HistogramType)")
+          1) == "rad/histo MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(rad/histo, histo, Map(), NonDeterminate), List(), None, default, Vector(), HistogramType)")
       assert(
         parts(
-          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(sweet/counter, sweet_counter, Map(), true), List(), None, default, Vector(), CounterType)")
+          2) == "sweet/counter MetricBuilder(false, No description provided, Unspecified, NoRoleSpecified, default, None, Identity(sweet/counter, sweet_counter, Map(), NonDeterminate), List(), None, default, Vector(), CounterType)")
     } finally {
       ps.close()
     }

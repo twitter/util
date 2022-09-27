@@ -5,6 +5,7 @@ import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.MetricBuilder.HistogramType
 import com.twitter.finagle.stats.MetricBuilder.Identity
+import com.twitter.finagle.stats.MetricBuilder.IdentityType
 import com.twitter.finagle.stats.MetricBuilder.MetricType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import scala.annotation.varargs
@@ -191,6 +192,60 @@ object MetricBuilder {
     def toPrometheusString: String = "counter"
   }
 
+  /** Representation of how an [[Identity]]s name is defined */
+  sealed abstract class IdentityType private () {
+
+    /**
+     * Bias this [[IdentityType]] to the specified type.
+     *
+     * @param to in the case that this is a `NonDeterminate` identity type, what the result should be.
+     */
+    final def bias(to: IdentityType.ResolvedIdentityType): IdentityType.ResolvedIdentityType =
+      this match {
+        case IdentityType.NonDeterminate => to
+        case IdentityType.Full => IdentityType.Full
+        case IdentityType.HierarchicalOnly => IdentityType.HierarchicalOnly
+      }
+  }
+
+  object IdentityType {
+
+    /**
+     * Resolves an [[IdentityType]] to the default [[ResolvedIdentityType]]
+     *
+     * A centralized place to resolve the ambiguity of the [[NonDeterminate]] identity type.
+     * We often need to know if a metric has dimensional support or not such as when emitting
+     * a metric. This function offers a central place where that decision is made so that in
+     * the future it can be changed in a central location or even put behind a flag.
+     *
+     * The current behavior is to default to [[IdentityType.HierarchicalOnly]]
+     */
+    private[twitter] def toResolvedIdentityType(identityType: IdentityType): ResolvedIdentityType =
+      identityType.bias(IdentityType.HierarchicalOnly)
+
+    /** An [[IdentityType]] that cannot be [[NonDeterminate]] */
+    sealed abstract class ResolvedIdentityType extends IdentityType
+
+    /**
+     * An [[IdentityType]] which has a name that is currently valid both dimensionally and
+     * hierarchically, but leaves it up to the [[StatsReceiver]] to decide whether to represent
+     * it with one or both names.
+     */
+    case object NonDeterminate extends IdentityType
+
+    /**
+     * An [[IdentityType]] that has means the associated metric [[Identity]] has been
+     * explicitly marked to not be valid dimensionally
+     */
+    case object HierarchicalOnly extends ResolvedIdentityType
+
+    /**
+     * An [[IdentityType]] which means that the associated metric [[Identity]] is valid
+     * both dimensionally and hierarchically
+     */
+    case object Full extends ResolvedIdentityType
+  }
+
   /**
    * Experimental way to represent both hierarchical and dimensional identity information.
    *
@@ -200,11 +255,11 @@ object MetricBuilder {
     hierarchicalName: Seq[String],
     dimensionalName: Seq[String],
     labels: Map[String, String] = Map.empty,
-    hierarchicalOnly: Boolean = true) {
+    identityType: IdentityType = IdentityType.NonDeterminate) {
     override def toString: String = {
       val hname = hierarchicalName.mkString(metadataScopeSeparator())
       val dname = dimensionalName.mkString(DimensionalNameScopeSeparator)
-      s"Identity($hname, $dname, $labels, $hierarchicalOnly)"
+      s"Identity($hname, $dname, $labels, $identityType)"
     }
   }
 }
@@ -331,13 +386,13 @@ class MetricBuilder private (
   }
 
   private[twitter] def withHierarchicalOnly: MetricBuilder = {
-    if (identity.hierarchicalOnly) this
-    else copy(identity = identity.copy(hierarchicalOnly = true))
+    if (identity.identityType == IdentityType.HierarchicalOnly) this
+    else copy(identity = identity.copy(identityType = IdentityType.HierarchicalOnly))
   }
 
   private[twitter] def withDimensionalSupport: MetricBuilder = {
-    if (identity.hierarchicalOnly) copy(identity = identity.copy(hierarchicalOnly = false))
-    else this
+    if (identity.identityType == IdentityType.Full) this
+    else copy(identity = identity.copy(identityType = IdentityType.Full))
   }
 
   @varargs
