@@ -17,7 +17,10 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
   implicit override val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(15, Seconds)), interval = scaled(Span(5, Millis)))
 
-  class MockTracker(var updates: Long = 0) extends ResourceTracker {
+  class MockTracker extends ResourceTracker {
+
+    @volatile var updates: Long = 0
+
     override def addCpuTime(time: Long): Unit = {
       updates = updates + 1
     }
@@ -29,12 +32,16 @@ class FuturePoolTest extends AnyFunSuite with Eventually {
       val pool = FuturePool(executor)
 
       val mockTracker = new MockTracker
-      val source = new Promise[Int]
+      val latch = new CountDownLatch(1)
       val result = ResourceTracker.let(mockTracker) {
-        pool(Await.result(source)) // simulate blocking call
+        pool {
+          // Perform a (potentially) blocking call.
+          latch.await()
+        }
       }
 
-      source.setValue(1); Await.result(result)
+      latch.countDown()
+      Await.result(result)
       assert(mockTracker.updates == 1)
     }
   }
