@@ -1,6 +1,5 @@
 package com.twitter.util
 
-import com.twitter.concurrent.Scheduler
 import scala.annotation.tailrec
 import scala.runtime.NonLocalReturnControl
 import scala.util.control.NonFatal
@@ -675,7 +674,7 @@ class Promise[A] extends Future[A] with Updatable[Try[A]] {
       //     Await.result(Future.Done.map(Predef.identity))
       //   }
       //
-      Scheduler.flush()
+      Fiber.flush()
 
       if (condition.await(timeout.inNanoseconds, java.util.concurrent.TimeUnit.NANOSECONDS)) this
       else throw new TimeoutException(timeout.toString)

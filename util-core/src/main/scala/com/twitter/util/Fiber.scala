@@ -9,14 +9,20 @@ private[twitter] abstract class Fiber {
 
   /** Submit work to the Fiber */
   def submitTask(r: FiberTask): Unit
+
+  /** Flush outstanding tasks */
+  def flush(): Unit
 }
 
-private[twitter] object Fiber {
+private[twitter] object Fiber extends Fiber {
 
   // Global default fiber which solely submits tasks to the global Scheduler
   val Global: Fiber = new Fiber {
     override def submitTask(r: FiberTask): Unit = {
       Scheduler.submit(r)
+    }
+    override def flush(): Unit = {
+      Scheduler.flush()
     }
   }
 
@@ -28,6 +34,9 @@ private[twitter] object Fiber {
     def submitTask(r: FiberTask): Unit = {
       scheduler.submit(r)
     }
+    override def flush(): Unit = {
+      scheduler.flush()
+    }
   }
 
   def let[T](fiber: Fiber)(f: => T): T = {
@@ -37,4 +46,10 @@ private[twitter] object Fiber {
     try f
     finally Local.restore(oldCtx)
   }
+
+  // Submit task to the fiber stored in the Local Context
+  def submitTask(r: FiberTask): Unit = Local.save().fiber.submitTask(r)
+
+  // Flush fiber stored in the Local Context
+  def flush(): Unit = Local.save().fiber.flush()
 }

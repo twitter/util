@@ -70,6 +70,11 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
   }
 
   /**
+   * If necessary, execute any scheduler specific flushing.
+   */
+  protected def schedulerFlush(): Unit
+
+  /**
    * If necessary, drain any thread specific state and resubmit the work queue.
    *
    * @note This is in service of blocking calls which are not desirable in async code
@@ -100,13 +105,13 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
 
       if (!multiThreadedQueue.isEmpty) {
         // There is fiber work that needs to be executed. Attempt to reschedule.
-
-        // TODO: if we end up using the ThreadLocalScheduler as our underlying execution engine
-        //  we're going to need to be able to flush it as well. Special consideration will need
-        //  to be taken for CPU usage tracking if that is the case.
-        //  We can work all this in the future.
         tryScheduleFiber()
       }
+
+      // Depending on the underlying execution engine, we may need to flush the scheduler as well.
+      // Special consideration will need to be taken for CPU usage tracking if that is the case.
+      // We can work this all out in the future.
+      schedulerFlush()
     }
   }
 

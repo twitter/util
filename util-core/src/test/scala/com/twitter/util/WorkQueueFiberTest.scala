@@ -38,6 +38,8 @@ class WorkQueueFiberTest extends AnyFunSuite {
       assert(runnable == null)
       runnable = r
     }
+
+    override protected def schedulerFlush(): Unit = ()
   }
 
   test("fiber creations are tracked") {
@@ -244,6 +246,7 @@ class WorkQueueFiberTest extends AnyFunSuite {
       override protected def schedulerSubmit(r: Runnable): Unit = {
         r.run()
       }
+      override protected def schedulerFlush(): Unit = ()
     }
 
     f.submitTask { () =>
