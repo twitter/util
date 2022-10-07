@@ -4,9 +4,9 @@ import com.twitter.io.TempFile
 import java.util.Base64
 import scala.collection.mutable.ListBuffer
 import java.nio.charset.StandardCharsets.UTF_8
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class KeyHasherTest extends AnyWordSpec {
+class KeyHasherTest extends AnyFunSuite {
   def readResource(name: String) = {
     var lines = new ListBuffer[String]()
     val src = scala.io.Source.fromFile(TempFile.fromResourcePath(getClass, "/" + name))
@@ -28,30 +28,27 @@ class KeyHasherTest extends AnyWordSpec {
     }
   }
 
-  "KeyHasher" should {
-    "correctly hash fnv1_32" in {
-      testHasher("fnv1_32", KeyHasher.FNV1_32)
-    }
+  test("KeyHasher should correctly hash fnv1_32") {
+    testHasher("fnv1_32", KeyHasher.FNV1_32)
+  }
 
-    "correctly hash fnv1_64" in {
-      testHasher("fnv1_64", KeyHasher.FNV1_64)
-    }
+  test("KeyHasher should correctly hash fnv1_64") {
+    testHasher("fnv1_64", KeyHasher.FNV1_64)
+  }
 
-    "correctly hash fnv1a_32" in {
-      testHasher("fnv1a_32", KeyHasher.FNV1A_32)
-    }
+  test("KeyHasher should correctly hash fnv1a_32") {
+    testHasher("fnv1a_32", KeyHasher.FNV1A_32)
+  }
 
-    "correctly hash fnv1a_64" in {
-      testHasher("fnv1a_64", KeyHasher.FNV1A_64)
-    }
+  test("KeyHasher should correctly hash fnv1a_64") {
+    testHasher("fnv1a_64", KeyHasher.FNV1A_64)
+  }
 
-    "correctly hash jenkins" in {
-      testHasher("jenkins", KeyHasher.JENKINS)
-    }
+  test("KeyHasher should correctly hash jenkins") {
+    testHasher("jenkins", KeyHasher.JENKINS)
+  }
 
-    "correctly hash crc32 itu" in {
-      testHasher("crc32", KeyHasher.CRC32_ITU)
-    }
-
+  test("KeyHasher should correctly hash crc32 itu") {
+    testHasher("crc32", KeyHasher.CRC32_ITU)
   }
 }
