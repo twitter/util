@@ -20,9 +20,9 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.util.{logging => javalog}
 
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class SyslogHandlerTest extends AnyWordSpec {
+class SyslogHandlerTest extends AnyFunSuite {
   val record1 = new javalog.LogRecord(Level.FATAL, "fatal message!")
   record1.setLoggerName("net.lag.whiskey.Train")
   record1.setMillis(1206769996722L)
@@ -30,90 +30,88 @@ class SyslogHandlerTest extends AnyWordSpec {
   record2.setLoggerName("net.lag.whiskey.Train")
   record2.setMillis(1206769996722L)
 
-  "SyslogHandler" should {
-    "write syslog entries" in {
-      // start up new syslog listener
-      val serverSocket = new DatagramSocket
-      val serverPort = serverSocket.getLocalPort
+  test("SyslogHandler should write syslog entries") {
+    // start up new syslog listener
+    val serverSocket = new DatagramSocket
+    val serverPort = serverSocket.getLocalPort
 
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          timezone = Some("UTC"),
-          hostname = "raccoon.local"
-        )
-      ).apply()
-      syslog.publish(record1)
-      syslog.publish(record2)
-
-      SyslogFuture.sync()
-      val p = new DatagramPacket(new Array[Byte](1024), 1024)
-      serverSocket.receive(p)
-      assert(
-        new String(
-          p.getData,
-          0,
-          p.getLength) == "<9>2008-03-29T05:53:16 raccoon.local whiskey: fatal message!"
+    var syslog = SyslogHandler(
+      port = serverPort,
+      formatter = new SyslogFormatter(
+        timezone = Some("UTC"),
+        hostname = "raccoon.local"
       )
-      serverSocket.receive(p)
-      assert(
-        new String(
-          p.getData,
-          0,
-          p.getLength) == "<11>2008-03-29T05:53:16 raccoon.local whiskey: error message!"
+    ).apply()
+    syslog.publish(record1)
+    syslog.publish(record2)
+
+    SyslogFuture.sync()
+    val p = new DatagramPacket(new Array[Byte](1024), 1024)
+    serverSocket.receive(p)
+    assert(
+      new String(
+        p.getData,
+        0,
+        p.getLength) == "<9>2008-03-29T05:53:16 raccoon.local whiskey: fatal message!"
+    )
+    serverSocket.receive(p)
+    assert(
+      new String(
+        p.getData,
+        0,
+        p.getLength) == "<11>2008-03-29T05:53:16 raccoon.local whiskey: error message!"
+    )
+  }
+
+  test("SyslogHandler with with server name") {
+    // start up new syslog listener
+    val serverSocket = new DatagramSocket
+    val serverPort = serverSocket.getLocalPort
+
+    var syslog = SyslogHandler(
+      port = serverPort,
+      formatter = new SyslogFormatter(
+        serverName = Some("pingd"),
+        timezone = Some("UTC"),
+        hostname = "raccoon.local"
       )
-    }
+    ).apply()
+    syslog.publish(record1)
 
-    "with server name" in {
-      // start up new syslog listener
-      val serverSocket = new DatagramSocket
-      val serverPort = serverSocket.getLocalPort
+    SyslogFuture.sync()
+    val p = new DatagramPacket(new Array[Byte](1024), 1024)
+    serverSocket.receive(p)
+    assert(
+      new String(
+        p.getData,
+        0,
+        p.getLength) == "<9>2008-03-29T05:53:16 raccoon.local [pingd] whiskey: fatal message!"
+    )
+  }
 
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          serverName = Some("pingd"),
-          timezone = Some("UTC"),
-          hostname = "raccoon.local"
-        )
-      ).apply()
-      syslog.publish(record1)
+  test("SyslogHandler with BSD time format") {
+    // start up new syslog listener
+    val serverSocket = new DatagramSocket
+    val serverPort = serverSocket.getLocalPort
 
-      SyslogFuture.sync()
-      val p = new DatagramPacket(new Array[Byte](1024), 1024)
-      serverSocket.receive(p)
-      assert(
-        new String(
-          p.getData,
-          0,
-          p.getLength) == "<9>2008-03-29T05:53:16 raccoon.local [pingd] whiskey: fatal message!"
+    var syslog = SyslogHandler(
+      port = serverPort,
+      formatter = new SyslogFormatter(
+        useIsoDateFormat = false,
+        timezone = Some("UTC"),
+        hostname = "raccoon.local"
       )
-    }
+    ).apply()
+    syslog.publish(record1)
 
-    "with BSD time format" in {
-      // start up new syslog listener
-      val serverSocket = new DatagramSocket
-      val serverPort = serverSocket.getLocalPort
-
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          useIsoDateFormat = false,
-          timezone = Some("UTC"),
-          hostname = "raccoon.local"
-        )
-      ).apply()
-      syslog.publish(record1)
-
-      SyslogFuture.sync()
-      val p = new DatagramPacket(new Array[Byte](1024), 1024)
-      serverSocket.receive(p)
-      assert(
-        new String(
-          p.getData,
-          0,
-          p.getLength) == "<9>Mar 29 05:53:16 raccoon.local whiskey: fatal message!"
-      )
-    }
+    SyslogFuture.sync()
+    val p = new DatagramPacket(new Array[Byte](1024), 1024)
+    serverSocket.receive(p)
+    assert(
+      new String(
+        p.getData,
+        0,
+        p.getLength) == "<9>Mar 29 05:53:16 raccoon.local whiskey: fatal message!"
+    )
   }
 }

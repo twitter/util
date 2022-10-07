@@ -20,75 +20,73 @@ import com.twitter.conversions.DurationOps._
 import com.twitter.io.TempFolder
 import com.twitter.util.Time
 import org.scalatest.BeforeAndAfter
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class ThrottledHandlerTest extends AnyWordSpec with BeforeAndAfter with TempFolder {
+class ThrottledHandlerTest extends AnyFunSuite with BeforeAndAfter with TempFolder {
   private var handler: StringHandler = _
 
-  "ThrottledHandler" should {
-    before {
-      Logger.clearHandlers()
-      handler = new StringHandler(BareFormatter, None)
-    }
+  before {
+    Logger.clearHandlers()
+    handler = new StringHandler(BareFormatter, None)
+  }
 
-    after {
-      Logger.clearHandlers()
-    }
+  after {
+    Logger.clearHandlers()
+  }
 
-    "throttle keyed log messages" in {
+  test("ThrottledHandler should throttle keyed log messages") {
+    val log = Logger()
+    val throttledLog = new ThrottledHandler(handler, 1.second, 3)
+    Time.withCurrentTimeFrozen { timeCtrl =>
+      log.addHandler(throttledLog)
+
+      log.error("apple: %s", "help!")
+      log.error("apple: %s", "help 2!")
+      log.error("orange: %s", "orange!")
+      log.error("orange: %s", "orange!")
+      log.error("apple: %s", "help 3!")
+      log.error("apple: %s", "help 4!")
+      log.error("apple: %s", "help 5!")
+      timeCtrl.advance(2.seconds)
+      log.error("apple: %s", "done.")
+
+      assert(
+        handler.get.split("\n").toList == List(
+          "apple: help!",
+          "apple: help 2!",
+          "orange: orange!",
+          "orange: orange!",
+          "apple: help 3!",
+          "(swallowed 2 repeating messages)",
+          "apple: done."
+        )
+      )
+    }
+  }
+
+  test("ThrottledHandler should log the summary even if nothing more is logged with that name") {
+    Time.withCurrentTimeFrozen { time =>
       val log = Logger()
       val throttledLog = new ThrottledHandler(handler, 1.second, 3)
-      Time.withCurrentTimeFrozen { timeCtrl =>
-        log.addHandler(throttledLog)
+      log.addHandler(throttledLog)
+      log.error("apple: %s", "help!")
+      log.error("apple: %s", "help!")
+      log.error("apple: %s", "help!")
+      log.error("apple: %s", "help!")
+      log.error("apple: %s", "help!")
 
-        log.error("apple: %s", "help!")
-        log.error("apple: %s", "help 2!")
-        log.error("orange: %s", "orange!")
-        log.error("orange: %s", "orange!")
-        log.error("apple: %s", "help 3!")
-        log.error("apple: %s", "help 4!")
-        log.error("apple: %s", "help 5!")
-        timeCtrl.advance(2.seconds)
-        log.error("apple: %s", "done.")
+      time.advance(2.seconds)
+      log.error("hello.")
 
-        assert(
-          handler.get.split("\n").toList == List(
-            "apple: help!",
-            "apple: help 2!",
-            "orange: orange!",
-            "orange: orange!",
-            "apple: help 3!",
-            "(swallowed 2 repeating messages)",
-            "apple: done."
-          )
+      assert(
+        handler.get.split("\n").toList == List(
+          "apple: help!",
+          "apple: help!",
+          "apple: help!",
+          "(swallowed 2 repeating messages)",
+          "hello."
         )
-      }
-    }
-
-    "log the summary even if nothing more is logged with that name" in {
-      Time.withCurrentTimeFrozen { time =>
-        val log = Logger()
-        val throttledLog = new ThrottledHandler(handler, 1.second, 3)
-        log.addHandler(throttledLog)
-        log.error("apple: %s", "help!")
-        log.error("apple: %s", "help!")
-        log.error("apple: %s", "help!")
-        log.error("apple: %s", "help!")
-        log.error("apple: %s", "help!")
-
-        time.advance(2.seconds)
-        log.error("hello.")
-
-        assert(
-          handler.get.split("\n").toList == List(
-            "apple: help!",
-            "apple: help!",
-            "apple: help!",
-            "(swallowed 2 repeating messages)",
-            "hello."
-          )
-        )
-      }
+      )
     }
   }
 }
