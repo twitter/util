@@ -19,13 +19,13 @@ package com.twitter.logging
 import java.util.{logging => jlogging}
 
 import org.scalatest.BeforeAndAfter
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
 /**
  * Specify logging during unit tests via system property, defaulting to FATAL only.
  */
 @deprecated("Prefer using slf4j for logging", "2019-11-20")
-trait TestLogging extends BeforeAndAfter { self: AnyWordSpec =>
+trait TestLogging extends BeforeAndAfter { self: AnyFunSuite =>
   val logLevel: Level =
     Logger.levelNames(Option[String](System.getenv("log")).getOrElse("FATAL").toUpperCase)
 

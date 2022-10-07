@@ -16,9 +16,9 @@
 
 package com.twitter.util
 
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class ThriftSerializerTest extends AnyWordSpec {
+class ThriftSerializerTest extends AnyFunSuite {
   val aString = "me gustan los tacos y los burritos"
   val aNumber = 42
   val original = new TestThriftStructure(aString, aNumber)
@@ -45,17 +45,15 @@ class ThriftSerializerTest extends AnyWordSpec {
     true
   }
 
-  "ThriftSerializer" should {
-    "encode and decode json" in {
-      testSerializer(new JsonThriftSerializer, Some(json))
-    }
+  test("ThriftSerializer should encode and decode json") {
+    testSerializer(new JsonThriftSerializer, Some(json))
+  }
 
-    "encode and decode binary" in {
-      testSerializer(new BinaryThriftSerializer, encodedBinary)
-    }
+  test("ThriftSerializer should encode and decode binary") {
+    testSerializer(new BinaryThriftSerializer, encodedBinary)
+  }
 
-    "encode and decode compact" in {
-      testSerializer(new CompactThriftSerializer, encodedCompact)
-    }
+  test("ThriftSerializer should encode and decode compact") {
+    testSerializer(new CompactThriftSerializer, encodedCompact)
   }
 }
