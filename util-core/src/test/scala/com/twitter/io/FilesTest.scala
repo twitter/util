@@ -1,12 +1,11 @@
 package com.twitter.io
 
 import java.io.File
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class FilesTest extends AnyWordSpec with TempFolder {
-  "Files" should {
-
-    "delete" in withTempFolder {
+class FilesTest extends AnyFunSuite with TempFolder {
+  test("Files should delete") {
+    withTempFolder {
       val tempFolder = new File(canonicalFolderName)
 
       val file = new File(tempFolder, "file")

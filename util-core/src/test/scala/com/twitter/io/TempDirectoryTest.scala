@@ -1,21 +1,17 @@
 package com.twitter.io
 
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.funsuite.AnyFunSuite
 
-class TempDirectoryTest extends AnyWordSpec {
+class TempDirectoryTest extends AnyFunSuite {
+  test("TempDirectory should create a directory when deleteAtExit is true") {
+    val dir = TempDirectory.create(true)
+    assert(dir.exists())
+    assert(dir.isDirectory)
+  }
 
-  "TempDirectory" should {
-
-    "create a directory when deleteAtExit is true" in {
-      val dir = TempDirectory.create(true)
-      assert(dir.exists())
-      assert(dir.isDirectory)
-    }
-
-    "create a directory when deleteAtExit is false" in {
-      val dir = TempDirectory.create(false)
-      assert(dir.exists())
-      assert(dir.isDirectory)
-    }
+  test("create a directory when deleteAtExit is false") {
+    val dir = TempDirectory.create(false)
+    assert(dir.exists())
+    assert(dir.isDirectory)
   }
 }

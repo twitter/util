@@ -1,44 +1,41 @@
 package com.twitter.util
 
 import java.util.Locale
+import org.scalatest.funsuite.AnyFunSuite
 
-import org.scalatest.wordspec.AnyWordSpec
-
-class TwitterDateFormatTest extends AnyWordSpec {
-  "TwitterDateFormat" should {
-    "disallow Y without w" in {
-      intercept[IllegalArgumentException] {
-        TwitterDateFormat("YYYYMMDD")
-      }
-      intercept[IllegalArgumentException] {
-        TwitterDateFormat("YMD", Locale.GERMAN)
-      }
+class TwitterDateFormatTest extends AnyFunSuite {
+  test("TwitterDateFormat should disallow Y without w") {
+    intercept[IllegalArgumentException] {
+      TwitterDateFormat("YYYYMMDD")
     }
-
-    "allow Y with w" in {
-      TwitterDateFormat("YYYYww")
+    intercept[IllegalArgumentException] {
+      TwitterDateFormat("YMD", Locale.GERMAN)
     }
+  }
 
-    "allow Y when quoted" in {
-      TwitterDateFormat("yyyy 'Year'")
+  test("TwitterDateFormat should allow Y with w") {
+    TwitterDateFormat("YYYYww")
+  }
+
+  test("TwitterDateFormat should allow Y when quoted") {
+    TwitterDateFormat("yyyy 'Year'")
+  }
+
+  test("TwitterDateFormat should stripSingleQuoted") {
+    import TwitterDateFormat._
+    assert(stripSingleQuoted("") == "")
+    assert(stripSingleQuoted("YYYY") == "YYYY")
+    assert(stripSingleQuoted("''") == "")
+    assert(stripSingleQuoted("'abc'") == "")
+    assert(stripSingleQuoted("x'abc'") == "x")
+    assert(stripSingleQuoted("'abc'x") == "x")
+    assert(stripSingleQuoted("'abc'def'ghi'") == "def")
+
+    intercept[IllegalArgumentException] {
+      stripSingleQuoted("'abc")
     }
-
-    "stripSingleQuoted" in {
-      import TwitterDateFormat._
-      assert(stripSingleQuoted("") == "")
-      assert(stripSingleQuoted("YYYY") == "YYYY")
-      assert(stripSingleQuoted("''") == "")
-      assert(stripSingleQuoted("'abc'") == "")
-      assert(stripSingleQuoted("x'abc'") == "x")
-      assert(stripSingleQuoted("'abc'x") == "x")
-      assert(stripSingleQuoted("'abc'def'ghi'") == "def")
-
-      intercept[IllegalArgumentException] {
-        stripSingleQuoted("'abc")
-      }
-      intercept[IllegalArgumentException] {
-        stripSingleQuoted("'abc'def'ghi")
-      }
+    intercept[IllegalArgumentException] {
+      stripSingleQuoted("'abc'def'ghi")
     }
   }
 }
