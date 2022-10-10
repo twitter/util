@@ -12,8 +12,28 @@ New Features
 
 * util-core: Introduce Future.fromCompletableFuture ``PHAB_ID=D940686``
 
+* util-core: Introduce `Time.fromInstant` ``PHAB_ID=D987464``
+
+* util-core: Introduce `TimeFormatter`, a replacement for `TimeFormat`. `TimeFormatter` uses
+  the modern `java.time.format.DateTimeFormatter` API instead of the `java.text.SimpleDateFormat`
+  with the main advantage being that it doesn't require synchronization on either formatting or
+  parsing, and is thus more performant and causes no contention. ``PHAB_ID=D987464``
+
 * util-stats: `MetricBuilder` now has API to configure a format in which histograms are exported.
   Use `.withHistogramFormat` to access it.  ``PHAB_ID=D908189``
+
+Deprecations
+~~~~~~~~~~~~
+* util-core: `TimeFormat`, as well as the `Time.format` methods are deprecated in favor of using
+  `TimeFormatter`. ``PHAB_ID=D987464``
+
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-core: `Time.at`, `Time.toString`, and `Time.fromRss` now use `TimeFormatter` internally and
+  thus have better performance and do not cause contention through synchronization. `toString` always
+  uses `TimeFormatter` while `at` and `fromRss` only use it when run with Java 9 or later due to a
+  compatibility bug in Java 1.8. ``PHAB_ID=D987464``
 
 22.7.0
 ------

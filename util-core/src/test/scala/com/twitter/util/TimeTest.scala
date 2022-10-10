@@ -7,6 +7,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -380,6 +381,84 @@ class TimeFormatTest extends AnyFunSuite {
   }
 }
 
+class TimeFormatterTest extends AnyFunSuite {
+  def assertParsesTo(
+    fmt: String,
+    str: String,
+    year: Int,
+    month: Int,
+    day: Int,
+    hour: Int,
+    minute: Int,
+    second: Int
+  ) = {
+    assert(
+      TimeFormatter(fmt).parse(str) == Time.fromInstant(
+        Instant.from(OffsetDateTime.of(year, month, day, hour, minute, second, 0, ZoneOffset.UTC))))
+
+  }
+
+  test("format correctly with non US locale") {
+    val locale = Locale.GERMAN
+    val format = "EEEE"
+    val timeFormat = TimeFormatter(format, locale)
+    val day = "Donnerstag"
+    assert(timeFormat.format(timeFormat.parse(day)) == day)
+  }
+
+  test("set UTC timezone as default") {
+    val format = "HH:mm"
+    val timeFormat = TimeFormatter(format)
+    val utcFormat = TimeFormatter(format, zoneId = ZoneOffset.UTC)
+    assert(timeFormat.format(utcFormat.parse("16:04")) == "16:04")
+  }
+
+  test("set non-UTC timezone correctly") {
+    val format = "HH:mm"
+    val estFormat = TimeFormatter(format, zoneId = ZoneId.of("America/New_York"))
+    val utcFormat = TimeFormatter(format, zoneId = ZoneOffset.UTC)
+    assert(utcFormat.format(estFormat.parse("16:04")) == "21:04")
+  }
+
+  test("parse dates with explicit offset timezone") {
+    // Known bug in Java 1.8.0 until at least _345, see https://bugs.openjdk.org/browse/JDK-8294853
+    // We're conditionally executing this test because pants still runs tests with Java 8.
+    // Alas, java.lang.Runtime.Version also doesn't exist until Java 9, so we're stuck with this
+    // somewhat pedestrian way of checking the runtime version...
+    if (!System.getProperty("java.version").startsWith("1.8.0")) {
+      assertParsesTo("yyyy-MM-dd HH:mm:ss Z", "2022-09-29 13:33:37 +0100", 2022, 9, 29, 12, 33, 37)
+    }
+  }
+
+  test("parse dates with explicit named timezone") {
+    assertParsesTo("yyyy-MM-dd HH:mm:ss z", "2022-09-29 13:33:37 EST", 2022, 9, 29, 17, 33, 37)
+  }
+
+  test("parse dates with no timezone") {
+    assertParsesTo("yyyy-MM-dd HH:mm:ss", "2022-09-29 13:33:37", 2022, 9, 29, 13, 33, 37)
+  }
+
+  test("parse dates only") {
+    assertParsesTo("yyyy-MM-dd", "2022-09-29", 2022, 9, 29, 0, 0, 0)
+  }
+
+  test("parse year-month only") {
+    assertParsesTo("yyyy-MM", "2022-09", 2022, 9, 1, 0, 0, 0)
+  }
+
+  test("parse month-day only") {
+    assertParsesTo("MM-dd", "09-29", 1970, 9, 29, 0, 0, 0)
+  }
+
+  test("parse hour-minute only") {
+    assertParsesTo("HH-mm", "13-37", 1970, 1, 1, 13, 37, 0)
+  }
+
+  test("parse hour only") {
+    assertParsesTo("HH", "13", 1970, 1, 1, 13, 0, 0)
+  }
+}
+
 trait TimeOps { val ops: Time.type = Time }
 class TimeTest
     extends AnyFunSuite
@@ -726,5 +805,21 @@ class TimeTest
       // java.time.Instant:getNano returns the nanoseconds of the second
       assert(offsetDateTime.getNano == Time.now.inNanoseconds % Duration.NanosPerSecond)
     }
+  }
+
+  test("at") {
+    assert(Time.at("1970-01-01 00:00:00 +0100").inLongSeconds == -3600)
+    assert(Time.at("1970-01-01 00:00:00 +0000").inLongSeconds == 0)
+    assert(Time.at("1970-01-01 00:00:00 UTC").inLongSeconds == 0)
+    assert(Time.at("1970-01-01 00:00:00 GMT").inLongSeconds == 0)
+    assert(Time.at("1970-01-01 00:00:00 EST").inLongSeconds == 18000)
+  }
+
+  test("fromRss") {
+    assert(Time.fromRss("Thu, 1 Jan 1970 00:00:00 +0100").inLongSeconds == -3600)
+    assert(Time.fromRss("Thu, 1 Jan 1970 00:00:00 +0000").inLongSeconds == 0)
+    assert(Time.fromRss("Thu, 1 Jan 1970 00:00:00 UTC").inLongSeconds == 0)
+    assert(Time.fromRss("Thu, 1 Jan 1970 00:00:00 GMT").inLongSeconds == 0)
+    assert(Time.fromRss("Thu, 1 Jan 1970 00:00:00 EST").inLongSeconds == 18000)
   }
 }

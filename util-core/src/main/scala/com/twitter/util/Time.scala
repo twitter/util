@@ -17,11 +17,13 @@
 package com.twitter.util
 
 import java.io.Serializable
+import java.text.ParseException
 import java.time.ZonedDateTime
 import java.time.Clock
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeParseException
 import java.util.concurrent.TimeUnit
 import java.util.Date
 import java.util.Locale
@@ -294,10 +296,13 @@ private[util] object TimeBox {
  *
  * @see [[Duration]] for intervals between two points in time.
  * @see [[Stopwatch]] for measuring elapsed time.
- * @see [[TimeFormat]] for converting to and from `String` representations.
+ * @see [[TimeFormatter]] for converting to and from `String` representations.
  */
 object Time extends TimeLikeOps[Time] {
   def fromNanoseconds(nanoseconds: Long): Time = new Time(nanoseconds)
+
+  def fromInstant(instant: Instant): Time = new Time(
+    instant.getEpochSecond * Duration.NanosPerSecond + instant.getNano)
 
   // This is needed for Java compatibility.
   override def fromFractionalSeconds(seconds: Double): Time = super.fromFractionalSeconds(seconds)
@@ -333,7 +338,7 @@ object Time extends TimeLikeOps[Time] {
 
     override def diff(that: Time): Duration = that match {
       case Top | Undefined => Duration.Undefined
-      case other => Duration.Top
+      case _ => Duration.Top
     }
 
     override def isFinite: Boolean = false
@@ -363,7 +368,7 @@ object Time extends TimeLikeOps[Time] {
 
     override def diff(that: Time): Duration = that match {
       case Bottom | Undefined => Duration.Undefined
-      case other => Duration.Bottom
+      case _ => Duration.Bottom
     }
 
     override def isFinite: Boolean = false
@@ -436,19 +441,67 @@ object Time extends TimeLikeOps[Time] {
    */
   val epoch: Time = fromNanoseconds(0L)
 
-  private val defaultFormat = new TimeFormat("yyyy-MM-dd HH:mm:ss Z")
-  private val rssFormat = new TimeFormat("E, dd MMM yyyy HH:mm:ss Z")
+  private val defaultFormat = TimeFormatter("yyyy-MM-dd HH:mm:ss Z")
+
+  // The default new parsing pattern is different from the default formatting pattern. There
+  // are two reasons for this, both of them designed to make parsing backwards-compatible with
+  // TimeFormat's SimpleDateFormat-based solution. One is that DateTimeFormatter pattern Z doesn't
+  // recognize textual zone IDs and z recognizes mostly just textual zone IDs, so we add both of
+  // them as optional. (Unfortunately, we can't enforce exactly one to be accepted, so it is
+  // possible to parse a string ending with a space and no time zone, or two time zones in which
+  // case last zone wins.) See https://bugs.openjdk.org/browse/JDK-8294710
+  // Another reason is that old SimpleDateFormat accepts single-digits for months, days, hours,
+  // minutes, and seconds with two-character patterns, while DateTimeFormatter doesn't. So for
+  // formatting we output canonical two-digit forms, but for parsing we accept single-digit forms.
+  private[this] val defaultParser =
+    versionedParser(oldPattern = "yyyy-MM-dd HH:mm:ss Z", newPattern = "yyyy-M-d H:m:s [Z][z]")
+
+  // The new RSS datetime pattern leverages the optional elements feature to correctly specify that
+  // day-of-week and second-of-minute are optional in RFC-1123. It also uses the same [Z][z] pattern
+  // as default parse.
+  private[this] val rssParser = versionedParser(
+    oldPattern = "E, d MMM yyyy HH:mm:ss Z",
+    newPattern = "[E, ]d MMM yyyy HH:mm[:ss] [Z][z]")
+
+  // This creates a parser function that either uses the deprecated TimeFormat or the new
+  // TimeFormatter, depending on whether the system executes on a 1.8 Java runtime or not. This is
+  // We still use the old SimpleDateFormat-based format for parsing Time.at/fromRss when running on
+  // Java 1.8 as a workaround for a bug with correct timezone parsing with the new java.time API
+  // that is fixed in Java 11 and later, see https://bugs.openjdk.org/browse/JDK-8294853.
+  private def versionedParser(oldPattern: String, newPattern: String): String => Time = {
+    if (System.getProperty("java.version").startsWith("1.8")) {
+      val tf = new TimeFormat(oldPattern)
+      tf.parse
+    } else {
+      // Setting Locale.US will provide the expected textual values for day-of-week and month-of-year.
+      val tf = TimeFormatter(newPattern, Locale.US)
+      s =>
+        try {
+          tf.parse(s)
+        } catch {
+          case e: DateTimeParseException => throw translateException(e)
+        }
+    }
+  }
 
   /**
    * Note, this should only ever be updated by methods used for testing.
    */
-  private[util] val localGetTime: Local[scala.Function0[Time]] = new Local[() => Time]
+  private[util] val localGetTime: Local[() => Time] = new Local[() => Time]
   private[util] val localGetTimer: Local[MockTimer] = new Local[MockTimer]
 
   /**
    * Creates a [[Time]] instance of the given `Date`.
    */
   def apply(date: Date): Time = fromMilliseconds(date.getTime)
+
+  private[this] def translateException(e: DateTimeParseException): ParseException = {
+    // Methods calling this used to throw java.text.ParseException before,
+    // and some callers might rely on that.
+    val pe = new ParseException(e.getMessage, e.getErrorIndex)
+    pe.initCause(e)
+    pe
+  }
 
   /**
    * Creates a [[Time]] instance at the given `datetime` string in the
@@ -459,7 +512,8 @@ object Time extends TimeLikeOps[Time] {
    * time.toString // 2019-05-12 08:00:00 +0000
    * }}}
    */
-  def at(datetime: String): Time = defaultFormat.parse(datetime)
+  def at(datetime: String): Time =
+    defaultParser(datetime)
 
   /**
    * Execute body with the time function replaced by `timeFunction`
@@ -535,7 +589,8 @@ object Time extends TimeLikeOps[Time] {
   /**
    * Returns the Time parsed from a string in RSS format. Eg: "Wed, 15 Jun 2005 19:00:00 GMT"
    */
-  def fromRss(rss: String): Time = rssFormat.parse(rss)
+  def fromRss(rss: String): Time =
+    rssParser(rss)
 }
 
 trait TimeControl {
@@ -546,8 +601,25 @@ trait TimeControl {
 /**
  * A thread-safe wrapper around a SimpleDateFormat object.
  *
+ * This class is deprecated in favor of [[TimeFormatter]]. When moving from this class to
+ * [[TimeFormatter]], be mindful that there are some subtle differences in patterns between
+ * [[java.text.SimpleDateFormat]] used by this class and [[DateTimeFormatter]] used by [[TimeFormatter]].
+ * Pattern character 'u' has a different meaning. Character 'a' cannot be repeated, and numerals for
+ * day of week produced by 'e' and 'c' can count from either Sunday or Monday depending on locale.
+ * Time zones might be parsed differently, and [[DateTimeFormatter]] defines several different time
+ * zone pattern characters with various behaviors. Consult the Javadoc for [[java.text.SimpleDateFormat]]
+ * and [[DateTimeFormatter]] for details. Finally, the parse method in this class throws a
+ * [[java.text.ParseException]] while the one in [[TimeFormatter]] throws [[DateTimeParseException]].
+ * If you rely on catching exceptions from parsing, you will need to change the type of the exception.
+ * Note that built in [[Time.at]] and [[Time.fromRss]] keep throwing [[java.text.ParseException]] for
+ * backwards compatibility.
+ *
  * The default timezone is UTC.
  */
+@deprecated(
+  message =
+    "Use TimeFormatter instead; it uses modern time APIs and requires no synchronization. " +
+      "See TimeFormat documentation for information on pattern differences.")
 class TimeFormat(
   pattern: String,
   locale: Option[Locale],
@@ -593,7 +665,7 @@ class TimeFormat(
  *
  * @see [[Duration]] for intervals between two points in time.
  * @see [[Stopwatch]] for measuring elapsed time.
- * @see [[TimeFormat]] for converting to and from `String` representations.
+ * @see [[TimeFormatter]] for converting to and from `String` representations.
  */
 sealed class Time private[util] (protected val nanos: Long)
     extends TimeLike[Time]
@@ -627,11 +699,17 @@ sealed class Time private[util] (protected val nanos: Long)
   /**
    * Formats this Time according to the given SimpleDateFormat pattern.
    */
+  @deprecated(
+    message =
+      "Use TimeFormatter instead. See TimeFormat documentation for information on pattern differences.")
   def format(pattern: String): String = new TimeFormat(pattern).format(this)
 
   /**
    * Formats this Time according to the given SimpleDateFormat pattern and locale.
    */
+  @deprecated(
+    message =
+      "Use TimeFormatter instead. See TimeFormat documentation for information on pattern differences.")
   def format(pattern: String, locale: Locale): String =
     new TimeFormat(pattern, Some(locale)).format(this)
 
@@ -697,11 +775,8 @@ sealed class Time private[util] (protected val nanos: Long)
   /**
    * Converts this Time object to a java.time.Instant
    */
-  def toInstant: Instant = {
-    val millis = inMilliseconds
-    val nanos = inNanoseconds - (millis * Duration.NanosPerMillisecond)
-    Instant.ofEpochMilli(millis).plusNanos(nanos)
-  }
+  def toInstant: Instant =
+    Instant.ofEpochSecond(0L, nanos)
 
   /**
    * Converts this Time object to a java.time.ZonedDateTime with ZoneId of UTC
