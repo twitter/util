@@ -1,6 +1,7 @@
 package com.twitter.finagle.stats
 
-import com.twitter.finagle.stats.exp.{ExpressionSchema, ExpressionSchemaKey}
+import com.twitter.finagle.stats.exp.ExpressionSchema
+import com.twitter.finagle.stats.exp.ExpressionSchemaKey
 
 /**
  * Interface used via the LoadService mechanism to obtain an
