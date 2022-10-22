@@ -11,6 +11,7 @@ import com.twitter.util.Try
 import java.io.PrintStream
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
+import scala.annotation.varargs
 import scala.collection.compat._
 import scala.collection.SortedMap
 import scala.collection.mutable
@@ -95,13 +96,9 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     }
   }
 
-  override def counter(name: String*): ReadableCounter = {
-    val metricBuilder = this
-      .metricBuilder(CounterType)
-      .withName(name: _*)
-
-    counter(metricBuilder)
-  }
+  @varargs
+  override def counter(name: String*): ReadableCounter =
+    counter(MetricBuilder.forCounter.withName(name: _*))
 
   /**
    * Creates a [[ReadableCounter]] of the given `name`.
@@ -136,13 +133,9 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
     }
   }
 
-  override def stat(name: String*): ReadableStat = {
-    val metricBuilder = this
-      .metricBuilder(HistogramType)
-      .withName(name: _*)
-
-    stat(metricBuilder)
-  }
+  @varargs
+  override def stat(name: String*): ReadableStat =
+    stat(MetricBuilder.forStat.withName(name: _*))
 
   /**
    * Creates a [[ReadableStat]] of the given `name`.
@@ -181,7 +174,7 @@ class InMemoryStatsReceiver extends StatsReceiver with WithHistogramDetails {
   /**
    * Creates a [[Gauge]] of the given `name`.
    */
-  def addGauge(metricBuilder: MetricBuilder)(f: => Float) = {
+  def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = {
     validateMetricType(metricBuilder, GaugeType)
     new Gauge {
 
