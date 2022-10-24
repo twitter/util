@@ -107,12 +107,11 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
         // There is fiber work that needs to be executed. Attempt to reschedule.
         tryScheduleFiber()
       }
-
-      // Depending on the underlying execution engine, we may need to flush the scheduler as well.
-      // Special consideration will need to be taken for CPU usage tracking if that is the case.
-      // We can work this all out in the future.
-      schedulerFlush()
     }
+    // Depending on the underlying execution engine, we may need to flush the scheduler as well.
+    // Special consideration will need to be taken for CPU usage tracking if that is the case.
+    // We can work this all out in the future.
+    schedulerFlush()
   }
 
   private[this] def threadLocalSubmit(r: FiberTask): Unit = {

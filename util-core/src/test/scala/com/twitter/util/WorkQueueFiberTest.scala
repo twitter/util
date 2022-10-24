@@ -326,7 +326,7 @@ class WorkQueueFiberTest extends AnyFunSuite {
     assert(executed)
   }
 
-  test("a flush outside the executing code is a no-op") {
+  test("a flush outside the executing code is a no-op for fiber") {
     val metrics = new TestMetrics
     val f = new TestFiber(metrics)
 
@@ -346,5 +346,29 @@ class WorkQueueFiberTest extends AnyFunSuite {
 
     f.executePendingRunnable()
     assert(executed)
+  }
+
+  test("a flush triggers a scheduler flush whether or not its in the executing code") {
+    val metrics = new TestMetrics
+    var schedulerFlushes = 0
+    val f = new WorkQueueFiber(metrics) {
+      override protected def schedulerSubmit(r: Runnable): Unit = {
+        r.run()
+      }
+      override protected def schedulerFlush(): Unit = {
+        schedulerFlushes += 1
+      }
+    }
+    // flush from within executing code
+    f.submitTask(() => {
+      f.flush()
+    })
+    assert(schedulerFlushes == 1)
+    assert(metrics.fiberFlushed.get == 1)
+    // flush from outside executing code
+    f.flush()
+    assert(schedulerFlushes == 2)
+    // the fiber didn't flush this time
+    assert(metrics.fiberFlushed.get == 1)
   }
 }
