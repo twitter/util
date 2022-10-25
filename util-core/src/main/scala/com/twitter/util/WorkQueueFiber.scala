@@ -218,7 +218,7 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
   }
 }
 
-private object WorkQueueFiber {
+private[twitter] object WorkQueueFiber {
 
   /** Telemetry used to monitor [[WorkQueueFiber]]s */
   abstract class FiberMetrics {
