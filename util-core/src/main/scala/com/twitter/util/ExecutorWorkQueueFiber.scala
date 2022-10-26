@@ -10,6 +10,11 @@ import java.util.concurrent.Executor
  * across threads. The ExecutorWorkQueueFiber pairs up a thread pool and a WorkQueueFiber
  * in order to act as a scheduler and handle all task scheduling responsibilities
  * for a server.
+ *
+ * @param pool a task Executor that must either execute the work immediately or pass the
+ *             work to another thread in order to avoid potential deadlocks.
+ * @param fiberMetrics telemetry used for tracking the execution of this fiber, and likely
+ *                     other fibers as well.
  */
 private[twitter] final class ExecutorWorkQueueFiber(
   pool: Executor,
