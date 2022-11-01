@@ -19,6 +19,10 @@ import scala.annotation.tailrec
  *
  * @note that priority is given to the work submitted by this thread.
  *
+ * @note care should be taken with the FiberTasks submitted to this Fiber. If a FiberTask
+ *       should throw an exception, the fiber could get stuck in an `executing` state and
+ *       resource tracking would be incomplete.
+ *
  * @param fiberMetrics telemetry used for tracking the execution of this fiber, and likely
  *                     other fibers as well.
  */
@@ -50,6 +54,8 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
   private[this] var executingThread: Thread = null
 
   private[this] val workRunnable: Runnable = { () => startWork() }
+
+  private[twitter] val tracker: ResourceTracker = new ResourceTracker
 
   /**
    * Submit the work to an actual thread for execution
@@ -86,7 +92,10 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
    *       with other work submitted to the fiber.
    */
   final def flush(): Unit = {
-    if (Thread.currentThread() eq executingThread) {
+    val inFiber = Thread.currentThread() eq executingThread
+    // Record flush start time so we can account for the extra work done by this `flush` call.
+    val flushStartTime = if (inFiber) ResourceTracker.currentThreadCpuTime else 0l
+    if (inFiber) {
       fiberMetrics.flushIncrement()
       // We need to move all our work into a new `schedulerSubmit` call. That means moving all
       // our thread local work into the thread-safe queue and resubmitting this fiber if there
@@ -109,9 +118,14 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
       }
     }
     // Depending on the underlying execution engine, we may need to flush the scheduler as well.
-    // Special consideration will need to be taken for CPU usage tracking if that is the case.
-    // We can work this all out in the future.
     schedulerFlush()
+    // Subtract the `flush` time from this fiber's total cpu time because the tasks executed may
+    // not belong to this fiber, and if they do, they'd be double counted since we should be in the
+    // `startWork` method right now executing one of the FiberTasks.
+    if (inFiber) {
+      val flushTime = ResourceTracker.currentThreadCpuTime - flushStartTime
+      if (flushTime > 0) tracker.addCpuTime(-flushTime)
+    }
   }
 
   private[this] def threadLocalSubmit(r: FiberTask): Unit = {
@@ -161,19 +175,21 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
     assert(!multiThreadedQueue.isEmpty)
 
     // Expects that the first thing to do is execute a thread local task.
-    @tailrec def go(n: FiberTask): Unit = {
+    @tailrec def go(count: Int, n: FiberTask): Int = {
       n.doRun()
       // If we're not the executing thread anymore it is because a task has "flushed" us.
       // If we've been flushed then we just need to exit now. The `flush()` method will
-      // take care of the state management.
-      if (executingThread eq currentThread) {
+      // take care of the state management and account for resource tracking.
+      if (executingThread ne currentThread) {
+        count
+      } else {
         // Get our next task, if it exists.
         var nn = localNext()
         if (nn == null) {
           nn = multiThreadedQueue.poll()
         }
 
-        if (nn != null) go(nn)
+        if (nn != null) go(count + 1, nn)
         else {
           // We found our local queue and multi-threaded queues both empty. We now go about
           // exiting this fiber submission.
@@ -189,13 +205,23 @@ private[twitter] abstract class WorkQueueFiber(fiberMetrics: WorkQueueFiber.Fibe
           // it to the scheduler because this loop was running.
           if (!multiThreadedQueue.isEmpty && !executing.getAndSet(true)) {
             executingThread = currentThread
-            go(multiThreadedQueue.poll())
+            go(count + 1, multiThreadedQueue.poll())
+          } else {
+            count
           }
         }
       }
     }
 
-    go(multiThreadedQueue.poll())
+    // Start tracking cpu usage
+    val trackingStartTime = ResourceTracker.currentThreadCpuTime
+    val continuationCount = go(1, multiThreadedQueue.poll())
+    tracker.addContinuations(continuationCount)
+    // See how much CPU time has elapsed from this fiber submission.
+    val elapsedTime = ResourceTracker.currentThreadCpuTime - trackingStartTime
+    if (elapsedTime > 0) {
+      tracker.addCpuTime(elapsedTime)
+    }
   }
 
   @inline private[this] def localHasNext: Boolean = r0 != null

@@ -59,6 +59,9 @@ class ExecutorWorkQueueFiberTest extends AnyFunSuite {
       // wait for the task to finish executing so that the next task gets its own
       // submission to the pool
       latch.await()
+      // give the executing thread some time to finish up resource tracking and fully
+      // exit out of its work loop
+      Thread.sleep(1)
     }
     assert(pool.poolSubmitCount.get() == N)
 

@@ -101,6 +101,7 @@ private[twitter] class ResourceTracker {
 
   private[util] def addCpuTime(time: Long): Unit = cpuTime.add(time)
   private[util] def incContinuations(): Unit = continuations.getAndIncrement()
+  private[util] def addContinuations(count: Int): Unit = continuations.getAndAdd(count)
 
   /**
    * Retrieve the total accumulated CPU time

@@ -371,4 +371,80 @@ class WorkQueueFiberTest extends AnyFunSuite {
     // the fiber didn't flush this time
     assert(metrics.fiberFlushed.get == 1)
   }
+
+  test("fiber tracks resources") {
+    val metrics = new TestMetrics
+    val f = new TestFiber(metrics)
+
+    val executed = new AtomicInteger()
+    val N = 5
+    for (_ <- 0 until N) {
+      f.submitTask { () =>
+        executed.incrementAndGet()
+      }
+    }
+
+    // The fiber hasn't done any work yet
+    assert(executed.get == 0)
+    assert(f.tracker.totalCpuTime() == 0)
+    assert(f.tracker.numContinuations() == 0)
+
+    f.executePendingRunnable()
+    assert(executed.get == N)
+    // The resource tracker records the work done by the fiber
+    assert(f.tracker.totalCpuTime() > 0)
+    assert(f.tracker.numContinuations() == N)
+  }
+
+  test("resource tracking with flush") {
+    val metrics = new TestMetrics
+    val f = new TestFiber(metrics)
+
+    val latch1, latch2, flushed = new CountDownLatch(1)
+
+    var innerTaskDone = false
+    f.submitTask { () =>
+      latch1.countDown()
+      latch2.await()
+      f.submitTask { () =>
+        innerTaskDone = true
+      }
+
+      // Now flush
+      f.flush()
+      flushed.countDown()
+    }
+
+    // Nothing recorded yet by the resource tracker
+    assert(f.tracker.totalCpuTime() == 0)
+    assert(f.tracker.numContinuations() == 0)
+
+    val t = new Thread({ () =>
+      f.executePendingRunnable()
+    })
+    t.start()
+
+    latch1.await()
+    // At this point nothing has been recorded with the resource tracker yet
+    assert(f.tracker.totalCpuTime() == 0)
+    assert(f.tracker.numContinuations() == 0)
+
+    // Release thread t and then stall t right after the flush
+    latch2.countDown()
+    flushed.await()
+    t.join()
+    // Now the cpu time and the number of continuations should have been updated
+    val cpuTimeAfterFLush = f.tracker.totalCpuTime()
+    assert(cpuTimeAfterFLush > 0)
+    assert(f.tracker.numContinuations() == 1)
+
+    assert(!innerTaskDone)
+    // We should now have the inner task awaiting whoever executes the next submission. Now run it.
+    f.executePendingRunnable()
+    assert(innerTaskDone)
+    // More cpu time should have been added as well as one more continuation
+    val cpuTimeAfterInnerTask = f.tracker.totalCpuTime()
+    assert(cpuTimeAfterInnerTask > cpuTimeAfterFLush)
+    assert(f.tracker.numContinuations() == 2)
+  }
 }
