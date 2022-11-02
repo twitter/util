@@ -6,10 +6,10 @@ private[twitter] object HistogramComponent {
   case object Avg extends HistogramComponent
   case object Sum extends HistogramComponent
   case object Count extends HistogramComponent
-  case class Percentile(percentile: Double) extends HistogramComponent
+  case class Percentile(decimal: Double) extends HistogramComponent
 
   val DefaultPercentiles: Seq[HistogramComponent] =
-    Seq(Percentile(50), Percentile(99), Percentile(999), Percentile(9999))
+    Seq(Percentile(0.50), Percentile(0.99), Percentile(0.999), Percentile(0.9999))
 }
 
 private[twitter] sealed trait HistogramComponent

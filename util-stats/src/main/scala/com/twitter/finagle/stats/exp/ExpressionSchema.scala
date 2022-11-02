@@ -101,13 +101,14 @@ private[twitter] object ExpressionSchema {
   }
 
   private def histogramLabel(histoExpr: HistogramExpression): Map[String, String] = {
+    val defaultHistogramFormatter = HistogramFormatter.default
     val value = histoExpr.component match {
-      case Percentile(percentile) => HistogramFormatter.labelPercentile(percentile)
-      case Min => HistogramFormatter.labelMin
-      case Max => HistogramFormatter.labelMax
-      case Avg => HistogramFormatter.labelAverage
-      case Sum => HistogramFormatter.labelSum
-      case Count => HistogramFormatter.labelCount
+      case Percentile(percentile) => defaultHistogramFormatter.labelPercentile(percentile)
+      case Min => defaultHistogramFormatter.labelMin
+      case Max => defaultHistogramFormatter.labelMax
+      case Avg => defaultHistogramFormatter.labelAverage
+      case Sum => defaultHistogramFormatter.labelSum
+      case Count => defaultHistogramFormatter.labelCount
     }
     Map("bucket" -> value)
   }

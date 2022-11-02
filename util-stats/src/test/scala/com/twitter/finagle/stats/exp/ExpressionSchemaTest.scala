@@ -236,7 +236,7 @@ class ExpressionSchemaTest extends AnyFunSuite {
           ExpressionSchemaKey(
             "latencies",
             Map(
-              "bucket" -> HistogramFormatter.labelPercentile(p),
+              "bucket" -> HistogramFormatter.default.labelPercentile(p),
               "role" -> "Client",
               "service_name" -> "aclient"),
             Seq())))
