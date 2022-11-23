@@ -7,5 +7,7 @@ owners:
   - roanta
   - vkostyukov
   - yufang
+  - mbezoyan
+  - mdickinson
   - csl-core-security:phab
   - platform-security:ldap

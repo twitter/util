@@ -6,6 +6,8 @@ owners:
   - roanta
   - vkostyukov
   - yufang
+  - mbezoyan
+  - mdickinson
 watchers:
   - coord-team@twitter.com
   - csl-team:ldap
