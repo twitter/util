@@ -3,11 +3,9 @@
 owners:
   # Individual users are not responsible for providing a blocking review, but they
   # are capable of doing so in the event that members of the groups cannot.
-  - banderson
-  - roanta
-  - vkostyukov
-  - yufang
+  - jillianc
   - mbezoyan
   - mdickinson
+  - nvong
   - csl-core-security:phab
   - platform-security:ldap

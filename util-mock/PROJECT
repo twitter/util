@@ -1,11 +1,7 @@
 owners:
-  - banderson
-  - ibennett
-  - mnakamura
-  - roanta
-  - vkostyukov
-  - yufang
+  - jillianc
   - mbezoyan
   - mdickinson
+  - nvong
 watchers:
   - csl-team:ldap
