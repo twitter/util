@@ -30,6 +30,8 @@ Deprecations
 Runtime Behavior Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* util: Bump version of Jackson to 2.14.1. ``PHAB_ID=D1025778``
+
 * util-core: `Time.at`, `Time.toString`, and `Time.fromRss` now use `TimeFormatter` internally and
   thus have better performance and do not cause contention through synchronization. `toString` always
   uses `TimeFormatter` while `at` and `fromRss` only use it when run with Java 9 or later due to a
