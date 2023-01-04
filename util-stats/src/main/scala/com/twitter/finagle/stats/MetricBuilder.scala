@@ -110,21 +110,22 @@ object MetricBuilder {
     metricType: MetricType,
   ): MetricBuilder = {
     new MetricBuilder(
-      keyIndicator,
-      description,
-      units,
-      role,
-      verbosity,
-      sourceClass,
+      keyIndicator = keyIndicator,
+      description = description,
+      units = units,
+      role = role,
+      verbosity = verbosity,
+      sourceClass = sourceClass,
       // For now we're not allowing construction w"ith labels.
       // They need to be added later via `.withLabels`.
-      Identity(name, name),
-      relativeName,
-      processPath,
-      histogramFormat,
-      percentiles,
-      isStandard,
-      metricType
+      identity = Identity(name, name),
+      relativeName = relativeName,
+      processPath = processPath,
+      histogramFormat = histogramFormat,
+      percentiles = percentiles,
+      isStandard = isStandard,
+      metricType = metricType,
+      metricUsageHints = Set.empty
     )
   }
 
@@ -302,7 +303,8 @@ class MetricBuilder private (
   val histogramFormat: HistogramFormat,
   val percentiles: IndexedSeq[Double],
   val isStandard: Boolean,
-  val metricType: MetricType)
+  val metricType: MetricType,
+  val metricUsageHints: Set[MetricUsageHint])
     extends Metadata {
 
   /**
@@ -323,7 +325,8 @@ class MetricBuilder private (
     isStandard: Boolean = this.isStandard,
     histogramFormat: HistogramFormat = this.histogramFormat,
     percentiles: IndexedSeq[Double] = this.percentiles,
-    metricType: MetricType = this.metricType
+    metricType: MetricType = this.metricType,
+    metricUsageHints: Set[MetricUsageHint] = this.metricUsageHints
   ): MetricBuilder = {
     new MetricBuilder(
       keyIndicator = keyIndicator,
@@ -338,7 +341,8 @@ class MetricBuilder private (
       histogramFormat = histogramFormat,
       percentiles = percentiles,
       isStandard = isStandard,
-      metricType = metricType
+      metricType = metricType,
+      metricUsageHints = metricUsageHints
     )
   }
 
@@ -411,6 +415,10 @@ class MetricBuilder private (
       this.metricType == GaugeType,
       "Cannot create a CounterishGauge from a Counter or Histogram")
     this.copy(metricType = CounterishGaugeType)
+  }
+
+  def withMetricUsageHints(hints: Set[MetricUsageHint]): MetricBuilder = {
+    this.copy(metricUsageHints = hints)
   }
 
   /**
