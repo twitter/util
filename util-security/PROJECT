@@ -6,6 +6,5 @@ owners:
   - jillianc
   - mbezoyan
   - mdickinson
-  - nvong
   - csl-core-security:phab
   - platform-security:ldap
