@@ -208,7 +208,7 @@ object Logger {
  * }}}
  */
 @SerialVersionUID(1L)
-final class Logger private (underlying: slf4j.Logger) extends Serializable {
+final class Logger private (val underlying: slf4j.Logger) extends Serializable {
 
   /* NOTE: we do not expose the non-varargs variations as we are unable to
      correctly call them from Scala, i.e.,
