@@ -214,12 +214,10 @@ object Promise {
   private final class Monitored[A](saved: Local.Context, k: Try[A] => Unit) extends K[A](saved) {
 
     def apply(result: Try[A]): Unit = {
-      val current = Local.save()
-      if (current ne saved)
-        Local.restore(saved)
-      try k(result)
-      catch Monitor.catcher
-      finally Local.restore(current)
+      Local.let(saved) {
+        try k(result)
+        catch Monitor.catcher
+      }
     }
   }
 
@@ -228,15 +226,14 @@ object Promise {
     protected[this] def k(r: Try[A]): Unit
 
     final def apply(result: Try[A]): Unit = {
-      val current = Local.save()
-      if (current ne saved)
-        Local.restore(saved)
-      try k(result)
-      catch {
-        case t: Throwable =>
-          Monitor.handle(t)
-          throw t
-      } finally Local.restore(current)
+      Local.let(saved) {
+        try k(result)
+        catch {
+          case t: Throwable =>
+            Monitor.handle(t)
+            throw t
+        }
+      }
     }
   }
 
@@ -615,11 +612,9 @@ class Promise[A] extends Future[A] with Updatable[Try[A]] {
     case s: Interruptible[A] =>
       if (!cas(s, new Interrupted(WaitQueue.merge(wq, s.waitq), intr))) raise0(intr, wq)
       else {
-        val current = Local.save()
-        if (current ne s.saved)
-          Local.restore(s.saved)
-        try s.handler.applyOrElse(intr, Promise.AlwaysUnit)
-        finally Local.restore(current)
+        Local.let(s.saved) {
+          s.handler.applyOrElse(intr, Promise.AlwaysUnit)
+        }
       }
 
     case p: Promise[A] /* Linked */ => p.raise0(intr, wq)

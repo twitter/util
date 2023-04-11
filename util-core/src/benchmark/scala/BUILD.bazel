@@ -1,0 +1,29 @@
+# Run locally:
+# ./bazel run util/util-core/src/benchmark/scala $BENCHMARK_NAME_REGEXP
+#
+# Run on a remote host:
+# Bundle:
+#   ./bazel bundle util/util-core/src/benchmark/scala
+# Copy jars to a target host:
+#   rsync -Lrv --delete dist/util-core-jmh-bundle* $TARGET_HOST:
+# Run on the remote host:
+#   ssh $TARGET_HOST /usr/lib/jvm/java-11-twitter/bin/java -jar util-core-jmh-bundle/util-core-jmh.jar $BENCHMARK_NAME_REGEXP
+jvm_binary(
+    basename = "util-core-jmh",
+    main = "org.openjdk.jmh.Main",
+    runtime_platform = "java11",
+    dependencies = [
+        "util/util-core/src/benchmark/scala:jmh_compiled_benchmark_lib",
+    ],
+)
+
+scala_benchmark_jmh(
+    name = "jmh",
+    sources = [
+        "**/*.scala",
+    ],
+    compiler_option_sets = ["fatal_warnings"],
+    dependencies = [
+        "util/util-core",
+    ],
+)
