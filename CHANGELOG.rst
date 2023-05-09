@@ -12,6 +12,8 @@ Runtime Behavior Changes
 
 * util: Bump version of Jackson to 2.14.2. ``PHAB_ID=D1049772``
 
+* util: Bump version of Jackson to 2.14.3. ``PHAB_ID=D1069160``
+
 22.12.0
 -------
 
