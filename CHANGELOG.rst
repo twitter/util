@@ -14,6 +14,9 @@ Runtime Behavior Changes
 
 * util: Bump version of Jackson to 2.14.3. ``PHAB_ID=D1069160``
 
+* util-securty: Add `deserializeAndFilterOutInvalidCertificates` Which wraps
+  the `deserializeX509` call in a Try. ``PHAB_ID=D1107551``
+
 22.12.0
 -------
 

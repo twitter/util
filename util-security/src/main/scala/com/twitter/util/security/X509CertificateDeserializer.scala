@@ -52,4 +52,28 @@ object X509CertificateDeserializer {
 
     messages.map(_.map(deserializeX509))
   }
+
+  /**
+   * Deserializes an [[InputStream]] that contains PEM-encoded X.509
+   * Certificates. Wraps the `deserializeX509` call in a Try
+   * (as `certificate.checkValidity()` can return CertificateExpiredException, CertificateNotYetValidException)
+   * and separates out any expired or not yet valid certificates detected.
+   *
+   * Closes the InputStream once it has finished reading.
+   */
+  def deserializeAndFilterOutInvalidCertificates(
+    rawPem: String,
+    name: String
+  ): (Seq[Try[X509Certificate]], Seq[Try[X509Certificate]]) = {
+    val pemBytes = new PemBytes(rawPem, name)
+    val messages: Try[Seq[Array[Byte]]] = pemBytes
+      .readMessages(MessageType)
+    messages
+      .map(certs => {
+        certs
+          .map(cert => {
+            Try(deserializeX509(cert))
+          }).partition(_.isReturn)
+      }).get()
+  }
 }
