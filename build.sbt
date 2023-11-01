@@ -2,7 +2,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / excludeLintKeys += scalacOptions // might be actually unused in util-doc module but not sure
 
 // All Twitter library releases are date versioned as YY.MM.patch
-val releaseVersion = "23.9.0-SNAPSHOT"
+val releaseVersion = "23.11.0-SNAPSHOT"
 
 val slf4jVersion = "1.7.30"
 val jacksonVersion = "2.14.3"
@@ -712,12 +712,12 @@ lazy val utilValidatorConstraint = Project(
   id = "util-validator-constraints",
   base = file("util-validator-constraints")
 ).settings(
-  settingsCrossCompiledWithTwoTen
-).settings(
-  libraryDependencies ++= Seq(
-    "jakarta.validation" % "jakarta.validation-api" % "3.0.0"
+    settingsCrossCompiledWithTwoTen
+  ).settings(
+    libraryDependencies ++= Seq(
+      "jakarta.validation" % "jakarta.validation-api" % "3.0.0"
+    )
   )
-)
 
 lazy val utilZk = Project(
   id = "util-zk",
