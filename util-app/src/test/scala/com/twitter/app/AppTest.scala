@@ -67,7 +67,7 @@ class AppTest extends AnyFunSuite {
 
     test1.main(Array())
 
-    assert(test1.reason.contains("Exception thrown in main on startup"))
+    assert(test1.reason.exists(_.contains("Exception thrown in main on startup")))
   }
 
   test("App: propagate underlying exception from fields in app") {

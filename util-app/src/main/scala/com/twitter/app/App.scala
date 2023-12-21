@@ -3,6 +3,8 @@ package com.twitter.app
 import com.twitter.app.lifecycle.Event._
 import com.twitter.conversions.DurationOps._
 import com.twitter.util._
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
@@ -82,7 +84,13 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
         System.err.println(throwable.getMessage)
         System.exit(1)
       case _ =>
-        exitOnError("Exception thrown in main on startup")
+        util.Using(new StringWriter) { stringWriter =>
+          util.Using(new PrintWriter(stringWriter)) { printWriter =>
+            throwable.printStackTrace(printWriter)
+            printWriter.flush()
+            exitOnError(s"Exception thrown in main on startup: ${stringWriter.toString}")
+          }
+        }
     }
   }
 

@@ -7,6 +7,13 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+Runtime Behavior Changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* util-app: When the application exits due to an error on startup, the error and
+  and stack trace are printed to stderr in addition to the existing stdout. ``PHAB_ID=D1116753``
+
+
 23.11.0
 -------
 
