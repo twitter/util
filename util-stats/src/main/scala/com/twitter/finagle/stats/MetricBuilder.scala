@@ -78,6 +78,8 @@ object MetricBuilder {
 
   val NoDescription: String = "No description provided"
 
+  private[this] val EmptyPercentiles = IndexedSeq.empty
+
   /**
    * Construct a MethodBuilder.
    *
@@ -105,7 +107,8 @@ object MetricBuilder {
     relativeName: Seq[String] = Seq.empty,
     processPath: Option[String] = None,
     histogramFormat: HistogramFormat = HistogramFormat.Default,
-    percentiles: IndexedSeq[Double] = IndexedSeq.empty,
+    percentiles: IndexedSeq[Double] =
+      EmptyPercentiles, // IndexedSeq.empty creates a new collection on every call
     isStandard: Boolean = false,
     metricType: MetricType,
   ): MetricBuilder = {
