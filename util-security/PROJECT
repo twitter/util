@@ -5,6 +5,6 @@ owners:
   # are capable of doing so in the event that members of the groups cannot.
   - jillianc
   - mbezoyan
-  - mdickinson
+  - tapans
   - csl-core-security:phab
   - platform-security:ldap
