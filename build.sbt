@@ -254,6 +254,8 @@ def scalatestScalacheckVersionedDep(scalaVersion: String) = {
   }
 }
 
+ThisBuild / versionScheme := Some("pvp")
+
 lazy val util = Project(
   id = "util",
   base = file(".")
