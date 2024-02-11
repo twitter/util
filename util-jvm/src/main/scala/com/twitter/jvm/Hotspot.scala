@@ -35,11 +35,18 @@ class Hotspot extends Jvm {
     ObjectName.getInstance("com.sun.management:type=HotSpotDiagnostic")
 
   private[this] val jvm: VMManagement = {
-    val fld = Class
-      .forName("sun.management.ManagementFactoryHelper")
-      .getDeclaredField("jvm")
-    fld.setAccessible(true)
-    fld.get(null).asInstanceOf[VMManagement]
+    try {
+      sun.management.ManagementFactoryHelper
+        .getVMManagement
+        .asInstanceOf[VMManagement]
+    } catch {
+      case _: NoSuchMethodError => {
+        val fld = Class.forName("sun.management.ManagementFactoryHelper")
+          .getDeclaredField("jvm")
+        fld.setAccessible(true)
+        fld.get(null).asInstanceOf[VMManagement]
+      }
+    }
   }
 
   private[this] def opt(name: String) =
@@ -150,7 +157,7 @@ class Hotspot extends Jvm {
     )
   }
 
-  private[this] object NilSafepointBean {
+  private[this] object NilSafepointBean extends SafepointBean {
     def getSafepointSyncTime = 0L
     def getTotalSafepointTime = 0L
     def getSafepointCount = 0L
@@ -159,18 +166,19 @@ class Hotspot extends Jvm {
   private val log = Logger.getLogger(getClass.getName)
 
   private[this] val safepointBean = {
-    val runtimeBean = Class
-      .forName("sun.management.ManagementFactoryHelper")
-      .getMethod("getHotspotRuntimeMBean")
-      .invoke(null)
+    val runtimeBean = sun.management.ManagementFactoryHelper.getHotspotRuntimeMBean
 
-    def asSafepointBean(x: AnyRef) = {
-      x.asInstanceOf[{
-        def getSafepointSyncTime: Long
-        def getTotalSafepointTime: Long
-        def getSafepointCount: Long
-      }]
+    def asSafepointBean(x: AnyRef): SafepointBean = x match {
+
+      case h: sun.management.HotspotRuntimeMBean => new SafepointBean() {
+        override def getSafepointCount: Long = h.getSafepointCount
+        override def getSafepointSyncTime: Long = h.getSafepointSyncTime
+        override def getTotalSafepointTime: Long = h.getTotalSafepointTime
+      }
+
+      case a => a.asInstanceOf[SafepointBean]
     }
+
     try {
       asSafepointBean(runtimeBean)
     } catch {
@@ -179,6 +187,12 @@ class Hotspot extends Jvm {
         log.log(Level.WARNING, "failed to get runtimeBean", t)
         asSafepointBean(NilSafepointBean)
     }
+  }
+
+  private[this] trait SafepointBean {
+    def getSafepointSyncTime : Long
+    def getTotalSafepointTime : Long
+    def getSafepointCount : Long
   }
 
   def safepoint: Safepoint = {
