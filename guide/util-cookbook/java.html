@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Usage from Java &#8212; Util 22.7.0 documentation</title>
-    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Usage from Java &#8212; Util 24.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/flasky.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,8 @@
           <a href="reader.html" title="Reader"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Usage from Java</a></li> 
       </ul>
     </div>  
 
@@ -59,9 +59,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="usage-from-java">
+  <section id="usage-from-java">
 <h1>Usage from Java<a class="headerlink" href="#usage-from-java" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="scala-s-functions">
+<section id="scala-s-functions">
 <h2>Scala’s Functions<a class="headerlink" href="#scala-s-functions" title="Permalink to this headline">¶</a></h2>
 <p>Due to Scala’s <code class="docutils literal notranslate"><span class="pre">Function0</span></code> and <code class="docutils literal notranslate"><span class="pre">Function1</span></code> being <code class="docutils literal notranslate"><span class="pre">traits</span></code>, these are
 difficult to instantiate directly from Java.</p>
@@ -75,35 +75,35 @@ versions of these work perfectly well and should be used instead of those.</p>
 <p>There are also construction methods on the <code class="docutils literal notranslate"><span class="pre">Function</span></code> object such as <code class="docutils literal notranslate"><span class="pre">func</span></code>
 which improves interop with Java 8’s lambdas as well as <code class="docutils literal notranslate"><span class="pre">ofCallable</span></code> and
 <code class="docutils literal notranslate"><span class="pre">ofRunnable</span></code>.</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.cons</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">scala.runtime.BoxedUnit</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="p">;</span>
+<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func</span><span class="p">;</span>
+<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="p">;</span>
+<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.cons</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">scala.runtime.BoxedUnit</span><span class="p">;</span>
 
 <span class="c1">// use a static import of func0 and lambdas for interop with</span>
 <span class="c1">// Scala&#39;s Function0 and call-by-name method arguments.</span>
-<span class="n">Function0</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fn0</span> <span class="o">=</span> <span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="s">&quot;example&quot;</span><span class="o">);</span>
+<span class="n">Function0</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fn0</span> <span class="o">=</span> <span class="n">func0</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="s">&quot;example&quot;</span><span class="p">);</span>
 <span class="c1">// and used inline:</span>
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">Future</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="s">&quot;example&quot;</span><span class="o">));</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">Future</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="n">func0</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="s">&quot;example&quot;</span><span class="p">));</span>
 
 <span class="c1">// use a static import of func and lambdas for interop with</span>
 <span class="c1">// Scala&#39;s Function1.</span>
-<span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">func</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+<span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">());</span>
 <span class="c1">// and used inline, with method references:</span>
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fi</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">func</span><span class="o">(</span><span class="n">String</span><span class="o">::</span><span class="n">length</span><span class="o">()));</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">fi</span> <span class="o">=</span> <span class="n">fs</span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">String</span><span class="p">::</span><span class="n">length</span><span class="p">()));</span>
 
 <span class="c1">// use a static import of cons and lambdas for interop with</span>
 <span class="c1">// Scala Function1&#39;s that return Unit.</span>
-<span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="n">cons</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">));</span>
+<span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="n">consumer</span> <span class="o">=</span> <span class="n">cons</span><span class="p">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">s</span><span class="p">));</span>
 <span class="c1">// and used inline, with method references:</span>
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="na">onSuccess</span><span class="o">(</span><span class="n">cons</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">));</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">fs</span><span class="p">.</span><span class="na">onSuccess</span><span class="p">(</span><span class="n">cons</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">::</span><span class="n">println</span><span class="p">));</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="compatibility-apis">
+</section>
+<section id="compatibility-apis">
 <h2>Compatibility APIs<a class="headerlink" href="#compatibility-apis" title="Permalink to this headline">¶</a></h2>
 <p>For many common classes and methods, there are static compatibility classes that
 provide Java developers with more idiomatic APIs and less <code class="docutils literal notranslate"><span class="pre">Foo$.MODULE$</span></code>s.
@@ -117,19 +117,20 @@ follow the convention of being in the same package, but with a plural name.
 For example, <code class="docutils literal notranslate"><span class="pre">com.twitter.io.Buf</span></code> has Java’s <code class="docutils literal notranslate"><span class="pre">com.twitter.io.Bufs</span></code>.</p>
 <p>As an example, this uses <code class="docutils literal notranslate"><span class="pre">com.twitter.util.FuturePools</span></code> in order to access
 the <code class="docutils literal notranslate"><span class="pre">FuturePool</span></code> companion object methods.</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.FuturePool</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="p">;</span>
 
-<span class="n">FuturePool</span> <span class="n">unboundedPool</span> <span class="o">=</span> <span class="n">FuturePools</span><span class="o">.</span><span class="na">unboundedPool</span><span class="o">();</span>
+<span class="n">FuturePool</span> <span class="n">unboundedPool</span> <span class="o">=</span> <span class="n">FuturePools</span><span class="p">.</span><span class="na">unboundedPool</span><span class="p">();</span>
 <span class="n">FuturePool</span> <span class="n">execServicePool</span> <span class="o">=</span>
-  <span class="n">FuturePools</span><span class="o">.</span><span class="na">newFuturePool</span><span class="o">(</span><span class="n">Executors</span><span class="o">.</span><span class="na">newSingleThreadExecutor</span><span class="o">());</span>
+  <span class="n">FuturePools</span><span class="p">.</span><span class="na">newFuturePool</span><span class="p">(</span><span class="n">Executors</span><span class="p">.</span><span class="na">newSingleThreadExecutor</span><span class="p">());</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -178,7 +179,7 @@ the <code class="docutils literal notranslate"><span class="pre">FuturePool</spa
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2022 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2024 Twitter, Inc.</div>
   
   </body>
 </html>

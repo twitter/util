@@ -55,21 +55,21 @@ Basic Usage
 
 Let's assume we have these two case classes:
 
-.. code:: scala
+.. code-block:: scala
 
     case class Bar(d: String)
     case class Foo(a: String, b: Int, c: Bar)
 
 To **serialize** a case class into a JSON string, use
 
-.. code:: scala
+.. code-block:: scala
 
     ScalaObjectMapper#writeValueAsString(any: Any): String // or
     JSON#write(any: Any)
 
 For example:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 10, 15, 30, 33, 38
 
     Welcome to Scala 2.12.12 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -121,14 +121,14 @@ For example:
 
 To **deserialize** a JSON string into a case class, use
 
-.. code:: scala
+.. code-block:: scala
 
     ScalaObjectMapper#parse[T](s: String): T // or
     JSON#parse[T](s: String): T
 
 For example, assuming the same `Bar` and `Foo` case classes defined above:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 10, 21
 
     Welcome to Scala 2.12.12 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -205,7 +205,7 @@ the `ScalaObject#Builder` to specify custom configuration.
 The companion object defines `apply` methods for creation of a |ScalaObjectMapper|_ configured
 with the defaults listed above:
 
-.. code:: scala
+.. code-block:: scala
 
     import com.twitter.util.jackson.ScalaObjectMapper
     import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper}
@@ -229,7 +229,7 @@ Companion Object Wrappers
 The companion object also defines other methods to easily obtain some specifically configured
 |ScalaObjectMapper|_ which wraps an *already configured* Jackson `ObjectMapper`:
 
-.. code:: scala
+.. code-block:: scala
 
     import com.twitter.util.jackson.ScalaObjectMapper
     import com.fasterxml.jackson.databind.{ObjectMapper => JacksonObjectMapper}
@@ -288,7 +288,7 @@ constructing a customized mapper.
 
 E.g., to set a `PropertyNamingStrategy` different than the default:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 3
 
     val objectMapper: ScalaObjectMapper =
@@ -298,7 +298,7 @@ E.g., to set a `PropertyNamingStrategy` different than the default:
 
 Or to set additional modules or configuration:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 4, 5, 6, 7
 
     val objectMapper: ScalaObjectMapper =
@@ -312,7 +312,7 @@ Or to set additional modules or configuration:
 
 You can also get a `camelCase`, `snake_case`, or even a YAML configured mapper.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7, 15, 23
 
     val camelCaseObjectMapper: ScalaObjectMapper =
@@ -346,7 +346,7 @@ The |ScalaObjectMapper|_ is a thin wrapper around a configured Jackson |jackson-
 `com.fasterxml.jackson.module.scala.ScalaObjectMapper`, thus you can always access the underlying
 Jackson object mapper by calling `underlying`:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7
 
     import com.fasterxml.jackson.databind.ObjectMapper
@@ -369,7 +369,7 @@ Add a Jackson Module to a |ScalaObjectMapper|_
 Follow the steps to create a Jackson Module for the custom serializer or deserializer then register
 the module to the underlying Jackson mapper from the |ScalaObjectMapper|_ instance:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 13, 14, 15, 43, 44, 45, 46, 47, 48, 52, 53
 
     import com.fasterxml.jackson.databind.JsonDeserializer
@@ -464,7 +464,7 @@ For example, you can annotate a method on the companion object for the case clas
 factory for instantiation. Any static factory method to use for instantiation **MUST** be specified
 on the companion object for case class:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 4
 
     case class MySimpleCaseClass(int: Int)
@@ -476,7 +476,7 @@ on the companion object for case class:
 
 Or to specify a secondary constructor to use for case class instantiation:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 2
 
     case class MyCaseClassWithMultipleConstructors(number1: Long, number2: Long, number3: Long) {
@@ -494,7 +494,7 @@ Or to specify a secondary constructor to use for case class instantiation:
     To annotate the primary constructor (as the syntax can seem non-intuitive because the `()` is
     required):
 
-    .. code:: scala
+    .. code-block:: scala
        :emphasize-lines: 1
 
         case class MyCaseClassWithMultipleConstructors @JsonCreator()(number1: Long, number2: Long, number3: Long) {
@@ -530,7 +530,7 @@ the `TimeStringDeserializer`.
 
 Thus if you had a case class defined:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7
 
     import com.fasterxml.jackson.annotation.JsonFormat
@@ -544,7 +544,7 @@ Thus if you had a case class defined:
 
 The following JSON:
 
-.. code:: json
+.. code-block:: json
 
     {
       "id": 42,
@@ -555,7 +555,7 @@ The following JSON:
 Will always deserialize properly into the case class regardless of the pattern configured on the
 `ObjectMapper` or as the default of a contextualized deserializer:
 
-.. code:: scala
+.. code-block:: scala
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
     Type in expressions for evaluation. Or try :help.
@@ -632,7 +632,7 @@ for specifying field annotations during deserialization with the `case class des
 
 For example, to deserialize JSON into the following classes that are not yours to annotate:
 
-.. code:: scala
+.. code-block:: scala
 
     case class Point(x: Int, y: Int) {
       def area: Int = x * y
@@ -643,7 +643,7 @@ For example, to deserialize JSON into the following classes that are not yours t
 However, you want to enforce field constraints with `validations <../util-validator/index.html>`_
 during deserialization. You can define a `Mix-in`,
 
-.. code:: scala
+.. code-block:: scala
 
     import com.fasterxml.jackson.annotation.JsonIgnore
     import jakarta.validation.constraints.{Max, Min}
@@ -659,7 +659,7 @@ Then register this `Mix-in` for the `Point` class type. There are several ways t
 Follow the steps to create a Jackson Module for the `Mix-in` then register the module to the
 underlying Jackson mapper from the |ScalaObjectMapper|_ instance:
 
-.. code:: scala
+.. code-block:: scala
 
     import com.fasterxml.jackson.databind.module.SimpleModule
     import com.twitter.util.jackson.ScalaObjectMapper
@@ -675,7 +675,7 @@ underlying Jackson mapper from the |ScalaObjectMapper|_ instance:
 
 Or register the `Mix-in` for the class type directly on the underlying Jackson mapper (without a Jackson Module):
 
-.. code:: scala
+.. code-block:: scala
 
     import com.twitter.util.jackson.ScalaObjectMapper
 
@@ -684,7 +684,7 @@ Or register the `Mix-in` for the class type directly on the underlying Jackson m
 
 Deserializing this JSON would then error with failed validations:
 
-.. code:: json
+.. code-block:: json
 
     {
       "points": [
@@ -693,7 +693,7 @@ Deserializing this JSON would then error with failed validations:
       ]
     }
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 51, 52, 53
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -810,7 +810,7 @@ than the `scala.util.parsing.json.JSON` utility.
     Users should prefer using a configured |ScalaObjectMapper|_ to perform validations in order to
     be able to properly handle validation exceptions.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7, 13, 22, 25
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -853,7 +853,7 @@ Similarly, there is also a utility for `YAML <https://yaml.org/>`__ serde operat
 the same methods as `c.t.util.jackson.JSON <#c-t-util-jackson-json>`__ using a default |ScalaObjectMapper|_
 configured with a `YAMLFactory`.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 8, 9, 10, 11, 12, 18, 19, 20, 29
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -919,7 +919,7 @@ populate the exception message.
 
 For example:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 13, 19, 54
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).
@@ -1020,7 +1020,7 @@ Normalization
 Both API methods accept a "normalize function" which is a function to apply on the *actual* to "normalize" any
 fields -- such as a timestamp -- before comparing to the *expected*.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 43, 44, 45, 46, 49, 52
 
     Welcome to Scala 2.12.13 (JDK 64-Bit Server VM, Java 1.8.0_242).

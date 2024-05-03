@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Futures &#8212; Util 22.7.0 documentation</title>
-    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Futures &#8212; Util 24.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/flasky.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,8 @@
           <a href="basics.html" title="Basics"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Futures</a></li> 
       </ul>
     </div>  
 
@@ -59,15 +59,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="futures">
+  <section id="futures">
 <h1>Futures<a class="headerlink" href="#futures" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">See the Finagle <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html">user guide</a>
+<p class="admonition-title">Note</p>
+<p>See the Finagle <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html">user guide</a>
 and the <a class="reference external" href="https://twitter.github.io/effectivescala/#Twitter's%20standard%20libraries-Futures">section on futures</a>
 in Effective Scala for details on concurrent programming with futures.</p>
 </div>
-<div class="section" id="conversions-between-twitter-s-future-and-scala-s-future">
+<section id="conversions-between-twitter-s-future-and-scala-s-future">
 <h2>Conversions between Twitter’s Future and Scala’s Future<a class="headerlink" href="#conversions-between-twitter-s-future-and-scala-s-future" title="Permalink to this headline">¶</a></h2>
 <p>Twitter’s <code class="docutils literal notranslate"><span class="pre">com.twitter.util.Future</span></code> is similar to, but
 <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html#futures">predates</a>,
@@ -78,37 +78,37 @@ in Effective Scala for details on concurrent programming with futures.</p>
 library to transform one into the other, or use a small bit of code shown
 below to avoid the extra dependency.</p>
 <p>Scala:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span> <span class="k">=&gt;</span> <span class="nc">TwitterFuture</span><span class="o">,</span> <span class="nc">Promise</span> <span class="k">=&gt;</span> <span class="nc">TwitterPromise</span><span class="o">,</span> <span class="nc">Return</span><span class="o">,</span> <span class="nc">Throw</span><span class="o">}</span>
-<span class="k">import</span> <span class="nn">scala.concurrent.</span><span class="o">{</span><span class="nc">Future</span> <span class="k">=&gt;</span> <span class="nc">ScalaFuture</span><span class="o">,</span> <span class="nc">Promise</span> <span class="k">=&gt;</span> <span class="nc">ScalaPromise</span><span class="o">,</span> <span class="nc">ExecutionContext</span><span class="o">}</span>
-<span class="k">import</span> <span class="nn">scala.util.</span><span class="o">{</span><span class="nc">Success</span><span class="o">,</span> <span class="nc">Failure</span><span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">util</span><span class="p">.{</span><span class="nc">Future</span> <span class="o">=&gt;</span> <span class="nc">TwitterFuture</span><span class="p">,</span> <span class="nc">Promise</span> <span class="o">=&gt;</span> <span class="nc">TwitterPromise</span><span class="p">,</span> <span class="nc">Return</span><span class="p">,</span> <span class="nc">Throw</span><span class="p">}</span>
+<span class="k">import</span> <span class="nn">scala</span><span class="p">.</span><span class="nn">concurrent</span><span class="p">.{</span><span class="nc">Future</span> <span class="o">=&gt;</span> <span class="nc">ScalaFuture</span><span class="p">,</span> <span class="nc">Promise</span> <span class="o">=&gt;</span> <span class="nc">ScalaPromise</span><span class="p">,</span> <span class="nc">ExecutionContext</span><span class="p">}</span>
+<span class="k">import</span> <span class="nn">scala</span><span class="p">.</span><span class="nn">util</span><span class="p">.{</span><span class="nc">Success</span><span class="p">,</span> <span class="nc">Failure</span><span class="p">}</span>
 
 <span class="cm">/** Convert from a Twitter Future to a Scala Future */</span>
-<span class="k">implicit</span> <span class="k">class</span> <span class="nc">RichTwitterFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="k">val</span> <span class="n">tf</span><span class="k">:</span> <span class="kt">TwitterFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">AnyVal</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">asScala</span><span class="k">:</span> <span class="kt">ScalaFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">val</span> <span class="n">promise</span><span class="k">:</span> <span class="kt">ScalaPromise</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">ScalaPromise</span><span class="o">()</span>
-    <span class="n">tf</span><span class="o">.</span><span class="n">respond</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Return</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">promise</span><span class="o">.</span><span class="n">success</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
-      <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">exception</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">promise</span><span class="o">.</span><span class="n">failure</span><span class="o">(</span><span class="n">exception</span><span class="o">)</span>
-    <span class="o">}</span>
-    <span class="n">promise</span><span class="o">.</span><span class="n">future</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<span class="k">implicit</span> <span class="k">class</span> <span class="nc">RichTwitterFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="kd">val</span> <span class="n">tf</span><span class="p">:</span> <span class="nc">TwitterFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">])</span> <span class="k">extends</span> <span class="nc">AnyVal</span> <span class="p">{</span>
+  <span class="k">def</span> <span class="nf">asScala</span><span class="p">:</span> <span class="nc">ScalaFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kd">val</span> <span class="n">promise</span><span class="p">:</span> <span class="nc">ScalaPromise</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span> <span class="o">=</span> <span class="nc">ScalaPromise</span><span class="p">()</span>
+    <span class="n">tf</span><span class="p">.</span><span class="n">respond</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nc">Return</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">promise</span><span class="p">.</span><span class="n">success</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+      <span class="k">case</span> <span class="nc">Throw</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">promise</span><span class="p">.</span><span class="n">failure</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">promise</span><span class="p">.</span><span class="n">future</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
 <span class="cm">/** Convert from a Scala Future to a Twitter Future */</span>
-<span class="k">implicit</span> <span class="k">class</span> <span class="nc">RichScalaFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="k">val</span> <span class="n">sf</span><span class="k">:</span> <span class="kt">ScalaFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">AnyVal</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">asTwitter</span><span class="o">(</span><span class="k">implicit</span> <span class="n">e</span><span class="k">:</span> <span class="kt">ExecutionContext</span><span class="o">)</span><span class="k">:</span> <span class="kt">TwitterFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">val</span> <span class="n">promise</span><span class="k">:</span> <span class="kt">TwitterPromise</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TwitterPromise</span><span class="o">[</span><span class="kt">A</span><span class="o">]()</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">onComplete</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Success</span><span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">promise</span><span class="o">.</span><span class="n">setValue</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
-      <span class="k">case</span> <span class="nc">Failure</span><span class="o">(</span><span class="n">exception</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">promise</span><span class="o">.</span><span class="n">setException</span><span class="o">(</span><span class="n">exception</span><span class="o">)</span>
-    <span class="o">}</span>
+<span class="k">implicit</span> <span class="k">class</span> <span class="nc">RichScalaFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="kd">val</span> <span class="n">sf</span><span class="p">:</span> <span class="nc">ScalaFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">])</span> <span class="k">extends</span> <span class="nc">AnyVal</span> <span class="p">{</span>
+  <span class="k">def</span> <span class="nf">asTwitter</span><span class="p">(</span><span class="k">implicit</span> <span class="n">e</span><span class="p">:</span> <span class="nc">ExecutionContext</span><span class="p">):</span> <span class="nc">TwitterFuture</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kd">val</span> <span class="n">promise</span><span class="p">:</span> <span class="nc">TwitterPromise</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TwitterPromise</span><span class="p">[</span><span class="nc">A</span><span class="p">]()</span>
+    <span class="n">sf</span><span class="p">.</span><span class="n">onComplete</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nc">Success</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">promise</span><span class="p">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+      <span class="k">case</span> <span class="nc">Failure</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">promise</span><span class="p">.</span><span class="n">setException</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+    <span class="p">}</span>
     <span class="n">promise</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="blocking-or-synchronous-work">
+</section>
+<section id="blocking-or-synchronous-work">
 <h2>Blocking or synchronous work<a class="headerlink" href="#blocking-or-synchronous-work" title="Permalink to this headline">¶</a></h2>
 <p>When you have work that is blocking, say I/O or a library
 not written in an asynchronous style, you should use a
@@ -121,83 +121,83 @@ have a memory leak. You can create a bounded <code class="docutils literal notra
 <code class="docutils literal notranslate"><span class="pre">FuturePool.apply(ExecutorService)</span></code>.</p>
 <p>For better Java compatibility, take a look at <code class="docutils literal notranslate"><span class="pre">com.twitter.util.FuturePools</span></code>.</p>
 <p>Scala:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.</span><span class="o">{</span><span class="nc">Future</span><span class="o">,</span> <span class="nc">FuturePool</span><span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">util</span><span class="p">.{</span><span class="nc">Future</span><span class="p">,</span> <span class="nc">FuturePool</span><span class="p">}</span>
 
-<span class="k">def</span> <span class="n">someIO</span><span class="o">()</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span>
+<span class="k">def</span> <span class="nf">someIO</span><span class="p">():</span> <span class="nc">String</span> <span class="o">=</span>
   <span class="c1">// does some blocking I/O and returns a string</span>
 
-<span class="k">val</span> <span class="n">futureResult</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">FuturePool</span><span class="o">.</span><span class="n">unboundedPool</span> <span class="o">{</span>
-  <span class="n">someIO</span><span class="o">()</span>
-<span class="o">}</span>
+<span class="kd">val</span> <span class="n">futureResult</span><span class="p">:</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span> <span class="o">=</span> <span class="nc">FuturePool</span><span class="p">.</span><span class="n">unboundedPool</span> <span class="p">{</span>
+  <span class="n">someIO</span><span class="p">()</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="o">;</span>
-<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.FuturePools</span><span class="p">;</span>
+<span class="kn">import static</span> <span class="nn">com.twitter.util.Function.func0</span><span class="p">;</span>
 
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">futureResult</span> <span class="o">=</span> <span class="n">FuturePools</span><span class="o">.</span><span class="na">unboundedPool</span><span class="o">().</span><span class="na">apply</span><span class="o">(</span>
-  <span class="n">func0</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">someIO</span><span class="o">());</span>
-<span class="o">);</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">futureResult</span> <span class="o">=</span> <span class="n">FuturePools</span><span class="p">.</span><span class="na">unboundedPool</span><span class="p">().</span><span class="na">apply</span><span class="p">(</span>
+  <span class="n">func0</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="n">someIO</span><span class="p">());</span>
+<span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="future-recursion">
+</section>
+<section id="future-recursion">
 <h2>Future Recursion<a class="headerlink" href="#future-recursion" title="Permalink to this headline">¶</a></h2>
 <p>Often there is a need for a future to recurse and call itself.
 Twitter’s <code class="docutils literal notranslate"><span class="pre">Future</span></code>s implement something akin to tail-call elimination
 which means you will not see a stack overflow with code written
 in this manner.</p>
 <p>Scala:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.util.Future</span>
-<span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicBoolean</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">util</span><span class="p">.</span><span class="nc">Future</span>
+<span class="k">import</span> <span class="nn">java</span><span class="p">.</span><span class="nn">util</span><span class="p">.</span><span class="nn">concurrent</span><span class="p">.</span><span class="nn">atomic</span><span class="p">.</span><span class="nc">AtomicBoolean</span>
 
-<span class="k">val</span> <span class="n">done</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">done</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AtomicBoolean</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="n">callThatReturnsFuture</span><span class="o">()</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">...</span>
+<span class="k">def</span> <span class="nf">callThatReturnsFuture</span><span class="p">():</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">Unit</span><span class="p">]</span> <span class="o">=</span> <span class="p">...</span>
 
-<span class="k">def</span> <span class="n">loop</span><span class="o">()</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">done</span><span class="o">.</span><span class="n">get</span><span class="o">)</span> <span class="o">{</span>
-    <span class="nc">Future</span><span class="o">.</span><span class="nc">Done</span>
-  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-    <span class="n">callThatReturnsFuture</span><span class="o">().</span><span class="n">before</span> <span class="o">{</span>
-      <span class="n">loop</span><span class="o">()</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<span class="k">def</span> <span class="nf">loop</span><span class="p">():</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">Unit</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">done</span><span class="p">.</span><span class="n">get</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nc">Future</span><span class="p">.</span><span class="nc">Done</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">callThatReturnsFuture</span><span class="p">().</span><span class="n">before</span> <span class="p">{</span>
+      <span class="n">loop</span><span class="p">()</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicBoolean</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">scala.runtime.BoxedUnit</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Function</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicBoolean</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">scala.runtime.BoxedUnit</span><span class="p">;</span>
 
-<span class="n">AtomicBoolean</span> <span class="n">done</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="n">AtomicBoolean</span> <span class="n">done</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicBoolean</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
 
-<span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="nf">loop</span><span class="o">()</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">done</span><span class="o">.</span><span class="na">get</span><span class="o">())</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">Future</span><span class="o">.</span><span class="na">Done</span><span class="o">();</span>
-  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">callThatReturnsFuture</span><span class="o">().</span><span class="na">flatMap</span><span class="o">(</span>
-      <span class="k">new</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
-        <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="nf">apply</span><span class="o">(</span><span class="n">BoxedUnit</span> <span class="n">unit</span><span class="o">)</span> <span class="o">{</span>
-          <span class="k">return</span> <span class="n">loop</span><span class="o">();</span>
-        <span class="o">}</span>
-      <span class="o">}</span>
-    <span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="nf">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">done</span><span class="p">.</span><span class="na">get</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">Future</span><span class="p">.</span><span class="na">Done</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">callThatReturnsFuture</span><span class="p">().</span><span class="na">flatMap</span><span class="p">(</span>
+      <span class="k">new</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="p">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;&gt;</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">BoxedUnit</span><span class="o">&gt;</span> <span class="nf">apply</span><span class="p">(</span><span class="n">BoxedUnit</span> <span class="n">unit</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="n">loop</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>A call to <code class="docutils literal notranslate"><span class="pre">loop()</span></code> will return a <code class="docutils literal notranslate"><span class="pre">Future</span></code> that will not be
 satisfied until the loop exits with one of these outcomes:</p>
 <ol class="arabic simple">
-<li>the flag, <code class="docutils literal notranslate"><span class="pre">done</span></code>, gets set to true; or</li>
-<li><code class="docutils literal notranslate"><span class="pre">callThatReturnsFuture</span></code> returns a failed <code class="docutils literal notranslate"><span class="pre">Future</span></code>.</li>
+<li><p>the flag, <code class="docutils literal notranslate"><span class="pre">done</span></code>, gets set to true; or</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">callThatReturnsFuture</span></code> returns a failed <code class="docutils literal notranslate"><span class="pre">Future</span></code>.</p></li>
 </ol>
-</div>
-<div class="section" id="limiting-concurrency-via-semaphores-and-mutexes">
+</section>
+<section id="limiting-concurrency-via-semaphores-and-mutexes">
 <h2>Limiting concurrency via semaphores and mutexes<a class="headerlink" href="#limiting-concurrency-via-semaphores-and-mutexes" title="Permalink to this headline">¶</a></h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">com.twitter.concurrent.AsyncSemaphore</span></code> or an
 <code class="docutils literal notranslate"><span class="pre">com.twitter.concurrent.AsyncMutex</span></code> for this. There is the succinct method
@@ -206,35 +206,35 @@ acquires a permit and runs the given function once acquired, then releases
 the permit after the future is satisfied. While that should be fine for
 most use cases <code class="docutils literal notranslate"><span class="pre">acquire()</span></code> can be used for more fine-grained control.</p>
 <p>Scala:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">concurrent</span><span class="p">.</span><span class="nc">AsyncSemaphore</span>
 
-<span class="k">val</span> <span class="n">semaphore</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AsyncSemaphore</span><span class="o">(</span><span class="mi">3</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AsyncSemaphore</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="n">semaphore</span><span class="o">.</span><span class="n">acquireAndRun</span> <span class="o">{</span>
-  <span class="n">callCatGifService</span><span class="o">(</span><span class="n">someId</span><span class="o">)</span>
-<span class="o">}</span>
+<span class="n">semaphore</span><span class="p">.</span><span class="n">acquireAndRun</span> <span class="p">{</span>
+  <span class="n">callCatGifService</span><span class="p">(</span><span class="n">someId</span><span class="p">)</span>
+<span class="p">}</span>
 
 <span class="c1">// or, with more control:</span>
-<span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="o">().</span><span class="n">flatMap</span> <span class="o">{</span> <span class="n">permit</span> <span class="k">=&gt;</span>
-  <span class="n">callCatGifService</span><span class="o">(</span><span class="n">someId</span><span class="o">).</span><span class="n">ensure</span> <span class="o">{</span> <span class="n">permit</span><span class="o">.</span><span class="n">release</span><span class="o">()</span> <span class="o">}</span>
-<span class="o">}</span>
+<span class="n">semaphore</span><span class="p">.</span><span class="n">acquire</span><span class="p">().</span><span class="n">flatMap</span> <span class="p">{</span> <span class="n">permit</span> <span class="o">=&gt;</span>
+  <span class="n">callCatGifService</span><span class="p">(</span><span class="n">someId</span><span class="p">).</span><span class="n">ensure</span> <span class="p">{</span> <span class="n">permit</span><span class="p">.</span><span class="n">release</span><span class="p">()</span> <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.twitter.concurrent.AsyncSemaphore</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Function0</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="p">;</span>
 
-<span class="n">AsyncSemaphore</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AsyncSemaphore</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
-<span class="n">semaphore</span><span class="o">.</span><span class="na">acquireAndRun</span><span class="o">(</span><span class="k">new</span> <span class="n">Function0</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">apply</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">callCatGifService</span><span class="o">(</span><span class="n">someId</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">});</span>
+<span class="n">AsyncSemaphore</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AsyncSemaphore</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">semaphore</span><span class="p">.</span><span class="na">acquireAndRun</span><span class="p">(</span><span class="k">new</span> <span class="n">Function0</span><span class="o">&lt;</span><span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">apply</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">callCatGifService</span><span class="p">(</span><span class="n">someId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="caching-futures">
+</section>
+<section id="caching-futures">
 <h2>Caching Futures<a class="headerlink" href="#caching-futures" title="Permalink to this headline">¶</a></h2>
 <p>It’s often useful to have an in-process cache of <code class="docutils literal notranslate"><span class="pre">com.twitter.util.Future</span></code>s.
 However, it’s tricky to get right especially around the handling of eviction of
@@ -243,48 +243,49 @@ failed <code class="docutils literal notranslate"><span class="pre">Futures</spa
 <a class="reference external" href="https://github.com/ben-manes/caffeine">Caffeine cache</a>
 for the correct behavior.</p>
 <p>Scala:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.github.benmanes.caffeine.cache._</span>
-<span class="k">import</span> <span class="nn">com.twitter.util.Future</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">github</span><span class="p">.</span><span class="nn">benmanes</span><span class="p">.</span><span class="nn">caffeine</span><span class="p">.</span><span class="nn">cache</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">util</span><span class="p">.</span><span class="nc">Future</span>
 
-<span class="k">val</span> <span class="n">loader</span><span class="k">:</span> <span class="kt">CacheLoader</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="k">new</span> <span class="nc">CacheLoader</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="o">{</span>
-    <span class="k">override</span> <span class="k">def</span> <span class="n">load</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="n">anExpensiveRpc</span><span class="o">(</span><span class="n">key</span><span class="o">)</span>
-  <span class="o">}</span>
+<span class="kd">val</span> <span class="n">loader</span><span class="p">:</span> <span class="nc">CacheLoader</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]]</span> <span class="o">=</span>
+  <span class="k">new</span> <span class="nc">CacheLoader</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]]</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nc">String</span><span class="p">):</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span> <span class="o">=</span> <span class="n">anExpensiveRpc</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+  <span class="p">}</span>
 
-<span class="k">val</span> <span class="n">caffeine</span><span class="k">:</span> <span class="kt">LoadingCache</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="k">=</span>
-  <span class="nc">Caffeine</span><span class="o">.</span><span class="n">newBuilder</span><span class="o">().</span><span class="n">build</span><span class="o">(</span><span class="n">loader</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">caffeine</span><span class="p">:</span> <span class="nc">LoadingCache</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]]</span> <span class="o">=</span>
+  <span class="nc">Caffeine</span><span class="p">.</span><span class="n">newBuilder</span><span class="p">().</span><span class="n">build</span><span class="p">(</span><span class="n">loader</span><span class="p">)</span>
 
-<span class="k">val</span> <span class="n">futureCache</span><span class="k">:</span> <span class="kt">LoadingFutureCache</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
-  <span class="k">new</span> <span class="nc">LoadingFutureCache</span><span class="o">(</span><span class="n">caffeine</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">futureCache</span><span class="p">:</span> <span class="nc">LoadingFutureCache</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span> <span class="nc">String</span><span class="p">]</span> <span class="o">=</span>
+  <span class="k">new</span> <span class="nc">LoadingFutureCache</span><span class="p">(</span><span class="n">caffeine</span><span class="p">)</span>
 
-<span class="k">val</span> <span class="n">value</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="n">futureCache</span><span class="o">(</span><span class="s">&quot;key&quot;</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">value</span><span class="p">:</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span> <span class="o">=</span> <span class="n">futureCache</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Java:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.CacheLoader</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.Caffeine</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingCache</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingFutureCache</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="o">;</span>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.CacheLoader</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.Caffeine</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingCache</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.github.benmanes.caffeine.cache.LoadingFutureCache</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.twitter.util.Future</span><span class="p">;</span>
 
-<span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">loader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+<span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">loader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="p">()</span> <span class="p">{</span>
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">load</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">anExpensiveRpc</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">};</span>
+  <span class="kd">public</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">load</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">anExpensiveRpc</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-<span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">caffeine</span> <span class="o">=</span> <span class="n">Caffeine</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">().</span><span class="na">build</span><span class="o">(</span><span class="n">loader</span><span class="o">);</span>
+<span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">caffeine</span> <span class="o">=</span> <span class="n">Caffeine</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">().</span><span class="na">build</span><span class="p">(</span><span class="n">loader</span><span class="p">);</span>
 
-<span class="n">Function1</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">futureCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoadingFutureCache</span><span class="o">(</span><span class="n">caffeine</span><span class="o">);</span>
+<span class="n">Function1</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">futureCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoadingFutureCache</span><span class="p">(</span><span class="n">caffeine</span><span class="p">);</span>
 
-<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">futureCache</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="s">&quot;key&quot;</span><span class="o">);</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">futureCache</span><span class="p">.</span><span class="na">apply</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -336,7 +337,7 @@ for the correct behavior.</p>
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2022 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2024 Twitter, Inc.</div>
   
   </body>
 </html>

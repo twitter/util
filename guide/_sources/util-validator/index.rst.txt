@@ -35,13 +35,13 @@ as our guide is largely based on this information.
 
 In order to use the `util-validator` add a dependency on the project, e.g. in `sbt <https://scala-sbt.org>`__:
 
-.. code:: scala
+.. code-block:: scala
 
     "com.twitter" %% "util-validator" % utilValidatorVersion
 
 or with `Maven <https://maven.apache.org/>`__:
 
-.. code:: xml
+.. code-block:: xml
 
     <dependency>
         <groupId>com.twitter</groupId>
@@ -57,7 +57,7 @@ Applying constraints
 Let's start with a basic example to see how to apply constraints. Let's assume you have a
 case class defined as such:
 
-.. code:: scala
+.. code-block:: scala
 
     package com.example
 
@@ -84,7 +84,7 @@ Validating constraints
 To perform a validation of these constraints, you use an instance of the `ScalaValidator`. Let’s
 take a look at a test for validating `Car` instances:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 15,25,35,45
 
     package com.example
@@ -162,7 +162,7 @@ rather than returning a `Set[ConstraintViolation[_]`.
 
 Instead of calling `ScalaValidator#validate`, use `ScalaValidator#verify`:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 16,28,40,52
 
     package com.example
@@ -254,7 +254,7 @@ a setter, and if the field is annotated with `@BeanProperty`, a bean getter and 
 
 Thus, if you had the following class definition:
 
-.. code:: scala
+.. code-block:: scala
 
     class C(@myAnnot var c: Int)
 
@@ -268,7 +268,7 @@ If you wanted Scala to copy the annotation to the generated field, you would nee
 
 For example, using `class C` again from above:
 
-.. code:: scala
+.. code-block:: scala
 
     class C(@(myAnnot @field) var c: Int)
 
@@ -285,7 +285,7 @@ Constructor param constraints
 
 Constraints can be expressed by annotating the constructor param of a case class. E.g.,
 
-.. code:: scala
+.. code-block:: scala
 
     package com.example
 
@@ -391,7 +391,7 @@ For that purpose the `@ValidPassengerCount` constraint is added on the class lev
 that constraint has access to the complete `Car` object, allowing to compare the numbers of seats
 and passengers.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 5
 
     package com.example
@@ -413,7 +413,7 @@ When a class implements a trait or extends an abstract class, all constraint ann
 on the super-type apply in the same manner as the constraints specified in the class itself.
 For example, if we had a trait, `Car` with a `RentalCar` implementation:
 
-.. code:: scala
+.. code-block:: scala
 
     trait Car {
       @NotEmpty def manufacturer: String
@@ -508,7 +508,7 @@ The same would be true, if `Car` was not a trait but an abstract class implement
 also specifies any constraints on the `manufacturer` field, it would be evaluated in addition to the
 `@NotEmpty` constraint from the `Car` trait:
 
-.. code:: bash
+.. code-block:: bash
    :emphasize-lines: 7,8,22,23
 
     scala> case class RentalCar(@Size(min = 2, max = 14) manufacturer: String, @NotEmpty rentalStation: String) extends Car
@@ -552,7 +552,7 @@ The Jakarta Bean Validation API does not only allow to validate single case clas
 complete object graphs via cascaded validation. To do so, just annotate a field or property
 representing a reference to another case class with `@Valid`.
 
-.. code:: scala
+.. code-block:: scala
 
     case class Person(@NotEmpty name: String)
 
@@ -576,7 +576,7 @@ Unlike constraints, object graph validation works for some container elements (t
 an `Iterable[_]`). That means the field of the container can be annotated with `@Valid`, which will
 cause each contained element to be validated when the parent object is validated.
 
-.. code:: scala
+.. code-block:: scala
 
     case class Person(@NotEmpty name: String)
 
@@ -657,7 +657,7 @@ Obtaining a Validator instance
 The `ScalaValidator` has an `apply()` function which will return an instance of a `ScalaValidator`
 configured with defaults.
 
-.. code:: scala
+.. code-block:: scala
 
     val validator: ScalaValidator = ScalaValidator()
 
@@ -666,7 +666,7 @@ customized validator.
 
 E.g., to configure a custom size for the descriptor cache:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 3
 
     val validator: ScalaValidator =
@@ -676,7 +676,7 @@ E.g., to configure a custom size for the descriptor cache:
 
 Or to add custom validations:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 10
 
     import com.twitter.util.validation.cfg.ConstraintMapping
@@ -693,7 +693,7 @@ Or to add custom validations:
 
 or to specify multiple constraint mappings:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 17
 
     import com.twitter.util.validation.cfg.ConstraintMapping
@@ -744,7 +744,7 @@ The topic of validation groups is discussed in detail in Hibernate's `Chapter 5,
 
 Use `validate` to perform validation of all constraints of a given case class.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 8
 
     import jakarta.validation.ConstraintViolation
@@ -769,7 +769,7 @@ one `ConstraintViolation[Car]` object.
 The `verify` method is the same as `validate` but instead of returning `Set[ConstraintViolation[T]]`
 the method throws a `ConstraintViolationException <https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintViolationException.html>`__.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 9
 
     import com.twitter.util.Try
@@ -789,7 +789,7 @@ the method throws a `ConstraintViolationException <https://javadoc.io/static/jak
 By using the `validateValue` method you can check whether a single field of a given case class can
 be validated  successfully if the field had the given value:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7,8,9,10
 
     import jakarta.validation.ConstraintViolation
@@ -808,7 +808,7 @@ be validated  successfully if the field had the given value:
 There is also a version of the method which instead of accepting a `Class[T]`, takes a
 `CaseClassDescriptor[T]` of a given class.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 6,9,10,11,12
 
     import jakarta.validation.ConstraintViolation
@@ -945,7 +945,7 @@ Method Parameter constraints
 
 You can specify the preconditions of a method by adding constraint annotations to its parameters:
 
-.. code:: scala
+.. code-block:: scala
 
     import jakarta.validation.constraints.{Min, NotEmpty, NotNull}
     import java.time.LocalDate
@@ -985,7 +985,7 @@ In contrast to single-parameter constraints, cross-parameter constraints are dec
 In the example below, the cross-parameter constraint `@LuggageCountMatchesPassengerCount` declared
 on the `load()` method is used to ensure that no passenger has more than two pieces of luggage.
 
-.. code:: scala
+.. code-block:: scala
 
     case class Car(@NotEmpty manufacturer: String, @AssertTrue isRegistered: Boolean) {
 
@@ -1007,7 +1007,7 @@ Method Return value constraints
 The postconditions of a method or constructor are declared by adding constraint annotations to the
 executable:
 
-.. code:: scala
+.. code-block:: scala
 
     case class RentalStation @ValidRentalStation(@NotEmpty name: String) {
 
@@ -1029,7 +1029,7 @@ Like the cascaded validation of case class fields (see `“Object graphs” <#ob
 validation. When validating a parameter or return value annotated with `@Valid`, the constraints
 declared on the parameter or return value object are also validated.
 
-.. code:: scala
+.. code-block:: scala
 
     case class Car(@NotEmpty manufacturer: String, @NotEmpty @Size(min = 2, max = 14) licensePlate: String)
 
@@ -1081,7 +1081,7 @@ needed.
 The `ScalaExecutableValidator` can be obtained from the `ScalaValidator` by calling
 `ScalaValidator#forExecutables`
 
-.. code:: scala
+.. code-block:: scala
 
     import com.twitter.util.validation.ScalaValidator
     import com.twitter.util.validation.executable.ScalaExecutableValidator
@@ -1102,7 +1102,7 @@ The `ScalaExecutableValidator` interface offers altogether six methods:
 
 Validates all `@MethodValidation`-annotated methods of a given object.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 27
 
     import com.twitter.util.validation.MethodValidation
@@ -1143,7 +1143,7 @@ Validates all `@MethodValidation`-annotated methods of a given object.
 
 Validates the given `@MethodValidation`-annotated method of an object.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 30
 
     import com.twitter.util.validation.MethodValidation
@@ -1188,7 +1188,7 @@ Validates the given `@MethodValidation`-annotated method of an object.
 Validates all constraints placed on the parameters of the given method. This method directly proxies
 to the `underlying Hibernate validator <https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateparameters_code>`__.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 32,33,34,35
 
     import com.twitter.util.validation.ScalaValidator
@@ -1236,7 +1236,7 @@ to the `underlying Hibernate validator <https://docs.jboss.org/hibernate/stable/
 Validates return value constraints of the given method. This method directly proxies to the
 `underlying Hibernate validator <https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validatereturnvalue_code>`__.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 27,28,29,30
 
     import com.twitter.util.validation.ScalaValidator
@@ -1281,7 +1281,7 @@ Validates return value constraints of the given method. This method directly pro
 Validates all constraints placed on the parameters of the given constructor. This method directly
 proxies to the `underlying Hibernate validator <https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateconstructorparameters_code>`__.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 27,28,29
 
     package com.example
@@ -1323,7 +1323,7 @@ proxies to the `underlying Hibernate validator <https://docs.jboss.org/hibernate
 Validates a constructor's return value. This method directly proxies to the
 `underlying Hibernate validator <https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#_code_executablevalidator_validateconstructorreturnvalue_code>`__.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 25,26,27
 
     package com.example
@@ -1414,7 +1414,7 @@ The constraint validator
 Having defined the annotation, we now need to create an implementation of a `ConstraintValidator <https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html>`__,
 which is able to validate fields with a `@CheckCase` annotation. To do so, we implement the Jakarta Bean Validation interface `ConstraintValidator <https://javadoc.io/static/jakarta.validation/jakarta.validation-api/3.0.0/jakarta/validation/ConstraintValidator.html>`__:
 
-.. code:: scala
+.. code-block:: scala
 
     package com.example.constraint
 
@@ -1483,7 +1483,7 @@ The last piece is an error message which should be used when a `@CheckCase` cons
 You have a few options. You can specify the default error message directly within the `message()`
 attribute of the constraint annotation, e.g.,
 
-.. code:: java
+.. code-block:: java
 
     String message() default "Case mode must be {value}";
 
@@ -1491,14 +1491,14 @@ However, if you want to be able to `internationalize <https://docs.oracle.com/ja
 an error message, it is generally recommended to place the value in a `Resource Bundle <https://beanvalidation.org/2.0/spec/#constraintsdefinitionimplementation-constraintdefinition-properties-message>`__,
 specifying the resource key as the `message()` attribute in the constraint annotation.
 
-.. code:: java
+.. code-block:: java
 
     String message() default "{com.example.constraint.CheckCase.message}";
 
 Create a `properties <https://en.wikipedia.org/wiki/.properties>`__ file,
 *ValidationMessages.properties* with the following contents:
 
-.. code:: text
+.. code-block:: text
 
     com.example.constraint.CheckCase.message=Case mode must be {value}
 
@@ -1541,7 +1541,7 @@ By default, Expression Language support **is not enabled** for custom violations
 be necessary. If you add an expression variable via the `TwitterConstraintValidatorContext`,
 Expression Language support will be enabled when adding a constraint violation.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 25,26,27,28,29
 
     import com.twitter.util.validation.constraintvalidation.TwitterConstraintValidatorContext
@@ -1584,7 +1584,7 @@ Using the constraint
 
 To use the custom `@CheckCase` constraint, annotate a case class field:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 7
 
     package com.example
@@ -1598,7 +1598,7 @@ To use the custom `@CheckCase` constraint, annotate a case class field:
 
 During validation, a `licensePlate` field with an invalid case will now cause validation to fail.
 
-.. code:: scala
+.. code-block:: scala
 
     // invalid license plate
     val car: Car = Car("Morris", "dd-ab-123", 4)
@@ -1619,7 +1619,7 @@ the entire case class instance. These constraints are defined in the same way as
 
 Here we'll see how to implement the `@ValidPassengerCount` annotation seen in an earlier example:
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 6
 
     package com.example
@@ -1634,7 +1634,7 @@ Here we'll see how to implement the `@ValidPassengerCount` annotation seen in an
 
 First the annotation definition could be written as:
 
-.. code:: java
+.. code-block:: java
 
     package com.example.constraint;
 
@@ -1653,13 +1653,13 @@ First the annotation definition could be written as:
 
 We define an error message in a *Validation.properties* file:
 
-.. code:: text
+.. code-block:: text
 
     com.example.constraint.ValidPassengerCount.message=invalid number of passengers
 
 Then the `ConstraintValidator` implementation which is specified to a `Car` type:
 
-.. code:: scala
+.. code-block:: scala
 
     package com.example
 
@@ -1683,7 +1683,7 @@ access the complete object state to decide whether the given instance is valid o
 
 During validation, an instance which does not satisfy the constraint will fail the validation.
 
-.. code:: scala
+.. code-block:: scala
 
     package com.example
 
@@ -1752,7 +1752,7 @@ In a case class, define a no-arg method that returns a `MethodValidationResult`.
 with `@MethodValidation`, optionally specifying validated fields of the case class for
 error-reporting.
 
-.. code:: scala
+.. code-block:: scala
    :emphasize-lines: 11,12
 
     import com.twitter.util.validation.MethodValidation
@@ -1798,7 +1798,7 @@ Best Practices
   `@MethodValidation`-annotated method should be able to be done eagerly and without side-effects.
 - Case classes with generic type params should be considered **not supported** for validation. E.g.,
 
-  .. code:: scala
+  .. code-block:: scala
 
       case class GenericCaseClass[T](@NotEmpty @Valid data: T)
 

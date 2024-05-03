@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reader &#8212; Util 22.7.0 documentation</title>
-    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Reader &#8212; Util 24.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/flasky.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,8 @@
           <a href="io.html" title="Input/Output"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Util Cookbook</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Reader</a></li> 
       </ul>
     </div>  
 
@@ -59,27 +59,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="reader">
+  <section id="reader">
 <h1>Reader<a class="headerlink" href="#reader" title="Permalink to this headline">¶</a></h1>
 <p>A reader exposes a pull-based API to model a potentially infinite stream of elements. Similar to use an
 iterator to iterate through all elements from the stream, users are able to read one element at a time,
 all elements are read in the order as they are fed to the reader.</p>
-<div class="section" id="interface">
+<section id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h2>
 <p>The most frequently used APIs are:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Reader</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">read</span><span class="o">()</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">trait</span> <span class="nc">Reader</span> <span class="p">{</span>
+  <span class="k">def</span> <span class="nf">read</span><span class="p">():</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">Option</span><span class="p">[</span><span class="nc">A</span><span class="p">]]</span>
 
-  <span class="k">def</span> <span class="n">discard</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span>
+  <span class="k">def</span> <span class="nf">discard</span><span class="p">():</span> <span class="nc">Unit</span>
 
-  <span class="k">def</span> <span class="n">onClose</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">StreamTermination</span><span class="o">]</span>
+  <span class="k">def</span> <span class="nf">onClose</span><span class="p">:</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">StreamTermination</span><span class="p">]</span>
 
-  <span class="k">final</span> <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+  <span class="k">final</span> <span class="k">def</span> <span class="nf">map</span><span class="p">[</span><span class="nc">B</span><span class="p">](</span><span class="n">f</span><span class="p">:</span> <span class="nc">A</span> <span class="o">=&gt;</span> <span class="nc">B</span><span class="p">):</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">B</span><span class="p">]</span>
 
-  <span class="k">final</span> <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
+  <span class="k">final</span> <span class="k">def</span> <span class="nf">flatMap</span><span class="p">[</span><span class="nc">B</span><span class="p">](</span><span class="n">f</span><span class="p">:</span> <span class="nc">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">B</span><span class="p">]):</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">B</span><span class="p">]</span>
 
-  <span class="k">def</span> <span class="n">flatten</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="k">implicit</span> <span class="n">ev</span><span class="k">:</span> <span class="kt">A</span> <span class="k">&lt;:</span><span class="kt">&lt;</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-<span class="o">}</span>
+  <span class="k">def</span> <span class="nf">flatten</span><span class="p">[</span><span class="nc">B</span><span class="p">](</span><span class="k">implicit</span> <span class="n">ev</span><span class="p">:</span> <span class="nc">A</span> <span class="o">&lt;:&lt;</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">B</span><span class="p">]):</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">B</span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>You could find a complete list of APIs from our <a class="reference external" href="https://twitter.github.io/util/docs/com/twitter/io/Reader.html">Reader Scaladoc</a>.
@@ -88,7 +88,7 @@ you don’t want others to read from it. You can use flatMap and map on a reader
 use them on <cite>Future</cite> and return a new reader after applying all transforming logic you need. Use
 <cite>onClose</cite> to check if the stream is terminated (read until the end of stream, discarded, or encountered
 an exception).</p>
-<div class="section" id="read">
+<section id="read">
 <h3>read()<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h3>
 <p>Read the next element of this stream. The returned <cite>Future</cite> will resolve into <cite>Some(e)</cite> when the
 element is available, or into <cite>None</cite> when the stream is fully-consumed. Reading from a discarded
@@ -99,16 +99,16 @@ the future that the previous read returned has been satisfied.</p>
 <p>Duplicate reads are guaranteed not to happen. When properly using the Reader, it’s impossible for a
 subsequent read to be satisfied before the first read, since the second read will not be issued until
 after the first read has been satisfied.</p>
-</div>
-<div class="section" id="discard">
+</section>
+<section id="discard">
 <h3>discard()<a class="headerlink" href="#discard" title="Permalink to this headline">¶</a></h3>
 <p>Always discard the reader when its output is no longer required to avoid resource leaks. Reading from a
 discarded reader will always resolve in <cite>ReaderDiscardedException</cite>.</p>
 <p>Discarding a fully-consumed reader or a failed reader won’t override its stream termination to <cite>Discarded</cite>.
 A fully-consumed reader remains at <cite>FullyRead</cite> and a failed reader remains at the failed future that
 terminates the stream.</p>
-</div>
-<div class="section" id="onclose">
+</section>
+<section id="onclose">
 <h3>onClose<a class="headerlink" href="#onclose" title="Permalink to this headline">¶</a></h3>
 <p>A <cite>Future</cite> that resolves once this reader is fully-consumed (will resolves in <cite>FullyRead</cite>), discarded
 (will resolve in <cite>Discarded</cite>), or failed (will resolve in the failed future that terminates the stream).
@@ -116,8 +116,8 @@ Once <cite>onClose</cite> is resolved in one stream termination, it won’t be o
 <p>This is useful for any extra resource cleanup that you must do once the stream is no longer being used, like
 measuring the stream lifetime, counting the number of alive streams, counting the number of failed streams,
 calculating stream success rate, etc.</p>
-</div>
-<div class="section" id="map">
+</section>
+<section id="map">
 <h3>map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h3>
 <p>Construct a new Reader by lazily applying <cite>f</cite> to every item read from this Reader, where <cite>f</cite> is the function
 that transforms data of type A to B. Note this operation only happens everytime a <cite>read()</cite> is called on the
@@ -125,8 +125,8 @@ new Reader.</p>
 <p>All operations of the new Reader will be in sync with self Reader. Discarding one Reader will discard
 the other Reader. When one Reader’s onClose resolves, the other Reader’s onClose will be resolved
 immediately with the same value.</p>
-</div>
-<div class="section" id="flatmap">
+</section>
+<section id="flatmap">
 <h3>flatMap<a class="headerlink" href="#flatmap" title="Permalink to this headline">¶</a></h3>
 <p>Construct a new Reader (aka flat reader in the rest of the context) by lazily applying <cite>f</cite> to every item
 read from self Reader (aka outer reader in the rest of the context), in the order as they are fed to the outer reader,
@@ -144,8 +144,8 @@ When one Reader’s onClose resolves, the other Reader’s onClose will be resol
 <p>However, after creating a flat reader via <cite>flatMap</cite>, the flat reader should be the only channel to interact with the stream,
 please avoid manipulating the inner reader or the outer reader by reading from it, discarding it, or failing it. This will
 affect the bahivor of the flat reader.</p>
-</div>
-<div class="section" id="flatten">
+</section>
+<section id="flatten">
 <h3>flatten<a class="headerlink" href="#flatten" title="Permalink to this headline">¶</a></h3>
 <p>Converts a <cite>Reader[Reader[B]]</cite> into a <cite>Reader[B]</cite>, this is a convenient abstraction to read from a
 stream (Reader, aka outer reader in the rest of the context) of Readers (aka inner reader in the rest of the context) as if
@@ -166,38 +166,38 @@ with the same value.</p>
 <p>However, after creating a flat reader via <cite>flatten</cite>, the flat reader should be the only channel to interact with the stream,
 please avoid manipulating the inner readers or the outer reader by reading from it, discarding it, or failing it. This will
 affect the bahivor of the flat reader.</p>
-</div>
-</div>
-<div class="section" id="example-usages">
+</section>
+</section>
+<section id="example-usages">
 <h2>Example Usages<a class="headerlink" href="#example-usages" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basic-operations-read-discard-onclose">
+<section id="basic-operations-read-discard-onclose">
 <h3>Basic operations: read, discard, onClose<a class="headerlink" href="#basic-operations-read-discard-onclose" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.io._</span>
-<span class="k">import</span> <span class="nn">com.twitter.util._</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">io</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">util</span><span class="p">.</span><span class="n">_</span>
 
-<span class="k">val</span> <span class="n">r1</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// Future(Some(1))</span>
-<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span> <span class="c1">// Future(None)</span>
-<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span> <span class="c1">// Future(StreamTermination.FullyRead)</span>
-<span class="n">r1</span><span class="o">.</span><span class="n">onClose</span> <span class="c1">// Future(None)</span>
-<span class="n">r1</span><span class="o">.</span><span class="n">read</span><span class="o">()</span>
+<span class="kd">val</span> <span class="n">r1</span> <span class="o">=</span> <span class="nc">Reader</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// Future(Some(1))</span>
+<span class="n">r1</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="c1">// Future(None)</span>
+<span class="n">r1</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> <span class="c1">// Future(StreamTermination.FullyRead)</span>
+<span class="n">r1</span><span class="p">.</span><span class="n">onClose</span> <span class="c1">// Future(None)</span>
+<span class="n">r1</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
 
-<span class="k">val</span> <span class="n">r2</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span>
-<span class="n">r2</span><span class="o">.</span><span class="n">discard</span><span class="o">()</span> <span class="c1">// Future(StreamTermination.Discarded)</span>
-<span class="n">r2</span><span class="o">.</span><span class="n">onClose</span> <span class="c1">// Future(ReaderDiscardedException)</span>
-<span class="n">r2</span><span class="o">.</span><span class="n">read</span><span class="o">()</span>
+<span class="kd">val</span> <span class="n">r2</span> <span class="o">=</span> <span class="nc">Reader</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">discard</span><span class="p">()</span> <span class="c1">// Future(StreamTermination.Discarded)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">onClose</span> <span class="c1">// Future(ReaderDiscardedException)</span>
+<span class="n">r2</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="construct-a-read-loop-to-consume-a-reader">
+</section>
+<section id="construct-a-read-loop-to-consume-a-reader">
 <h3>Construct a read-loop to consume a reader<a class="headerlink" href="#construct-a-read-loop-to-consume-a-reader" title="Permalink to this headline">¶</a></h3>
 <p>Given the pull-based API, the consumer is responsible for driving the computation. A very typical
 code pattern to consume a reader is to use a read-loop:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="n">consume</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">r</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span><span class="o">]))(</span><span class="n">process</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Unit</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="o">().</span><span class="n">flatMap</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">process</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="n">before</span><span class="o">(</span><span class="n">consume</span><span class="o">(</span><span class="n">r</span><span class="o">)(</span><span class="n">process</span><span class="o">))</span>
-    <span class="k">case</span> <span class="nc">None</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">.</span><span class="nc">Done</span> <span class="c1">// reached the end of the stream; no need to discard</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">consume</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="n">r</span><span class="p">:</span> <span class="nc">Reader</span><span class="p">[</span><span class="nc">A</span><span class="p">]))(</span><span class="n">process</span><span class="p">:</span> <span class="nc">A</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">Unit</span><span class="p">]):</span> <span class="nc">Future</span><span class="p">[</span><span class="nc">Unit</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">r</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">flatMap</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nc">Some</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">process</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">before</span><span class="p">(</span><span class="n">consume</span><span class="p">(</span><span class="n">r</span><span class="p">)(</span><span class="n">process</span><span class="p">))</span>
+    <span class="k">case</span> <span class="nc">None</span> <span class="o">=&gt;</span> <span class="nc">Future</span><span class="p">.</span><span class="nc">Done</span> <span class="c1">// reached the end of the stream; no need to discard</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The pattern above leverages <cite>Future</cite> recursion to exert back-pressure by allowing only one
@@ -205,49 +205,50 @@ outstanding read. Read must not be issued until the previous read finishes. This
 ensure a finer grained back-pressure in network systems allowing consumers to artificially slow down
 the producers and not rely solely on transport and IO buffering.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">One way to reason about the read-loop idiom is to view it as a subscription to a publisher (reader)
+<p class="admonition-title">Note</p>
+<p>One way to reason about the read-loop idiom is to view it as a subscription to a publisher (reader)
 in the Pub/Sub terminology. Perhaps the major difference between readers and traditional publishers,
 is readers only allow one subscriber (read-loop). It’s generally safer to assume the reader is fully
 consumed (stream is exhausted) once its read-loop is run.</p>
 </div>
-</div>
-<div class="section" id="error-handling">
+</section>
+<section id="error-handling">
 <h3>Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h3>
 <p>Given the read-loop above, its returned <cite>Future</cite> could be used to observe both successful and
 unsuccessful outcomes.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">consume</span><span class="o">(</span><span class="n">stream</span><span class="o">)(</span><span class="n">processor</span><span class="o">).</span><span class="n">respond</span> <span class="o">{</span>
-  <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
-  <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
-<span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">consume</span><span class="p">(</span><span class="n">stream</span><span class="p">)(</span><span class="n">processor</span><span class="p">).</span><span class="n">respond</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="nc">Return</span><span class="p">(())</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="p">)</span>
+  <span class="k">case</span> <span class="nc">Throw</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="p">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$</span><span class="n">e</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>If an exception is thrown during read, the reader’s onClose will be resolved with the same exception, so
 alternatively, you could handle a stream error like below:</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">reader</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">.</span><span class="n">value</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
-<span class="n">reader</span><span class="o">.</span><span class="n">onClose</span><span class="o">.</span><span class="n">respond</span> <span class="o">{</span>
-  <span class="k">case</span> <span class="nc">Return</span><span class="o">(())</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="o">)</span>
-  <span class="k">case</span> <span class="nc">Throw</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$e</span><span class="s">&quot;</span><span class="o">)</span>
-<span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span> <span class="n">reader</span> <span class="o">=</span> <span class="nc">Reader</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">reader</span><span class="p">.</span><span class="n">onClose</span><span class="p">.</span><span class="n">respond</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="nc">Return</span><span class="p">(())</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;Consumed an entire stream successfully.&quot;</span><span class="p">)</span>
+  <span class="k">case</span> <span class="nc">Throw</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="p">(</span><span class="s">s&quot;Encountered an error while consuming a stream: </span><span class="si">$</span><span class="n">e</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Once failed, a stream can not be restarted such that all future reads will resolve into a failure.
+<p class="admonition-title">Note</p>
+<p>Once failed, a stream can not be restarted such that all future reads will resolve into a failure.
 There is no need to discard an already failed stream.</p>
 </div>
-</div>
-<div class="section" id="resource-safety">
+</section>
+<section id="resource-safety">
 <h3>Resource Safety<a class="headerlink" href="#resource-safety" title="Permalink to this headline">¶</a></h3>
 <p>One of the important implications of readers, and streams in general, is that they are prone to resource
 leaks unless fully consumed，discarded, or failed. Specifically, readers backed with a resource, like a
 network connection, <strong>MUST</strong> be discarded unless already consumed (EOF observed), or failed to prevent
 connection leaks.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -310,7 +311,7 @@ connection leaks.</p>
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2022 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2024 Twitter, Inc.</div>
   
   </body>
 </html>

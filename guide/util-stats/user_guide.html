@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>User Guide &#8212; Util 22.7.0 documentation</title>
-    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>User Guide &#8212; Util 24.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/flasky.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,8 @@
           <a href="basics.html" title="Basics"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User Guide</a></li> 
       </ul>
     </div>  
 
@@ -59,9 +59,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="user-guide">
+  <section id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="choosing-the-stats-implementation-to-use-for-finagle">
+<section id="choosing-the-stats-implementation-to-use-for-finagle">
 <span id="choosing-impl"></span><h2>Choosing the stats implementation to use for Finagle<a class="headerlink" href="#choosing-the-stats-implementation-to-use-for-finagle" title="Permalink to this headline">¶</a></h2>
 <p>Finagle uses util-stats heavily throughout and it is important for a well-run service to have this
 wired up properly. Finagle uses <a class="reference external" href="https://github.com/twitter/finagle/blob/release/finagle-core/src/main/scala/com/twitter/finagle/util/LoadService.scala">LoadService</a> in order to discover implementations on the
@@ -74,38 +74,38 @@ dependencies. This also implies that developers of libraries should not depend o
 implementation and only depend on util-stats.</p>
 <p>If no implementations are found, metrics are reported to a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> which is essentially
 <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code>.</p>
-</div>
-<div class="section" id="measuring-the-latency-of-operations">
+</section>
+<section id="measuring-the-latency-of-operations">
 <h2>Measuring the latency of operations<a class="headerlink" href="#measuring-the-latency-of-operations" title="Permalink to this headline">¶</a></h2>
 <p>A common need for clients is to capture the latency distribution, often of asynchronous calls such
 as those returning <a class="reference external" href="https://twitter.github.io/finagle/guide/Futures.html">Futures</a>. This can be done easily via the <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala">Stat.time</a> and <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/Stat.scala">Stat.timeFuture</a>
 methods.</p>
-</div>
-<div class="section" id="prefer-storing-counters-and-stats-in-member-variables">
+</section>
+<section id="prefer-storing-counters-and-stats-in-member-variables">
 <h2>Prefer storing counters and stats in member variables<a class="headerlink" href="#prefer-storing-counters-and-stats-in-member-variables" title="Permalink to this headline">¶</a></h2>
 <p>While it may be tempting to create your metrics inline, whenever possible you should initialize
 these up front, typically in a class constructor. This is because while capturing usage via
 <code class="docutils literal notranslate"><span class="pre">Stat.add</span></code> and <code class="docutils literal notranslate"><span class="pre">Counter.incr</span></code> is optimized for performance, the construction of a <code class="docutils literal notranslate"><span class="pre">Stat</span></code> and
 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> is not.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CountingExample</span><span class="o">(</span><span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CountingExample</span><span class="p">(</span><span class="n">statsReceiver</span><span class="p">:</span> <span class="nc">StatsReceiver</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// create the Counter once and store it in a member</span>
-  <span class="k">private</span> <span class="k">val</span> <span class="n">numSheep</span> <span class="k">=</span> <span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;sheep&quot;</span><span class="o">)</span>
+  <span class="k">private</span> <span class="kd">val</span> <span class="n">numSheep</span> <span class="o">=</span> <span class="n">statsReceiver</span><span class="p">.</span><span class="n">counter</span><span class="p">(</span><span class="s">&quot;sheep&quot;</span><span class="p">)</span>
 
   <span class="c1">// incr() called on the member variable many times</span>
   <span class="c1">// in the application&#39;s lifecycle.</span>
-  <span class="k">def</span> <span class="n">bedtime</span><span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="n">numSheep</span><span class="o">.</span><span class="n">incr</span><span class="o">(</span><span class="n">n</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">bedtime</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">Unit</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">numSheep</span><span class="p">.</span><span class="n">incr</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="c1">// nifty business logic here</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Note that sometimes this is not possible due to business logic, for example, when a counter is named
 based on current context. However, care should be taken to ensure that the cardinality of metrics
 created is bounded or you will run the risk of a memory leak (for example by including application
 ids in your metric names).</p>
-</div>
-<div class="section" id="store-gauges-in-member-variables">
+</section>
+<section id="store-gauges-in-member-variables">
 <span id="gauges-in-members"></span><h2>Store gauges in member variables<a class="headerlink" href="#store-gauges-in-member-variables" title="Permalink to this headline">¶</a></h2>
 <p>While your application code is not likely to refer to the value returned from
 <code class="docutils literal notranslate"><span class="pre">StatsReceiver.addGauge</span></code>, you should store it in a member variable. This is due to the common
@@ -113,23 +113,23 @@ implementation of <code class="docutils literal notranslate"><span class="pre">G
 If a <code class="docutils literal notranslate"><span class="pre">CumulativeGauge</span></code> is not held by a strong reference, <em>the gauge is eligible for garbage
 collection</em>, which would cause your metric to disappear unexpectedly at runtime.</p>
 <div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// bad, don&#39;t do this:</span>
-<span class="k">class</span> <span class="nc">BadExample</span><span class="o">(</span><span class="n">queue</span><span class="k">:</span> <span class="kt">BlockingQueue</span><span class="o">[</span><span class="kt">Work</span><span class="o">],</span> <span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">statsReceiver</span><span class="o">.</span><span class="n">addGauge</span><span class="o">(</span><span class="s">&quot;num_waiting&quot;</span><span class="o">)</span> <span class="o">{</span> <span class="n">queue</span><span class="o">.</span><span class="n">size</span> <span class="o">}</span>
+<span class="k">class</span> <span class="nc">BadExample</span><span class="p">(</span><span class="n">queue</span><span class="p">:</span> <span class="nc">BlockingQueue</span><span class="p">[</span><span class="nc">Work</span><span class="p">],</span> <span class="n">statsReceiver</span><span class="p">:</span> <span class="nc">StatsReceiver</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">statsReceiver</span><span class="p">.</span><span class="n">addGauge</span><span class="p">(</span><span class="s">&quot;num_waiting&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span> <span class="p">}</span>
   <span class="c1">// code that may do incredible things but you&#39;d never know</span>
   <span class="c1">// the size of the queue.</span>
-<span class="o">}</span>
+<span class="p">}</span>
 
 <span class="c1">// do this instead:</span>
-<span class="k">class</span> <span class="nc">GoodExample</span><span class="o">(</span><span class="n">queue</span><span class="k">:</span> <span class="kt">BlockingQueue</span><span class="o">[</span><span class="kt">Work</span><span class="o">],</span> <span class="n">statsReceiver</span><span class="k">:</span> <span class="kt">StatsReceiver</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">private</span> <span class="k">val</span> <span class="n">queueDepth</span> <span class="k">=</span>
-    <span class="n">statsReceiver</span><span class="o">.</span><span class="n">addGauge</span><span class="o">(</span><span class="s">&quot;num_waiting&quot;</span><span class="o">)</span> <span class="o">{</span> <span class="n">queue</span><span class="o">.</span><span class="n">size</span> <span class="o">}</span>
+<span class="k">class</span> <span class="nc">GoodExample</span><span class="p">(</span><span class="n">queue</span><span class="p">:</span> <span class="nc">BlockingQueue</span><span class="p">[</span><span class="nc">Work</span><span class="p">],</span> <span class="n">statsReceiver</span><span class="p">:</span> <span class="nc">StatsReceiver</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="kd">val</span> <span class="n">queueDepth</span> <span class="o">=</span>
+    <span class="n">statsReceiver</span><span class="p">.</span><span class="n">addGauge</span><span class="p">(</span><span class="s">&quot;num_waiting&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span> <span class="p">}</span>
   <span class="c1">// code that does incredible things AND you know the</span>
   <span class="c1">// size of the queue.</span>
-<span class="o">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="prefer-addgauge-over-providegauge">
+</section>
+<section id="prefer-addgauge-over-providegauge">
 <h2>Prefer <cite>addGauge</cite> over <cite>provideGauge</cite><a class="headerlink" href="#prefer-addgauge-over-providegauge" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code> offers two similar methods, <code class="docutils literal notranslate"><span class="pre">addGauge</span></code> and <code class="docutils literal notranslate"><span class="pre">provideGauge</span></code>, and whenever
 possible <code class="docutils literal notranslate"><span class="pre">addGauge</span></code> should be preferred. <code class="docutils literal notranslate"><span class="pre">provideGauge</span></code> is basically a call to <code class="docutils literal notranslate"><span class="pre">addGauge</span></code>
@@ -137,46 +137,46 @@ along with code that holds a strong reference to the gauge in a global linked li
 <a class="reference internal" href="#gauges-in-members"><span class="std std-ref">previous note</span></a> that <code class="docutils literal notranslate"><span class="pre">Gauges</span></code> need to held in strong references and as
 such you should only rely on <code class="docutils literal notranslate"><span class="pre">provideGauge</span></code> when you do not have a place to keep a strong
 reference.</p>
-</div>
-<div class="section" id="prefer-fully-qualified-names-over-scoping">
+</section>
+<section id="prefer-fully-qualified-names-over-scoping">
 <h2>Prefer fully-qualified names over scoping<a class="headerlink" href="#prefer-fully-qualified-names-over-scoping" title="Permalink to this headline">¶</a></h2>
 <p>There is a convenient API method (<code class="docutils literal notranslate"><span class="pre">scope</span></code>) allowing to spawn a “scoped” version of a given
 <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>. Although it enables effortless code reuse, scoping comes at the cost of extra
 allocations. Inlining a fully-qualified metric name directly into the constructing method yields
 the same outcome yet avoids the overhead needed to accommodate interim structures.</p>
 <p>Put this way, if possible, prefer this</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="o">.</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;bar&quot;</span><span class="o">,</span> <span class="s">&quot;baz&quot;</span><span class="o">)</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="p">.</span><span class="n">counter</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="s">&quot;baz&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>over this</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="o">.</span><span class="n">scope</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">).</span><span class="n">scope</span><span class="o">(</span><span class="s">&quot;bar&quot;</span><span class="o">).</span><span class="n">counter</span><span class="o">(</span><span class="s">&quot;baz&quot;</span><span class="o">)</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="n">statsReceiver</span><span class="p">.</span><span class="n">scope</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">).</span><span class="n">scope</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">).</span><span class="n">counter</span><span class="p">(</span><span class="s">&quot;baz&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>It’s important to note that while this optimization is appealing like an easy win, it shouldn’t
 be universally applied. There are many legitimate use-cases when scoping a <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>
 is very reasonable thing to do, and otherwise, would require an alternative channel for the scope
 to be propagated between components, presumably introducing the overhead somewhere else.</p>
-</div>
-<div class="section" id="testing-code-that-use-statsreceivers">
+</section>
+<section id="testing-code-that-use-statsreceivers">
 <span id="testing-code"></span><h2>Testing code that use StatsReceivers<a class="headerlink" href="#testing-code-that-use-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>If your tests do not need to verify the value of stats, you should use a <a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a>
 which provides a no-op implementation. If your tests need to verify the value of stats, you should
 use an <a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> which provides <code class="docutils literal notranslate"><span class="pre">ReadableCounters</span></code> and <code class="docutils literal notranslate"><span class="pre">ReadableStats</span></code> that
 enable simpler testing.</p>
-</div>
-<div class="section" id="usage-from-java">
+</section>
+<section id="usage-from-java">
 <h2>Usage from Java<a class="headerlink" href="#usage-from-java" title="Permalink to this headline">¶</a></h2>
 <p>There are Java-friendly mechanisms in the <code class="docutils literal notranslate"><span class="pre">StatsReceivers</span></code> object (note the trailing <strong>s</strong>) for
 creating counters, gauges and stats. In addition <code class="docutils literal notranslate"><span class="pre">JStats</span></code> is available for measuring latency.</p>
-</div>
-<div class="section" id="thread-safety">
+</section>
+<section id="thread-safety">
 <h2>Thread-safety<a class="headerlink" href="#thread-safety" title="Permalink to this headline">¶</a></h2>
 <p>It is expected that implementations of <code class="docutils literal notranslate"><span class="pre">StatsReceivers</span></code> and their associated counters/gauges/stats
 themselves are thread-safe and safe to use across threads.</p>
 <p>The caveat is that because <code class="docutils literal notranslate"><span class="pre">Gauges</span></code> run a function when they are read, the code you provide as the
 function <strong>must also</strong> be thread-safe.</p>
-</div>
-<div class="section" id="leveraging-verbosity-levels">
+</section>
+<section id="leveraging-verbosity-levels">
 <h2>Leveraging Verbosity Levels<a class="headerlink" href="#leveraging-verbosity-levels" title="Permalink to this headline">¶</a></h2>
 <p>Introducing a new application metric (i.e., a histogram or a counter) is always a trade-off between
 its operational value and its cost within observability. Verbosity levels for StatsReceivers are
@@ -189,48 +189,49 @@ operations.</p>
 cost. However taking this to extremes may drastically affect operability of your service. We
 recommend using your judgment to make sure denylisting a given metric will not reduce a process’
 visibility.</p>
-</div>
-<div class="section" id="custom-histogram-percentiles">
+</section>
+<section id="custom-histogram-percentiles">
 <h2>Custom Histogram Percentiles<a class="headerlink" href="#custom-histogram-percentiles" title="Permalink to this headline">¶</a></h2>
 <p>If you need a custom histogram percentile, you can use the <cite>MetricBuilder</cite> interface, and populate
 it via <cite>MetricBuilder#withPercentiles</cite>.</p>
-<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.twitter.finagle.stats.</span><span class="o">{</span><span class="nc">DefaultStatsReceiver</span><span class="o">,</span> <span class="nc">StatsReceiver</span><span class="o">,</span> <span class="nc">MetricBuilder</span><span class="o">}</span>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com</span><span class="p">.</span><span class="nn">twitter</span><span class="p">.</span><span class="nn">finagle</span><span class="p">.</span><span class="nn">stats</span><span class="p">.{</span><span class="nc">DefaultStatsReceiver</span><span class="p">,</span> <span class="nc">StatsReceiver</span><span class="p">,</span> <span class="nc">MetricBuilder</span><span class="p">}</span>
 
-<span class="k">val</span> <span class="n">sr</span><span class="k">:</span> <span class="kt">StatsReceiver</span> <span class="o">=</span> <span class="nc">DefaultStatsReceiver</span>
-<span class="k">val</span> <span class="n">mb</span><span class="k">:</span> <span class="kt">MetricBuilder</span> <span class="o">=</span> <span class="n">sr</span><span class="o">.</span><span class="n">metricBuilder</span><span class="o">().</span><span class="n">withPercentiles</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="mf">0.99</span><span class="o">,</span> <span class="mf">0.999</span><span class="o">,</span> <span class="mf">0.9999</span><span class="o">,</span> <span class="mf">0.90</span><span class="o">,</span> <span class="mf">0.6</span><span class="o">))</span>
-<span class="k">val</span> <span class="n">stat</span> <span class="k">=</span> <span class="n">mb</span><span class="o">.</span><span class="n">histogram</span><span class="o">(</span><span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;cool&quot;</span><span class="o">,</span> <span class="s">&quot;histo&quot;</span><span class="o">)</span>
+<span class="kd">val</span> <span class="n">sr</span><span class="p">:</span> <span class="nc">StatsReceiver</span> <span class="o">=</span> <span class="nc">DefaultStatsReceiver</span>
+<span class="kd">val</span> <span class="n">mb</span><span class="p">:</span> <span class="nc">MetricBuilder</span> <span class="o">=</span> <span class="n">sr</span><span class="p">.</span><span class="n">metricBuilder</span><span class="p">().</span><span class="n">withPercentiles</span><span class="p">(</span><span class="nc">Seq</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+<span class="kd">val</span> <span class="n">stat</span> <span class="o">=</span> <span class="n">mb</span><span class="p">.</span><span class="n">histogram</span><span class="p">(</span><span class="s">&quot;my&quot;</span><span class="p">,</span> <span class="s">&quot;cool&quot;</span><span class="p">,</span> <span class="s">&quot;histo&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
+</section>
+<section id="access-needed-to-a-statsreceiver-in-an-inconvenient-place">
 <h2>Access needed to a StatsReceiver in an inconvenient place<a class="headerlink" href="#access-needed-to-a-statsreceiver-in-an-inconvenient-place" title="Permalink to this headline">¶</a></h2>
 <p>Ideally classes would be passed a properly scoped <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code> in their constructor but this
 isn’t always simple or feasible. This may be due to various reasons such as legacy code, code in a
 static initializer or a Scala object. In these cases, if you are depending on finagle-core, you
 should consider using one of <code class="docutils literal notranslate"><span class="pre">DefaultStatsReceiver</span></code>, <code class="docutils literal notranslate"><span class="pre">ClientStatsReceiver</span></code> or
 <code class="docutils literal notranslate"><span class="pre">ServerStatsReceiver</span></code>. These are initialized via Finagle’s <code class="docutils literal notranslate"><span class="pre">LoadService</span></code> mechanism.</p>
-</div>
-<div class="section" id="useful-statsreceivers">
+</section>
+<section id="useful-statsreceivers">
 <h2>Useful StatsReceivers<a class="headerlink" href="#useful-statsreceivers" title="Permalink to this headline">¶</a></h2>
 <p>There a few <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s which work across implementations that
 developers may find useful.</p>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</li>
-<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> for when you do not care about all metrics.</li>
-<li><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala">DenylistStatsReceiver</a> programmatically decide which metrics to ignore.</li>
-<li><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s.</li>
+<li><p><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/InMemoryStatsReceiver.scala">InMemoryStatsReceiver</a> useful for <a class="reference internal" href="#testing-code"><span class="std std-ref">unit testing</span></a>.</p></li>
+<li><p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/NullStatsReceiver.scala">NullStatsReceiver</a> for when you do not care about all metrics.</p></li>
+<li><p><a class="reference external" href="https://github.com/twitter/util/blob/develop/util-stats/src/main/scala/com/twitter/finagle/stats/DenylistStatsReceiver.scala">DenylistStatsReceiver</a> programmatically decide which metrics to ignore.</p></li>
+<li><p><a class="reference external" href="https://github.com/twitter/util/blob/release/util-stats/src/main/scala/com/twitter/finagle/stats/BroadcastStatsReceiver.scala">BroadcastStatsReceiver</a> allows for sending metrics to two or more <code class="docutils literal notranslate"><span class="pre">StatsReceiver</span></code>s.</p></li>
 </ul>
-</div>
-<div class="section" id="viewing-per-node-metrics">
+</section>
+<section id="viewing-per-node-metrics">
 <h2>Viewing per-node metrics<a class="headerlink" href="#viewing-per-node-metrics" title="Permalink to this headline">¶</a></h2>
 <p>This is possible, however the mechanism varies depending on which “application” framework you are
 using.</p>
 <p>Via TwitterServer/finagle-stats — the <a class="reference external" href="https://twitter.github.io/twitter-server/Features.html#http-admin-interface">HTTP admin interface</a> responds with json at
 <code class="docutils literal notranslate"><span class="pre">/admin/metrics.json</span></code> and there is a web UI for watching them in real-time at <code class="docutils literal notranslate"><span class="pre">/admin/metrics</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -291,7 +292,7 @@ using.</p>
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2022 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2024 Twitter, Inc.</div>
   
   </body>
 </html>

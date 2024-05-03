@@ -1,19 +1,18 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>FAQ &#8212; Util 22.7.0 documentation</title>
-    <link rel="stylesheet" href="../_static/flasky.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>FAQ &#8212; Util 24.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/flasky.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,7 +49,8 @@
           <a href="user_guide.html" title="User Guide"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Util</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">util-stats Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FAQ</a></li> 
       </ul>
     </div>  
 
@@ -59,9 +59,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="faq">
+  <section id="faq">
 <h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="why-are-util-stats-in-the-com-twitter-finagle-stats-package">
+<section id="why-are-util-stats-in-the-com-twitter-finagle-stats-package">
 <h2>Why are util-stats in the com.twitter.finagle.stats package?<a class="headerlink" href="#why-are-util-stats-in-the-com-twitter-finagle-stats-package" title="Permalink to this headline">¶</a></h2>
 <p>This is a historical artifact that reflects how the code was
 originally written as part of <a class="reference external" href="https://twitter.github.io/finagle/">Finagle</a>
@@ -69,15 +69,15 @@ but turned out to not actually depend on anything Finagle-specific.
 The code was moved to <a class="reference external" href="https://twitter.github.io/util/">util</a>
 in order to allow usage without depending on finagle-core.
 To ease the transition, the package namespace was left as is.</p>
-</div>
-<div class="section" id="why-were-there-two-different-implementations">
+</section>
+<section id="why-were-there-two-different-implementations">
 <h2>Why were there two(!) different implementations?<a class="headerlink" href="#why-were-there-two-different-implementations" title="Permalink to this headline">¶</a></h2>
 <p>This is somewhat historical, as early on in Twitter, Ostrich was created for Scala developers.
 <cite>finagle-stats</cite> was written quite a bit later in order to
 improve upon its implementation in terms of
 allocation efficiency and histogram precision.</p>
-</div>
-<div class="section" id="why-is-nullstatsreceiver-being-used">
+</section>
+<section id="why-is-nullstatsreceiver-being-used">
 <h2>Why is <cite>NullStatsReceiver</cite> being used?<a class="headerlink" href="#why-is-nullstatsreceiver-being-used" title="Permalink to this headline">¶</a></h2>
 <p><cite>NullStatsReceiver</cite> is used when no metrics implementation is found on the classpath.
 The section on <a class="reference internal" href="user_guide.html#choosing-impl"><span class="std std-ref">choosing the stats implementation</span></a> covers how to
@@ -85,36 +85,36 @@ pick an implementation for your application. Twitter runs its production
 services with <cite>finagle-stats</cite> and it is available on
 <a class="reference external" href="https://github.com/twitter/finagle/tree/master/finagle-stats">Github</a>
 and <a class="reference external" href="https://search.maven.org/#search%7Cga%7C1%7Cfinagle-stats">Maven Central</a>.</p>
-</div>
-<div class="section" id="why-migrate-to-finagle-stats">
+</section>
+<section id="why-migrate-to-finagle-stats">
 <span id="why-finagle-stats"></span><h2>Why migrate to finagle-stats?<a class="headerlink" href="#why-migrate-to-finagle-stats" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>finagle-stats</cite> library is designed to replace Ostrich which was
 formerly supported by Twitter. The comparison table below
 illustrates the advantages of <cite>finagle-stats</cite> over Ostrich.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="53%" />
-<col width="18%" />
-<col width="30%" />
+<col style="width: 53%" />
+<col style="width: 18%" />
+<col style="width: 30%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">&#160;</th>
-<th class="head">Ostrich</th>
-<th class="head">finagle-stats</th>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Ostrich</p></th>
+<th class="head"><p>finagle-stats</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Allocations per <cite>Stat.add</cite></td>
-<td>0 bytes</td>
-<td>0 bytes</td>
+<tbody>
+<tr class="row-even"><td><p>Allocations per <cite>Stat.add</cite></p></td>
+<td><p>0 bytes</p></td>
+<td><p>0 bytes</p></td>
 </tr>
-<tr class="row-odd"><td>Highest histogram resolution</td>
-<td>p9999</td>
-<td>p9999</td>
+<tr class="row-odd"><td><p>Highest histogram resolution</p></td>
+<td><p>p9999</p></td>
+<td><p>p9999</p></td>
 </tr>
-<tr class="row-even"><td>Sampling error</td>
-<td>±5%</td>
-<td>±0.5%</td>
+<tr class="row-even"><td><p>Sampling error</p></td>
+<td><p>±5%</p></td>
+<td><p>±0.5%</p></td>
 </tr>
 </tbody>
 </table>
@@ -122,8 +122,8 @@ illustrates the advantages of <cite>finagle-stats</cite> over Ostrich.</p>
 histograms. This is available on the
 <a class="reference external" href="https://twitter.github.io/twitter-server/Admin.html#admin-histograms">/admin/histogram</a>
 admin page.</p>
-</div>
-<div class="section" id="are-metric-values-reset-or-latched-after-an-observability-collection">
+</section>
+<section id="are-metric-values-reset-or-latched-after-an-observability-collection">
 <h2>Are metric values reset or latched after an observability collection?<a class="headerlink" href="#are-metric-values-reset-or-latched-after-an-observability-collection" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">Stats</span></code> are latched by all two implementations.
 This means that for each observability collection window,
@@ -145,10 +145,11 @@ to see per minute values.</p>
 <p><sup>[1]</sup> Note that by using <code class="docutils literal notranslate"><span class="pre">finagle-stats</span></code> and setting the flag
 <code class="docutils literal notranslate"><span class="pre">com.twitter.finagle.stats.useCounterDeltas=true</span></code> you can
 get per-minute deltas in Commons Metrics.</p>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -200,7 +201,7 @@ get per-minute deltas in Commons Metrics.</p>
       </div>
       <div class="clearer"></div>
     </div>
-  <div class="footer">&copy; Copyright 2022 Twitter, Inc.</div>
+  <div class="footer">&copy; Copyright 2024 Twitter, Inc.</div>
   
   </body>
 </html>
