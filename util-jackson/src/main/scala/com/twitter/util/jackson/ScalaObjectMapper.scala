@@ -412,7 +412,7 @@ object ScalaObjectMapper {
 
 private[jackson] object ArrayElementsOnNewLinesPrettyPrinter extends DefaultPrettyPrinter {
   _arrayIndenter = DefaultIndenter.SYSTEM_LINEFEED_INSTANCE
-  override def createInstance(): DefaultPrettyPrinter = this
+  override def createInstance(): DefaultPrettyPrinter = new DefaultPrettyPrinter(this)
 }
 
 /**
