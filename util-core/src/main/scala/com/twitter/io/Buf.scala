@@ -778,13 +778,15 @@ object Buf {
        *
        * A copy may be performed if necessary.
        */
-      def extract(buf: Buf): Array[Byte] = Buf.ByteArray.coerce(buf) match {
-        case Buf.ByteArray.Owned(bytes, 0, end) if end == bytes.length =>
-          bytes
-        case Buf.ByteArray.Shared(bytes) =>
+      def extract(buf: Buf): Array[Byte] = {
+        val byteArray = Buf.ByteArray.coerce(buf)
+        if (byteArray.begin == 0 && byteArray.end == byteArray.bytes.length) {
+          byteArray.bytes
+        } else {
           // If the unsafe version included offsets, we need to create a new array
           // containing only the relevant bytes.
-          bytes
+          byteArray.copiedByteArray
+        }
       }
     }
 
