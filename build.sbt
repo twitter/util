@@ -395,6 +395,7 @@ lazy val utilCore = Project(
     libraryDependencies ++= Seq(
       caffeineLib % "test",
       scalacheckLib,
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
       "org.mockito" % "mockito-core" % mockitoVersion % "test",
     ) ++
       scalatestMockitoVersionedDep(scalaVersion.value) ++
