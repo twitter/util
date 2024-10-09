@@ -54,7 +54,7 @@ class WeNeverCloseButWeDoNotCare extends WeNeverClose {
 }
 
 trait ErrorOnExitApp extends App {
-  override val defaultCloseGracePeriod: Duration = 10.seconds
+  override val defaultCloseGracePeriod: Duration = 30.seconds
 
   override def exitOnError(throwable: Throwable): Unit = {
     throw throwable
@@ -397,6 +397,10 @@ class AppTest extends AnyFunSuite {
   }
 
   test("App: exit functions properly capture mix of non-fatal and fatal exceptions") {
+    // This test case is known to be flaky on GitHub CI because it throws a `TimeoutException` before the expected
+    // `InterruptedException` is thrown.
+    // I suspect this is due to CI has limited CPU resources compared to local development while running lots of test
+    // suites in parallel.
     val app = new ErrorOnExitApp {
       def main(): Unit = {
         onExit {
