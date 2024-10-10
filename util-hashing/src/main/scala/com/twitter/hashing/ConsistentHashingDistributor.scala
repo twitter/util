@@ -1,6 +1,7 @@
 package com.twitter.hashing
 
 import java.security.MessageDigest
+import java.util
 
 case class HashNode[A](identifier: String, weight: Int, handle: A)
 
@@ -53,7 +54,7 @@ class ConsistentHashingDistributor[A](
     md.update(('0' + j).toByte)
   }
 
-  private[this] val continuum: java.util.TreeMap[Long, HashNode[A]] = {
+  private[this] val (continuumKeys: Array[Long], continuumValues: Array[HashNode[A]]) = {
     val md5 = MessageDigest.getInstance("MD5")
     val underlying = new java.util.TreeMap[Long, HashNode[A]]()
     val dash: Byte = '-'.toByte
@@ -98,7 +99,19 @@ class ConsistentHashingDistributor[A](
       assert(underlying.size >= numReps * (nodeCount - 1))
     }
 
-    underlying
+    val keys = new Array[Long](underlying.size())
+    val values = new Array[HashNode[A]](underlying.size())
+
+    var i = 0;
+    val underlyingIterator = underlying.entrySet().iterator()
+    while (underlyingIterator.hasNext) {
+      val entry = underlyingIterator.next()
+      keys(i) = entry.getKey
+      values(i) = entry.getValue
+      i += 1
+    }
+
+    (keys, values)
   }
 
   def nodes: Seq[A] = hashNodes.map(_.handle)
@@ -108,20 +121,29 @@ class ConsistentHashingDistributor[A](
   // we need to maintain compatibility with libmemcached
   private[this] def truncateHash(hash: Long): Long = hash & 0xffffffffL
 
-  private def mapEntryForHash(hash: Long): java.util.Map.Entry[Long, HashNode[A]] = {
+  private def mapEntryForHash(hash: Long): Int = {
     val truncatedHash = truncateHash(hash)
-    val entry = continuum.ceilingEntry(truncatedHash)
-    if (entry == null) continuum.firstEntry else entry
+    val index = util.Arrays.binarySearch(continuumKeys, truncatedHash)
+    if (index >= 0) {
+      index
+    } else {
+      val insertionPoint = -(index + 1)
+      if (insertionPoint < continuumValues.length) {
+        insertionPoint
+      } else {
+        0
+      }
+    }
   }
 
   def partitionIdForHash(hash: Long): Long =
-    mapEntryForHash(hash).getKey
+    continuumKeys(mapEntryForHash(hash))
 
   def entryForHash(hash: Long): (Long, A) = {
-    val entry = mapEntryForHash(hash)
-    (entry.getKey, entry.getValue.handle)
+    val index = mapEntryForHash(hash)
+    (continuumKeys(index), continuumValues(index).handle)
   }
 
   def nodeForHash(hash: Long): A =
-    mapEntryForHash(hash).getValue.handle
+    continuumValues(mapEntryForHash(hash)).handle
 }
