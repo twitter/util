@@ -7,6 +7,12 @@ Note that ``PHAB_ID=#`` and ``RB_ID=#`` correspond to associated messages in com
 Unreleased
 ----------
 
+New Features
+~~~~~~~~~~~~
+
+* util-jvm: Add gc pause stats for all collector pools, including G1. ``PHAB_ID=D1176049``
+
+
 24.5.0
 ------
 

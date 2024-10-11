@@ -1,5 +1,6 @@
 package com.twitter.jvm
 
+import com.sun.management.GarbageCollectionNotificationInfo
 import com.twitter.conversions.StringOps._
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
 import com.twitter.finagle.stats.Bytes
@@ -9,6 +10,10 @@ import com.twitter.finagle.stats.exp.Expression
 import com.twitter.finagle.stats.exp.ExpressionSchema
 import java.lang.management.BufferPoolMXBean
 import java.lang.management.ManagementFactory
+import javax.management.Notification
+import javax.management.NotificationEmitter
+import javax.management.NotificationListener
+import javax.management.openmbean.CompositeData
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
 
@@ -185,6 +190,26 @@ object JvmStats {
         gcStats.metricBuilder(GaugeType).withCounterishGauge.withName(name, "msec")) {
         gc.getCollectionTime.toFloat
       }
+
+      val gcPauseStat = gcStats.stat(name, "pause_msec")
+      gc.asInstanceOf[NotificationEmitter].addNotificationListener(
+          new NotificationListener {
+            override def handleNotification(
+              notification: Notification,
+              handback: Any
+            ): Unit = {
+              notification.getType
+              if (notification.getType == GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION) {
+                gcPauseStat.add(
+                  GarbageCollectionNotificationInfo
+                    .from(notification.getUserData
+                      .asInstanceOf[CompositeData]).getGcInfo.getDuration)
+              }
+            }
+          },
+          null,
+          null
+        )
 
       gcStats.registerExpression(
         ExpressionSchema(s"gc_cycles", Expression(poolCycles.metadata))
