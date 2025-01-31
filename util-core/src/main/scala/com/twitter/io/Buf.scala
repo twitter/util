@@ -404,7 +404,7 @@ object Buf {
     def length: Int = 3
   }
 
-  private final case class Composite(bufs: IndexedSeq[Buf], length: Int) extends Buf {
+  final case class Composite(bufs: IndexedSeq[Buf], length: Int) extends Buf {
     // the factory method requires non-empty Bufs
     override def isEmpty: Boolean = false
 
