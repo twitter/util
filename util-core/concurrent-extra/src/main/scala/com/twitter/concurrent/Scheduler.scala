@@ -4,7 +4,8 @@ import com.twitter.util.Awaitable.CanAwait
 import java.util.ArrayDeque
 import java.util.concurrent._
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.logging.{Level, Logger}
+import java.util.logging.Level
+import java.util.logging.Logger
 import scala.collection.mutable
 
 /**
@@ -202,7 +203,7 @@ class LocalScheduler(lifo: Boolean) extends Scheduler {
 
   // use weak refs to prevent Activations from causing a memory leak
   // thread-safety provided by synchronizing on `activations`
-  private[this] val activations = new mutable.WeakHashMap[Activation, Boolean]()
+  private[this] val activations = new mutable.WeakHashMap[Activation, java.lang.Boolean]()
 
   private[this] val local = new ThreadLocal[Activation]()
 
