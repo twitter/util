@@ -11,6 +11,8 @@ New Features
 ~~~~~~~~~~~~
 
 * util-jvm: Add gc pause stats for all collector pools, including G1. ``PHAB_ID=D1176049``
+* util-stats: Expose dimensional metrics APIs and allow metrics with an indeterminate
+  identity to be exported through the Prometheus exporter. ``PHAB_ID=D1218090``
 
 
 24.5.0
@@ -21,6 +23,8 @@ Runtime Behavior Changes
 
 * util-app: When the application exits due to an error on startup, the error and
   and stack trace are printed to stderr in addition to the existing stdout. ``PHAB_ID=D1116753``
+* util-jvm: Memory manager & pool metrics are labelled dimensionally rather than hierarchically
+  when exported as dimensional metrics. ``PHAB_ID=D1218090``
 
 
 23.11.0

@@ -401,7 +401,7 @@ trait StatsReceiver {
    * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
    * emitted in hierarchical form.
    */
-  private[finagle] final def hierarchicalScope(namespace: String): StatsReceiver = {
+  def hierarchicalScope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else
       new ScopeTranslatingStatsReceiver(
@@ -414,7 +414,7 @@ trait StatsReceiver {
    * Create a new `StatsReceiver` that will add a scope that is only used when the metric is
    * emitted in dimensional form.
    */
-  private[finagle] final def dimensionalScope(namespace: String): StatsReceiver = {
+  def dimensionalScope(namespace: String): StatsReceiver = {
     if (namespace == "") this
     else
       new ScopeTranslatingStatsReceiver(
@@ -426,7 +426,7 @@ trait StatsReceiver {
   /**
    * Create a new `StatsReceiver` that will add the specified label to all created metrics.
    */
-  private[finagle] final def label(labelName: String, labelValue: String): StatsReceiver = {
+  def label(labelName: String, labelValue: String): StatsReceiver = {
     require(labelName.nonEmpty)
     if (labelValue == "") this
     else new LabelTranslatingStatsReceiver(this, labelName, labelValue)

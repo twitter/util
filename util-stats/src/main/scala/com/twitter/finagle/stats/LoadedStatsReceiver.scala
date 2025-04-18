@@ -23,10 +23,7 @@ object LoadedStatsReceiver extends StatsReceiverProxy {
  * [[com.twitter.finagle.util.LoadService]] mechanism.
  */
 object DefaultStatsReceiver extends StatsReceiverProxy {
-  val self: StatsReceiver =
-    LoadedStatsReceiver
-      .dimensionalScope("app")
-      .label("implementation", "app")
+  val self: StatsReceiver = LoadedStatsReceiver.label("implementation", "app")
 
   override def repr: DefaultStatsReceiver.type = this
 

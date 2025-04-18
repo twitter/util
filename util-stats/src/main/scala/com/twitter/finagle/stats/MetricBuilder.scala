@@ -1,5 +1,6 @@
 package com.twitter.finagle.stats
 
+import com.twitter.app.GlobalFlag
 import com.twitter.finagle.stats.MetricBuilder.CounterType
 import com.twitter.finagle.stats.MetricBuilder.CounterishGaugeType
 import com.twitter.finagle.stats.MetricBuilder.GaugeType
@@ -9,6 +10,12 @@ import com.twitter.finagle.stats.MetricBuilder.IdentityType
 import com.twitter.finagle.stats.MetricBuilder.MetricType
 import com.twitter.finagle.stats.MetricBuilder.UnlatchedCounter
 import scala.annotation.varargs
+
+object biasToFull
+    extends GlobalFlag[Boolean](
+      false,
+      "Bias metrics with an indeterminate identity to be exported through all available exporters"
+    )
 
 /**
  * Represents the "role" this service plays with respect to this metric.
@@ -225,7 +232,7 @@ object MetricBuilder {
      * The current behavior is to default to [[IdentityType.HierarchicalOnly]]
      */
     private[twitter] def toResolvedIdentityType(identityType: IdentityType): ResolvedIdentityType =
-      identityType.bias(IdentityType.HierarchicalOnly)
+      identityType.bias(if (biasToFull()) IdentityType.Full else IdentityType.HierarchicalOnly)
 
     /** An [[IdentityType]] that cannot be [[NonDeterminate]] */
     sealed abstract class ResolvedIdentityType extends IdentityType

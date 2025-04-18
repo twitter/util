@@ -113,15 +113,17 @@ object JvmStats {
     val postGCStats = memStats.scope("postGC")
     memPool.foreach { pool =>
       val name = pool.getName.regexSub("""[^\w]""".r) { m => "_" }
+      val currentPoolScope = currentMem.hierarchicalScope(name).label("pool", name)
+      val postGcPoolScope = postGCStats.hierarchicalScope(name).label("pool", name)
       if (pool.getCollectionUsage != null) {
         def usage = pool.getCollectionUsage // this is a snapshot, we can't reuse the value
-        gauges.add(postGCStats.addGauge(name, "used") { usage.getUsed.toFloat })
+        gauges.add(postGcPoolScope.addGauge("used") { usage.getUsed.toFloat })
       }
       if (pool.getUsage != null) {
         def usage = pool.getUsage // this is a snapshot, we can't reuse the value
-        val usageGauge = currentMem.addGauge(name, "used") { usage.getUsed.toFloat }
+        val usageGauge = currentPoolScope.addGauge("used") { usage.getUsed.toFloat }
         gauges.add(usageGauge)
-        gauges.add(currentMem.addGauge(name, "max") { usage.getMax.toFloat })
+        gauges.add(currentPoolScope.addGauge("max") { usage.getMax.toFloat })
 
         // register memory usage expression
         currentMem.registerExpression(
@@ -171,9 +173,10 @@ object JvmStats {
         val bufferPoolStats = memStats.scope("buffer")
         jBufferPool.asScala.foreach { bp =>
           val name = bp.getName
-          gauges.add(bufferPoolStats.addGauge(name, "count") { bp.getCount.toFloat })
-          gauges.add(bufferPoolStats.addGauge(name, "used") { bp.getMemoryUsed.toFloat })
-          gauges.add(bufferPoolStats.addGauge(name, "max") { bp.getTotalCapacity.toFloat })
+          val bufferPoolScope = bufferPoolStats.hierarchicalScope(name).label("pool", name)
+          gauges.add(bufferPoolScope.addGauge("count") { bp.getCount.toFloat })
+          gauges.add(bufferPoolScope.addGauge("used") { bp.getMemoryUsed.toFloat })
+          gauges.add(bufferPoolScope.addGauge("max") { bp.getTotalCapacity.toFloat })
         }
     }
 
@@ -181,17 +184,18 @@ object JvmStats {
     val gcStats = stats.scope("gc")
     gcPool.foreach { gc =>
       val name = gc.getName.regexSub("""[^\w]""".r) { m => "_" }
+      val poolScope = gcStats.hierarchicalScope(name).label("jmm", name)
       val poolCycles =
-        gcStats.addGauge(
-          gcStats.metricBuilder(GaugeType).withCounterishGauge.withName(name, "cycles")) {
+        poolScope.addGauge(
+          poolScope.metricBuilder(GaugeType).withCounterishGauge.withName("cycles")) {
           gc.getCollectionCount.toFloat
         }
-      val poolMsec = gcStats.addGauge(
-        gcStats.metricBuilder(GaugeType).withCounterishGauge.withName(name, "msec")) {
+      val poolMsec = poolScope.addGauge(
+        poolScope.metricBuilder(GaugeType).withCounterishGauge.withName("msec")) {
         gc.getCollectionTime.toFloat
       }
 
-      val gcPauseStat = gcStats.stat(name, "pause_msec")
+      val gcPauseStat = poolScope.stat("pause_msec")
       gc.asInstanceOf[NotificationEmitter].addNotificationListener(
           new NotificationListener {
             override def handleNotification(
@@ -244,7 +248,7 @@ object JvmStats {
     allocations.start()
     if (allocations.trackingEden) {
       val allocationStats = memStats.scope("allocations")
-      val eden = allocationStats.scope("eden")
+      val eden = allocationStats.hierarchicalScope("eden").label("space", "eden")
       gauges.add(eden.addGauge("bytes") { allocations.eden.toFloat })
     }
 

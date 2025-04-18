@@ -41,7 +41,8 @@ private[jvm] class Allocations(statsReceiver: StatsReceiver) {
   private[this] val beanAndListeners =
     new LinkedBlockingQueue[(NotificationEmitter, NotificationListener)]()
 
-  private[this] val edenGcPauses = statsReceiver.scope("eden").stat("pause_msec")
+  private[this] val edenGcPauses = statsReceiver
+    .hierarchicalScope("eden").label("jmm", "eden").stat("pause_msec")
 
   private[jvm] def start(): Unit = {
     edenPool
