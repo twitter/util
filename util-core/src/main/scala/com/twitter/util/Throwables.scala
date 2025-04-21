@@ -1,6 +1,7 @@
 package com.twitter.util
 
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 object Throwables {
 
@@ -38,5 +39,15 @@ object Throwables {
 
   object RootCause {
     def unapply(e: Throwable): Option[Throwable] = Option(e.getCause)
+
+    def nested(ex: Throwable): Throwable = {
+      var rootException = ex
+      val exceptions = mutable.HashSet[Throwable]()
+      while (rootException.getCause != null && !exceptions.contains(rootException)) {
+        exceptions.add(rootException)
+        rootException = rootException.getCause
+      }
+      rootException
+    }
   }
 }

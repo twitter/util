@@ -16,7 +16,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class StatsReceiverTest extends AnyFunSuite {
 
-  test("RollupStatsReceiver counter/stats") {
+  test("RollupStatsReceiver counter/stats - full translation") {
     val mem = new InMemoryStatsReceiver
     val receiver = new RollupStatsReceiver(mem)
 
@@ -30,6 +30,36 @@ class StatsReceiverTest extends AnyFunSuite {
     assert(mem.counters(Seq("toto", "titi")) == 2)
     assert(mem.counters(Seq("toto", "titi", "tata")) == 1)
     assert(mem.counters(Seq("toto", "titi", "tutu")) == 1)
+
+    def identity(path: String*): IdentityType = mem.schemas(path).identity.identityType
+
+    assert(identity("toto") == IdentityType.NonDeterminate)
+    assert(identity("toto", "titi") == IdentityType.NonDeterminate)
+    assert(identity("toto", "titi", "tata") == IdentityType.NonDeterminate)
+    assert(identity("toto", "titi", "tutu") == IdentityType.NonDeterminate)
+  }
+
+  test("RollupStatsReceiver counter/stats - hierarchical only") {
+    val mem = new InMemoryStatsReceiver
+    val receiver = new RollupStatsReceiver(mem, hierarchicalOnly = true)
+
+    receiver.counter("toto", "titi", "tata").incr()
+    assert(mem.counters(Seq("toto")) == 1)
+    assert(mem.counters(Seq("toto", "titi")) == 1)
+    assert(mem.counters(Seq("toto", "titi", "tata")) == 1)
+
+    receiver.counter("toto", "titi", "tutu").incr()
+    assert(mem.counters(Seq("toto")) == 2)
+    assert(mem.counters(Seq("toto", "titi")) == 2)
+    assert(mem.counters(Seq("toto", "titi", "tata")) == 1)
+    assert(mem.counters(Seq("toto", "titi", "tutu")) == 1)
+
+    def identity(path: String*): IdentityType = mem.schemas(path).identity.identityType
+
+    assert(identity("toto") == IdentityType.NonDeterminate)
+    assert(identity("toto", "titi") == IdentityType.HierarchicalOnly)
+    assert(identity("toto", "titi", "tata") == IdentityType.HierarchicalOnly)
+    assert(identity("toto", "titi", "tutu") == IdentityType.HierarchicalOnly)
   }
 
   test("Broadcast Counter/Stat") {

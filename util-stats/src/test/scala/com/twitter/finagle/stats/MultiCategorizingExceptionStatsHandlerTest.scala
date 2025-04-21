@@ -20,6 +20,16 @@ class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
+    val identity = receiver.schemas(Seq("clienterrors")).toMetricBuilder.get.identity
+    assert(
+      identity.labels == Map(
+        "interrupted" -> "true",
+        "restartable" -> "true",
+        "source" -> "service",
+        "exception" -> "java.lang.Exception"
+      )
+    )
+
     assert(receiver.counters(Seq("clienterrors")) == 1)
     assert(receiver.counters(Seq("clienterrors", "interrupted")) == 1)
     assert(receiver.counters(Seq("clienterrors", "restartable")) == 1)
@@ -99,6 +109,9 @@ class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
 
+    val identity = receiver.schemas(Seq("clienterrors")).toMetricBuilder.get.identity
+    assert(identity.labels == Map("source" -> "service", "exception" -> "java.lang.Exception"))
+
     assert(receiver.counters(Seq("clienterrors")) == 1)
     assert(receiver.counters(Seq("clienterrors", classOf[RuntimeException].getName)) == 1)
     assert(
@@ -141,6 +154,9 @@ class MultiCategorizingExceptionStatsHandlerTest extends AnyFunSuite {
     handler.record(receiver, new RuntimeException(new Exception("e")))
 
     val keys = receiver.counters.keys.map(_.mkString("/")).toSeq.sorted
+
+    val identity = receiver.schemas(Seq("failures")).toMetricBuilder.get.identity
+    assert(identity.labels == Map("exception" -> "java.lang.Exception"))
 
     assert(receiver.counters.view.filterKeys(_.contains("failures")).size == 3)
     assert(receiver.counters.view.filterKeys(_.contains("sourcedfailures")).size == 0)

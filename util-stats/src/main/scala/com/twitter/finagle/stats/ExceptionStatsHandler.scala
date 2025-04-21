@@ -111,11 +111,17 @@ class CategorizingExceptionStatsHandler(
  *   failures/restartable/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException: 1
  *   failures/restartable/com.twitter.finagle.Failure/com.twitter.finagle.CancelledConnectionException/java.net.ConnectException: 1
  *
+ * `f1` is also recorded dimensionally as:
+ *   failures{interrupted=true, restartable=true, exception=java.net.ConnectException}
+ *
  * `f2` is recorded as:
  *   failures
  *   failures/com.twitter.finagle.IndividualRequestTimeoutException
  *   sourcedfailures/myservice
  *   sourcedfailures/myservice/com.twitter.finagle.IndividualRequestTimeoutException
+ *
+ * `f2` is also recorded dimensionally as:
+ *   failures{interrupted=true, source=myservice, restartable=true, exception=com.twitter.finagle.IndividualRequestTimeoutException}
  *
  * @param mkLabel label prefix, default to 'failures'
  * @param mkFlags  extracting flags if the Throwable is a Failure
@@ -139,14 +145,32 @@ private[finagle] class MultiCategorizingExceptionStatsHandler(
       if (flags.isEmpty) Seq(Seq(parentLabel))
       else flags.toSeq.map(Seq(parentLabel, _))
 
-    val labels: Seq[Seq[String]] = mkSource(t) match {
+    val maybeSource = mkSource(t)
+    val labels: Seq[Seq[String]] = maybeSource match {
       case Some(service) => flagLabels :+ Seq(SourcedFailures, service)
       case None => flagLabels
     }
 
     val paths: Seq[Seq[String]] = statPaths(t, labels, rollup)
 
-    if (flags.nonEmpty) statsReceiver.counter(parentLabel).incr()
-    paths.foreach { path => statsReceiver.counter(path: _*).incr() }
+    val dimensionalLabels = Map("exception" -> Throwables.RootCause.nested(t).getClass.getName) ++
+      flags.map { flag => flag -> "true" } ++
+      maybeSource.map("source" -> _).toSeq
+
+    val dimensionalMetric = MetricBuilder.forCounter
+      .withName(parentLabel)
+      .withLabels(dimensionalLabels)
+      .withDimensionalSupport
+
+    statsReceiver.counter(dimensionalMetric).incr()
+    paths.foreach {
+      case Seq(comp) if comp == parentLabel =>
+      // The "flat" counter is used to build up the rollup hierarchies but since we also use it
+      // to hold the dimensional metric, we skip it when recording hierarchical metrics.
+      case path =>
+        statsReceiver
+          .counter(MetricBuilder.forCounter.withHierarchicalOnly.withName(path: _*))
+          .incr()
+    }
   }
 }

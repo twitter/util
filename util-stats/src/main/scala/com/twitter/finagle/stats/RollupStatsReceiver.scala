@@ -9,37 +9,45 @@ package com.twitter.finagle.stats
  * - "/errors"
  * - "/errors/clientErrors"
  * - "/errors/clientErrors/java_net_ConnectException"
+ *
+ * @param self the [[StatsReceiver]] to proxy metrics creation to
+ * @param hierarchicalOnly whether non-root scopes should be created with the HierarchicalOnly metrics identity
  */
-class RollupStatsReceiver(protected val self: StatsReceiver) extends StatsReceiverProxy {
+class RollupStatsReceiver(protected val self: StatsReceiver, hierarchicalOnly: Boolean = false)
+    extends StatsReceiverProxy {
 
-  private[this] def tails[A](s: Seq[A]): Seq[Seq[A]] = {
+  /**
+   * @return Seq(metrics namespace -> whether the namespace is the "parent" scope)
+   */
+  private[this] def tails[A](s: Seq[A]): Seq[(Seq[A], Boolean)] = {
     s match {
       case s @ Seq(_) =>
-        Seq(s)
+        Seq(s -> true)
 
       case Seq(hd, tl @ _*) =>
-        Seq(Seq(hd)) ++ (tails(tl) map { t => Seq(hd) ++ t })
+        Seq(Seq(hd) -> true) ++ (tails(tl) map { case (t, _) => (Seq(hd) ++ t) -> false })
     }
   }
 
-  override def counter(metricBuilder: MetricBuilder) = new Counter {
-    private[this] val allCounters = BroadcastCounter(
-      tails(metricBuilder.name).map(n => self.counter(metricBuilder.withName(n: _*)))
-    )
+  private[this] def metrics(parent: MetricBuilder): Seq[MetricBuilder] = tails(parent.name).map {
+    case (name, isRoot) =>
+      val builder = parent.withName(name: _*)
+      if (isRoot || !hierarchicalOnly) builder else builder.withHierarchicalOnly
+  }
+
+  override def counter(metricBuilder: MetricBuilder): Counter = new Counter {
+    private[this] val allCounters = BroadcastCounter(metrics(metricBuilder).map(self.counter))
     def incr(delta: Long): Unit = allCounters.incr(delta)
     def metadata: Metadata = allCounters.metadata
   }
-  override def stat(metricBuilder: MetricBuilder) = new Stat {
-    private[this] val allStats = BroadcastStat(
-      tails(metricBuilder.name).map(n => self.stat(metricBuilder.withName(n: _*)))
-    )
+  override def stat(metricBuilder: MetricBuilder): Stat = new Stat {
+    private[this] val allStats = BroadcastStat(metrics(metricBuilder).map(self.stat))
     def add(value: Float): Unit = allStats.add(value)
     def metadata: Metadata = allStats.metadata
   }
 
-  override def addGauge(metricBuilder: MetricBuilder)(f: => Float) = new Gauge {
-    private[this] val underlying =
-      tails(metricBuilder.name).map(n => self.addGauge(metricBuilder.withName(n: _*))(f))
+  override def addGauge(metricBuilder: MetricBuilder)(f: => Float): Gauge = new Gauge {
+    private[this] val underlying = metrics(metricBuilder).map { self.addGauge(_)(f) }
     def remove(): Unit = underlying.foreach(_.remove())
     def metadata: Metadata = MultiMetadata(underlying.map(_.metadata))
   }
