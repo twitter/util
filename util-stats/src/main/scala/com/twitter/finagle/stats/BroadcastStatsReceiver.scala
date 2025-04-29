@@ -22,6 +22,9 @@ object BroadcastStatsReceiver {
       with DelegatingStatsReceiver {
     val repr: AnyRef = this
 
+    override def scopeTranslation: NameTranslatingStatsReceiver.Mode =
+      NameTranslatingStatsReceiver.FullTranslation
+
     def counter(metricBuilder: MetricBuilder) = new BroadcastCounter.Two(
       first.counter(metricBuilder),
       second.counter(metricBuilder)
@@ -62,6 +65,9 @@ object BroadcastStatsReceiver {
 
   private class N(srs: Seq[StatsReceiver]) extends StatsReceiver with DelegatingStatsReceiver {
     val repr: AnyRef = this
+
+    override def scopeTranslation: NameTranslatingStatsReceiver.Mode =
+      NameTranslatingStatsReceiver.FullTranslation
 
     def counter(metricBuilder: MetricBuilder) =
       BroadcastCounter(srs.map { _.counter(metricBuilder) })
