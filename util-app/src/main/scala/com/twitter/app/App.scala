@@ -10,7 +10,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicReference
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+import scala.sys.ShutdownHookThread
 import scala.util.control.NonFatal
+import com.twitter.finagle.util.enableJvmShutdownHook
 
 /**
  * A composable application trait that includes flag parsing as well
@@ -444,6 +446,11 @@ trait App extends ClosableOnce with CloseOnceAwaitably with Lifecycle {
         catch {
           case _: NoSuchMethodException => None
         }
+      if (enableJvmShutdownHook()) {
+        ShutdownHookThread {
+          Await.result(close(defaultCloseGracePeriod))
+        }
+      }
 
       // Invoke main() if it exists.
       mainMethod.foreach { method =>

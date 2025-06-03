@@ -1,6 +1,7 @@
 package com.twitter.finagle.util
 
 import com.twitter.app
+import com.twitter.app.GlobalFlag
 
 /**
  * A deny list of implementations to ignore. Keys are the fully qualified class names.
@@ -43,4 +44,13 @@ object loadServiceIgnoredPaths
     extends app.GlobalFlag[Seq[String]](
       Seq.empty[String],
       "Additional packages to be excluded from recursive directory scan"
+    )
+
+/**
+ * This flag enables another way for graceful shutdown.
+ */
+object enableJvmShutdownHook
+    extends GlobalFlag[Boolean](
+      false,
+      "Registers a JVM shutdown hook which invokes close()"
     )
