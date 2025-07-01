@@ -51,6 +51,6 @@ object loadServiceIgnoredPaths
  */
 object enableJvmShutdownHook
     extends GlobalFlag[Boolean](
-      false,
+      true,
       "Registers a JVM shutdown hook which invokes close()"
     )

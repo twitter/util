@@ -25,7 +25,7 @@ Runtime Behavior Changes
   and stack trace are printed to stderr in addition to the existing stdout. ``PHAB_ID=D1116753``
 * util-jvm: Memory manager & pool metrics are labelled dimensionally rather than hierarchically
   when exported as dimensional metrics. ``PHAB_ID=D1218090``
-
+* util-app: Enables a jvm shutdown hook to call app.quit(). ``PHAB_ID=D1236932``
 
 23.11.0
 -------

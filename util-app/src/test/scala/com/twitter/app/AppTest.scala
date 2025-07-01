@@ -5,11 +5,13 @@ import com.twitter.app.lifecycle.Event
 import com.twitter.app.lifecycle.Observer
 import com.twitter.app.LoadService.Binding
 import com.twitter.conversions.DurationOps._
+import com.twitter.finagle.util.enableJvmShutdownHook
 import com.twitter.util._
 import java.util.concurrent.ConcurrentLinkedQueue
 import scala.jdk.CollectionConverters._
 import scala.language.reflectiveCalls
 import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.BeforeAndAfterEach
 
 class TestApp(f: () => Unit) extends App {
   var reason: Option[String] = None
@@ -61,7 +63,12 @@ trait ErrorOnExitApp extends App {
   }
 }
 
-class AppTest extends AnyFunSuite {
+class AppTest extends AnyFunSuite with BeforeAndAfterEach {
+
+  override protected def beforeEach(): Unit = {
+    enableJvmShutdownHook.parse("false")
+  }
+
   test("App: make sure system.exit called on exception from main") {
     val test1 = new TestApp(() => throw new RuntimeException("simulate main failing"))
 
