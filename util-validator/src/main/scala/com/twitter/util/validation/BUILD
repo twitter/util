@@ -1,7 +1,7 @@
 scala_library(
     sources = ["*.scala"],
     compiler_option_sets = ["fatal_warnings"],
-    platform = "java8-do-not-use",
+    platform = "java8",
     provides = scala_artifact(
         org = "com.twitter",
         name = "util-validation-core",
