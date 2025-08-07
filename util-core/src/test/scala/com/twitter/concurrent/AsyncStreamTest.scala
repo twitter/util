@@ -748,6 +748,120 @@ class AsyncStreamTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
       assert(Await.result(stream.toSeq()) == Seq(n))
     }
+
+    test(s"$impl: groupBy") {
+      forAll { xs: Seq[(Int, String)] =>
+        val stream = fromSeq(xs)
+        val expected = xs.groupBy(_._1)
+        assert(Await.result(stream.groupBy(_._1)(Seq)) == expected)
+      }
+    }
+
+    test(s"$impl: distinct") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val expected = xs.distinct
+        assert(Await.result(stream.distinct.toSeq()) == expected)
+      }
+    }
+
+    test(s"$impl: distinctBy") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val expected = xs.distinctBy(_ % 3)
+        assert(Await.result(stream.distinctBy(_ % 3).toSeq()) == expected)
+      }
+    }
+
+    test(s"$impl: contains") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val expected = xs.contains(3)
+        assert(Await.result(stream.contains(3)) == expected)
+      }
+    }
+
+    test(s"$impl: exists") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val expected = xs.exists(_ % 3 == 0)
+        assert(Await.result(stream.exists(_ % 3 == 0)) == expected)
+      }
+    }
+
+    test(s"$impl: find") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val expected = xs.find(_ % 3 == 0)
+        assert(Await.result(stream.find(_ % 3 == 0)) == expected)
+      }
+    }
+
+    test(s"$impl: collect") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val pf: PartialFunction[Int, String] = {
+          case n if n % 3 == 0 => String.valueOf(n + 2)
+          case n if n % 2 == 0 => String.valueOf(n + 17)
+        }
+        val expected = xs.collect(pf)
+        assert(Await.result(stream.collect(pf).toSeq()) == expected)
+      }
+    }
+
+    test(s"$impl: collectFirst") {
+      forAll { xs: Seq[Int] =>
+        val stream = fromSeq(xs)
+        val pf: PartialFunction[Int, String] = {
+          case n if n % 3 == 0 => String.valueOf(n + 2)
+          case n if n % 2 == 0 => String.valueOf(n + 17)
+        }
+        val expected = xs.collectFirst(pf)
+        assert(Await.result(stream.collectFirst(pf)) == expected)
+      }
+    }
+
+    test(s"$impl: to[String]") {
+      forAll { xs: Seq[Char] =>
+        val stream = fromSeq(xs)
+        assert(Await.result(stream.to[String]) == xs.mkString)
+      }
+    }
+
+    test(s"$impl: to[List[Int]]") {
+      forAll { xs: List[Int] =>
+        val stream = fromSeq(xs)
+        assert(Await.result(stream.to[List[Int]]) == xs)
+      }
+    }
+
+    test(s"$impl: toList") {
+      forAll { xs: List[Int] =>
+        val stream = fromSeq(xs)
+        assert(Await.result(stream.toList) == xs)
+      }
+    }
+
+    test(s"$impl: toSet") {
+      forAll { xs: Set[Int] =>
+        val stream = fromSeq(xs.toSeq)
+        assert(Await.result(stream.toSet) == xs)
+      }
+    }
+
+    test(s"$impl: toArray") {
+      forAll { xs: Array[Int] =>
+        val stream = fromSeq(xs.toSeq)
+        assert(java.util.Arrays.equals(Await.result(stream.toArray), xs))
+      }
+    }
+
+    test(s"$impl: toMap") {
+      forAll { map: Map[String, Int] =>
+        val stream = fromSeq(map.toSeq)
+        assert(Await.result(stream.toMap) == map)
+      }
+    }
   }
 
 }

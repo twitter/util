@@ -13,7 +13,8 @@ New Features
 * util-jvm: Add gc pause stats for all collector pools, including G1. ``PHAB_ID=D1176049``
 * util-stats: Expose dimensional metrics APIs and allow metrics with an indeterminate
   identity to be exported through the Prometheus exporter. ``PHAB_ID=D1218090``
-
+* util-core: Add AsyncStream methods: `groupBy`, `distinct`, `distinctBy`, `contains`, `exists`, `find`, `collect`,
+  `collectFirst`, `to`, `toList`, `toSet`, `toArray`, `toMap`
 
 24.5.0
 ------
