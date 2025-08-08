@@ -1,9 +1,10 @@
 package com.twitter.util.validation.internal
 
+import org.hibernate.validator.internal.util.annotation.AnnotationDescriptor
+
 import java.lang.annotation.Annotation
 import java.lang.reflect.Method
 import java.util
-import sun.reflect.annotation.AnnotationParser
 
 private[validation] object AnnotationFactory {
 
@@ -11,7 +12,6 @@ private[validation] object AnnotationFactory {
    * Creates a new Annotation (AnnotationProxy) instance of
    * the given annotation type with the custom values applied.
    *
-   * @see [[AnnotationParser.annotationForMap]]
    */
   def newInstance[A <: Annotation](
     annotationType: Class[A],
@@ -33,6 +33,16 @@ private[validation] object AnnotationFactory {
       val key = keysIterator.next()
       attributes.put(key, customValues(key).asInstanceOf[AnyRef])
     }
-    AnnotationParser.annotationForMap(annotationType, attributes).asInstanceOf[A]
+    annotationForMap(annotationType, attributes).asInstanceOf[A]
+  }
+
+  private def annotationForMap[A <: Annotation](
+    annotationClass: Class[A],
+    memberValues: util.Map[String, AnyRef]
+  ): Annotation = {
+    val ad: AnnotationDescriptor[A] =
+      new AnnotationDescriptor.Builder[A](annotationClass, memberValues).build()
+    org.hibernate.validator.internal.util.annotation.AnnotationFactory
+      .create(ad)
   }
 }
