@@ -17,9 +17,13 @@
 package com.twitter.logging
 
 import com.twitter.util.TwitterDateFormat
-import java.text.{MessageFormat, DateFormat}
+import java.text.MessageFormat
+import java.text.DateFormat
 import java.util.regex.Pattern
-import java.util.{Date, GregorianCalendar, TimeZone, logging => javalog}
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.TimeZone
+import java.util.{logging => javalog}
 import scala.collection.mutable
 import java.{util => ju}
 
@@ -125,14 +129,15 @@ class Formatter(
   /**
    * Return the string representation of a given log level's name
    */
-  def formatLevelName(level: javalog.Level): String = {
+  def formatLevelName(level: javalog.Level, overrideFatalWithError: Boolean = false): String = {
     level match {
       case x: Level =>
         x.name
       case x: javalog.Level =>
         Logger.levels.get(x.intValue) match {
           case None => "%03d".format(x.intValue)
-          case Some(level) => level.name
+          case Some(level) =>
+            if (level == Level.FATAL && overrideFatalWithError) "ERROR" else level.name
         }
     }
   }
