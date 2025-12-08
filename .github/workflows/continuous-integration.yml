@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scala: [2.12.12, 2.13.6]
+        scala: [2.12.12, 2.13.6, 3.0.2]
         java: ['1.8', '1.11']
     runs-on: ubuntu-latest
     steps:
@@ -52,4 +52,4 @@ jobs:
             find ~/.sbt         -name "*.lock"               -delete
           fi
       - name: test
-        run: ${{ format('./sbt ++{0} clean test', matrix.scala) }}
+        run: ${{ format('./sbt "++{0} -v clean; ++{0} test"', matrix.scala) }}
