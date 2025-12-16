@@ -647,7 +647,7 @@ object AsyncStream {
   def fromSeq[A](seq: Seq[A]): AsyncStream[A] = seq match {
     case Nil => empty
     case _ if SeqUtil.hasKnownSize(seq) && seq.tail.isEmpty => of(seq.head)
-    case _ => seq.head +:: fromSeq(seq.tail)
+    case _ => of(seq.head).flatMap(_ +:: fromSeq(seq.tail))
   }
 
   /**
