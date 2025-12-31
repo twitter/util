@@ -650,12 +650,25 @@ lazy val utilTest = Project(
   id = "util-test",
   base = file("util-test")
 ).settings(
-    sharedSettings
+    sharedScala3EnabledSettings
   ).settings(
     name := "util-test",
-    libraryDependencies ++= Seq(
-      "org.mockito" % "mockito-all" % "1.10.19",
-      "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0"
+    libraryDependencies ++= (
+      if (scalaVersion.value.startsWith("2"))
+        Seq(
+          "org.mockito" % "mockito-all" % "1.10.19",
+          "org.scalatestplus" %% "mockito-1-10" % "3.1.0.0"
+        )
+      else
+        Seq(
+          // We keep this ancient version for now as it's unclear how much source incompatibility a jump to 3.4.x would
+          // cause to consumers of this module.
+          // If we run into compatibility issues with new versions of scalatest-mockito we will have to upgrade to
+          // mockito-core 3.4.x for Scala 2 and 3.
+          "org.mockito" % "mockito-all" % "1.10.19",
+          "org.scalatest" %% "scalatest" % "3.2.9",
+          "org.scalatestplus" %% "mockito-3-4" % "3.2.9.0"
+        )
     )
   ).dependsOn(utilCore, utilLogging, utilStats)
 
