@@ -76,6 +76,30 @@ object Function {
   }
 
   /**
+   * Creates a [[Function]] of `T` to `R` from a `java.util.function.Function`.
+   *
+   * Allows for better interop with Scala from Java 8 using the standard JDK
+   * functional interfaces.
+   *
+   * For example:
+   * {{{
+   * import com.twitter.util.Future;
+   * import static com.twitter.util.Function.func;
+   * import java.util.function.Function;
+   *
+   * Function<String, Integer> f = String::length;
+   * Future<String> fs = Future.value("example");
+   * Future<Integer> fi = fs.map(func(f));
+   * }}}
+   *
+   * @see [[func]] if you have a [[com.twitter.function.JavaFunction]].
+   * @see [[exfunc]] if your function throws checked exceptions.
+   */
+  def func[T, R](f: juf.Function[T, R]): Function[T, R] = new Function[T, R] {
+    def apply(value: T): R = f.apply(value)
+  }
+
+  /**
    * Creates a [[Function0]] of type-`T` from a `java.util.function.JavaSupplier`.
    *
    * Allows for better interop with Scala from Java 8 using lambdas.
@@ -120,6 +144,31 @@ object Function {
    */
   def cons[T](f: JavaConsumer[T]): Function[T, Unit] = new Function[T, Unit] {
     def apply(value: T): Unit = f(value)
+  }
+
+  /**
+   * Creates a [[Function]] of `T` to `Unit` from a `java.util.function.Consumer`.
+   *
+   * Allows for better interop with Scala from Java 8 using the standard JDK
+   * functional interfaces.
+   *
+   * For example:
+   * {{{
+   * import com.twitter.util.Future;
+   * import static com.twitter.util.Function.cons;
+   * import java.util.function.Consumer;
+   *
+   * Consumer<String> c = System.out::println;
+   * Future<String> fs = Future.value("example");
+   * Future<String> f2 = fs.onSuccess(cons(c));
+   * }}}
+   *
+   * @see [[excons]] if your function throws checked exceptions.
+   * @see [[func]] if you have a function which returns a type, `R`.
+   * @see [[func0]] if you have a function which takes no input.
+   */
+  def cons[T](f: juf.Consumer[T]): Function[T, Unit] = new Function[T, Unit] {
+    def apply(value: T): Unit = f.accept(value)
   }
 
   /**

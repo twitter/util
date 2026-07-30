@@ -10,6 +10,8 @@ import static com.twitter.util.Function.func0;
 import static com.twitter.util.Function.excons;
 import static com.twitter.util.Function.exfunc;
 import static com.twitter.util.Function.exfunc0;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 public class FunctionCompilationTest {
@@ -76,6 +78,42 @@ public class FunctionCompilationTest {
     Function<String, BoxedUnit> fun =
       excons(value -> { throw new Exception("Expected"); });
     fun.apply("test");
+  }
+
+  @Test
+  public void testFuncFromJavaUtilFunction() {
+    Function<String, Integer> f = new Function<String, Integer>() {
+      @Override
+      public Integer apply(String s) {
+        return s.length();
+      }
+    };
+    com.twitter.util.Function<String, Integer> fun = func(f);
+    Assert.assertEquals(4, fun.apply("test").intValue());
+  }
+
+  @Test
+  public void testFuncFromJavaUtilFunctionLambda() {
+    com.twitter.util.Function<String, Integer> fun = func((String s) -> s.length());
+    Assert.assertEquals(4, fun.apply("test").intValue());
+  }
+
+  @Test
+  public void testConsFromJavaUtilConsumer() {
+    Consumer<String> c = new Consumer<String>() {
+      @Override
+      public void accept(String s) {
+        // no-op
+      }
+    };
+    com.twitter.util.Function<String, BoxedUnit> fun = cons(c);
+    Assert.assertEquals(BoxedUnit.UNIT, fun.apply("test"));
+  }
+
+  @Test
+  public void testConsFromJavaUtilConsumerLambda() {
+    com.twitter.util.Function<String, BoxedUnit> fun = cons((String s) -> {});
+    Assert.assertEquals(BoxedUnit.UNIT, fun.apply("test"));
   }
 
 }
